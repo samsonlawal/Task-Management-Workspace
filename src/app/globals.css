@@ -4,14 +4,53 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
-    --foreground: #ededed;
   }
+} */
+
+
+@font-face {
+  font-family: 'madei';
+  src: url('/fonts/MADEINFINITYPersonalUse-Black.otf') format('otf');
+       /* url('/fonts/MyFont-Regular.woff') format('woff'); */
+  font-weight:900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'madei';
+  src: url('/fonts/MADEINFINITYPersonalUse-Light.otf') format('opentype');
+       /* url('/fonts/MyFont-Regular.woff') format('woff'); */
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'madei';
+  src: url('/fonts/MADEINFINITYPersonalUse-Medium.otf') format('opentype');
+       /* url('/fonts/MyFont-Regular.woff') format('woff'); */
+  font-weight:500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'madei';
+  src: url('/fonts/MADEINFINITYPersonalUse-Regular.otf') format('opentype');
+       /* url('/fonts/MyFont-Regular.woff') format('woff'); */
+  font-weight:400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'madei';
+  src: url('/fonts/MADEINFINITYPersonalUse-Thin.otf') format('opentype');
+       /* url('/fonts/MyFont-Regular.woff') format('woff'); */
+  font-weight:100;
+  font-style: normal;
 }
 
 body {

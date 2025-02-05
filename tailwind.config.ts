@@ -12,6 +12,16 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        madei: ["madei", "sans-serif"],
+      },
+      fontWeight: {
+        thin: "100",
+        regular: "300",
+        normal: "400",
+        medium: "500",
+        black: "900",
+      },
     },
   },
   plugins: [],
