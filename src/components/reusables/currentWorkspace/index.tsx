@@ -16,7 +16,7 @@ export default function CurrentWorkspace() {
           <p>Infinty</p>
         </div>
       </div>
-      {/* <Switch /> */}
+      <Switch />
     </div>
   );
 }
