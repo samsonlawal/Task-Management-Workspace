@@ -3,7 +3,7 @@ import React from "react";
 export default function WSHeading() {
   return (
     <div>
-      <div className="flex flex-1 flex-row justify-between rounded-bl-[15px] rounded-tl-[15px]">
+      <div className="flex flex-1 flex-row justify-between rounded-bl-[15px] rounded-tl-[15px] px-[32px]">
         <div className="">
           <p>
             <span className="text-[#707070]">workspaces / </span> Infinty

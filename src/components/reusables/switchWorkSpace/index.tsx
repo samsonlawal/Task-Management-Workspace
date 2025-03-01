@@ -8,7 +8,7 @@ export default function Switch() {
       <div>
         <div className="flex flex-col gap-2">
           <div className="flex flex-row items-center gap-[8px]">
-            <div className="flex h-[32px] w-[32px] items-center justify-center rounded-[5px] bg-[#cbd627] text-white">
+            <div className="flex h-[36px] w-[36px] items-center justify-center rounded-[5px] bg-[#A8A8A8] text-[13px] text-white">
               JB
             </div>
             <div className="flex flex-col -space-y-[6px]">
@@ -17,7 +17,7 @@ export default function Switch() {
             </div>
           </div>
           <div className="flex flex-row items-center gap-[12px]">
-            <div className="flex h-[32px] w-[32px] items-center justify-center rounded-[5px] bg-[#27d6b0] text-white">
+            <div className="flex h-[36px] w-[36px] items-center justify-center rounded-[5px] bg-[#A8A8A8] text-[13px] text-white">
               M
             </div>
             <div className="flex flex-col -space-y-[6px]">
@@ -26,7 +26,7 @@ export default function Switch() {
             </div>
           </div>
           <div className="flex flex-row items-center gap-[12px]">
-            <div className="flex h-[32px] w-[32px] items-center justify-center rounded-[5px] bg-[#276dd6] text-white">
+            <div className="flex h-[36px] w-[36px] items-center justify-center rounded-[5px] bg-[#A8A8A8] text-[13px] text-white">
               HD
             </div>
             <div className="flex flex-col -space-y-[6px]">
@@ -39,3 +39,5 @@ export default function Switch() {
     </div>
   );
 }
+
+    
