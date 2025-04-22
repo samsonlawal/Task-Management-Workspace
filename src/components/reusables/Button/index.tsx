@@ -17,7 +17,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       className={cn(
-        "rounded px-4 py-2 font-medium text-white transition-all",
+        "rounded px-4 py-2 font-normal text-white transition-all duration-300",
         `bg-${color}-500 hover:bg-${color}-600`,
         className,
       )}

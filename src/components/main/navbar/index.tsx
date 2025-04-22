@@ -1,8 +1,17 @@
+"use client";
+
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 export default function Navbar() {
+  const currentUI = useSelector((state: RootState) => state.ui.currentUI);
+
   return (
-    <div className="flex w-full items-center justify-end border-b-[1px] px-[32px] py-[12px]">
+    <div className="flex w-full items-center justify-between border-b-[1px] px-[32px] py-[10px]">
+      <h2 className="text-xl">
+        {currentUI === "tasks" ? "Workspace" : "Members"}
+      </h2>
       <DropdownMenu />
     </div>
   );
@@ -14,12 +23,12 @@ function DropdownMenu() {
   return (
     <div className="w-fit text-left font-madei">
       <Menu>
-        <MenuButton className="flex w-[230px] items-center gap-2 self-end rounded-md border-[1px] px-2 py-1.5 text-black shadow-inner shadow-white/10 hover:bg-gray-200/70 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
+        <MenuButton className="flex w-[230px] items-center gap-2 self-end rounded-md border-[1px] px-2 py-1 text-black shadow-inner shadow-white/10 hover:bg-gray-200/70 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
           <div className="flex w-full flex-row items-center gap-[8px]">
-            <span className="flex h-[30px] w-[30px] items-center justify-center rounded-[5px] bg-[#99c485] text-white">
+            <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#99c485] text-white">
               D
             </span>
-            <div className="flex flex-col items-start -space-y-[5px] leading-5">
+            <div className="flex flex-col items-start -space-y-[5px] font-madei leading-5">
               <p>Deji</p>
               <p className="text-[12px] text-[#707070]">deji@gmail.com</p>
             </div>

@@ -8,6 +8,24 @@
   }
 } */
 
+@font-face {
+  font-family: 'makizlo';
+  src: url('/fonts/makizlo.otf') format('otf');
+       /* url('/fonts/MyFont-Regular.woff') format('woff'); */
+       font-weight: normal;
+         font-style: normal;
+}
+
+@font-face {
+  font-family: 'makizlo';
+  src: url('/fonts/makizlo.otf') format('opentype');
+       /* url('/fonts/MyFont-Regular.woff') format('woff'); */
+       font-weight: normal;
+  font-style: normal;
+}
+
+
+
 
 @font-face {
   font-family: 'madei';
@@ -48,6 +66,31 @@
   font-weight:100;
   font-style: normal;
 }
+
+@font-face {
+  font-family: 'karst';
+  src: url('/fonts/karst-light.otf') format('otf');
+       /* url('/fonts/MyFont-Regular.woff') format('woff'); */
+       font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'karst';
+  src: url('/fonts/karst-light.otf') format('opentype');
+       /* url('/fonts/MyFont-Regular.woff') format('woff'); */
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'karstThick';
+  src: url('/fonts/karst-extrabold.otf') format('opentype');
+       /* url('/fonts/MyFont-Regular.woff') format('woff'); */
+  font-weight: normal;
+  font-style: normal;
+}
+
 
 
   .magicpattern { 

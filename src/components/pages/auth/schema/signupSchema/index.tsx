@@ -16,8 +16,12 @@ export const signupSchema = yup.object().shape({
     .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
     .matches(/\d/, "Password must contain at least one number")
     .required("Password cannot be empty"),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref("password")], "Passwords must match")
-    .required("Please confirm your password"),
+  terms: yup
+    .boolean()
+    .oneOf([true], "You must agree to the Terms and Conditions")
+    .required("You must agree to the Terms and Conditions"),
+  // confirmPassword: yup
+  //   .string()
+  //   .oneOf([yup.ref("password")], "Passwords must match")
+  //   .required("Please confirm your password"),
 });

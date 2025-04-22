@@ -16,6 +16,8 @@ interface CustomSelectProps {
   placeholder?: string;
   className?: string;
   onChange?: (value: string) => void;
+  onClick?: any;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const CustomSelect: React.FC<CustomSelectProps> = ({
@@ -24,31 +26,61 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   placeholder = "Select an option",
   className,
   onChange,
+  onClick,
+  onOpenChange,
 }) => {
+  // Keep track of the select state internally
+  const [isSelectOpen, setIsSelectOpen] = React.useState(false);
+
+  // Handle open change with internal state
+  const handleOpenChange = (open: boolean) => {
+    setIsSelectOpen(open);
+    if (onOpenChange) {
+      onOpenChange(open);
+    }
+  };
+
   return (
-    <Select onValueChange={onChange}>
-      <SelectTrigger
-        className={cn(
-          "w-[110px] border-gray-300 bg-[#222] font-light text-white outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1",
-          className,
-        )}
-      >
-        <SelectValue placeholder={placeholder} className="text-white" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          {label && <SelectLabel>{label}</SelectLabel>}
-          {options.map((option) => (
-            <SelectItem
-              key={option.value}
-              value={option.value}
-              className="hover:bg-[#bbb]"
-            >
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+    <div onClick={(e) => e.stopPropagation()}>
+      <Select onValueChange={onChange} onOpenChange={handleOpenChange}>
+        <SelectTrigger
+          className={cn(
+            "w-[110px] border-gray-300 bg-gray-200 font-light text-black outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1",
+            className,
+          )}
+          onClick={(e) => {
+            // Stop propagation to prevent parent dialog from closing
+            e.stopPropagation();
+
+            // If you also have a custom onClick handler
+            if (onClick) onClick(e);
+          }}
+        >
+          <SelectValue placeholder={placeholder} className="text-white" />
+        </SelectTrigger>
+        <SelectContent
+          className="bg-white"
+          // We do need some event prevention to avoid closing parent dialog
+          onPointerDownOutside={(e) => {
+            if (isSelectOpen) {
+              e.preventDefault();
+            }
+          }}
+        >
+          <SelectGroup>
+            {label && <SelectLabel>{label}</SelectLabel>}
+            {options.map((option) => (
+              <SelectItem
+                key={option.value}
+                value={option.value}
+                className="hover:bg-gray-200"
+              >
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
   );
 };

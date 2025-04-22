@@ -4,11 +4,11 @@ import React from "react";
 
 export default function Sidebar() {
   return (
-    <div className="flex w-[280px] flex-col justify-between border-r-[1px] border-[#c7c7c7] py-[24px] font-madei">
+    <div className="flex w-[260px] flex-col justify-between border-r-[1px] py-[14px] font-madei dark:bg-[#1A1A1D]">
       <div className="flex flex-col gap-[32px]">
-        <div className="flex flex-row items-center gap-1 px-[18px]">
-          <img src="/icons/hexhex.svg" alt="" className="h-6 w-6" />
-          <p className="text-[21px] font-[400]">Management</p>
+        <div className="flex flex-row items-center px-[6px]">
+          <img src="/icons/new-logo2.svg" alt="" className="h-10 w-10" />
+          <p className="text-[21px] font-[400]">StackTask</p>
         </div>
         <CurrentWorkspace />
       </div>

@@ -2,6 +2,7 @@ import React from "react";
 import Head from "./head";
 import SingleTask from "../singleTask";
 import tasks from "@/components/data";
+import AddTask from "../Dialogs/AddTask";
 
 export default function Criteria({ text }: { text: string }) {
   console.log(tasks);
@@ -26,12 +27,7 @@ export default function Criteria({ text }: { text: string }) {
           ))}
       </div>
 
-      <div
-        className="flex h-[45px] w-full items-center justify-center border-[1px] border-[#A8A8A8]"
-        style={{ borderStyle: "dashed", borderWidth: "2px" }}
-      >
-        <img src="/icons/plus.svg" alt="" className="cursor-pointer" />
-      </div>
+      <AddTask />
     </div>
   );
 }

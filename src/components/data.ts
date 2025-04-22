@@ -10,6 +10,7 @@ const tasks = [
     assignee: {
       name: "Alice Johnson",
       email: "alice.johnson@example.com",
+      image: "https://i.pravatar.cc/150?u=alice.johnson",
     },
     created_at: "2025-02-01T10:00:00Z",
     updated_at: "2025-02-02T14:00:00Z",
@@ -27,6 +28,7 @@ const tasks = [
     assignee: {
       name: "Bob Smith",
       email: "bob.smith@example.com",
+      image: "https://i.pravatar.cc/150?u=bob.smith",
     },
     created_at: "2025-02-02T09:30:00Z",
     updated_at: "2025-02-03T11:00:00Z",
@@ -44,6 +46,7 @@ const tasks = [
     assignee: {
       name: "Charlie Adams",
       email: "charlie.adams@example.com",
+      image: "https://i.pravatar.cc/150?u=charlie.adams",
     },
     created_at: "2025-02-02T12:00:00Z",
     updated_at: "2025-02-04T09:45:00Z",
@@ -67,6 +70,7 @@ const tasks = [
     assignee: {
       name: "Eva Martinez",
       email: "eva.martinez@example.com",
+      image: "https://i.pravatar.cc/150?u=eva.martinez",
     },
     created_at: "2025-02-03T15:30:00Z",
     updated_at: "2025-02-04T10:20:00Z",
@@ -86,11 +90,12 @@ const tasks = [
       "Review the authentication module for security vulnerabilities.",
     tags: ["backend", "security"],
     deadline: "2025-02-18T23:59:00Z",
-    status: "AWAITING REVIEW",
+    status: "IN-REVIEW",
     priority: "high",
     assignee: {
       name: "Grace Cooper",
       email: "grace.cooper@example.com",
+      image: "https://i.pravatar.cc/150?u=grace.cooper",
     },
     created_at: "2025-02-05T11:00:00Z",
     updated_at: "2025-02-06T14:30:00Z",
@@ -109,11 +114,12 @@ const tasks = [
     description: "Document the design system components and guidelines.",
     tags: ["UI/UX", "docs"],
     deadline: "2025-02-25T23:59:00Z",
-    status: "AWAITING REVIEW",
+    status: "IN-REVIEW",
     priority: "medium",
     assignee: {
       name: "Ivy Nelson",
       email: "ivy.nelson@example.com",
+      image: "https://i.pravatar.cc/150?u=ivy.nelson",
     },
     created_at: "2025-02-06T10:15:00Z",
     updated_at: "2025-02-07T08:50:00Z",
@@ -131,6 +137,7 @@ const tasks = [
     assignee: {
       name: "Alice Johnson",
       email: "alice.johnson@example.com",
+      image: "https://i.pravatar.cc/150?u=alice.johnson",
     },
     created_at: "2025-02-01T10:00:00Z",
     updated_at: "2025-02-02T14:00:00Z",
