@@ -21,7 +21,7 @@ export default function SingleTask({
   name?: string;
   fullname?: string;
   email: string;
-  image: string;
+  image?: string;
   priority: string;
 }) {
   const priorityColors = {
