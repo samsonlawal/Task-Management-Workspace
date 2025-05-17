@@ -59,12 +59,13 @@ export default function SignUp() {
         payload: { fullname, username, email, password },
         successCallback: () => {
           showSuccessToast({ message: "🚀 Sign Up Successful!" });
+          // console.log(formik.values);
         },
         errorCallback: ({ message }) => {
           showErrorToast({ message });
+          // console.log(formik.values);
         },
       });
-      // console.log(formik.values);
     });
   };
 

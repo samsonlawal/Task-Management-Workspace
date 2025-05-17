@@ -3,6 +3,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+// import { useSelector } from "react-redux";
+
 
 export default function Navbar() {
   const currentUI = useSelector((state: RootState) => state.ui.currentUI);
@@ -18,19 +20,48 @@ export default function Navbar() {
 }
 
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { useLogout } from "@/hooks/api/auth";
+import { useRouter } from "next/navigation";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function DropdownMenu() {
+
+  const { user, isLoggedIn } = useSelector((state: any) => state.auth);
+  const router = useRouter()
+
+  const {onLogout} = useLogout()
+  function handleLogout() {
+    onLogout();
+    router.push("/");
+  }
+
   return (
-    <div className="w-fit text-left font-madei">
+    <div className="w-fit text-left font-madei flex flex-row justify-center items-center gap-6">
+      {/* <FontAwesomeIcon icon={faBell} className="" /> */}
+
+      <div>
+        <img src="/icons/bell-line.svg" alt="" className="w-5 h-5 cursor-pointer"/>
+      </div>
       <Menu>
         <MenuButton className="flex w-[230px] items-center gap-2 self-end rounded-md border-[1px] px-2 py-1 text-black shadow-inner shadow-white/10 hover:bg-gray-200/70 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
           <div className="flex w-full flex-row items-center gap-[8px]">
-            <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#99c485] text-white">
-              D
-            </span>
+            {user?.profileImage === "none" ? (
+              <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#99c485] text-white">
+                {user?.fullname.charAt(0).toUpperCase()}
+              </span>
+            ) : (
+              <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full">
+                <img
+                  src={user?.profileImage}
+                  alt=""
+                  className="mx-auto rounded-full"
+                />
+              </span>
+            )}
             <div className="flex flex-col items-start -space-y-[5px] font-madei leading-5">
-              <p>Deji</p>
-              <p className="text-[12px] text-[#707070]">deji@gmail.com</p>
+              <p>{user?.fullname}</p>
+              <p className="text-[12px] text-[#707070]">{user?.email}</p>
             </div>
           </div>
           <img src="/icons/dcaret.svg" alt="" className="cursor-pointer pr-1" />
@@ -61,7 +92,10 @@ function DropdownMenu() {
             </MenuItem>
             {/* <div className="my-1 h-px bg-white/5" /> */}
             <MenuItem>
-              <div className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] py-1 pl-2 hover:bg-gray-200/70">
+              <div
+                onClick={() => handleLogout()}
+                className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] py-1 pl-2 hover:bg-gray-200/70"
+              >
                 <div className="flex flex-col -space-y-[8px]">
                   <p className="text-[15px]">Logout</p>
                 </div>

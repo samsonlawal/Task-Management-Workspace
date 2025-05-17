@@ -7,7 +7,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CustomSelect } from "../../select";
 import Button from "../../Button";
 import {
@@ -19,29 +19,64 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MemberSelect from "../../MemberSelect";
 import { useCreateTask } from "@/hooks/api/tasks";
-import { TTask } from "@/types";
+import { TAddTask } from "@/types";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
+import { showSuccessToast, showErrorToast } from "@/utils/toaster";
+import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
+import { useGetSingleWorkspace } from "@/hooks/api/workspace";
+import { setWorkspace } from "@/redux/Slices/workspaceSlice";
 
-export default function AddTask() {
+export default function AddTask({ onGetTasks, taskData }: any) {
+  const dispatch = useDispatch();
+
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<string>("to-do");
   const [status, setStatus] = useState<string>("todo");
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
+  const [workspaceId, setWorkspaceId] = useState<string>("");
 
-  const { loading, handleCreateTask } = useCreateTask();
+  const TasksData = useSelector((state: RootState) => state.TasksData);
 
-  const [task, setTask] = useState<TTask>({
+  const MemberData = useSelector((state: RootState) => state.MemberData);
+
+  const [task, setTask] = useState<TAddTask>({
     description: "",
     workspace_id: "",
-    assignee: {
-      id: "",
-      name: "",
-      email: "",
-      profileImage: "",
-    },
+    assignee: "",
     deadline: "",
-    status: "",
+    // status: "",
+    // priority: "",
   });
+
+  const [taskAssignee, setTaskAssignee] = useState();
+  const { currentWorkspace } = useSelector(
+    (state: any) => state.currentWorkspace,
+  );
+
+  const { onCreateTask, loading: creatTaskLoading } = useCreateTask();
+
+  const {
+    data: workspaceData,
+    onGetSingleWorkspace,
+    loading: singleWorkspaceLoading,
+  } = useGetSingleWorkspace(currentWorkspace);
+  useEffect(() => {
+    getFromLocalStorage({
+      key: "CurrentWorkspaceId",
+      cb: (id: string) => {
+        if (id) {
+          setWorkspaceId(id);
+          setTask((prevTask) => ({
+            ...prevTask,
+            workspace_id: id,
+          }));
+        }
+      },
+    });
+  }, []);
 
   const handleDialogClose = () => {
     if (!isSelectOpen) {
@@ -49,11 +84,91 @@ export default function AddTask() {
     }
   };
 
+  useEffect(() => {
+    setTask((prevTask) => ({
+      ...prevTask,
+      assignee: taskAssignee,
+    }));
+  }, [taskAssignee]);
+
+  const handleCreateTask = () =>
+    // e: React.MouseEvent<HTMLButtonElement> | React.FormEvent,
+    {
+      // e.preventDefault();
+      const {
+        description,
+        workspace_id,
+        assignee,
+        deadline,
+        // status,
+        // priority,
+      } = task;
+      let errorMsg = "";
+
+      if (!task.description) {
+        errorMsg = "description is required.";
+      } else if (!task?.assignee) {
+        errorMsg = "assignee is required.";
+      }
+
+      if (errorMsg) {
+        showErrorToast({ message: errorMsg });
+      } else {
+        // console.log(workspace_id);
+
+        onCreateTask({
+          payload: {
+            description,
+            workspace_id,
+            assignee,
+            deadline,
+            // status,
+            // priority,
+          },
+          successCallback: async () => {
+            showSuccessToast({ message: "Task Created Successfully!" });
+
+            // const updatedWorkspace = await onGetSingleWorkspace(workspace_id);
+            // if (updatedWorkspace) {
+            //   dispatch(setWorkspace(updatedWorkspace));
+            // }
+            // console.log("Task Added to:", workspace_id);
+
+            await onGetTasks({ workspaceId: workspace_id });
+            console.log("New tasks:", taskData);
+
+            handleDialogClose();
+          },
+          errorCallback: ({ message }) => {
+            showErrorToast({ message });
+          },
+        });
+      }
+    };
+
+  function checkWsId() {
+    setIsOpen(true);
+
+    getFromLocalStorage({
+      key: "CurrentWorkspaceId",
+      cb: (id: string) => {
+        if (id) {
+          setWorkspaceId(id);
+          setTask((prevTask) => ({
+            ...prevTask,
+            workspace_id: id,
+          }));
+          // console.log(id);
+        }
+      },
+    });
+  }
+
   return (
     <>
       <button
-        onClick={() => setIsOpen(true)}
-        className="flex h-10 w-fit items-center justify-center gap-2 rounded-[5px] bg-[#242424] px-3 text-[14px] font-regular text-white transition-all duration-300 hover:bg-black"
+        onClick={checkWsId}
+        className="flex h-10 w-fit items-center justify-center gap-2 rounded-[4px] bg-[#242424] px-3 text-[14px] font-regular text-white transition-all duration-300 hover:bg-black"
       >
         {/* <FontAwesomeIcon icon={faListCheck} /> */}
         <FontAwesomeIcon icon={faPlus} />
@@ -145,7 +260,7 @@ export default function AddTask() {
                       className="w-[200px] bg-none"
                       onOpenChange={setIsSelectOpen}
                     /> */}
-                    <MemberSelect />
+                    <MemberSelect setTaskAssignee={setTaskAssignee} />
                   </div>
                 </div>
 
@@ -162,7 +277,7 @@ export default function AddTask() {
                   </label>
                 </div> */}
 
-                <div className="flex flex-col items-start gap-2">
+                {/* <div className="flex flex-col items-start gap-2">
                   <span className="text-sm">Status:</span>
 
                   <div className="flex flex-row gap-2">
@@ -177,7 +292,6 @@ export default function AddTask() {
                         onChange={() => setStatus("todo")}
                         className={`peer checked:accent-black`}
                       />
-                      {/* <div className="h-4 w-4 rounded-full border border-gray-400 peer-checked:border-blue-500 peer-checked:bg-blue-500"></div> */}
                       <span className="text-sm text-gray-700">To-Do</span>
                     </label>
 
@@ -193,27 +307,11 @@ export default function AddTask() {
                         onChange={() => setStatus("in-progress")}
                         className={`peer checked:accent-black`}
                       />
-                      {/* <div className="h-4 w-4 rounded-full border border-gray-400 peer-checked:border-blue-500 peer-checked:bg-blue-500"></div> */}
                       <span className="text-sm text-gray-700">In-Progress</span>
                     </label>
 
-                    {/* <label
-                      className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] px-2 py-1 ${status === "done" ? "bg-gray-200" : "bg-none"}`}
-                    >
-                      {" "}
-                      <input
-                        type="radio"
-                        name="status"
-                        value="done"
-                        checked={status === "done"}
-                        onChange={() => setStatus("done")}
-                        className="peer"
-                      />
-                      <div className="h-4 w-4 rounded-full border border-gray-400 peer-checked:border-blue-500 peer-checked:bg-blue-500"></div>
-                      <span className="text-sm text-gray-700">Done</span>
-                    </label> */}
                   </div>
-                </div>
+                </div> */}
               </div>
 
               <div className="flex gap-3 pt-4 text-[14px]">
@@ -222,11 +320,28 @@ export default function AddTask() {
                   onClick={() => setIsOpen(false)}
                   className="bg-gray-200 text-black hover:bg-gray-300"
                 />
-                <Button
+                {/* <Button
                   text="Create"
-                  onClick={() => setIsOpen(false)}
+                  onClick={handleCreateTask}
                   className="bg-[#222] px-7 text-white hover:bg-[#111]"
-                />
+                /> */}
+
+                <button
+                  className="w-[100px] rounded bg-[#222] py-2 font-normal text-white transition-all duration-300 hover:bg-[#111]"
+                  onClick={handleCreateTask}
+                >
+                  {!creatTaskLoading ? (
+                    "Create"
+                  ) : (
+                    <span className="flex w-full items-center justify-center">
+                      <img
+                        src="/icons/loaderWhite.svg"
+                        alt=""
+                        className="w-4 animate-spin"
+                      />
+                    </span>
+                  )}
+                </button>
               </div>
             </div>
           </DialogPanel>
@@ -235,3 +350,4 @@ export default function AddTask() {
     </>
   );
 }
+

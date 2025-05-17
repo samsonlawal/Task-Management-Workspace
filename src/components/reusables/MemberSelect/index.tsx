@@ -6,7 +6,9 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "@headlessui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const members = [
   {
@@ -35,10 +37,20 @@ const members = [
   },
 ];
 
-export default function MemberSelect() {
+export default function MemberSelect({ setTaskAssignee }: any) {
+  const WorkspaceData = useSelector((state: RootState) => state.WorkspaceData);
+  const MemberData = useSelector((state: RootState) => state.MemberData);
+
+  let members = MemberData?.members;
+
   const [selectedMember, setSelectedMember] = useState<
     (typeof members)[0] | null
   >(null);
+
+  useEffect(() => {
+    // console.log(selectedMember);
+    setTaskAssignee(selectedMember?.userId?._id);
+  }, [selectedMember]);
 
   return (
     <Listbox value={selectedMember} onChange={setSelectedMember}>
@@ -47,7 +59,11 @@ export default function MemberSelect() {
           {selectedMember ? (
             <>
               <img
-                src={selectedMember?.image}
+                src={
+                  selectedMember.userId
+                    ? selectedMember.userId.profileImage
+                    : selectedMember.profileImage
+                }
                 alt=""
                 className="h-6 w-6 rounded-full object-cover"
               />
@@ -56,7 +72,9 @@ export default function MemberSelect() {
                   {selectedMember.name}
                 </span> */}
                 <span className="text-xs text-black">
-                  {selectedMember.email}
+                  {selectedMember.userId
+                    ? selectedMember.userId.email
+                    : selectedMember.email}
                 </span>
               </div>
             </>
@@ -69,20 +87,26 @@ export default function MemberSelect() {
         </ListboxButton>
 
         <ListboxOptions className="absolute z-10 mt-1 w-full rounded-md border border-gray-300 bg-white p-1">
-          {members.map((member) => (
+          {members?.map((member, index) => (
             <ListboxOption
-              key={member.id}
+              key={index}
               value={member}
               className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 hover:bg-gray-200/70"
             >
               <img
-                src={member.image}
+                src={
+                  member.userId
+                    ? member.userId.profileImage
+                    : member.profileImage
+                }
                 alt=""
                 className="h-6 w-6 rounded-full object-cover"
               />
               <div className="flex flex-col">
                 {/* <span className="text-sm font-medium">{member.name}</span> */}
-                <span className="text-xs text-[black]">{member.email}</span>
+                <span className="text-xs text-[black]">
+                  {member.userId ? member.userId.email : member.email}
+                </span>
               </div>
             </ListboxOption>
           ))}

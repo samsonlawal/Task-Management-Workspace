@@ -1,14 +1,29 @@
 import axios from "axios";
 import env from "@/config/env";
-import { TTask } from "@/types";
+import { TAddTask, TTask } from "@/types";
+import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 
 class service {
-  getTasks() {
-    return axios.get(env.api.tasks);
+  getTasks(workspaceId: string) {
+    return axios.get(env.api.tasks + "/" + workspaceId);
   }
 
-  createTask({ payload }: { payload: TTask }) {
-    return axios.post(env.api.tasks, payload);
+  createTask({ payload }: { payload: TAddTask }) {
+    const raw = localStorage.getItem("STACKTASK_PERSISTOR");
+    const parsed = raw ? JSON.parse(raw) : null;
+    const token = parsed?.accessToken;
+
+    return axios.post(
+      env.api.tasks,
+      payload,
+      !token
+        ? undefined
+        : {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          },
+    );
   }
 }
 

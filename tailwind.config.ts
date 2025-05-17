@@ -55,6 +55,7 @@ export default {
         madei: ["madei", "sans-serif"],
         // makizlo: ["Makizlo", "sans-serif"],
         karst: ["karst", "sans-serif"],
+        satoshi: ["satoshi", "sans-serif"],
       },
       fontWeight: {
         thin: "100",

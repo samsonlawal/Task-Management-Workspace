@@ -12,20 +12,125 @@ import { CustomSelect } from "../../select";
 import Button from "../../Button";
 import { faUserPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { TAddMember } from "@/types";
+import { useDispatch, useSelector } from "react-redux";
+import { showErrorToast, showSuccessToast } from "@/utils/toaster";
+import { useAddMember, useGetMembers } from "@/hooks/api/workspace";
+import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
+import { setMembers } from "@/redux/Slices/memberSlice";
 
 export default function AddMember() {
+  const dispatch = useDispatch();
+
   let [isOpen, setIsOpen] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [workspace_id, setWorkspaceId] = useState<string>("");
+
+  const [member, setMember] = useState<TAddMember>({
+    email: "",
+    role: "",
+  });
+
+  const { currentWorkspace } = useSelector(
+    (state: any) => state.currentWorkspace,
+  );
+
+  const { onAddMember, loading: addMemberLoading } = useAddMember();
+  const {
+    data: memberData,
+    onGetMembers,
+    loading: getMembersLoading,
+  } = useGetMembers();
+
+  // Handle email input change
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMember({
+      ...member,
+      email: e.target.value,
+    });
+  };
+
+  // Handle role selection change
+  const handleRoleChange = (value: string) => {
+    setMember({
+      ...member,
+      role: value,
+    });
+  };
+
+  const handleAddMember = () => {
+    const { email, role } = member; // Make sure jobTitle is included
+    let errorMsg = "";
+
+    if (!email) {
+      errorMsg = "Email is required.";
+    } else if (!role) {
+      errorMsg = "Role is required.";
+    }
+
+    if (errorMsg) {
+      showErrorToast({ message: errorMsg });
+      return;
+    }
+
+    console.log(email, role);
+
+    onAddMember({
+      workspaceId: workspace_id,
+      payload: {
+        email,
+        role,
+        // jobTitle, // Include jobTitle in the payload
+      },
+      successCallback: async () => {
+        showSuccessToast({ message: "Member Added Successfully!" });
+
+        // Add the new member to the existing list
+        await onGetMembers({ workspaceId: workspace_id });
+        console.log("New tasks:", memberData);
+
+        handleDialogClose();
+      },
+      errorCallback: ({ message }) => {
+        showErrorToast({ message });
+      },
+    });
+  };
 
   // Toggle the main dialog
   const toggleDialog = () => {
     setIsOpen(!isOpen);
+
+    getFromLocalStorage({
+      key: "CurrentWorkspaceId",
+      cb: (id: string) => {
+        if (id) {
+          setWorkspaceId(id);
+          // setTask((prevTask) => ({
+          //   ...prevTask,
+          //   workspace_id: id,
+          // }));
+          // console.log(id);
+        }
+      },
+    });
   };
 
   // Only close the dialog if the select isn't open
+  // const handleDialogClose = () => {
+  //   if (!isSelectOpen) {
+  //     setIsOpen(false);
+  //   }
+  // };
+
   const handleDialogClose = () => {
     if (!isSelectOpen) {
       setIsOpen(false);
+      // Reset form
+      setMember({
+        email: "",
+        role: "",
+      });
     }
   };
 
@@ -75,9 +180,13 @@ export default function AddMember() {
             >
               <div className="flex flex-row gap-2">
                 <input
+                  name="email"
                   type="email"
+                  value={member.email}
                   placeholder="Enter email address"
                   className="h-[36px] flex-1 rounded-md border-[1px] border-gray-400 px-2 text-[14px] font-light text-[#444] placeholder-[#999] outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                  onChange={handleEmailChange}
+                  required
                 />
                 <CustomSelect
                   options={[
@@ -85,7 +194,8 @@ export default function AddMember() {
                     { label: "Admin", value: "admin" },
                   ]}
                   placeholder="Role"
-                  onChange={(value) => console.log("Selected:", value)}
+                  value={member.role}
+                  onChange={handleRoleChange}
                   onOpenChange={handleSelectOpenChange}
                 />
               </div>
@@ -95,11 +205,27 @@ export default function AddMember() {
                   onClick={() => setIsOpen(false)}
                   className="bg-gray-200 text-black hover:bg-gray-300"
                 />
-                <Button
+                {/* <Button
                   text="Invite"
-                  onClick={() => setIsOpen(false)}
+                  onClick={handleAddMember}
                   className="bg-[#222] px-7 text-white hover:bg-[#111]"
-                />
+                /> */}
+                <button
+                  className="w-[100px] rounded bg-[#222] py-2 font-normal text-white transition-all duration-300 hover:bg-[#111]"
+                  onClick={handleAddMember}
+                >
+                  {!addMemberLoading ? (
+                    "Invite"
+                  ) : (
+                    <span className="flex w-full items-center justify-center">
+                      <img
+                        src="/icons/loaderWhite.svg"
+                        alt=""
+                        className="w-4 animate-spin"
+                      />
+                    </span>
+                  )}
+                </button>
               </div>
             </div>
           </DialogPanel>

@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
 export const signupSchema = yup.object().shape({
-  name: yup
+  fullname: yup
     .string()
     .min(2, "Name must be at least 2 characters")
     .required("Name cannot be empty"),

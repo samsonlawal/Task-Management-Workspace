@@ -4,6 +4,8 @@ const api = ({ inProduction }: { inProduction: boolean }) => {
   return {
     auth: BASE_URL_LINK + "/auth",
     tasks: BASE_URL_LINK + "/tasks",
+    profiles: BASE_URL_LINK + "/users",
+    workspaces: BASE_URL_LINK + "/workspaces",
   };
 };
 

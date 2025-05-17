@@ -1,18 +1,40 @@
 export type TAssignee = {
   id: string;
-  name: string;
+  name?: string;
+  fullname?: string;
   email: string;
   profileImage: string;
+};
+
+export type TAddAssignee = {
+  email: string;
 };
 
 export type TTask = {
   description: string;
   status?: string;
-  // priority?: string;
+  priority: string;
   assignee: TAssignee;
   workspace_id: string;
+  createdAt: string;
+};
+
+export type TAddTask = {
+  description: string;
+  // status?: string;
+  // priority: string;
+  assignee: string;
+  workspace_id: string;
+  // createdAt: string;
   deadline: string;
 };
+
+export type TAddMember = {
+  email: string;
+  role: string;
+
+};
+
 
 export type TRegister = {
   fullname: string;
@@ -28,4 +50,23 @@ export type TRegister = {
 export type TLogin = {
   email: string;
   password: string;
+};
+
+export type TWorkspace = {
+  name: string;
+  owner: string;
+  memberCount: number;
+  _id: string;
+};
+
+type Workspace = {
+  name: string; // Make sure this exists in your type
+  id: string;
+  // other properties...
+};
+
+export type TWorkspaceData = {
+  workspace: Workspace;
+  members: Record<string, any>;
+  tasks: Record<string, any>;
 };

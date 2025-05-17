@@ -3,7 +3,11 @@
 import React, { useState } from "react";
 import AddMember from "../Dialogs/AddMember";
 import tasks from "@/components/data";
-import { faArrowLeft, faUsers } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faArrowRight,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -14,16 +18,23 @@ export default function AddMemberUI() {
   const [display, setDisplay] = useState<"tasks" | "dashboard">("tasks");
 
   const currentUI = useSelector((state: RootState) => state.ui.currentUI);
+  const WorkspaceData = useSelector((state: RootState) => state.WorkspaceData);
+
   const dispatch = useDispatch();
+
+  const handleDashboard = () => {
+    dispatch(setCurrentUI("dashboard"));
+    // console.log(WorkspaceData?.workspace.members);
+  };
 
   return (
     <div className="flex w-full items-center justify-center">
       {currentUI === "tasks" ? (
-        <div className="flex h-fit w-[92%] flex-col justify-center gap-[10px] rounded-[6px] border-[1px] border-[#C7C7C7] p-[10px] py-[10px] font-madei">
+        <div className="flex h-fit w-[92%] flex-col items-center justify-center gap-[16px] rounded-[6px] border-[1px] border-gray-300/60 p-[10px] py-[10px] font-madei">
           {/* <p className="font-regular text-[15px] leading-tight text-[#565656]">
         Members:
       </p> */}
-          <div className="flex flex-row -space-x-[10px]">
+          {/* <div className="flex flex-row -space-x-[10px]">
             {Array.from({ length: 5 }).map((_, index) => (
               <div
                 key={index}
@@ -32,17 +43,18 @@ export default function AddMemberUI() {
                 {index === 4 && "+6"}
               </div>
             ))}
-          </div>
+          </div> */}
           <p className="text-[14px] font-regular leading-tight text-[#565656]">
             Invite members and manage your team here.
           </p>
           <button
-            onClick={() => dispatch(setCurrentUI("dashboard"))}
+            onClick={() => handleDashboard()}
             className="flex h-10 w-full items-center justify-center gap-[8px] rounded-[5px] bg-[#242424] text-[14px] font-regular text-white transition-all duration-300 hover:gap-[12px] hover:bg-black"
           >
             {/* <FontAwesomeIcon icon={faUsers} /> */}
-            <img src="/icons/tema-white.svg" alt="" />
-            Manage Workspace
+            {/* <img src="/icons/tema-white.svg" alt="" /> */}
+            <p className="leading-tight">Subscription</p>
+            <FontAwesomeIcon icon={faArrowRight} />
           </button>
         </div>
       ) : (

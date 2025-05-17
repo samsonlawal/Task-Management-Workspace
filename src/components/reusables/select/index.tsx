@@ -15,6 +15,7 @@ interface CustomSelectProps {
   options: { label: string; value: string }[];
   placeholder?: string;
   className?: string;
+  value?: string; // <-- Add this
   onChange?: (value: string) => void;
   onClick?: any;
   onOpenChange?: (open: boolean) => void;
@@ -28,6 +29,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   onChange,
   onClick,
   onOpenChange,
+  value,
 }) => {
   // Keep track of the select state internally
   const [isSelectOpen, setIsSelectOpen] = React.useState(false);
@@ -42,7 +44,11 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
-      <Select onValueChange={onChange} onOpenChange={handleOpenChange}>
+      <Select
+        value={value}
+        onValueChange={onChange}
+        onOpenChange={handleOpenChange}
+      >
         <SelectTrigger
           className={cn(
             "w-[110px] border-gray-300 bg-gray-200 font-light text-black outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1",

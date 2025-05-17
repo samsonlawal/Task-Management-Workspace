@@ -1,3 +1,8 @@
+// import { faCalendar, faClock } from "@fortawesome/free-solid-svg-icons";
+import { faCalendar, faClock } from "@fortawesome/free-regular-svg-icons";
+import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 export default function SingleTask({
@@ -5,37 +10,44 @@ export default function SingleTask({
   // tags,
   deadline,
   name,
+  fullname,
   email,
   image,
-  // priority,
+  priority,
 }: {
   desc: string;
   // tags: [];
   deadline: any;
-  name: string;
+  name?: string;
+  fullname?: string;
   email: string;
   image: string;
-  // priority: string;
+  priority: string;
 }) {
   const priorityColors = {
-    high: "border-[#c92727]",
-    medium: "border-[#F39C12]",
-    // neutral: "border-[#707070]",
+    high: "bg-red-300/30",
+    medium: "bg-yellow-300/30",
+    low: "bg-green-300/30",
+  };
+
+  const priorityTextColors = {
+    high: "text-red-800",
+    medium: "text-yellow-800",
+    low: "text-green-800",
   };
 
   const getBgColor = (firstName: string) => {
     const colors: any = {
-      A: "bg-red-500", // Red for 'A'
-      B: "bg-blue-500", // Blue for 'B'
-      C: "bg-green-500", // Green for 'C'
-      D: "bg-yellow-500", // Yellow for 'D'
-      // Add more letters/colors as needed
+      A: "bg-red-500",
+      B: "bg-blue-500",
+      C: "bg-green-500",
+      D: "bg-yellow-500",
     };
 
     const firstLetter: string = firstName
       ? firstName.charAt(0).toUpperCase()
       : "";
-    return colors[firstLetter] || "bg-gray-500"; // Default to gray if no match
+    return colors[firstLetter] || "bg-gray-500";
   };
 
   // const color =
@@ -43,31 +55,55 @@ export default function SingleTask({
   //     ? priorityColors[priority as keyof typeof priorityColors]
   //     : "bg-[#C0C0C0]";
 
+  // max-h-[189px]
+
   return (
-    <div className="group relative flex max-h-[189px] min-h-[116px] w-[244px] flex-col justify-between gap-5 rounded-[6px] bg-gray-200 pb-2 pt-2 text-[14px] font-regular">
-      <p className="line-clamp-2 h-fit px-[14px] leading-4">{desc}</p>
-      <div className="flex flex-col gap-1">
-        <div className="flex flex-col gap-1 px-[14px]">
-          {/* <div className="flex flex-row gap-1">
-            <span className="rounded-full bg-[#ffce2b] px-2">work</span>
-            <span className="rounded-full bg-[#64BC21] px-2">sales</span>
-          </div> */}
-          <p className="text-[12px] text-[#707070]">
-            Deadline:{" "}
-            {new Date(deadline).toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            })}
-          </p>
+    <div className="group relative flex min-h-[116px] w-[244px] flex-col justify-between gap-3 rounded-[6px] bg-gray-200/60 pt-3 font-madei text-[14px] font-[300]">
+      <div className="flex flex-row justify-between px-[14px]">
+        <div className="flex flex-row gap-1">
+          <div
+            className={`flex h-fit w-fit flex-col items-center justify-center gap-1 rounded-[3px] ${priority && priorityColors[priority as keyof typeof priorityColors] ? priorityColors[priority as keyof typeof priorityColors] : "bg-gray-700"} px-2 py-1`}
+          >
+            <p
+              className={`text-[11px] ${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"}`}
+            >
+              {(priority || "")?.split(" ")[0].charAt(0).toUpperCase() +
+                (priority || "")?.split(" ")[0].slice(1).toLowerCase()}
+            </p>
+          </div>
+          <div className="flex h-fit w-fit flex-col items-center justify-center gap-1 rounded-[3px] bg-gray-500/10 px-2 py-1">
+            <p className="text-[11px] text-gray-500">
+              <FontAwesomeIcon
+                icon={faCalendar}
+                className="bg-none text-[12px]"
+              />
+              {"  "}
+              {new Date(deadline).toLocaleDateString("en-GB", {
+                month: "short",
+                day: "2-digit",
+                year: "numeric",
+              })}
+            </p>
+          </div>
         </div>
+        <div className="cursor-pointer px-2">
+          <FontAwesomeIcon
+            icon={faEllipsisVertical}
+            className="absolute right-[14px] top-[14px] hidden text-gray-500 opacity-0 group-hover:opacity-100"
+          />
+        </div>
+      </div>
+      <p className="line-clamp-2 h-fit px-[14px] text-[12px] leading-4">
+        {desc}
+      </p>
+      <div className="flex flex-row items-center gap-1 border-t-[1px] border-gray-500/10">
         <div
-          className={`flex w-full flex-row items-center gap-2 border-t-[1px] border-[#c0c0c0] px-[12px] pt-2`}
+          className={`jusitfy-center flex flex-1 flex-row items-center gap-2 px-[12px] py-2`}
         >
           <div
-            className={`flex h-[25px] w-[25px] items-center justify-center rounded-full ${image === "none" || "" ? getBgColor(name) : ""}`}
+            className={`flex h-[23px] w-[23px] items-center justify-center rounded-full ${image === "none" || "" ? getBgColor(name || fullname || "") : ""}`}
           >
-            {image !== "none" || "" ? (
+            {(image && image !== "none") || "" ? (
               <img
                 src={image}
                 alt="User Profile"
@@ -75,26 +111,55 @@ export default function SingleTask({
               />
             ) : (
               <p className="text-xs text-white">
-                {name ? name.charAt(0).toUpperCase() : ""}
+                {name || fullname
+                  ? name
+                    ? name.charAt(0).toUpperCase()
+                    : fullname?.charAt(0).toUpperCase() || ""
+                  : ""}
               </p>
             )}
           </div>
 
           <div className="flex flex-col items-start gap-[2px] -space-y-2 overflow-hidden">
-            <p className="text-[13px]">{name}</p>
-            <p className="w-full truncate whitespace-nowrap text-[12px] font-light text-[#707070]">
-              {email}
+            <p className="text-[13px] text-gray-700">
+              {(name || fullname || "")?.split(" ")[0].charAt(0).toUpperCase() +
+                (name || fullname || "")?.split(" ")[0].slice(1).toLowerCase()}
             </p>
+            {/* <p className="w-full truncate whitespace-nowrap text-[12px] font-light text-[#707070]">
+              {email}
+            </p> */}
           </div>
+        </div>
+
+        {/* deadline */}
+        <div className="flex h-full w-fit flex-col items-center justify-center gap-1 px-[14px]">
+          {/* <div className="flex flex-row gap-1">
+            <span className="rounded-full bg-[#ffce2b] px-2">work</span>
+            <span className="rounded-full bg-[#64BC21] px-2">sales</span>
+          </div> */}
+          {/* <div className="flex h-fit w-fit flex-col items-center justify-center gap-1 rounded-[3px] bg-gray-500/10 px-2 py-1">
+            <p className="text-[11px] text-gray-500">
+              <FontAwesomeIcon
+                icon={faCalendar}
+                className="bg-none text-[12px]"
+              />
+              {"  "}
+              {new Date(deadline).toLocaleDateString("en-GB", {
+                month: "short",
+                day: "2-digit",
+                year: "numeric",
+              })}
+            </p>
+          </div> */}
         </div>
       </div>
       {/* <div
         className={`absolute bottom-0 right-0 h-0 w-0 rounded-[4px] border-r-[10px] border-t-[10px] border-t-transparent ${color}`}
       ></div> */}
 
-      <div className="absolute -right-1.5 -top-1.5 flex h-5 w-5 translate-y-2 scale-0 cursor-pointer items-center justify-center rounded-full bg-white leading-none opacity-0 shadow-[0_0_10px_rgba(0,0,0,0.5)] transition-all duration-500 ease-in-out group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100">
+      {/* <div className="absolute -right-1.5 -top-1.5 flex h-5 w-5 translate-y-2 scale-0 cursor-pointer items-center justify-center rounded-full bg-white leading-none opacity-0 shadow-[0_0_10px_rgba(0,0,0,0.5)] transition-all duration-500 ease-in-out group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100">
         <img src="/icons/ex.svg" alt="" className="h-2.5 w-2.5" />
-      </div>
+      </div> */}
     </div>
   );
 }
