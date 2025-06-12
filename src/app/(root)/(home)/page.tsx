@@ -11,7 +11,13 @@ export default function Home() {
       {user ? (
         <h1 className="text-2xl font-bold">Welcome, {user.username} 👋</h1>
       ) : (
-        <h1 className="text-2xl font-bold">Welcome to Task Manager</h1>
+        <>
+          <h1 className="text-2xl font-bold">Welcome to Task Manager</h1>
+
+          <a href="/auth/sign-in" className="w-fit bg-slate-600 px-6 py-2">
+            Login
+          </a>
+        </>
       )}
     </div>
   );

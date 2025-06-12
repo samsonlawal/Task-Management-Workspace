@@ -144,7 +144,7 @@ function Workspace() {
   }, [workspaceData, taskData, memberData, dispatch]);
 
   return (
-    <div className="w-full text-left font-madei">
+    <div className="w-full text-left">
       <Menu>
         <MenuButton className="inline-flex w-full items-center gap-2 rounded-md border-[1px] bg-white px-2 py-1.5 text-black transition-all duration-300 hover:bg-gray-100 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
           <div
@@ -153,12 +153,14 @@ function Workspace() {
           >
             {workspaceData?.name ? (
               <>
-                <span className="flex h-[29px] w-[29px] items-center justify-center rounded-[5px] bg-[#A8A8A8] text-white">
+                <span className="poppins-medium flex h-[29px] w-[29px] items-center justify-center rounded-[5px] bg-[#A8A8A8] text-white">
                   {workspaceData?.name.charAt(0).toUpperCase()}
                 </span>
                 <div className="flex flex-col items-start -space-y-1">
-                  <p className="text-[14px]">{workspaceData?.name}</p>
-                  <p className="text-[10px] font-normal text-[#707070]">
+                  <p className="poppins-medium text-[13px]">
+                    {workspaceData?.name}
+                  </p>
+                  <p className="poppins-medium text-[10px] font-normal text-[#707070]">
                     {workspaceData?.memberCount}
                     {" Members"}
                   </p>
@@ -179,7 +181,7 @@ function Workspace() {
         <MenuItems
           transition
           anchor="bottom start"
-          className="flex min-h-[300px] w-[260px] origin-top-right flex-col justify-between rounded-md border-[1px] border-gray-300/60 bg-gray-100 px-3 py-4 font-madei text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-300 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          className="poppins-medium flex min-h-[300px] w-[260px] origin-top-right flex-col justify-between rounded-md border-[1px] border-gray-300/60 bg-gray-100 px-3 py-4 text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-300 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
           <div className="flex flex-col gap-[10px]">
             {/* <MenuItem> */}

@@ -110,7 +110,7 @@ function TabComponent() {
               {tabs?.map((tab, index) => (
                 <div
                   key={index}
-                  className={`flex w-fit cursor-pointer select-none flex-row items-center gap-2 px-4 py-2 text-sm font-[400] ${
+                  className={`flex w-fit cursor-pointer select-none flex-row items-center gap-2 rounded-t-sm px-4 py-2 text-sm font-[400] ${
                     activeTab === index
                       ? "border-b-2 border-black bg-gray-100 text-black"
                       : "text-gray-500 hover:text-black"
@@ -119,8 +119,8 @@ function TabComponent() {
                 >
                   {tab}
                   {index === activeTab && (
-                    <div className="flex h-4 w-4 items-center justify-center rounded-full bg-gray-400/60 font-normal">
-                      <p className="text-xs font-light">
+                    <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-gray-400/40 font-normal">
+                      <p className="text-[10px] font-light">
                         {tabContent[activeTab]?.length}
                       </p>
                     </div>

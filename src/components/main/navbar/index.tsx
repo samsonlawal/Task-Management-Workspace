@@ -11,7 +11,11 @@ export default function Navbar() {
 
   return (
     <div className="flex w-full items-center justify-between border-b-[1px] px-[32px] py-[10px]">
-      <h2 className="text-xl">
+      {/* <h2 className="montserrat-bold text-xl">
+        {currentUI === "tasks" ? "Workspace" : "Members"}
+      </h2> */}
+
+      <h2 className="poppins-semibold text-xl">
         {currentUI === "tasks" ? "Workspace" : "Members"}
       </h2>
       <DropdownMenu />
@@ -26,22 +30,25 @@ import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function DropdownMenu() {
-
   const { user, isLoggedIn } = useSelector((state: any) => state.auth);
-  const router = useRouter()
+  const router = useRouter();
 
-  const {onLogout} = useLogout()
+  const { onLogout } = useLogout();
   function handleLogout() {
     onLogout();
     router.push("/");
   }
 
   return (
-    <div className="w-fit text-left font-madei flex flex-row justify-center items-center gap-6">
+    <div className="flex w-fit flex-row items-center justify-center gap-6 text-left">
       {/* <FontAwesomeIcon icon={faBell} className="" /> */}
 
       <div>
-        <img src="/icons/bell-line.svg" alt="" className="w-5 h-5 cursor-pointer"/>
+        <img
+          src="/icons/bell-line.svg"
+          alt=""
+          className="h-5 w-5 cursor-pointer"
+        />
       </div>
       <Menu>
         <MenuButton className="flex w-[230px] items-center gap-2 self-end rounded-md border-[1px] px-2 py-1 text-black shadow-inner shadow-white/10 hover:bg-gray-200/70 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
@@ -59,7 +66,7 @@ function DropdownMenu() {
                 />
               </span>
             )}
-            <div className="flex flex-col items-start -space-y-[5px] font-madei leading-5">
+            <div className="flex flex-col items-start -space-y-[5px] leading-5">
               <p>{user?.fullname}</p>
               <p className="text-[12px] text-[#707070]">{user?.email}</p>
             </div>
@@ -70,7 +77,7 @@ function DropdownMenu() {
         <MenuItems
           transition
           anchor="bottom end"
-          className="flex min-h-fit w-[230px] origin-top-right flex-col justify-between rounded-xl border-[1px] border-[#c7c7c7] bg-white px-3 py-4 font-madei text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          className="flex min-h-fit w-[230px] origin-top-right flex-col justify-between rounded-xl border-[1px] border-[#c7c7c7] bg-white px-3 py-4 text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
           <div className="flex flex-col gap-[10px]">
             {/* </MenuItem> */}

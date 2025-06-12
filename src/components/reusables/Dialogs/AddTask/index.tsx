@@ -35,6 +35,8 @@ export default function AddTask({ onGetTasks, taskData }: any) {
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<string>("to-do");
   const [status, setStatus] = useState<string>("todo");
+  const [priority, setPriority] = useState<string>("Low");
+
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const [workspaceId, setWorkspaceId] = useState<string>("");
 
@@ -48,7 +50,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     assignee: "",
     deadline: "",
     // status: "",
-    // priority: "",
+    priority: "",
   });
 
   const [taskAssignee, setTaskAssignee] = useState();
@@ -101,9 +103,13 @@ export default function AddTask({ onGetTasks, taskData }: any) {
         assignee,
         deadline,
         // status,
-        // priority,
+        priority,
       } = task;
       let errorMsg = "";
+
+      console.log("deadline:", deadline);
+      console.log("deadline type:", typeof deadline);
+      console.log("parsed date:", new Date(deadline));
 
       if (!task.description) {
         errorMsg = "description is required.";
@@ -123,7 +129,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
             assignee,
             deadline,
             // status,
-            // priority,
+            priority,
           },
           successCallback: async () => {
             showSuccessToast({ message: "Task Created Successfully!" });
@@ -164,11 +170,21 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     });
   }
 
+  const date = new Date(task.deadline);
+  const formattedDate = date
+    .toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    })
+    .replace(/ /g, " "); // Output: "12 Jul 2025"
+  console.log(formattedDate);
+
   return (
     <>
       <button
         onClick={checkWsId}
-        className="flex h-10 w-fit items-center justify-center gap-2 rounded-[4px] bg-[#242424] px-3 text-[14px] font-regular text-white transition-all duration-300 hover:bg-black"
+        className="flex h-10 w-fit items-center justify-center gap-2 rounded-[6px] bg-[#242424] px-3 text-[14px] font-regular text-white transition-all duration-300 hover:bg-black"
       >
         {/* <FontAwesomeIcon icon={faListCheck} /> */}
         <FontAwesomeIcon icon={faPlus} />
@@ -178,7 +194,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
         open={isOpen}
         onClose={handleDialogClose}
         transition
-        className="fixed inset-0 flex w-screen items-center justify-center bg-black/30 p-4 font-madei transition duration-300 ease-out data-[closed]:opacity-0"
+        className="poppins fixed inset-0 flex w-screen select-none items-center justify-center bg-black/30 p-4 font-madei transition duration-300 ease-out data-[closed]:opacity-0"
       >
         {/* The backdrop, rendered as a fixed sibling to the panel container */}
         <DialogBackdrop className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
@@ -187,11 +203,11 @@ export default function AddTask({ onGetTasks, taskData }: any) {
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
           {/* The actual dialog panel  */}
           <DialogPanel
-            className="h-fit w-[600px] space-y-8 rounded-xl bg-white px-8 py-8"
+            className="h-fit w-[600px] space-y-1 rounded-xl bg-white px-8 py-8"
             onClick={(e) => e.stopPropagation()}
           >
             <DialogTitle className="flex flex-row items-center justify-between font-medium">
-              <p className="text-[18px]">Add Task</p>
+              <p className="poppins-bold text-[18px]">Add Task</p>
               <div
                 onClick={() => setIsOpen(false)}
                 className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-black"
@@ -199,16 +215,20 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                 <FontAwesomeIcon icon={faXmark} className="fa-sm text-white" />
               </div>
             </DialogTitle>
-            {/* <Description className="pb-6">
-              <p className="w-[80%] text-[14px] font-light leading-4 text-[#777]">
+            <Description className="pb-6">
+              <p className="w-[95%] text-[13px] font-light leading-4 text-black">
                 Set up a space to manage your tasks and collaborate with your
                 team.
               </p>
-            </Description> */}
+            </Description>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-4">
+                {/* description */}
                 <div className="flex flex-col gap-1">
-                  <label htmlFor="spaceName" className="text-[14px]">
+                  <label
+                    htmlFor="spaceName"
+                    className="text-[14px] font-semibold"
+                  >
                     Description
                     {/* <span className="font-light text-[#999]">(optional)</span> */}
                   </label>
@@ -222,13 +242,76 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                         description: e.target.value,
                       }))
                     }
-                    className="h-[80px] max-h-[100px] w-full rounded-md border-[1px] border-gray-400 px-2 py-2 text-[14px] font-light text-[#444] placeholder-[#999] outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                    className="h-[80px] max-h-[100px] w-full rounded-md border-[1px] border-gray-300 px-2 py-2 text-xs text-[black] placeholder-gray-600 outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
                   />
                 </div>
 
+                {/* Priority */}
+                <div className="flex flex-col items-start gap-2">
+                  <span className="poppins-semibold text-[14px]">
+                    Priority:
+                  </span>
+
+                  <div className="poppins-regular flex flex-row gap-2">
+                    <label
+                      className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1.5 ${task.priority === "Low" ? "bg-gray-200" : "bg-none"}`}
+                    >
+                      <input
+                        type="checkbox"
+                        name="priority"
+                        value={task.priority}
+                        checked={task.priority === "Low"}
+                        onChange={() =>
+                          setTask((prev) => ({ ...prev, priority: "Low" }))
+                        }
+                        className={`peer hidden checked:accent-black`}
+                      />
+                      <span className="text-xs text-gray-700">Low</span>
+                    </label>
+
+                    <label
+                      className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1 ${task.priority === "Medium" ? "bg-gray-200" : "bg-none"}`}
+                    >
+                      {" "}
+                      <input
+                        type="checkbox"
+                        name="priority"
+                        value={task.priority}
+                        checked={task.priority === "Medium"}
+                        onChange={() =>
+                          setTask((prev) => ({ ...prev, priority: "Medium" }))
+                        }
+                        className={`peer hidden checked:accent-black`}
+                      />
+                      <span className="text-xs text-gray-700">Medium</span>
+                    </label>
+
+                    <label
+                      className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1 ${task.priority === "High" ? "bg-gray-200" : "bg-none"}`}
+                    >
+                      {" "}
+                      <input
+                        type="checkbox"
+                        name="priority"
+                        value={task.priority}
+                        checked={task.priority === "High"}
+                        onChange={() =>
+                          setTask((prev) => ({ ...prev, priority: "High" }))
+                        }
+                        className={`peer hidden checked:accent-black`}
+                      />
+                      <span className="text-xs text-gray-700">High</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Others */}
                 <div className="flex flex-row-reverse gap-2">
                   <div className="flex flex-1 flex-col gap-1">
-                    <label htmlFor="deadline" className="text-[14px]">
+                    <label
+                      htmlFor="deadline"
+                      className="poppins-semibold text-[14px]"
+                    >
                       Deadline
                     </label>
                     <input
@@ -236,7 +319,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                       type="date"
                       placeholder="Add deadline"
                       value={task.deadline}
-                      className="h-[40px] w-full rounded-md border-[1px] border-gray-400 px-2 text-[14px] font-light text-[#444] placeholder-[#999] outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                      className="h-[40px] w-full select-none rounded-md border-[1px] border-gray-300 px-2 text-xs font-light text-gray-700 placeholder-gray-700 outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
                       onChange={(e) =>
                         setTask((prev) => ({
                           ...prev,
@@ -247,7 +330,10 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                   </div>
 
                   <div className="flex w-fit flex-col gap-1">
-                    <label htmlFor="spaceName" className="text-[14px]">
+                    <label
+                      htmlFor="spaceName"
+                      className="text-[14px] font-semibold"
+                    >
                       Assignee:
                     </label>
                     {/* <CustomSelect
@@ -276,49 +362,13 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                     <div className="peer h-4 w-8 rounded-full bg-gray-300 after:absolute after:left-1 after:top-0.5 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-all peer-checked:bg-blue-500 peer-checked:after:translate-x-3" />
                   </label>
                 </div> */}
-
-                {/* <div className="flex flex-col items-start gap-2">
-                  <span className="text-sm">Status:</span>
-
-                  <div className="flex flex-row gap-2">
-                    <label
-                      className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1 ${status === "todo" ? "bg-gray-200" : "bg-none"}`}
-                    >
-                      <input
-                        type="checkbox"
-                        name="status"
-                        value="todo"
-                        checked={status === "todo"}
-                        onChange={() => setStatus("todo")}
-                        className={`peer checked:accent-black`}
-                      />
-                      <span className="text-sm text-gray-700">To-Do</span>
-                    </label>
-
-                    <label
-                      className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1 ${status === "in-progress" ? "bg-gray-200" : "bg-none"}`}
-                    >
-                      {" "}
-                      <input
-                        type="checkbox"
-                        name="status"
-                        value="in-progress"
-                        checked={status === "in-progress"}
-                        onChange={() => setStatus("in-progress")}
-                        className={`peer checked:accent-black`}
-                      />
-                      <span className="text-sm text-gray-700">In-Progress</span>
-                    </label>
-
-                  </div>
-                </div> */}
               </div>
 
               <div className="flex gap-3 pt-4 text-[14px]">
                 <Button
                   text="Cancel"
                   onClick={() => setIsOpen(false)}
-                  className="bg-gray-200 text-black hover:bg-gray-300"
+                  className="bg-gray-200 text-[13px] text-black hover:bg-gray-300"
                 />
                 {/* <Button
                   text="Create"
@@ -327,7 +377,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                 /> */}
 
                 <button
-                  className="w-[100px] rounded bg-[#222] py-2 font-normal text-white transition-all duration-300 hover:bg-[#111]"
+                  className="w-[100px] rounded bg-[#222] py-2 text-[13px] font-normal text-white transition-all duration-300 hover:bg-[#111]"
                   onClick={handleCreateTask}
                 >
                   {!creatTaskLoading ? (

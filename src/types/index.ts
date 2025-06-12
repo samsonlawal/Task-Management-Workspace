@@ -22,7 +22,7 @@ export type TTask = {
 export type TAddTask = {
   description: string;
   // status?: string;
-  // priority: string;
+  priority: string;
   assignee?: string;
   workspace_id: string;
   // createdAt: string;

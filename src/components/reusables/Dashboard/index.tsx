@@ -146,7 +146,7 @@ function Dashboard() {
         {members ? (
           <div className="h-full w-full rounded-[8px]">
             {/* Header */}
-            <div className="grid h-[50px] w-full grid-cols-[20px_50px_2fr_2.5fr_2fr_1fr_1fr_0.7fr] items-center justify-center gap-5 rounded-[8px] bg-gray-100 px-4 text-sm font-medium text-gray-600">
+            <div className="grid h-[50px] w-full grid-cols-[20px_50px_2fr_2.5fr_2fr_1fr_1fr_0.7fr] items-center justify-center gap-5 rounded-t-[8px] bg-gray-100 px-4 text-sm font-medium text-gray-600">
               <div className="flex items-center justify-center">
                 <input
                   type="checkbox"

@@ -25,14 +25,16 @@ export default function SingleTask({
   priority: string;
 }) {
   const priorityColors = {
-    high: "bg-red-300/30",
-    medium: "bg-yellow-300/30",
+    High: "bg-red-300/30",
+    Medium: "bg-yellow-300/30",
+    Low: "bg-green-300/30",
     low: "bg-green-300/30",
   };
 
   const priorityTextColors = {
-    high: "text-red-800",
-    medium: "text-yellow-800",
+    High: "text-red-800",
+    Medium: "text-yellow-800",
+    Low: "text-green-800",
     low: "text-green-800",
   };
 
@@ -56,6 +58,7 @@ export default function SingleTask({
   //     : "bg-[#C0C0C0]";
 
   // max-h-[189px]
+  console.log(deadline);
 
   return (
     <div className="group relative flex min-h-[116px] w-[244px] flex-col justify-between gap-3 rounded-[6px] bg-gray-200/60 pt-3 font-madei text-[14px] font-[300]">
@@ -93,9 +96,11 @@ export default function SingleTask({
           />
         </div>
       </div>
-      <p className="line-clamp-2 h-fit px-[14px] text-[12px] leading-4">
-        {desc}
-      </p>
+      <div className="flex h-[32px] items-start">
+        <p className="line-clamp-2 h-fit px-[14px] text-[12px] leading-4">
+          {desc}
+        </p>
+      </div>
       <div className="flex flex-row items-center gap-1 border-t-[1px] border-gray-500/10">
         <div
           className={`jusitfy-center flex flex-1 flex-row items-center gap-2 px-[12px] py-2`}
@@ -132,25 +137,13 @@ export default function SingleTask({
         </div>
 
         {/* deadline */}
-        <div className="flex h-full w-fit flex-col items-center justify-center gap-1 px-[14px]">
-          {/* <div className="flex flex-row gap-1">
-            <span className="rounded-full bg-[#ffce2b] px-2">work</span>
-            <span className="rounded-full bg-[#64BC21] px-2">sales</span>
-          </div> */}
-          {/* <div className="flex h-fit w-fit flex-col items-center justify-center gap-1 rounded-[3px] bg-gray-500/10 px-2 py-1">
-            <p className="text-[11px] text-gray-500">
-              <FontAwesomeIcon
-                icon={faCalendar}
-                className="bg-none text-[12px]"
-              />
-              {"  "}
-              {new Date(deadline).toLocaleDateString("en-GB", {
-                month: "short",
-                day: "2-digit",
-                year: "numeric",
-              })}
-            </p>
-          </div> */}
+        <div className="flex h-full w-fit flex-row items-center justify-center gap-1 px-[14px]">
+          <img
+            src="/icons/chat-outline.svg"
+            alt="User Profile"
+            className="h-3.5 w-3.5"
+          />
+          <p className="text-[10px] text-[#565656]">2</p>
         </div>
       </div>
       {/* <div
