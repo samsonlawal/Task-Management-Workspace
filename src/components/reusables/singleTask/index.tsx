@@ -4,6 +4,7 @@ import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { DateTime } from "luxon";
 
 export default function SingleTask({
   desc,
@@ -61,7 +62,7 @@ export default function SingleTask({
   console.log(deadline);
 
   return (
-    <div className="group relative flex min-h-[116px] w-[244px] flex-col justify-between gap-3 rounded-[6px] bg-gray-200/60 pt-3 font-madei text-[14px] font-[300]">
+    <div className="group relative flex min-h-[116px] w-[200px] flex-col justify-between gap-3 rounded-[6px] bg-gray-200/60 pt-3 font-madei text-[14px] font-[300]">
       <div className="flex flex-row justify-between px-[14px]">
         <div className="flex flex-row gap-1">
           <div
@@ -81,11 +82,14 @@ export default function SingleTask({
                 className="bg-none text-[12px]"
               />
               {"  "}
+              {/* 
               {new Date(deadline).toLocaleDateString("en-GB", {
+                timeZone: "UTC", // Force UTC
                 month: "short",
                 day: "2-digit",
                 year: "numeric",
-              })}
+              })} */}
+              {DateTime.fromISO(deadline).toFormat("dd MMM yyyy")}
             </p>
           </div>
         </div>

@@ -95,8 +95,8 @@ function TabComponent() {
   );
 
   return (
-    <div className="mb-4 flex h-screen w-full flex-1 flex-col gap-6 font-madei font-normal">
-      <div className="sticky top-0 w-full bg-white">
+    <div className="mb-4 flex h-screen w-full flex-1 flex-col gap-2 font-madei font-normal">
+      <div className="sticky top-0 w-full bg-white pb-6">
         <Navbar />
       </div>
       {/* Tabs Navigation */}
@@ -106,7 +106,7 @@ function TabComponent() {
           {/* <div className="fixed top-16 z-10 w-full bg-white shadow-sm"> */}
 
           <div className="mx-8 flex justify-between transition-all duration-300">
-            <div className="flex flex-row border-b-[1px]">
+            <div className="flex flex-row">
               {tabs?.map((tab, index) => (
                 <div
                   key={index}
@@ -149,7 +149,7 @@ function TabComponent() {
                         key={index}
                         desc={task.description}
                         // tags={task.tags}
-                        deadline={task.createdAt}
+                        deadline={task.deadline}
                         name={task.assignee?.name || task.assignee?.fullname}
                         email={task.assignee?.email}
                         priority={task.priority}
