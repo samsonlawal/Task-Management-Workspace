@@ -18,7 +18,10 @@ import { setMembers } from "@/redux/Slices/memberSlice";
 
 import { setTasks } from "@/redux/Slices/taskSlice";
 
-import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
+import {
+  getFromLocalStorage,
+  saveToLocalStorage,
+} from "@/utils/localStorage/AsyncStorage";
 import Loader from "@/utils/loader";
 import { useGetTasks } from "@/hooks/api/tasks";
 
@@ -49,20 +52,24 @@ function Workspace() {
 
   // const { tasksData } = useSelector((state: any) => state.TasksData);
 
+  // get user's workspaces
   const {
     data: workspaces,
     onGetUserWorkspace,
     loading: workspacingLoading,
   } = useGetUserWorkspace(user?.id);
 
+  // get workspace tasks
   const { data: taskData, onGetTasks, loading: tasksLoading } = useGetTasks();
 
+  // get workspace members data
   const {
     data: memberData,
     onGetMembers,
     loading: membersLoading,
   } = useGetMembers();
 
+  // get workspace data
   const {
     data: workspaceData,
     onGetSingleWorkspace,
@@ -87,9 +94,13 @@ function Workspace() {
       });
       onGetUserWorkspace(user?._id);
     }
+
     // call the task enpoint here
   }, [user]);
 
+  // Open swith workspace modal
+  // Get user workspaces
+  // Filter current WS and list the others
   function openWorkspaceDialog() {
     onGetUserWorkspace(user?._id);
     setFilteredWorkspaces(
@@ -98,15 +109,18 @@ function Workspace() {
     );
 
     console.log(workspaceData?._id);
-
     // call the task enpoint here
   }
 
   function switchWorkspace(id: string) {
+    saveToLocalStorage({
+      key: "WorkspaceData",
+      value: workspaceData,
+    });
+    dispatch(setWorkspace(workspaceData));
     onGetUserWorkspace(user?._id);
     onGetSingleWorkspace(id);
     dispatch(setCurrentWorkspace(id));
-    dispatch(setWorkspace(workspaceData));
     onGetTasks({ workspaceId: id });
     onGetMembers({ workspaceId: id });
 
@@ -118,16 +132,16 @@ function Workspace() {
 
   // Add this useEffect to handle workspaceData changes
 
-  // useEffect(() => {
-  //   if (workspaceData && taskData) {
-  //     dispatch(setCurrentWorkspace(workspaceData?._id));
-  //     dispatch(setWorkspace(workspaceData));
-  //     dispatch(setTasks(taskData));
-  //     dispatch(setMembers(memberData));
-  //   }
-  //   // console.log("This works");
-  //   console.log(workspaceData?._id);
-  // }, [memberData, taskData, workspaceData, dispatch]);
+  useEffect(() => {
+    if (workspaceData && taskData) {
+      dispatch(setCurrentWorkspace(workspaceData?._id));
+      dispatch(setWorkspace(workspaceData));
+      dispatch(setTasks(taskData));
+      dispatch(setMembers(memberData));
+    }
+    // console.log("This works");
+    console.log(workspaceData?._id);
+  }, [memberData, taskData, workspaceData, dispatch]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {

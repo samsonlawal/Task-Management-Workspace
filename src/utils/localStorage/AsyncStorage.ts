@@ -13,7 +13,9 @@ export const saveToLocalStorage = ({
   try {
     const jsonValue = JSON.stringify(value);
     storage?.setItem(key, jsonValue);
-  } catch (e) {}
+  } catch (e) {
+    console.error("Failed to save:", e);
+  }
 };
 
 interface GetFromLocalStorageProps {
@@ -30,7 +32,9 @@ export const getFromLocalStorage = ({
     if (value) {
       if (typeof cb === "function") cb(JSON.parse(value));
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error("Failed to fetch:", e);
+  }
 };
 
 interface DeleteFromLocalStorageProps {
@@ -42,5 +46,7 @@ export const deleteFromLocalStorage = ({
 }: DeleteFromLocalStorageProps): void => {
   try {
     storage?.removeItem(key);
-  } catch (e) {}
+  } catch (e) {
+    console.error("Failed to delete:", e);
+  }
 };

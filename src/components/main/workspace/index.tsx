@@ -31,6 +31,7 @@ import SingleTask from "@/components/reusables/singleTask";
 import AddTask from "@/components/reusables/Dialogs/AddTask";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { setTasks } from "@/redux/Slices/taskSlice";
 import Dashboard from "@/components/reusables/Dashboard";
 import { useGetTasks } from "@/hooks/api/tasks";
 import { useEffect } from "react";
@@ -38,6 +39,8 @@ import { useRouter } from "next/navigation";
 
 function TabComponent() {
   const router = useRouter();
+  const dispatch = useDispatch();
+
   const { user } = useSelector((state: any) => state.auth);
   const { currentWorkspace } = useSelector(
     (state: any) => state.currentWorkspace,
@@ -57,6 +60,7 @@ function TabComponent() {
     // if (user) {
     // console.log(user);
     console.log(tasks);
+    dispatch(setTasks(tasks));
     // console.log(MemberData);
     // }
   }, [MemberData, tasks]);
@@ -75,6 +79,8 @@ function TabComponent() {
   // if (!user) return null;
 
   const [activeTab, setActiveTab] = useState<number>(0);
+  const [activeTabs, setActiveTabs] = useState<string>("");
+
   const currentUI = useSelector((state: RootState) => state.ui.currentUI);
   // const { data: tasks, onGetTasks } = useGetTasks();
 
@@ -82,20 +88,43 @@ function TabComponent() {
   //   (task) => task.workspace._id === currentWorkspace._id,
   // );
 
+  useEffect(() => {
+    console.log(activeTabs);
+  }, [activeTab]);
+
+  const statusMap = {
+    "TO-DO": "todo",
+    "IN-PROGRESS": "in-progress",
+    "IN-REVIEW": "in-review",
+    DONE: "done",
+  };
+
   const tabs = ["ALL", "TO-DO", "IN-PROGRESS", "IN-REVIEW", "DONE"];
   const tabContent = useMemo(
     () => [
       tasks,
-      tasks?.filter((task) => task.status === "todo"),
-      tasks?.filter((task) => task.status === "in-progress"),
+      tasks?.filter((task) => statusMap["TO-DO"] === task.status),
+      tasks?.filter((task) => statusMap["IN-PROGRESS"] === task.status),
       tasks?.filter((task) => task.status === "in-review"),
       tasks?.filter((task) => task.status === "done"),
     ],
     [tasks],
   );
 
+  // const tabContent = useMemo(
+  //   () => [
+  //     tasks,
+  //     tasks?.filter((task) => task.status === statusMap["TO-DO"]),
+  //     tasks?.filter((task) => task.status === statusMap["IN-PROGRESS"]),
+  //     tasks?.filter((task) => task.status === statusMap["IN-REVIEW"]),
+  //     tasks?.filter((task) => task.status === statusMap["DONE"]),
+  //     // ...other tabs
+  //   ],
+  //   [tasks],
+  // );
+
   return (
-    <div className="mb-4 flex h-screen w-full flex-1 flex-col gap-2 font-madei font-normal">
+    <div className="poppins mb-4 flex h-screen w-full flex-1 flex-col gap-2">
       <div className="sticky top-0 w-full bg-white pb-6">
         <Navbar />
       </div>
@@ -110,17 +139,20 @@ function TabComponent() {
               {tabs?.map((tab, index) => (
                 <div
                   key={index}
-                  className={`flex w-fit cursor-pointer select-none flex-row items-center gap-2 rounded-t-sm px-4 py-2 text-sm font-[400] ${
+                  className={`flex w-fit cursor-pointer select-none flex-row items-center gap-1 rounded-t-sm px-2 text-[12px] font-[600] ${
                     activeTab === index
                       ? "border-b-2 border-black bg-gray-100 text-black"
                       : "text-gray-500 hover:text-black"
                   }`}
-                  onClick={() => setActiveTab(index)}
+                  onClick={() => {
+                    setActiveTab(index);
+                    setActiveTabs(tabs[index]);
+                  }}
                 >
                   {tab}
                   {index === activeTab && (
-                    <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-gray-400/40 font-normal">
-                      <p className="text-[10px] font-light">
+                    <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-gray-400/40">
+                      <p className="text-[10px] font-normal">
                         {tabContent[activeTab]?.length}
                       </p>
                     </div>
@@ -134,7 +166,7 @@ function TabComponent() {
             </div>
           </div>
           {/* Tab Content */}
-          <div className="flex-1 overflow-y-auto px-8 pb-8">
+          <div className="flex-1 overflow-y-auto px-8 pb-8 pt-2">
             {tasksLoading ? (
               <p className="flex h-full items-center justify-center">
                 {" "}
@@ -154,6 +186,10 @@ function TabComponent() {
                         email={task.assignee?.email}
                         priority={task.priority}
                         image={task.assignee?.profileImage}
+                        id={task._id}
+                        status={task.status}
+                        createdAt={task.createdAt}
+                        // workspaceId={task.workspace_id}
                       />
                     ) : null,
                   )

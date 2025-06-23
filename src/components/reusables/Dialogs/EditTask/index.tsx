@@ -184,10 +184,13 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     <>
       <button
         onClick={checkWsId}
-        className="flex w-fit items-center justify-center gap-2 rounded-[6px] bg-[#242424] px-3 py-2.5 text-[12px] font-regular text-white transition-all duration-300 hover:bg-black"
+        // className="flex w-fit items-center justify-center gap-2 rounded-[6px] bg-[#242424] px-3 py-2 text-[12px] font-regular text-white transition-all duration-300 hover:bg-black"
       >
-        <FontAwesomeIcon icon={faPlus} />
-        Add New Task
+        <img
+          src="/icons/edit.svg"
+          alt=""
+          className="h-4 w-4 transition-all duration-300 hover:h-[18px] hover:w-[18px] hover:cursor-pointer"
+        />
       </button>
       <Dialog
         open={isOpen}
@@ -464,4 +467,3 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     </>
   );
 }
-

@@ -8,6 +8,10 @@ class service {
     return axios.get(env.api.tasks + "/" + workspaceId);
   }
 
+  getSingleTask(id: string) {
+    return axios.get(env.api.tasks + "/single/" + id);
+  }
+
   createTask({ payload }: { payload: TAddTask }) {
     const raw = localStorage.getItem("STACKTASK_PERSISTOR");
     const parsed = raw ? JSON.parse(raw) : null;

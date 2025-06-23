@@ -1,29 +1,36 @@
-// import { faCalendar, faClock } from "@fortawesome/free-solid-svg-icons";
+// Updated SingleTask component - pass task data to TaskDetails
 import { faCalendar, faClock } from "@fortawesome/free-regular-svg-icons";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useState } from "react";
 import { DateTime } from "luxon";
+import TaskDetails from "../TaskDetails";
+import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 export default function SingleTask({
   desc,
-  // tags,
   deadline,
   name,
   fullname,
   email,
   image,
   priority,
+  id,
+  status,
+  createdAt,
 }: {
   desc: string;
-  // tags: [];
   deadline: any;
   name?: string;
   fullname?: string;
   email: string;
   image?: string;
   priority: string;
+  id: string;
+  status: string;
+  createdAt: string;
 }) {
   const priorityColors = {
     High: "bg-red-300/30",
@@ -53,64 +60,74 @@ export default function SingleTask({
     return colors[firstLetter] || "bg-gray-500";
   };
 
-  // const color =
-  //   priority in priorityColors
-  //     ? priorityColors[priority as keyof typeof priorityColors]
-  //     : "bg-[#C0C0C0]";
+  const workspaceData = useSelector(
+    (state: RootState) => state.WorkspaceData?.workspace,
+  );
 
-  // max-h-[189px]
-  console.log(deadline);
+  // Create task object to pass to TaskDetails
+  const taskData = {
+    id,
+    description: desc,
+    deadline,
+    assignee: {
+      name: name || fullname || "",
+      email,
+      image,
+    },
+    priority,
+    // Add other task properties as needed
+    status, // You might want to pass this as a prop too
+    createdAt, // You might want to pass this as a prop
+    workspaceName: workspaceData?.name,
+  };
+
+  function gettaskdetails() {
+    // console.log(id);
+    // console.log("Task data:", taskData);
+    console.log(workspaceData);
+  }
 
   return (
-    <div className="group relative flex min-h-[116px] w-[200px] flex-col justify-between gap-3 rounded-[6px] bg-gray-200/60 pt-3 font-madei text-[14px] font-[300]">
-      <div className="flex flex-row justify-between px-[14px]">
+    <div className="group relative flex min-h-[96px] w-[205px] flex-col justify-between gap-2 rounded-[6px] border border-gray-200 bg-gray-200/60 pt-2 text-[14px] font-[300]">
+      <div className="flex flex-row justify-between px-[10px] font-medium">
         <div className="flex flex-row gap-1">
           <div
-            className={`flex h-fit w-fit flex-col items-center justify-center gap-1 rounded-[3px] ${priority && priorityColors[priority as keyof typeof priorityColors] ? priorityColors[priority as keyof typeof priorityColors] : "bg-gray-700"} px-2 py-1`}
+            className={`flex h-fit w-fit flex-col items-center justify-center gap-1 rounded-[3px] ${priority && priorityColors[priority as keyof typeof priorityColors] ? priorityColors[priority as keyof typeof priorityColors] : "bg-gray-700"} px-1 py-0.5`}
           >
             <p
-              className={`text-[11px] ${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"}`}
+              className={`text-[9px] ${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"}`}
             >
               {(priority || "")?.split(" ")[0].charAt(0).toUpperCase() +
                 (priority || "")?.split(" ")[0].slice(1).toLowerCase()}
             </p>
           </div>
-          <div className="flex h-fit w-fit flex-col items-center justify-center gap-1 rounded-[3px] bg-gray-500/10 px-2 py-1">
-            <p className="text-[11px] text-gray-500">
+          <div className="flex h-fit w-fit flex-col items-center justify-center gap-1 rounded-[3px] bg-gray-500/10 px-1 py-0.5">
+            <p className="text-[9px] text-gray-500">
               <FontAwesomeIcon
                 icon={faCalendar}
                 className="bg-none text-[12px]"
               />
               {"  "}
-              {/* 
-              {new Date(deadline).toLocaleDateString("en-GB", {
-                timeZone: "UTC", // Force UTC
-                month: "short",
-                day: "2-digit",
-                year: "numeric",
-              })} */}
               {DateTime.fromISO(deadline).toFormat("dd MMM yyyy")}
             </p>
           </div>
         </div>
-        <div className="cursor-pointer px-2">
-          <FontAwesomeIcon
-            icon={faEllipsisVertical}
-            className="absolute right-[14px] top-[14px] hidden text-gray-500 opacity-0 group-hover:opacity-100"
-          />
+        <div className="cursor-pointer" onClick={gettaskdetails}>
+          {/* Pass taskData to TaskDetails component */}
+          <TaskDetails taskData={taskData} getDetails={gettaskdetails} />
         </div>
       </div>
-      <div className="flex h-[32px] items-start">
-        <p className="line-clamp-2 h-fit px-[14px] text-[12px] leading-4">
+      <div className="flex min-h-[18px] items-start">
+        <p className="line-clamp-2 h-fit px-[10px] text-[10px] font-medium leading-tight">
           {desc}
         </p>
       </div>
       <div className="flex flex-row items-center gap-1 border-t-[1px] border-gray-500/10">
         <div
-          className={`jusitfy-center flex flex-1 flex-row items-center gap-2 px-[12px] py-2`}
+          className={`jusitfy-center flex flex-1 flex-row items-center gap-2 px-[10px] py-1.5`}
         >
           <div
-            className={`flex h-[23px] w-[23px] items-center justify-center rounded-full ${image === "none" || "" ? getBgColor(name || fullname || "") : ""}`}
+            className={`flex h-[20px] w-[20px] items-center justify-center rounded-full ${image === "none" || "" ? getBgColor(name || fullname || "") : ""}`}
           >
             {(image && image !== "none") || "" ? (
               <img
@@ -119,7 +136,7 @@ export default function SingleTask({
                 className="h-full w-full rounded-full object-cover"
               />
             ) : (
-              <p className="text-xs text-white">
+              <p className="text-[10px] text-white">
                 {name || fullname
                   ? name
                     ? name.charAt(0).toUpperCase()
@@ -130,13 +147,10 @@ export default function SingleTask({
           </div>
 
           <div className="flex flex-col items-start gap-[2px] -space-y-2 overflow-hidden">
-            <p className="text-[13px] text-gray-700">
+            <p className="text-[10px] font-medium text-gray-700">
               {(name || fullname || "")?.split(" ")[0].charAt(0).toUpperCase() +
                 (name || fullname || "")?.split(" ")[0].slice(1).toLowerCase()}
             </p>
-            {/* <p className="w-full truncate whitespace-nowrap text-[12px] font-light text-[#707070]">
-              {email}
-            </p> */}
           </div>
         </div>
 
@@ -150,13 +164,6 @@ export default function SingleTask({
           <p className="text-[10px] text-[#565656]">2</p>
         </div>
       </div>
-      {/* <div
-        className={`absolute bottom-0 right-0 h-0 w-0 rounded-[4px] border-r-[10px] border-t-[10px] border-t-transparent ${color}`}
-      ></div> */}
-
-      {/* <div className="absolute -right-1.5 -top-1.5 flex h-5 w-5 translate-y-2 scale-0 cursor-pointer items-center justify-center rounded-full bg-white leading-none opacity-0 shadow-[0_0_10px_rgba(0,0,0,0.5)] transition-all duration-500 ease-in-out group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100">
-        <img src="/icons/ex.svg" alt="" className="h-2.5 w-2.5" />
-      </div> */}
     </div>
   );
 }

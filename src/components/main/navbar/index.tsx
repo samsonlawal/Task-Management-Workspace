@@ -40,25 +40,27 @@ function DropdownMenu() {
   }
 
   return (
-    <div className="flex w-fit flex-row items-center justify-center gap-6 text-left">
+    <div className="flex h-[50px] w-fit flex-row items-center justify-center gap-6 text-left">
       {/* <FontAwesomeIcon icon={faBell} className="" /> */}
-
-      <div>
+      <div className="group relative w-fit">
         <img
           src="/icons/bell-line.svg"
-          alt=""
-          className="h-5 w-5 cursor-pointer"
+          alt="Notifications"
+          className="h-[18px] w-[18px] cursor-pointer"
         />
+        {/* Notification badge */}
+        <span className="absolute -right-[1px] -top-[1px] h-2 w-2 rounded-full border border-white bg-red-500 transition-all duration-300 group-hover:-right-1 group-hover:-top-1"></span>
       </div>
+      {/* <div className="h-[80%] border-l-[1px]"></div> */}
       <Menu>
-        <MenuButton className="flex w-[230px] items-center gap-2 self-end rounded-md border-[1px] px-2 py-1 text-black shadow-inner shadow-white/10 hover:bg-gray-200/70 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
+        <MenuButton className="flex w-[210px] items-center justify-center gap-2 rounded-md border-[1px] px-2 py-[8px] text-black shadow-inner shadow-white/10 transition-colors duration-500 hover:bg-gray-200/70 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
           <div className="flex w-full flex-row items-center gap-[8px]">
             {user?.profileImage === "none" ? (
               <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#99c485] text-white">
                 {user?.fullname.charAt(0).toUpperCase()}
               </span>
             ) : (
-              <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full">
+              <span className="flex h-[26px] w-[26px] items-center justify-center rounded-full">
                 <img
                   src={user?.profileImage}
                   alt=""
@@ -67,8 +69,8 @@ function DropdownMenu() {
               </span>
             )}
             <div className="flex flex-col items-start -space-y-[5px] leading-5">
-              <p>{user?.fullname}</p>
-              <p className="text-[12px] text-[#707070]">{user?.email}</p>
+              <p className="text-[14px]">{user?.fullname}</p>
+              {/* <p className="text-[10px] text-[#707070]">{user?.email}</p> */}
             </div>
           </div>
           <img src="/icons/dcaret.svg" alt="" className="cursor-pointer pr-1" />

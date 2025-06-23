@@ -146,7 +146,7 @@ function Dashboard() {
         {members ? (
           <div className="h-full w-full rounded-[8px]">
             {/* Header */}
-            <div className="grid h-[50px] w-full grid-cols-[20px_50px_2fr_2.5fr_2fr_1fr_1fr_0.7fr] items-center justify-center gap-5 rounded-t-[8px] bg-gray-100 px-4 text-sm font-medium text-gray-600">
+            <div className="grid h-[50px] w-full grid-cols-[20px_50px_2fr_2.5fr_1fr_1fr_0.7fr] items-center justify-center gap-5 rounded-t-[8px] bg-gray-100 px-4 text-sm font-medium text-gray-600">
               <div className="flex items-center justify-center">
                 <input
                   type="checkbox"
@@ -163,7 +163,7 @@ function Dashboard() {
               <div>ID</div>
               <div>Full Name</div>
               <div>Email</div>
-              <div>Job Title</div>
+              {/* <div>Job Title</div> */}
               <div>Role</div>
               <div>Status</div>
               <div>Actions</div>
@@ -188,7 +188,7 @@ function Dashboard() {
                 return (
                   <div
                     key={user._id || index}
-                    className="grid w-full grid-cols-[20px_50px_2fr_2.5fr_2fr_1fr_1fr_0.7fr] items-center gap-5 border-b border-gray-300 px-4 py-3 text-sm font-[300] text-gray-800"
+                    className="grid w-full grid-cols-[20px_50px_2fr_2.5fr_1fr_1fr_0.7fr] items-center gap-5 border-b border-gray-300 px-4 py-3 text-[13px] font-[400] text-gray-800"
                   >
                     <div className="flex items-center">
                       <input
@@ -205,27 +205,27 @@ function Dashboard() {
                         alt="User"
                         className="h-7 w-7 rounded-full object-cover"
                       />
-                      {fullname}
+                      <p className="truncate">{fullname}</p>
                     </div>
-                    <div>{email}</div>
-                    <div>{jobTitle}</div>
+                    <div className="truncate">{email}</div>
+                    {/* <div>{jobTitle}</div> */}
                     <div>{role}</div>
                     <div>
                       <div
-                        className={`flex w-[70px] flex-row items-center justify-center gap-1 rounded-sm py-1 ${
+                        className={`flex w-[70px] flex-row items-center justify-center gap-1 rounded-full py-1 ${
                           status.toLowerCase() === "active"
-                            ? "bg-green-100 text-green-800"
+                            ? "bg-[#66FF00]/30 text-[green]"
                             : "bg-gray-200 text-gray-600"
                         }`}
                       >
                         <div
-                          className={`h-2 w-2 rounded-full ${
+                          className={`h-1.5 w-1.5 rounded-full ${
                             status.toLowerCase() === "active"
-                              ? "bg-green-800"
+                              ? "animate-pulse bg-[green]"
                               : "bg-gray-500"
                           }`}
                         ></div>
-                        {status}
+                        <p className="text-[11px] capitalize">{status}</p>
                       </div>
                     </div>
                     <div className="flex items-center justify-center">
@@ -238,19 +238,19 @@ function Dashboard() {
                 );
               })
             ) : (
-              <div className="flex h-40 w-full items-center justify-center border-b border-gray-300 px-4 py-3 text-gray-500">
-                No members match your search criteria
+              <div className="flex h-40 w-full items-center justify-center border-b border-gray-300 px-4 py-3 text-[13px] text-gray-500">
+                No member matches your search criteria.
               </div>
             )}
 
             {/* Footer */}
             <div className="flex items-center justify-between px-4 py-3">
               {/* Showing x of y */}
-              <div className="text-sm text-gray-600">
+              <div className="text-[12px] text-gray-600">
                 {totalItems > 0 ? (
                   <>
-                    Showing {Math.min(startIndex + 1, totalItems)} to{" "}
-                    {Math.min(startIndex + itemsPerPage, totalItems)} of{" "}
+                    Showing {Math.min(startIndex + 1, totalItems)} -{" "}
+                    {Math.min(startIndex + itemsPerPage, totalItems)} of{"  "}
                     {totalItems}
                   </>
                 ) : (
@@ -259,7 +259,7 @@ function Dashboard() {
               </div>
 
               {/* Pagination */}
-              <div className="flex items-center gap-3 text-sm text-gray-600">
+              <div className="flex items-center gap-3 text-[12px] text-gray-600">
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}

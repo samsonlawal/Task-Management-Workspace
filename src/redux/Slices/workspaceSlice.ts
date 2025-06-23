@@ -5,11 +5,13 @@ import { saveToLocalStorage } from "@/utils/localStorage/AsyncStorage";
 type WorkspaceState = {
   workspace: Record<string, any> | null;
   members: Array<any> | null;
+  name: string;
 };
 
 const initialState: WorkspaceState = {
   workspace: null,
   members: null,
+  name: "",
 };
 
 const workspaceSlice = createSlice({

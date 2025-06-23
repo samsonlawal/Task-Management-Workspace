@@ -40,9 +40,9 @@ export default function RootLayout({
         ></link>
       </head>
       <body className="">
-        <PostHogProvider>
-          <Initializers>{children}</Initializers>
-        </PostHogProvider>
+        {/* <PostHogProvider> */}
+        <Initializers>{children}</Initializers>
+        {/* </PostHogProvider> */}
         {/* <Login /> */}
       </body>
     </html>

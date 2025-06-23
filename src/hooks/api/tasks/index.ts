@@ -63,7 +63,38 @@ export const useGetTasks = () => {
     }
   };
 
-  return { loading, data, onGetTasks };
+  const OnGetSingleTask = async ({
+    id,
+    successCallback,
+    errorCallback,
+  }: {
+    id: string;
+    successCallback?: (tasks: TTask[]) => void;
+    errorCallback?: (props: { message?: string; description?: string }) => void;
+  }) => {
+    if (!id) return;
+
+    setLoading(true);
+    try {
+      const res = await TaskService.getSingleTask(id);
+
+      const task = res?.data || [];
+      setData(task);
+      dispatch(setTasks(res?.data));
+      successCallback?.(task);
+    } catch (error: Error | AxiosError | any) {
+      const message =
+        error?.response?.data?.message || "Failed to fetch single task";
+      const description = error?.response?.data?.description || "";
+
+      showErrorToast({ message, description });
+      errorCallback?.({ message, description });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, data, OnGetSingleTask };
 };
 
 export const useCreateTask = () => {

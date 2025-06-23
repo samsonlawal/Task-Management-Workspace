@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type UIState = {
-  currentUI: "tasks" | "dashboard";
+  currentUI: "tasks" | "team" | "dashboard" | "settings";
 };
 
 const initialState: UIState = {
@@ -12,7 +12,10 @@ const uiSlice = createSlice({
   name: "ui",
   initialState,
   reducers: {
-    setCurrentUI: (state, action: PayloadAction<"tasks" | "dashboard">) => {
+    setCurrentUI: (
+      state,
+      action: PayloadAction<"tasks" | "team" | "dashboard" | "settings">,
+    ) => {
       state.currentUI = action.payload;
     },
   },

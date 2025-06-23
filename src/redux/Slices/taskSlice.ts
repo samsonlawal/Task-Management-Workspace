@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { saveToLocalStorage } from "@/utils/localStorage/AsyncStorage";
 
 // Define proper types for your task state
 type taskState = {
@@ -15,6 +16,7 @@ const taskSlice = createSlice({
   reducers: {
     setTasks: (state, action: PayloadAction<Array<any> | null>) => {
       state.task = action.payload;
+      saveToLocalStorage({ key: "WStasks", value: action.payload });
     },
   },
 });

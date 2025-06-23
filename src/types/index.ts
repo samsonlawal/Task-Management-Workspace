@@ -21,7 +21,7 @@ export type TTask = {
 
 export type TAddTask = {
   description: string;
-  // status?: string;
+  status?: string;
   priority: string;
   assignee?: string;
   workspace_id: string;
@@ -69,4 +69,5 @@ export type TWorkspaceData = {
   workspace: Workspace;
   members: Record<string, any>;
   tasks: Record<string, any>;
+  name: string;
 };
