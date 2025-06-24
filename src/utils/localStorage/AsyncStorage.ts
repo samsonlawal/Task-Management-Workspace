@@ -29,11 +29,14 @@ export const getFromLocalStorage = ({
 }: GetFromLocalStorageProps): void => {
   try {
     const value = storage?.getItem(key);
-    if (value) {
+    // Check if value exists and is not "undefined" string
+    if (value && value !== "undefined" && value !== "null") {
       if (typeof cb === "function") cb(JSON.parse(value));
     }
   } catch (e) {
     console.error("Failed to fetch:", e);
+    // Optionally clear the corrupted data
+    storage?.removeItem(key);
   }
 };
 

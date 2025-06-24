@@ -53,7 +53,7 @@ export default function Sidebar() {
           <p className="font-karst text-[18px] font-extrabold">taskstackHQ</p>
         </div>
         <CurrentWorkspace />
-        <div className="poppins-regular flex flex-col justify-between px-[12px] text-[14px] font-[300] text-[#707070]">
+        <div className="poppins-regular flex flex-col justify-between gap-1 px-[12px] text-[13px] font-[300] text-[#707070]">
           <span
             className="flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] px-2 py-2 transition-all duration-300 hover:bg-gray-300/50"
             onClick={() => {

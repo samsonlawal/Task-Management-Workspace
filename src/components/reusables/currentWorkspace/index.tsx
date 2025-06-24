@@ -113,11 +113,15 @@ function Workspace() {
   }
 
   function switchWorkspace(id: string) {
-    saveToLocalStorage({
-      key: "WorkspaceData",
-      value: workspaceData,
-    });
-    dispatch(setWorkspace(workspaceData));
+    // Only save if workspaceData exists
+    if (workspaceData) {
+      saveToLocalStorage({
+        key: "WorkspaceData",
+        value: workspaceData,
+      });
+      dispatch(setWorkspace(workspaceData));
+    }
+
     onGetUserWorkspace(user?._id);
     onGetSingleWorkspace(id);
     dispatch(setCurrentWorkspace(id));
@@ -131,16 +135,18 @@ function Workspace() {
   }
 
   // Add this useEffect to handle workspaceData changes
-
   useEffect(() => {
     if (workspaceData && taskData) {
       dispatch(setCurrentWorkspace(workspaceData?._id));
       dispatch(setWorkspace(workspaceData));
       dispatch(setTasks(taskData));
-      dispatch(setMembers(memberData));
+      if (memberData) {
+        dispatch(setMembers(memberData));
+      }
     }
     // console.log("This works");
     console.log(workspaceData?._id);
+    console.log(taskData);
   }, [memberData, taskData, workspaceData, dispatch]);
 
   useEffect(() => {
@@ -149,7 +155,10 @@ function Workspace() {
         dispatch(setWorkspace(workspaceData));
         dispatch(setTasks(taskData));
         dispatch(setMembers(memberData));
-        dispatch(setCurrentWorkspace(workspaceData._id));
+        // Add null check here too
+        if (workspaceData._id) {
+          dispatch(setCurrentWorkspace(workspaceData._id));
+        }
         console.log(memberData);
       }
     }, 200);

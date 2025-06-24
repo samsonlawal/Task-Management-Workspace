@@ -48,9 +48,9 @@ export const useGetTasks = () => {
     try {
       const res = await TaskService.getTasks(workspaceId);
 
-      const tasks = res?.data || [];
+      const tasks = res?.data?.tasks || [];
       setData(tasks);
-      dispatch(setTasks(res?.data));
+      dispatch(setTasks(res?.data?.tasks));
       successCallback?.(tasks);
     } catch (error: Error | AxiosError | any) {
       const message = error?.response?.data?.message || "Failed to fetch tasks";
@@ -63,6 +63,13 @@ export const useGetTasks = () => {
     }
   };
 
+  return { loading, data, onGetTasks };
+};
+
+export const useGetSingleTask = () => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<TTask[]>([]);
+  const dispatch = useDispatch();
   const OnGetSingleTask = async ({
     id,
     successCallback,
@@ -78,7 +85,7 @@ export const useGetTasks = () => {
     try {
       const res = await TaskService.getSingleTask(id);
 
-      const task = res?.data || [];
+      const task = res?.data?.task || [];
       setData(task);
       dispatch(setTasks(res?.data));
       successCallback?.(task);

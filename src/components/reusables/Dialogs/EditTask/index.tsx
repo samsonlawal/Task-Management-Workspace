@@ -18,7 +18,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MemberSelect from "../../MemberSelect";
-import { useCreateTask } from "@/hooks/api/tasks";
+import { useCreateTask, useGetSingleTask } from "@/hooks/api/tasks";
 import { TAddTask } from "@/types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -61,10 +61,17 @@ export default function AddTask({ onGetTasks, taskData }: any) {
   const { onCreateTask, loading: creatTaskLoading } = useCreateTask();
 
   const {
+    data: singleTask,
+    OnGetSingleTask,
+    loading: getSingleTaskLoading,
+  } = useGetSingleTask();
+
+  const {
     data: workspaceData,
     onGetSingleWorkspace,
     loading: singleWorkspaceLoading,
   } = useGetSingleWorkspace(currentWorkspace);
+
   useEffect(() => {
     getFromLocalStorage({
       key: "CurrentWorkspaceId",

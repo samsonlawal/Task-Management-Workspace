@@ -50,7 +50,12 @@ function TabComponent() {
 
   const MemberData = useSelector((state: RootState) => state.MemberData);
 
-  const tasks = useSelector((state: RootState) => state.TasksData?.task || []);
+  // Update the tasks selector to ensure array type
+  const tasks = useSelector(
+    (state: RootState) =>
+      // Array.isArray(state.TasksData?.task) ? state.TasksData.task : [],
+      state.TasksData.task,
+  );
 
   // let allTasks = TasksData?.task;
 
@@ -59,7 +64,7 @@ function TabComponent() {
   useEffect(() => {
     // if (user) {
     // console.log(user);
-    console.log(tasks);
+    console.log("tasks:", tasks);
     dispatch(setTasks(tasks));
     // console.log(MemberData);
     // }
@@ -100,16 +105,16 @@ function TabComponent() {
   };
 
   const tabs = ["ALL", "TO-DO", "IN-PROGRESS", "IN-REVIEW", "DONE"];
-  const tabContent = useMemo(
-    () => [
-      tasks,
-      tasks?.filter((task) => statusMap["TO-DO"] === task.status),
-      tasks?.filter((task) => statusMap["IN-PROGRESS"] === task.status),
-      tasks?.filter((task) => task.status === "in-review"),
-      tasks?.filter((task) => task.status === "done"),
-    ],
-    [tasks],
-  );
+  const tabContent = useMemo(() => {
+    const safeTasks = Array.isArray(tasks) ? tasks : [];
+    return [
+      safeTasks,
+      safeTasks.filter((task) => task?.status === statusMap["TO-DO"]),
+      safeTasks.filter((task) => task?.status === statusMap["IN-PROGRESS"]),
+      safeTasks.filter((task) => task?.status === "in-review"),
+      safeTasks.filter((task) => task?.status === "done"),
+    ];
+  }, [tasks]);
 
   // const tabContent = useMemo(
   //   () => [

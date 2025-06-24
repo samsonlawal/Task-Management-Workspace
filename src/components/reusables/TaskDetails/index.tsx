@@ -28,6 +28,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { TWorkspaceData } from "@/types";
+// import { setSingleTask, setTasks } from "@/redux/Slices/taskSlice";
 import EditTask from "../Dialogs/EditTask";
 
 interface TaskData {
@@ -116,10 +117,14 @@ export default function TaskDetails({
       cb: (data: unknown) => {
         if (data && typeof data === "object") {
           setSpaceData(data as TWorkspaceData);
-          console.log(data);
+          // console.log(data);
         }
       },
     });
+
+    // dispatch(setSingleTask(taskData));
+    console.log(taskData);
+
     // }, [workspaceId]);
   }, [setIsOpen]);
 
