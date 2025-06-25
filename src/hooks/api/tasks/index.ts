@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import TaskService from "@/services/tasks";
-import { TTask, TAddTask } from "@/types";
+import { TTask, TAddTask, TSingleTask } from "@/types";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 
 import axios, { AxiosError } from "axios";
@@ -68,15 +68,15 @@ export const useGetTasks = () => {
 
 export const useGetSingleTask = () => {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<TTask[]>([]);
+  const [data, setData] = useState<TSingleTask | null | undefined>(null);
   const dispatch = useDispatch();
   const OnGetSingleTask = async ({
     id,
     successCallback,
     errorCallback,
   }: {
-    id: string;
-    successCallback?: (tasks: TTask[]) => void;
+    id?: string;
+    successCallback?: (task: TSingleTask | null | undefined) => void;
     errorCallback?: (props: { message?: string; description?: string }) => void;
   }) => {
     if (!id) return;
@@ -87,8 +87,9 @@ export const useGetSingleTask = () => {
 
       const task = res?.data?.task || [];
       setData(task);
-      dispatch(setTasks(res?.data));
+      // dispatch(setCurrentTask(res?.data));
       successCallback?.(task);
+      console.log(task);
     } catch (error: Error | AxiosError | any) {
       const message =
         error?.response?.data?.message || "Failed to fetch single task";

@@ -108,7 +108,7 @@ function Workspace() {
         [],
     );
 
-    console.log(workspaceData?._id);
+    // console.log(workspaceData?._id);
     // call the task enpoint here
   }
 
@@ -131,7 +131,7 @@ function Workspace() {
     setFilteredWorkspaces(
       workspaces?.filter((workspace) => workspace._id !== id) || [],
     );
-    console.log(id);
+    // console.log(id);
   }
 
   // Add this useEffect to handle workspaceData changes
@@ -145,8 +145,8 @@ function Workspace() {
       }
     }
     // console.log("This works");
-    console.log(workspaceData?._id);
-    console.log(taskData);
+    // console.log(workspaceData?._id);
+    // console.log(taskData);
   }, [memberData, taskData, workspaceData, dispatch]);
 
   useEffect(() => {
@@ -159,7 +159,7 @@ function Workspace() {
         if (workspaceData._id) {
           dispatch(setCurrentWorkspace(workspaceData._id));
         }
-        console.log(memberData);
+        // console.log(memberData);
       }
     }, 200);
 

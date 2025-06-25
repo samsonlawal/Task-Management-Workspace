@@ -19,9 +19,21 @@ export type TTask = {
   createdAt: string;
 };
 
-export type TAddTask = {
+export type TSingleTask = {
   description: string;
   status?: string;
+  priority: string;
+  assignee: TAssignee;
+  workspace_id: string;
+  createdAt: string;
+  id: string;
+  deadline: string;
+  name?: string;
+};
+
+export type TAddTask = {
+  description: string;
+  status: string;
   priority: string;
   assignee?: string;
   workspace_id: string;

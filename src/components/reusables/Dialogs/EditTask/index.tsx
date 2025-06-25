@@ -28,10 +28,11 @@ import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
 import { useGetSingleWorkspace } from "@/hooks/api/workspace";
 import { setWorkspace } from "@/redux/Slices/workspaceSlice";
 
+
 export default function AddTask({ onGetTasks, taskData }: any) {
   const dispatch = useDispatch();
 
-  let [isOpen, setIsOpen] = useState<boolean>(false);
+  let [isEditOpen, setIsEditOpen] = useState<boolean>(false);
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<string>("to-do");
   const [status, setStatus] = useState<string>("todo");
@@ -40,9 +41,13 @@ export default function AddTask({ onGetTasks, taskData }: any) {
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const [workspaceId, setWorkspaceId] = useState<string>("");
 
-  const TasksData = useSelector((state: RootState) => state.TasksData);
+  // const TasksData = useSelector((state: RootState) => state.TasksData);
 
   const MemberData = useSelector((state: RootState) => state.MemberData);
+
+  const currentTask = useSelector(
+    (state: RootState) => state.TasksData.currentTask,
+  );
 
   const [task, setTask] = useState<TAddTask>({
     description: "",
@@ -53,7 +58,22 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     priority: "",
   });
 
-  const [taskAssignee, setTaskAssignee] = useState();
+  // Add this useEffect to populate task state with currentTask data
+  // useEffect(() => {
+  //   if (currentTask && isOpen) {
+  //     setTask({
+  //       description: currentTask.description || "",
+  //       workspace_id: currentTask.workspace_id || workspaceId,
+  //       assignee: currentTask.assignee.email || "",
+  //       deadline: currentTask.deadline || "",
+  //       status: currentTask.status || "to-do",
+  //       priority: currentTask.priority || "Low",
+  //     });
+  //     // setTaskAssignee(currentTask.assignee);
+  //   }
+  // }, [currentTask, isOpen, workspaceId]);
+
+  const [taskAssignee, setTaskAssignee] = useState<any>();
   const { currentWorkspace } = useSelector(
     (state: any) => state.currentWorkspace,
   );
@@ -89,7 +109,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
 
   const handleDialogClose = () => {
     if (!isSelectOpen) {
-      setIsOpen(false);
+      setIsEditOpen(false);
     }
   };
 
@@ -100,81 +120,120 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     }));
   }, [taskAssignee]);
 
-  const handleCreateTask = () =>
-    // e: React.MouseEvent<HTMLButtonElement> | React.FormEvent,
-    {
-      // e.preventDefault();
-      const {
-        description,
-        workspace_id,
-        assignee,
-        deadline,
-        status,
-        priority,
-      } = task;
-      let errorMsg = "";
+  // const handleCreateTask = () =>
+  //   // e: React.MouseEvent<HTMLButtonElement> | React.FormEvent,
+  //   {
+  //     // e.preventDefault();
+  //     const {
+  //       description,
+  //       workspace_id,
+  //       assignee,
+  //       deadline,
+  //       status,
+  //       priority,
+  //     } = task;
+  //     let errorMsg = "";
 
-      console.log("deadline:", deadline);
-      console.log("deadline type:", typeof deadline);
-      console.log("parsed date:", new Date(deadline));
+  //     console.log("deadline:", deadline);
+  //     console.log("deadline type:", typeof deadline);
+  //     console.log("parsed date:", new Date(deadline));
 
-      if (!task.description) {
-        errorMsg = "description is required.";
-      } else if (!task?.assignee) {
-        errorMsg = "assignee is required.";
-      }
+  //     if (!task.description) {
+  //       errorMsg = "description is required.";
+  //     } else if (!task?.assignee) {
+  //       errorMsg = "assignee is required.";
+  //     }
 
-      if (errorMsg) {
-        showErrorToast({ message: errorMsg });
-      } else {
-        // console.log(workspace_id);
+  //     if (errorMsg) {
+  //       showErrorToast({ message: errorMsg });
+  //     } else {
+  //       // console.log(workspace_id);
 
-        onCreateTask({
-          payload: {
-            description,
-            workspace_id,
-            assignee,
-            deadline,
-            status,
-            priority,
-          },
-          successCallback: async () => {
-            showSuccessToast({ message: "Task Created Successfully!" });
+  //       onCreateTask({
+  //         payload: {
+  //           description,
+  //           workspace_id,
+  //           assignee,
+  //           deadline,
+  //           status,
+  //           priority,
+  //         },
+  //         successCallback: async () => {
+  //           showSuccessToast({ message: "Task Created Successfully!" });
 
-            // const updatedWorkspace = await onGetSingleWorkspace(workspace_id);
-            // if (updatedWorkspace) {
-            //   dispatch(setWorkspace(updatedWorkspace));
-            // }
-            // console.log("Task Added to:", workspace_id);
+  //           // const updatedWorkspace = await onGetSingleWorkspace(workspace_id);
+  //           // if (updatedWorkspace) {
+  //           //   dispatch(setWorkspace(updatedWorkspace));
+  //           // }
+  //           // console.log("Task Added to:", workspace_id);
 
-            await onGetTasks({ workspaceId: workspace_id });
-            console.log("New tasks:", taskData);
+  //           await onGetTasks({ workspaceId: workspace_id });
+  //           console.log("New tasks:", taskData);
 
-            handleDialogClose();
-          },
-          errorCallback: ({ message }) => {
-            showErrorToast({ message });
-          },
-        });
-      }
-    };
+  //           handleDialogClose();
+  //         },
+  //         errorCallback: ({ message }) => {
+  //           showErrorToast({ message });
+  //         },
+  //       });
+  //     }
+  //   };
 
   function checkWsId() {
-    setIsOpen(true);
+    !singleWorkspaceLoading && setIsEditOpen(true);
 
-    getFromLocalStorage({
-      key: "CurrentWorkspaceId",
-      cb: (id: string) => {
-        if (id) {
-          setWorkspaceId(id);
-          setTask((prevTask) => ({
-            ...prevTask,
-            workspace_id: id,
-          }));
-          // console.log(id);
+    // getFromLocalStorage({
+    //   key: "CurrentWorkspaceId",
+    //   cb: (id: string) => {
+    //     if (id) {
+    //       setWorkspaceId(id);
+    //       setTask((prevTask) => ({
+    //         ...prevTask,
+    //         workspace_id: id,
+    //       }));
+    //       // console.log(id);
+    //     }
+    //   },
+    // });
+    OnGetSingleTask({
+      id: currentTask?.id,
+      successCallback: (fetchedTask) => {
+        if (fetchedTask) {
+          // Normalize priority and status to capitalized format
+          const normalize = (val: string, allowed: string[]) => {
+            const found = allowed.find(
+              (a) => a.toLowerCase() === (val || "").toLowerCase(),
+            );
+            return found || allowed[0];
+          };
+
+          setTask({
+            description: fetchedTask.description || "",
+            workspace_id: fetchedTask.workspace_id || workspaceId,
+            assignee: fetchedTask.assignee?.email || "",
+            deadline: fetchedTask.deadline
+              ? fetchedTask.deadline.slice(0, 10)
+              : "",
+            status: normalize(fetchedTask.status || "", [
+              "to-do",
+              "in-progress",
+            ]),
+            priority: normalize(fetchedTask.priority, [
+              "Low",
+              "Medium",
+              "High",
+            ]),
+          });
+          setTaskAssignee((fetchedTask.assignee as any)?._id || "");
         }
+        setIsEditOpen(true);
+      },
+      errorCallback: () => {
+        setIsEditOpen(false);
       },
     });
+    console.log("from edit:", currentTask);
+    // console.log(single)
   }
 
   const date = new Date(task.deadline);
@@ -200,7 +259,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
         />
       </button>
       <Dialog
-        open={isOpen}
+        open={isEditOpen}
         onClose={handleDialogClose}
         transition
         className="poppins fixed inset-0 flex w-screen select-none items-center justify-center bg-black/30 p-4 font-madei transition duration-300 ease-out data-[closed]:opacity-0"
@@ -216,18 +275,16 @@ export default function AddTask({ onGetTasks, taskData }: any) {
             onClick={(e) => e.stopPropagation()}
           >
             <DialogTitle className="flex flex-row items-center justify-between font-medium">
-              <p className="poppins-bold text-[18px]">Create Task</p>
+              <p className="poppins-bold text-[18px]">Edit Task</p>
               <div
-                onClick={() => setIsOpen(false)}
+                onClick={() => setIsEditOpen(false)}
                 className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-black"
               >
                 <FontAwesomeIcon icon={faXmark} className="fa-sm text-white" />
               </div>
             </DialogTitle>
-            <Description className="pb-6">
-              <p className="w-[95%] text-[13px] font-light leading-4 text-black">
-                Add a new task to your workspace and start organizing your work.
-              </p>
+            <Description className="w-[95%] pb-6 text-[13px] font-light leading-4 text-black">
+              Add a new task to your workspace and start organizing your work.
             </Description>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-4">
@@ -266,9 +323,9 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                         className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1.5 ${task.priority === "Low" ? "bg-gray-200" : "bg-none"}`}
                       >
                         <input
-                          type="checkbox"
+                          type="radio"
                           name="priority"
-                          value={task.priority}
+                          value="Low"
                           checked={task.priority === "Low"}
                           onChange={() =>
                             setTask((prev) => ({ ...prev, priority: "Low" }))
@@ -283,9 +340,9 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                       >
                         {" "}
                         <input
-                          type="checkbox"
+                          type="radio"
                           name="priority"
-                          value={task.priority}
+                          value="Medium"
                           checked={task.priority === "Medium"}
                           onChange={() =>
                             setTask((prev) => ({ ...prev, priority: "Medium" }))
@@ -300,9 +357,9 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                       >
                         {" "}
                         <input
-                          type="checkbox"
+                          type="radio"
                           name="priority"
-                          value={task.priority}
+                          value="High"
                           checked={task.priority === "High"}
                           onChange={() =>
                             setTask((prev) => ({ ...prev, priority: "High" }))
@@ -325,7 +382,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                         className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1.5 ${task.status === "to-do" ? "bg-gray-200" : "bg-none"}`}
                       >
                         <input
-                          type="checkbox"
+                          type="radio"
                           name="status"
                           value={task.status}
                           checked={task.status === "to-do"}
@@ -342,7 +399,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                       >
                         {" "}
                         <input
-                          type="checkbox"
+                          type="radio"
                           name="status"
                           value={task.status}
                           checked={task.status === "in-progress"}
@@ -364,7 +421,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                       >
                         {" "}
                         <input
-                          type="checkbox"
+                          type="radio"
                           name="priority"
                           value={task.priority}
                           checked={task.priority === "High"}
@@ -420,7 +477,10 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                       className="w-[200px] bg-none"
                       onOpenChange={setIsSelectOpen}
                     /> */}
-                    <MemberSelect setTaskAssignee={setTaskAssignee} />
+                    <MemberSelect
+                      setTaskAssignee={setTaskAssignee}
+                      value={task.assignee}
+                    />
                   </div>
                 </div>
 
@@ -428,7 +488,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                   <span className="text-[14px]">High priority:</span>
                   <label className="relative inline-flex cursor-pointer items-center">
                     <input
-                      type="checkbox"
+                      type="radio"
                       checked={isToggled}
                       onChange={() => setIsToggled(!isToggled)}
                       className="peer sr-only"
@@ -441,7 +501,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
               <div className="flex gap-3 pt-4 text-[14px]">
                 <Button
                   text="Cancel"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => setIsEditOpen(false)}
                   className="bg-gray-200 text-[13px] text-black hover:bg-gray-300"
                 />
                 {/* <Button
@@ -452,10 +512,10 @@ export default function AddTask({ onGetTasks, taskData }: any) {
 
                 <button
                   className="w-[100px] rounded bg-[#222] py-2 text-[13px] font-normal text-white transition-all duration-300 hover:bg-[#111]"
-                  onClick={handleCreateTask}
+                  // onClick={handleCreateTask}
                 >
                   {!creatTaskLoading ? (
-                    "Create"
+                    "Update"
                   ) : (
                     <span className="flex w-full items-center justify-center">
                       <img

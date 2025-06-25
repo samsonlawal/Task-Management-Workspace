@@ -28,7 +28,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { TWorkspaceData } from "@/types";
-// import { setSingleTask, setTasks } from "@/redux/Slices/taskSlice";
+import { setSingleTask, setTasks } from "@/redux/Slices/taskSlice";
 import EditTask from "../Dialogs/EditTask";
 
 interface TaskData {
@@ -56,15 +56,15 @@ export default function TaskDetails({
 }) {
   const dispatch = useDispatch();
 
-  const workspaceData = useSelector((state: RootState) => state.WorkspaceData);
+  // const workspaceData = useSelector((state: RootState) => state.WorkspaceData);
 
-  let [isOpen, setIsOpen] = useState<boolean>(false);
+  let [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<
     "activity" | "comments" | "attachments"
   >("activity");
 
   const handleDialogClose = () => {
-    setIsOpen(false);
+    setIsDetailsOpen(false);
   };
 
   // const WorkspaceData = useSelector((state: RootState) => state.WorkspaceData);
@@ -117,23 +117,24 @@ export default function TaskDetails({
       cb: (data: unknown) => {
         if (data && typeof data === "object") {
           setSpaceData(data as TWorkspaceData);
-          // console.log(data);
         }
       },
     });
 
-    // dispatch(setSingleTask(taskData));
-    console.log(taskData);
+    dispatch(setSingleTask(taskData));
+    // console.log("Singletask:", taskData);
 
     // }, [workspaceId]);
-  }, [setIsOpen]);
+  }, [setIsDetailsOpen]);
 
   return (
     <>
       <button
         onClick={() => {
-          setIsOpen(true);
+          setIsDetailsOpen(true);
           getDetails?.();
+          dispatch(setSingleTask(taskData));
+          console.log("Singletask:", taskData);
         }}
         className="absolute right-0 top-0 z-10 p-2 opacity-0 transition-opacity hover:opacity-100 focus:opacity-100"
         aria-label="Task options"
@@ -144,7 +145,7 @@ export default function TaskDetails({
         />
       </button>
       <Dialog
-        open={isOpen}
+        open={isDetailsOpen}
         onClose={handleDialogClose}
         transition
         className="poppins fixed inset-0 flex w-screen select-none items-center justify-end bg-black/30 p-4 font-madei transition duration-300 ease-out data-[closed]:opacity-0"
@@ -176,7 +177,7 @@ export default function TaskDetails({
                     src="/icons/cancel.svg"
                     alt=""
                     className="h-3 w-3"
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => setIsDetailsOpen(false)}
                   />
                 </div>
 

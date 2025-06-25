@@ -37,18 +37,30 @@ const members = [
   },
 ];
 
-export default function MemberSelect({ setTaskAssignee }: any) {
+export default function MemberSelect({ setTaskAssignee, value }: any) {
   const WorkspaceData = useSelector((state: RootState) => state.WorkspaceData);
   const MemberData = useSelector((state: RootState) => state.MemberData);
-
-  let members = MemberData?.members;
 
   const [selectedMember, setSelectedMember] = useState<any | null>(null);
 
   useEffect(() => {
+    // When value (assigneeId) changes, update selectedMember
+    if (value && MemberData) {
+      const found = MemberData?.members?.find(
+        (m: any) => (m.userId?._id || m._id) === value,
+      );
+      setSelectedMember(found || null);
+    } else {
+      setSelectedMember(null);
+    }
+  }, [value, MemberData]);
+
+  let members = MemberData?.members;
+
+  useEffect(() => {
     // console.log(selectedMember);
     setTaskAssignee(selectedMember?.userId?._id);
-  }, [selectedMember]);
+  }, [selectedMember, setTaskAssignee]);
 
   return (
     <Listbox value={selectedMember} onChange={setSelectedMember}>

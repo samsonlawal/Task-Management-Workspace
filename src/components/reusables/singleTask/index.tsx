@@ -82,8 +82,8 @@ export default function SingleTask({
   };
 
   function gettaskdetails() {
-    console.log(id);
-    console.log("Task data:", taskData);
+    // console.log(id);
+    // console.log("Task data:", taskData);
     // console.log(workspaceData);
   }
 

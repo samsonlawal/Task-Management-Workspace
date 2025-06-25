@@ -1,32 +1,32 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { saveToLocalStorage } from "@/utils/localStorage/AsyncStorage";
 
-// interface TaskData {
-//   id: string;
-//   description: string;
-//   deadline: string;
-//   assignee: {
-//     name: string;
-//     email: string;
-//     image?: string;
-//     profileImage?: string;
-//   };
-//   priority: string;
-//   status: string;
-//   createdAt: string;
-//   workspaceName: string;
-//   // workspaceId: string;
-// }
+interface TaskData {
+  id: string;
+  description: string;
+  deadline: string;
+  assignee: {
+    name: string;
+    email: string;
+    image?: string;
+    profileImage?: string;
+  };
+  priority: string;
+  status: string;
+  createdAt: string;
+  workspaceName: string;
+  // workspaceId: string;
+}
 
 // Define proper types for your task state
 type taskState = {
   task: Array<any>;
-  // currentTask: TaskData | null;
+  currentTask: TaskData | null;
 };
 
 const initialState: taskState = {
   task: [],
-  // currentTask: null,
+  currentTask: null,
 };
 
 const taskSlice = createSlice({
@@ -44,14 +44,14 @@ const taskSlice = createSlice({
       saveToLocalStorage({ key: "WStasks", value: action.payload });
     },
 
-    // setSingleTask: (state, action: PayloadAction<TaskData | null>) => {
-    //   state.currentTask = action.payload;
-    //   saveToLocalStorage({ key: "currentTask", value: action.payload });
-    // },
+    setSingleTask: (state, action: PayloadAction<TaskData | null>) => {
+      state.currentTask = action.payload;
+      saveToLocalStorage({ key: "currentTask", value: action.payload });
+    },
   },
 });
 
-export const { setTasks } = taskSlice.actions;
-// export const { setTasks, setSingleTask } = taskSlice.actions;
+// export const { setTasks } = taskSlice.actions;
+export const { setTasks, setSingleTask } = taskSlice.actions;
 
 export default taskSlice.reducer;
