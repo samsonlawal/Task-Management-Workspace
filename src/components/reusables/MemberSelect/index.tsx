@@ -41,29 +41,36 @@ export default function MemberSelect({ setTaskAssignee, value }: any) {
   const WorkspaceData = useSelector((state: RootState) => state.WorkspaceData);
   const MemberData = useSelector((state: RootState) => state.MemberData);
 
+  const members = MemberData?.members || [];
+
   const [selectedMember, setSelectedMember] = useState<any | null>(null);
 
   useEffect(() => {
-    // When value (assigneeId) changes, update selectedMember
-    if (value && MemberData) {
-      const found = MemberData?.members?.find(
+    if (value && members.length > 0) {
+      console.log("yes");
+      const found = members.find(
         (m: any) => (m.userId?._id || m._id) === value,
       );
       setSelectedMember(found || null);
+      console.log("found", found);
     } else {
       setSelectedMember(null);
     }
-  }, [value, MemberData]);
+  }, [value, members]);
 
-  let members = MemberData?.members;
-
-  useEffect(() => {
-    // console.log(selectedMember);
-    setTaskAssignee(selectedMember?.userId?._id);
-  }, [selectedMember, setTaskAssignee]);
+  // useEffect(() => {
+  //   // if (!selectedMember) return;
+  //   setTaskAssignee(selectedMember.userId?._id || selectedMember._id || "");
+  // }, [selectedMember]);
 
   return (
-    <Listbox value={selectedMember} onChange={setSelectedMember}>
+    <Listbox
+      value={selectedMember}
+      onChange={(member) => {
+        setSelectedMember(member);
+        setTaskAssignee(member.userId?._id || member._id || "");
+      }}
+    >
       <div className="relative w-52">
         <ListboxButton className="flex h-[40px] w-full items-center gap-3 rounded-md border border-gray-300 px-3 py-2 text-left shadow-none">
           {selectedMember ? (

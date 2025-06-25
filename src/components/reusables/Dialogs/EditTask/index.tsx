@@ -479,7 +479,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                     /> */}
                     <MemberSelect
                       setTaskAssignee={setTaskAssignee}
-                      value={task.assignee}
+                      value={taskAssignee}
                     />
                   </div>
                 </div>
