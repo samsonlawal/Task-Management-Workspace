@@ -180,8 +180,9 @@ export default function AddTask({ onGetTasks, taskData }: any) {
   //   };
 
   function checkWsId() {
-    !singleWorkspaceLoading && setIsEditOpen(true);
-
+    if (!singleWorkspaceLoading) {
+      setIsEditOpen(true);
+    }
     // getFromLocalStorage({
     //   key: "CurrentWorkspaceId",
     //   cb: (id: string) => {
