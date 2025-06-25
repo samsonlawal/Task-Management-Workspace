@@ -35,6 +35,9 @@ export default function TaskView() {
             name={task.assignee.name}
             email={task.assignee.email}
             priority={task.priority}
+            id={task.id}
+            status={task.status}
+            createdAt={task.created_at}
           />
         ))}
       </div>
