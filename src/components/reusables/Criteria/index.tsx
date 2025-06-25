@@ -17,6 +17,9 @@ export default function Criteria({ text }: { text: string }) {
           .map((task, index) => (
             <SingleTask
               key={task.id}
+              id={task.id}
+              status={task.status}
+              createdAt={task.created_at}
               desc={task.description}
               // tags={task.tags}
               deadline={task.deadline}
