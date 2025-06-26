@@ -29,6 +29,24 @@ class service {
           },
     );
   }
+
+  updateTask(id: string, { payload }: { payload: TAddTask }) {
+    const raw = localStorage.getItem("STACKTASK_PERSISTOR");
+    const parsed = raw ? JSON.parse(raw) : null;
+    const token = parsed?.accessToken;
+
+    return axios.patch(
+      env.api.tasks + "/" + id,
+      payload,
+      !token
+        ? undefined
+        : {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          },
+    );
+  }
 }
 
 const TaskService = new service();

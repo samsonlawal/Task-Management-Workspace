@@ -28,6 +28,11 @@ import { useDispatch } from "react-redux";
 //   return { onGetTasks, data };
 // };
 
+type TasksResponse = {
+  success: boolean;
+  tasks: TTask[];
+};
+
 export const useGetTasks = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<TTask[]>([]);
@@ -39,7 +44,7 @@ export const useGetTasks = () => {
     errorCallback,
   }: {
     workspaceId: string;
-    successCallback?: (tasks: TTask[]) => void;
+    successCallback?: (response: TasksResponse) => void;
     errorCallback?: (props: { message?: string; description?: string }) => void;
   }) => {
     if (!workspaceId) return;
@@ -49,6 +54,7 @@ export const useGetTasks = () => {
       const res = await TaskService.getTasks(workspaceId);
 
       const tasks = res?.data?.tasks || [];
+      console.log("from useGetTasks:", tasks);
       setData(tasks);
       dispatch(setTasks(res?.data?.tasks));
       successCallback?.(tasks);
@@ -75,7 +81,7 @@ export const useGetSingleTask = () => {
     successCallback,
     errorCallback,
   }: {
-    id?: string;
+    id: string;
     successCallback?: (task: TSingleTask | null | undefined) => void;
     errorCallback?: (props: { message?: string; description?: string }) => void;
   }) => {
@@ -134,6 +140,46 @@ export const useCreateTask = () => {
   };
 
   return { loading, onCreateTask };
+};
+
+export const useUpdateTask = () => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<TSingleTask | null | undefined>(null);
+
+  const onUpdateTask = async ({
+    id,
+    payload,
+    successCallback,
+    errorCallback,
+  }: {
+    id: string;
+    payload: TAddTask;
+    successCallback?: (data?: any) => void;
+    errorCallback?: (props: { message?: string; description?: string }) => void;
+  }) => {
+    if (!id) return;
+
+    setLoading(true);
+
+    try {
+      const res = await TaskService.updateTask(id, { payload });
+      const task = res?.data?.task;
+      // console.log(res?.data);
+
+      successCallback?.(res?.data);
+    } catch (error: Error | AxiosError | any) {
+      const message =
+        error?.response?.data?.message || "Failed to fetch single task";
+      const description = error?.response?.data?.description || "";
+
+      showErrorToast({ message, description });
+      errorCallback?.({ message, description });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { data, loading, onUpdateTask };
 };
 
 

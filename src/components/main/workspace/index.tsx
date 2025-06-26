@@ -36,6 +36,7 @@ import Dashboard from "@/components/reusables/Dashboard";
 import { useGetTasks } from "@/hooks/api/tasks";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Loader from "@/utils/loader";
 
 function TabComponent() {
   const router = useRouter();
@@ -61,14 +62,14 @@ function TabComponent() {
 
   const { data: taskData, onGetTasks, loading: tasksLoading } = useGetTasks();
 
-  useEffect(() => {
-    // if (user) {
-    // console.log(user);
-    // console.log("tasks:", tasks);
-    dispatch(setTasks(tasks));
-    // console.log(MemberData);
-    // }
-  }, [MemberData, tasks]);
+  // useEffect(() => {
+  //   // if (user) {
+  //   // console.log(user);
+  //   // console.log("tasks:", tasks);
+  //   dispatch(setTasks(tasks));
+  //   // console.log(MemberData);
+  //   // }
+  // }, [MemberData, tasks, onGetTasks]);
 
   useEffect(() => {
     if (user) {
@@ -175,7 +176,7 @@ function TabComponent() {
             {tasksLoading ? (
               <p className="flex h-full items-center justify-center">
                 {" "}
-                Loading...
+                <Loader loaderSize={40} />
               </p>
             ) : (
               <div className="flex h-fit flex-row flex-wrap gap-1">

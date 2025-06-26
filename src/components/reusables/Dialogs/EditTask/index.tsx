@@ -18,7 +18,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MemberSelect from "../../MemberSelect";
-import { useCreateTask, useGetSingleTask } from "@/hooks/api/tasks";
+import {
+  useCreateTask,
+  useGetSingleTask,
+  useUpdateTask,
+} from "@/hooks/api/tasks";
 import { TAddTask } from "@/types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -27,9 +31,10 @@ import { showSuccessToast, showErrorToast } from "@/utils/toaster";
 import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
 import { useGetSingleWorkspace } from "@/hooks/api/workspace";
 import { setWorkspace } from "@/redux/Slices/workspaceSlice";
+import { useGetTasks } from "@/hooks/api/tasks";
+import { setTasks } from "@/redux/Slices/taskSlice";
 
-
-export default function AddTask({ onGetTasks, taskData }: any) {
+export default function AddTask({ taskData }: any) {
   const dispatch = useDispatch();
 
   let [isEditOpen, setIsEditOpen] = useState<boolean>(false);
@@ -78,13 +83,23 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     (state: any) => state.currentWorkspace,
   );
 
-  const { onCreateTask, loading: creatTaskLoading } = useCreateTask();
+  const {
+    data: updateTask,
+    onUpdateTask,
+    loading: updateTaskLoading,
+  } = useUpdateTask();
 
   const {
     data: singleTask,
     OnGetSingleTask,
     loading: getSingleTaskLoading,
   } = useGetSingleTask();
+
+  const {
+    data: AllTasks,
+    onGetTasks,
+    loading: getTasksLoading,
+  } = useGetTasks();
 
   const {
     data: workspaceData,
@@ -120,64 +135,67 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     }));
   }, [taskAssignee]);
 
-  // const handleCreateTask = () =>
-  //   // e: React.MouseEvent<HTMLButtonElement> | React.FormEvent,
-  //   {
-  //     // e.preventDefault();
-  //     const {
-  //       description,
-  //       workspace_id,
-  //       assignee,
-  //       deadline,
-  //       status,
-  //       priority,
-  //     } = task;
-  //     let errorMsg = "";
+  const handleUpdateTask = () => {
+    const { description, workspace_id, assignee, deadline, status, priority } =
+      task;
+    let errorMsg = "";
 
-  //     console.log("deadline:", deadline);
-  //     console.log("deadline type:", typeof deadline);
-  //     console.log("parsed date:", new Date(deadline));
+    if (!task.description) {
+      errorMsg = "description is required.";
+    } else if (!task?.assignee) {
+      errorMsg = "assignee is required.";
+    }
 
-  //     if (!task.description) {
-  //       errorMsg = "description is required.";
-  //     } else if (!task?.assignee) {
-  //       errorMsg = "assignee is required.";
-  //     }
+    if (errorMsg) {
+      showErrorToast({ message: errorMsg });
+    } else {
+      // console.log(workspace_id);
 
-  //     if (errorMsg) {
-  //       showErrorToast({ message: errorMsg });
-  //     } else {
-  //       // console.log(workspace_id);
+      onUpdateTask({
+        id: currentTask?.id || "",
+        payload: {
+          description,
+          workspace_id,
+          assignee,
+          deadline,
+          status,
+          priority,
+        },
+        successCallback: async () => {
+          showSuccessToast({ message: "Task Updated Successfully!" });
 
-  //       onCreateTask({
-  //         payload: {
-  //           description,
-  //           workspace_id,
-  //           assignee,
-  //           deadline,
-  //           status,
-  //           priority,
-  //         },
-  //         successCallback: async () => {
-  //           showSuccessToast({ message: "Task Created Successfully!" });
+          // Fetch new tasks
 
-  //           // const updatedWorkspace = await onGetSingleWorkspace(workspace_id);
-  //           // if (updatedWorkspace) {
-  //           //   dispatch(setWorkspace(updatedWorkspace));
-  //           // }
-  //           // console.log("Task Added to:", workspace_id);
+          // onGetTasks({
+          //   workspaceId: workspace_id || "",
+          //   // successCallback: (tasks) => {
+          //   //   // Tasks are already set in state by onGetTasks
+          //   //   // But you can do additional logic here if needed
+          //   //   let all = tasks;
+          //   //   dispatch(setTasks(tasks));
+          //   //   console.log("Tasks refreshed:", tasks);
+          //   //   console.log("All tasks:", AllTasks);
+          //   // },
+          // });
 
-  //           await onGetTasks({ workspaceId: workspace_id });
-  //           console.log("New tasks:", taskData);
+          onGetTasks({
+            workspaceId: workspace_id,
+          });
 
-  //           handleDialogClose();
-  //         },
-  //         errorCallback: ({ message }) => {
-  //           showErrorToast({ message });
-  //         },
-  //       });
-  //     }
-  //   };
+          handleDialogClose();
+        },
+        errorCallback: ({ message }) => {
+          showErrorToast({ message });
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (AllTasks && AllTasks.length > 0) {
+      console.log("AllTasks updated:", AllTasks);
+    }
+  }, [AllTasks, getTasksLoading]);
 
   function checkWsId() {
     if (!singleWorkspaceLoading) {
@@ -197,7 +215,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     //   },
     // });
     OnGetSingleTask({
-      id: currentTask?.id,
+      id: currentTask?.id || "",
       successCallback: (fetchedTask) => {
         if (fetchedTask) {
           // Normalize priority and status to capitalized format
@@ -234,6 +252,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
       },
     });
     console.log("from edit:", currentTask);
+
     // console.log(single)
   }
 
@@ -513,9 +532,9 @@ export default function AddTask({ onGetTasks, taskData }: any) {
 
                 <button
                   className="w-[100px] rounded bg-[#222] py-2 text-[13px] font-normal text-white transition-all duration-300 hover:bg-[#111]"
-                  // onClick={handleCreateTask}
+                  onClick={handleUpdateTask}
                 >
-                  {!creatTaskLoading ? (
+                  {!updateTaskLoading ? (
                     "Update"
                   ) : (
                     <span className="flex w-full items-center justify-center">

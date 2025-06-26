@@ -40,43 +40,36 @@ export default function CurrentWorkspace() {
 }
 
 function Workspace() {
-  // const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const [filteredWorkspaces, setFilteredWorkspaces] = useState<any>([]);
-  // const [tasks, setTasks] = useState<any>([]);
 
   const { user } = useSelector((state: any) => state.auth);
   const { currentWorkspace } = useSelector(
     (state: any) => state.currentWorkspace,
   );
 
-  // const { tasksData } = useSelector((state: any) => state.TasksData);
+  // Use the unified hook
+  const { data: taskData, onGetTasks, loading: tasksLoading } = useGetTasks();
 
-  // get user's workspaces
   const {
     data: workspaces,
     onGetUserWorkspace,
     loading: workspacingLoading,
   } = useGetUserWorkspace(user?.id);
 
-  // get workspace tasks
-  const { data: taskData, onGetTasks, loading: tasksLoading } = useGetTasks();
-
-  // get workspace members data
   const {
     data: memberData,
     onGetMembers,
     loading: membersLoading,
   } = useGetMembers();
 
-  // get workspace data
   const {
     data: workspaceData,
     onGetSingleWorkspace,
     loading: singleWorkspaceLoading,
   } = useGetSingleWorkspace(currentWorkspace);
 
-  // fetch and retrieve on refresh
+  // Fixed useEffect - only fetch data when user changes
   useEffect(() => {
     if (user) {
       onGetUserWorkspace(user?._id);
@@ -87,33 +80,31 @@ function Workspace() {
           if (id) {
             dispatch(setCurrentWorkspace(id));
             onGetSingleWorkspace(id);
-            onGetTasks({ workspaceId: id });
+
+            // Add success callback to ensure proper handling
+            onGetTasks({
+              workspaceId: id,
+              successCallback: (tasks) => {
+                console.log("Initial tasks loaded:", tasks);
+              },
+            });
+
             onGetMembers({ workspaceId: id });
           }
         },
       });
-      onGetUserWorkspace(user?._id);
     }
+  }, [user]); // Only depend on user
 
-    // call the task enpoint here
-  }, [user]);
-
-  // Open swith workspace modal
-  // Get user workspaces
-  // Filter current WS and list the others
   function openWorkspaceDialog() {
     onGetUserWorkspace(user?._id);
     setFilteredWorkspaces(
       workspaces?.filter((workspace) => workspace._id !== workspaceData?._id) ||
         [],
     );
-
-    // console.log(workspaceData?._id);
-    // call the task enpoint here
   }
 
   function switchWorkspace(id: string) {
-    // Only save if workspaceData exists
     if (workspaceData) {
       saveToLocalStorage({
         key: "WorkspaceData",
@@ -125,46 +116,39 @@ function Workspace() {
     onGetUserWorkspace(user?._id);
     onGetSingleWorkspace(id);
     dispatch(setCurrentWorkspace(id));
-    onGetTasks({ workspaceId: id });
+
+    // Add success callback for workspace switching
+    onGetTasks({
+      workspaceId: id,
+      successCallback: (tasks) => {
+        console.log("Tasks loaded after workspace switch:", tasks);
+      },
+    });
+
     onGetMembers({ workspaceId: id });
 
     setFilteredWorkspaces(
       workspaces?.filter((workspace) => workspace._id !== id) || [],
     );
-    // console.log(id);
   }
 
-  // Add this useEffect to handle workspaceData changes
+  // FIXED: Simplified useEffect to prevent clearing
   useEffect(() => {
-    if (workspaceData && taskData) {
+    if (workspaceData) {
       dispatch(setCurrentWorkspace(workspaceData?._id));
       dispatch(setWorkspace(workspaceData));
-      dispatch(setTasks(taskData));
-      if (memberData) {
-        dispatch(setMembers(memberData));
-      }
     }
-    // console.log("This works");
-    // console.log(workspaceData?._id);
-    // console.log(taskData);
-  }, [memberData, taskData, workspaceData, dispatch]);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (workspaceData && taskData && memberData) {
-        dispatch(setWorkspace(workspaceData));
-        dispatch(setTasks(taskData));
-        dispatch(setMembers(memberData));
-        // Add null check here too
-        if (workspaceData._id) {
-          dispatch(setCurrentWorkspace(workspaceData._id));
-        }
-        // console.log(memberData);
-      }
-    }, 200);
+    if (memberData) {
+      dispatch(setMembers(memberData));
+    }
 
-    return () => clearTimeout(timeout);
-  }, [workspaceData, taskData, memberData, dispatch]);
+    // Only dispatch tasks if we have tasks data
+    if (taskData && taskData.length > 0) {
+      console.log("Dispatching tasks to Redux:", taskData);
+      dispatch(setTasks(taskData));
+    }
+  }, [workspaceData, memberData, taskData, dispatch]);
 
   return (
     <div className="w-full text-left">
