@@ -326,6 +326,32 @@ export default function TaskDetails({
                 </div>
               </div>
 
+              {/* Actions */}
+              {/* <div className="flex flex-row items-center gap-8">
+                <div className="flex w-[90px] items-center justify-start gap-1">
+                  <FontAwesomeIcon
+                    icon={faCircleCheck}
+                    className="h-3 w-3 text-gray-500 hover:text-gray-700"
+                  />
+                  <label className="text-[11px] text-gray-500">Actions:</label>
+                </div>
+                <div
+                  className={`flex flex-row items-center gap-1 rounded-sm ${priorityDisplay.color} px-1.5 py-0.5`}
+                >
+                  <button
+                    onClick={() => {
+                      // Handle task completion logic here
+                      console.log("Task completed");
+                      // Optionally, you can close the dialog after completion
+                      setIsDetailsOpen(false);
+                    }}
+                    className="text-[11px] font-normal text-green-800 hover:underline"
+                  >
+                    Mark as Done
+                  </button>
+                </div>
+              </div> */}
+
               <div className="flex gap-3 pt-4 text-[12px]">
                 <div className="mt-6 w-full">
                   {/* Tab Headers */}

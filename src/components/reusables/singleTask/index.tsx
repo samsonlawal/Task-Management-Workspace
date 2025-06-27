@@ -88,11 +88,11 @@ export default function SingleTask({
   }
 
   return (
-    <div className="group relative flex min-h-[96px] w-[205px] flex-col justify-between gap-2 rounded-[6px] border border-gray-200 bg-gray-200/60 pt-2 text-[14px] font-[300]">
+    <div className="group relative flex min-h-[96px] w-[205px] flex-col justify-between gap-2 rounded-[6px] border border-gray-200 bg-gray-200 pt-2 text-[14px] font-[300]">
       <div className="flex flex-row justify-between px-[10px] font-medium">
         <div className="flex flex-row gap-1">
           <div
-            className={`flex h-fit w-fit flex-col items-center justify-center gap-1 rounded-[3px] ${priority && priorityColors[priority as keyof typeof priorityColors] ? priorityColors[priority as keyof typeof priorityColors] : "bg-gray-700"} px-1 py-0.5`}
+            className={`flex h-fit w-fit flex-col items-center justify-center gap-1 rounded-[3px] ${priority && priorityColors[priority as keyof typeof priorityColors] ? priorityColors[priority as keyof typeof priorityColors] : "bg-gray-700"} px-1.5 py-1`}
           >
             <p
               className={`text-[9px] ${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"}`}
@@ -101,7 +101,7 @@ export default function SingleTask({
                 (priority || "")?.split(" ")[0].slice(1).toLowerCase()}
             </p>
           </div>
-          <div className="flex h-fit w-fit flex-col items-center justify-center gap-1 rounded-[3px] bg-gray-500/10 px-1 py-0.5">
+          <div className="flex h-fit w-fit flex-col items-center justify-center gap-1 rounded-[3px] bg-gray-500/10 px-1.5 py-1">
             <p className="text-[9px] text-gray-500">
               <FontAwesomeIcon
                 icon={faCalendar}
@@ -118,7 +118,7 @@ export default function SingleTask({
         </div>
       </div>
       <div className="flex min-h-[18px] items-start">
-        <p className="line-clamp-2 h-fit px-[10px] text-[10px] font-medium leading-tight">
+        <p className="line-clamp-2 h-fit px-[10px] text-[10.5px] font-normal leading-tight">
           {desc}
         </p>
       </div>

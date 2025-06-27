@@ -182,4 +182,44 @@ export const useUpdateTask = () => {
   return { data, loading, onUpdateTask };
 };
 
+export const useDeleteTask = () => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<TSingleTask | null | undefined>(null);
+
+  const onDeleteTask = async ({
+    id,
+    payload,
+    successCallback,
+    errorCallback,
+  }: {
+    id: string;
+    payload: TAddTask;
+    successCallback?: (data?: any) => void;
+    errorCallback?: (props: { message?: string; description?: string }) => void;
+  }) => {
+    if (!id) return;
+
+    setLoading(true);
+
+    try {
+      const res = await TaskService.deleteTask(id, { payload });
+      const task = res?.data?.task;
+      // console.log(res?.data);
+
+      successCallback?.(res?.data);
+    } catch (error: Error | AxiosError | any) {
+      const message =
+        error?.response?.data?.message || "Failed to fetch single task";
+      const description = error?.response?.data?.description || "";
+
+      showErrorToast({ message, description });
+      errorCallback?.({ message, description });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { data, loading, onDeleteTask };
+};
+
 

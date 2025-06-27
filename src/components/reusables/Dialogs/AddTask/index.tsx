@@ -187,7 +187,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
         className="flex w-fit items-center justify-center gap-2 rounded-[6px] bg-[#242424] px-3 py-2.5 text-[12px] font-regular text-white transition-all duration-300 hover:bg-black"
       >
         <FontAwesomeIcon icon={faPlus} />
-        Add New Task
+        New Task
       </button>
       <Dialog
         open={isOpen}
