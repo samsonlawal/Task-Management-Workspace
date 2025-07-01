@@ -136,19 +136,19 @@ export default function TaskDetails({
           dispatch(setSingleTask(taskData));
           console.log("Singletask:", taskData);
         }}
-        className="absolute right-0 top-0 z-10 p-2 opacity-0 transition-opacity hover:opacity-100 focus:opacity-100"
+        className="absolute right-0 top-0 z-10 p-2 transition-opacity hover:opacity-100 focus:opacity-100"
         aria-label="Task options"
       >
         <FontAwesomeIcon
           icon={faEllipsisVertical}
-          className="h-4 w-4 text-gray-500 hover:text-gray-700"
+          className="h-4 w-4 text-[#989898] hover:text-gray-700"
         />
       </button>
       <Dialog
         open={isDetailsOpen}
         onClose={handleDialogClose}
         transition
-        className="poppins fixed inset-0 flex w-screen select-none items-center justify-end bg-black/30 p-4 font-madei transition duration-300 ease-out data-[closed]:opacity-0"
+        className="poppins fixed inset-0 flex w-screen select-none items-center justify-end bg-black/30 font-madei transition duration-300 ease-out data-[closed]:opacity-0"
       >
         <DialogBackdrop className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
 
