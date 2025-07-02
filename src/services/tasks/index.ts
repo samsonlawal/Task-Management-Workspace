@@ -48,13 +48,66 @@ class service {
     );
   }
 
-  deleteTask(id: string, { payload }: { payload: TAddTask }) {
+  deleteTask(id: string) {
+    const raw = localStorage.getItem("STACKTASK_PERSISTOR");
+    const parsed = raw ? JSON.parse(raw) : null;
+    const token = parsed?.accessToken;
+
+    return axios.delete(
+      env.api.tasks + "/" + id,
+      !token
+        ? undefined
+        : {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          },
+    );
+  }
+
+  promoteTask(id: string, { payload }: { payload: TAddTask }) {
     const raw = localStorage.getItem("STACKTASK_PERSISTOR");
     const parsed = raw ? JSON.parse(raw) : null;
     const token = parsed?.accessToken;
 
     return axios.patch(
-      env.api.tasks + "/" + id,
+      env.api.tasks + "/promote/" + id,
+      payload,
+      !token
+        ? undefined
+        : {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          },
+    );
+  }
+
+  demoteTask(id: string, { payload }: { payload: TAddTask }) {
+    const raw = localStorage.getItem("STACKTASK_PERSISTOR");
+    const parsed = raw ? JSON.parse(raw) : null;
+    const token = parsed?.accessToken;
+
+    return axios.patch(
+      env.api.tasks + "/demote/" + id,
+      payload,
+      !token
+        ? undefined
+        : {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          },
+    );
+  }
+
+  markAsDone(id: string, { payload }: { payload: TAddTask }) {
+    const raw = localStorage.getItem("STACKTASK_PERSISTOR");
+    const parsed = raw ? JSON.parse(raw) : null;
+    const token = parsed?.accessToken;
+
+    return axios.patch(
+      env.api.tasks + "/done/" + id,
       payload,
       !token
         ? undefined

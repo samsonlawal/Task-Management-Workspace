@@ -142,7 +142,14 @@ export default function AddTask({ onGetTasks, taskData }: any) {
 
             await onGetTasks({ workspaceId: workspace_id });
             console.log("New tasks:", taskData);
-
+            setTask({
+              description: "",
+              workspace_id: "",
+              assignee: "",
+              deadline: "",
+              status: "",
+              priority: "",
+            });
             handleDialogClose();
           },
           errorCallback: ({ message }) => {

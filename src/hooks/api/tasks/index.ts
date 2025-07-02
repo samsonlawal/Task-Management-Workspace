@@ -188,12 +188,12 @@ export const useDeleteTask = () => {
 
   const onDeleteTask = async ({
     id,
-    payload,
+    // payload,
     successCallback,
     errorCallback,
   }: {
     id: string;
-    payload: TAddTask;
+    // payload: TAddTask;
     successCallback?: (data?: any) => void;
     errorCallback?: (props: { message?: string; description?: string }) => void;
   }) => {
@@ -202,9 +202,8 @@ export const useDeleteTask = () => {
     setLoading(true);
 
     try {
-      const res = await TaskService.deleteTask(id, { payload });
-      const task = res?.data?.task;
-      // console.log(res?.data);
+      const res = await TaskService.deleteTask(id);
+      console.log(res?.data);
 
       successCallback?.(res?.data);
     } catch (error: Error | AxiosError | any) {
@@ -222,4 +221,43 @@ export const useDeleteTask = () => {
   return { data, loading, onDeleteTask };
 };
 
+// export const usePromoteTask = () => {
+//   const [loading, setLoading] = useState(false);
+//   const [data, setData] = useState<TSingleTask | null | undefined>(null);
+
+//   const onPromoteTask = async ({
+//     id,
+//     // payload,
+//     successCallback,
+//     errorCallback,
+//   }: {
+//     id: string;
+//     payload: TAddTask;
+//     successCallback?: (data?: any) => void;
+//     errorCallback?: (props: { message?: string; description?: string }) => void;
+//   }) => {
+//     if (!id) return;
+
+//     setLoading(true);
+
+//     try {
+//       const res = await TaskService.updateTask(id, { payload });
+//       const task = res?.data?.task;
+//       // console.log(res?.data);
+
+//       successCallback?.(res?.data);
+//     } catch (error: Error | AxiosError | any) {
+//       const message =
+//         error?.response?.data?.message || "Failed to fetch single task";
+//       const description = error?.response?.data?.description || "";
+
+//       showErrorToast({ message, description });
+//       errorCallback?.({ message, description });
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return { data, loading, onUpdateTask };
+// };
 

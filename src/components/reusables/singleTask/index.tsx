@@ -79,6 +79,7 @@ export default function SingleTask({
     status, // You might want to pass this as a prop too
     createdAt, // You might want to pass this as a prop
     workspaceName: workspaceData?.name,
+    workspaceId: workspaceData?._id,
   };
 
   function gettaskdetails() {
