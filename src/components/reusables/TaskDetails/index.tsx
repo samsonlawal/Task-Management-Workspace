@@ -31,7 +31,7 @@ import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { TWorkspaceData } from "@/types";
 import { setSingleTask, setTasks } from "@/redux/Slices/taskSlice";
 import EditTask from "../Dialogs/EditTask";
-import { useDeleteTask, useGetTasks } from "@/hooks/api/tasks";
+import { useDeleteTask, useGetTasks, usePromoteTask } from "@/hooks/api/tasks";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 
 interface TaskData {
@@ -60,6 +60,9 @@ export default function TaskDetails({
   const dispatch = useDispatch();
 
   const { onDeleteTask, loading: deleteLoading } = useDeleteTask();
+  const { onPromoteTask, loading: promoteLoading } = usePromoteTask();
+  // const { onPromoteTask, loading: promoteLoading } = us();
+
   const {
     data: AllTasks,
     onGetTasks,
@@ -157,6 +160,28 @@ export default function TaskDetails({
     }
   }
 
+  function handlePromoteTask() {
+    // console.log(taskData.id);
+    const { id, workspaceId } = taskData;
+    console.log(taskData);
+
+    if (id) {
+      onPromoteTask({
+        id: id,
+        successCallback: async () => {
+          // setIsDetailsOpen(false);
+          onGetTasks({
+            workspaceId: workspaceId,
+          });
+          showSuccessToast({ message: "Task Promoted Successfully!" });
+        },
+        errorCallback: ({ message }) => {
+          showErrorToast({ message });
+        },
+      });
+    }
+  }
+
   return (
     <>
       <button
@@ -180,29 +205,29 @@ export default function TaskDetails({
         transition
         className="poppins fixed inset-0 flex w-screen select-none items-center justify-end bg-black/30 font-madei transition duration-300 ease-out data-[closed]:opacity-0"
       >
-        {!deleteLoading ? (
+        {!deleteLoading || !promoteLoading ? (
           <>
             <DialogBackdrop className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
 
             <div className="fixed inset-0 flex w-screen items-center justify-end p-2">
               <DialogPanel
-                className="h-[100%] w-[400px] space-y-1 rounded-xl bg-gray-100 px-8 py-8"
+                className="h-[100%] w-[400px] space-y-1 rounded-xl bg-gray-100 px-8 py-6"
                 onClick={(e) => e.stopPropagation()}
               >
                 <DialogTitle className="flex flex-col items-start justify-center gap-8 pb-4 font-medium">
-                  <div className="flex w-full flex-row items-center justify-between border-b-[1px] pb-3">
+                  <div className="flex w-full flex-row items-center justify-between border-b-[1px] pb-2">
+                    <img
+                      src="/icons/cancel.svg"
+                      alt=""
+                      className="h-3 w-3"
+                      onClick={() => setIsDetailsOpen(false)}
+                    />
                     <div className="flex w-fit cursor-pointer items-center justify-start rounded-full">
                       {/* <FontAwesomeIcon
             icon={faXmark}
             className="h-4 w-4 text-gray-500 hover:text-gray-700"
             onClick={() => setIsOpen(false)}
           /> */}
-                      <img
-                        src="/icons/cancel.svg"
-                        alt=""
-                        className="h-3 w-3"
-                        onClick={() => setIsDetailsOpen(false)}
-                      />
 
                       <div className="flex flex-row text-[12px] font-normal">
                         {/* <EditTask /> */}
@@ -232,7 +257,7 @@ export default function TaskDetails({
         /> */}
                   </div>
 
-                  <div className="flex w-full flex-col items-center justify-between">
+                  <div className="flex w-full flex-col items-start justify-between">
                     <div className="text-[12px] font-normal">
                       <p className="text-gray-400">
                         Project {`> `}
@@ -382,30 +407,53 @@ export default function TaskDetails({
                   </div>
 
                   {/* Actions */}
-                  {/* <div className="flex flex-row items-center gap-8">
-        <div className="flex w-[90px] items-center justify-start gap-1">
-          <FontAwesomeIcon
-            icon={faCircleCheck}
-            className="h-3 w-3 text-gray-500 hover:text-gray-700"
-          />
-          <label className="text-[11px] text-gray-500">Actions:</label>
-        </div>
-        <div
-          className={`flex flex-row items-center gap-1 rounded-sm ${priorityDisplay.color} px-1.5 py-0.5`}
-        >
-          <button
-            onClick={() => {
-              // Handle task completion logic here
-              console.log("Task completed");
-              // Optionally, you can close the dialog after completion
-              setIsDetailsOpen(false);
-            }}
-            className="text-[11px] font-normal text-green-800 hover:underline"
-          >
-            Mark as Done
-          </button>
-        </div>
-      </div> */}
+                  <div className="flex flex-row items-center gap-8">
+                    <div className="flex w-[90px] items-center justify-start gap-1">
+                      <FontAwesomeIcon
+                        icon={faCircleCheck}
+                        className="h-3 w-3 text-gray-500 hover:text-gray-700"
+                      />
+                      <label className="text-[11px] text-gray-500">
+                        Actions:
+                      </label>
+                    </div>
+                    <div className="flex flex-row items-center justify-center gap-2">
+                      <div className="flex flex-row text-[12px] font-normal">
+                        {/* <EditTask /> */}
+
+                        <button
+                          onClick={() => {
+                            handlePromoteTask();
+                          }}
+                          className="flex h-7 w-7 items-center justify-center rounded-sm bg-slate-300 hover:bg-gray-300/70 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                          aria-label="Task options"
+                        >
+                          <img src="/icons/btn-left.svg" alt="" />
+                        </button>
+                      </div>
+                      <button
+                        onClick={() => {
+                          // setIsDetailsOpen(false);
+                        }}
+                        className="h-7 rounded-sm bg-slate-300 px-2.5 text-[11px] font-normal text-gray-500 hover:bg-gray-300/70"
+                      >
+                        Done
+                      </button>
+                      <div className="flex flex-row text-[12px] font-normal">
+                        {/* <EditTask /> */}
+
+                        <button
+                          onClick={() => {
+                            handlePromoteTask();
+                          }}
+                          className="flex h-7 w-7 items-center justify-center rounded-sm bg-slate-300 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                          aria-label="Task options"
+                        >
+                          <img src="/icons/btn-right.svg" alt="" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
 
                   <div className="flex gap-3 pt-4 text-[12px]">
                     <div className="mt-6 w-full">

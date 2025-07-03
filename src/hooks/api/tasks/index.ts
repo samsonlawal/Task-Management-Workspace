@@ -221,43 +221,121 @@ export const useDeleteTask = () => {
   return { data, loading, onDeleteTask };
 };
 
-// export const usePromoteTask = () => {
-//   const [loading, setLoading] = useState(false);
-//   const [data, setData] = useState<TSingleTask | null | undefined>(null);
+export const usePromoteTask = () => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<TSingleTask | null | undefined>(null);
 
-//   const onPromoteTask = async ({
-//     id,
-//     // payload,
-//     successCallback,
-//     errorCallback,
-//   }: {
-//     id: string;
-//     payload: TAddTask;
-//     successCallback?: (data?: any) => void;
-//     errorCallback?: (props: { message?: string; description?: string }) => void;
-//   }) => {
-//     if (!id) return;
+  const onPromoteTask = async ({
+    id,
+    // payload,
+    successCallback,
+    errorCallback,
+  }: {
+    id: string;
+    // payload: TAddTask;
+    successCallback?: (data?: any) => void;
+    errorCallback?: (props: { message?: string; description?: string }) => void;
+  }) => {
+    if (!id) return;
 
-//     setLoading(true);
+    setLoading(true);
 
-//     try {
-//       const res = await TaskService.updateTask(id, { payload });
-//       const task = res?.data?.task;
-//       // console.log(res?.data);
+    try {
+      const res = await TaskService.promoteTask(id);
+      // const task = res?.data?.task;
+      // console.log(res?.data);
 
-//       successCallback?.(res?.data);
-//     } catch (error: Error | AxiosError | any) {
-//       const message =
-//         error?.response?.data?.message || "Failed to fetch single task";
-//       const description = error?.response?.data?.description || "";
+      successCallback?.(res?.data);
+    } catch (error: Error | AxiosError | any) {
+      const message =
+        error?.response?.data?.message || "Failed to promote task";
+      const description = error?.response?.data?.description || "";
 
-//       showErrorToast({ message, description });
-//       errorCallback?.({ message, description });
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+      showErrorToast({ message, description });
+      errorCallback?.({ message, description });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-//   return { data, loading, onUpdateTask };
-// };
+  return { data, loading, onPromoteTask };
+};
+
+export const useDemoteTask = () => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<TSingleTask | null | undefined>(null);
+
+  const onPromoteTask = async ({
+    id,
+    // payload,
+    successCallback,
+    errorCallback,
+  }: {
+    id: string;
+    // payload: TAddTask;
+    successCallback?: (data?: any) => void;
+    errorCallback?: (props: { message?: string; description?: string }) => void;
+  }) => {
+    if (!id) return;
+
+    setLoading(true);
+
+    try {
+      const res = await TaskService.demoteTask(id);
+      // const task = res?.data?.task;
+      // console.log(res?.data);
+
+      successCallback?.(res?.data);
+    } catch (error: Error | AxiosError | any) {
+      const message = error?.response?.data?.message || "Failed to demote task";
+      const description = error?.response?.data?.description || "";
+
+      showErrorToast({ message, description });
+      errorCallback?.({ message, description });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { data, loading, onPromoteTask };
+};
+
+export const useMarkAsDone = () => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<TSingleTask | null | undefined>(null);
+
+  const onPromoteTask = async ({
+    id,
+    // payload,
+    successCallback,
+    errorCallback,
+  }: {
+    id: string;
+    // payload: TAddTask;
+    successCallback?: (data?: any) => void;
+    errorCallback?: (props: { message?: string; description?: string }) => void;
+  }) => {
+    if (!id) return;
+
+    setLoading(true);
+
+    try {
+      const res = await TaskService.markAsDone(id);
+      // const task = res?.data?.task;
+      // console.log(res?.data);
+
+      successCallback?.(res?.data);
+    } catch (error: Error | AxiosError | any) {
+      const message = error?.response?.data?.message || "Failed mark as done";
+      const description = error?.response?.data?.description || "";
+
+      showErrorToast({ message, description });
+      errorCallback?.({ message, description });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { data, loading, onPromoteTask };
+};
 
