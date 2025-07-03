@@ -265,7 +265,7 @@ export const useDemoteTask = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<TSingleTask | null | undefined>(null);
 
-  const onPromoteTask = async ({
+  const onDemoteTask = async ({
     id,
     // payload,
     successCallback,
@@ -297,14 +297,14 @@ export const useDemoteTask = () => {
     }
   };
 
-  return { data, loading, onPromoteTask };
+  return { data, loading, onDemoteTask };
 };
 
 export const useMarkAsDone = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<TSingleTask | null | undefined>(null);
 
-  const onPromoteTask = async ({
+  const onMarkAsDone = async ({
     id,
     // payload,
     successCallback,
@@ -336,6 +336,6 @@ export const useMarkAsDone = () => {
     }
   };
 
-  return { data, loading, onPromoteTask };
+  return { data, loading, onMarkAsDone };
 };
 

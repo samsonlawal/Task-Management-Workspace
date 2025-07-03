@@ -1,4 +1,3 @@
-// Updated TaskDetails component - uses dynamic task data
 "use client";
 
 import {
@@ -31,7 +30,13 @@ import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { TWorkspaceData } from "@/types";
 import { setSingleTask, setTasks } from "@/redux/Slices/taskSlice";
 import EditTask from "../Dialogs/EditTask";
-import { useDeleteTask, useGetTasks, usePromoteTask } from "@/hooks/api/tasks";
+import {
+  useDeleteTask,
+  useDemoteTask,
+  useGetTasks,
+  useMarkAsDone,
+  usePromoteTask,
+} from "@/hooks/api/tasks";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 
 interface TaskData {
@@ -61,7 +66,8 @@ export default function TaskDetails({
 
   const { onDeleteTask, loading: deleteLoading } = useDeleteTask();
   const { onPromoteTask, loading: promoteLoading } = usePromoteTask();
-  // const { onPromoteTask, loading: promoteLoading } = us();
+  const { onDemoteTask, loading: demoteLoading } = useDemoteTask();
+  const { onMarkAsDone, loading: markAsDoneLoading } = useMarkAsDone();
 
   const {
     data: AllTasks,
@@ -170,10 +176,57 @@ export default function TaskDetails({
         id: id,
         successCallback: async () => {
           // setIsDetailsOpen(false);
+          console.log("Task Promoted Successfully!");
           onGetTasks({
             workspaceId: workspaceId,
           });
           showSuccessToast({ message: "Task Promoted Successfully!" });
+        },
+        errorCallback: ({ message }) => {
+          showErrorToast({ message });
+        },
+      });
+    }
+  }
+
+  function handleDemoteTask() {
+    // console.log(taskData.id);
+    const { id, workspaceId } = taskData;
+    console.log(taskData);
+
+    if (id) {
+      onDemoteTask({
+        id: id,
+        successCallback: async () => {
+          // setIsDetailsOpen(false);
+          console.log("Task Demoted Successfully!");
+          onGetTasks({
+            workspaceId: workspaceId,
+          });
+          showSuccessToast({ message: "Task Demoted Successfully!" });
+        },
+        errorCallback: ({ message }) => {
+          showErrorToast({ message: "Failed to demote task" });
+        },
+      });
+    }
+  }
+
+  function handleMarkAsDone() {
+    // console.log(taskData.id);
+    const { id, workspaceId } = taskData;
+    console.log(taskData);
+
+    if (id) {
+      onMarkAsDone({
+        id: id,
+        successCallback: async () => {
+          // setIsDetailsOpen(false);
+          console.log("Task Demoted Successfully!");
+          onGetTasks({
+            workspaceId: workspaceId,
+          });
+          showSuccessToast({ message: "Task Demoted Successfully!" });
         },
         errorCallback: ({ message }) => {
           showErrorToast({ message });
@@ -418,27 +471,51 @@ export default function TaskDetails({
                       </label>
                     </div>
                     <div className="flex flex-row items-center justify-center gap-2">
+                      {/* Demote task */}
                       <div className="flex flex-row text-[12px] font-normal">
                         {/* <EditTask /> */}
 
                         <button
                           onClick={() => {
-                            handlePromoteTask();
+                            handleDemoteTask();
                           }}
-                          className="flex h-7 w-7 items-center justify-center rounded-sm bg-slate-300 hover:bg-gray-300/70 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                          disabled={markAsDoneLoading}
+                          className="flex h-7 w-7 items-center justify-center rounded-sm bg-slate-300 hover:bg-gray-300/70 focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:cursor-not-allowed"
                           aria-label="Task options"
                         >
-                          <img src="/icons/btn-left.svg" alt="" />
+                          {demoteLoading ? (
+                            <img
+                              src="/icons/loaderWhite.svg"
+                              alt=""
+                              className="w-3 animate-spin"
+                            />
+                          ) : (
+                            <img src="/icons/btn-left.svg" alt="" />
+                          )}
                         </button>
                       </div>
+
+                      {/* Mark as done */}
                       <button
                         onClick={() => {
                           // setIsDetailsOpen(false);
+                          handleMarkAsDone();
                         }}
-                        className="h-7 rounded-sm bg-slate-300 px-2.5 text-[11px] font-normal text-gray-500 hover:bg-gray-300/70"
+                        disabled={markAsDoneLoading}
+                        className="h-7 w-16 rounded-sm bg-slate-300 px-2.5 text-[11px] font-normal text-gray-500 hover:bg-gray-300/70 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:cursor-not-allowed"
                       >
-                        Done
+                        {markAsDoneLoading ? (
+                          <img
+                            src="/icons/loaderWhite.svg"
+                            alt=""
+                            className="w-3 animate-spin"
+                          />
+                        ) : (
+                          <p>Done</p>
+                        )}
                       </button>
+
+                      {/* Promote Task */}
                       <div className="flex flex-row text-[12px] font-normal">
                         {/* <EditTask /> */}
 
@@ -446,10 +523,19 @@ export default function TaskDetails({
                           onClick={() => {
                             handlePromoteTask();
                           }}
-                          className="flex h-7 w-7 items-center justify-center rounded-sm bg-slate-300 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                          disabled={markAsDoneLoading}
+                          className="flex h-7 w-7 items-center justify-center rounded-sm bg-slate-300 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:cursor-not-allowed"
                           aria-label="Task options"
                         >
-                          <img src="/icons/btn-right.svg" alt="" />
+                          {!promoteLoading ? (
+                            <img src="/icons/btn-right.svg" alt="" />
+                          ) : (
+                            <img
+                              src="/icons/loaderWhite.svg"
+                              alt=""
+                              className="w-3 animate-spin"
+                            />
+                          )}
                         </button>
                       </div>
                     </div>
