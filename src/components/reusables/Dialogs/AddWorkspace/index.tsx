@@ -14,6 +14,8 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCreateWorkspace } from "@/hooks/api/workspace";
 import { TAddWorkspace } from "@/types";
+import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
+import { showErrorToast } from "@/utils/toaster";
 
 export default function AddWorkspace() {
   let [isOpen, setIsOpen] = useState(false);
@@ -22,28 +24,53 @@ export default function AddWorkspace() {
     description: "",
   });
 
+  const [userId, setUserId] = useState<string>("");
+
   useEffect(() => {
-    // getFromLocalStorage({
-    //   key: "CurrentWorkspaceId",
-    //   cb: (id: string) => {
-    //     if (id) {
-    //       setWorkspaceId(id);
-    //       setTask((prevTask) => ({
-    //         ...prevTask,
-    //         workspace_id: id,
-    //       }));
-    //     }
-    //   },
-    // });
+    getFromLocalStorage({
+      key: "STACKTASK_PERSISTOR",
+      cb: (data: any) => {
+        if (data) {
+          setUserId(data?.user?._id);
+        }
+      },
+    });
   }, []);
 
   const {
     data: workspaceData,
-    loading: createWorkspaceLoadin,
+    loading: createWorkspaceLoading,
     OnCreateWorkspace,
   } = useCreateWorkspace();
 
   function handleCreateTask() {
+    const { name, description } = workspace;
+    let errorMsg = "";
+
+    if (!workspace.name) {
+      errorMsg = "name is required.";
+    }
+
+    if (errorMsg) {
+      showErrorToast({ message: errorMsg });
+    } else {
+      OnCreateWorkspace({
+        userId,
+        payload: {
+          name,
+          description,
+        },
+        successCallback: (data) => {
+          setWorkspace({ name: "", description: "" });
+          setIsOpen(false);
+          console.log("Workspace created successfully:", data);
+        },
+        errorCallback: (error) => {
+          console.error("Error creating workspace:", error);
+        },
+      });
+    }
+
     console.log(workspace.name);
   }
 
@@ -159,7 +186,7 @@ export default function AddWorkspace() {
                   className="w-[100px] rounded bg-[#222] py-2 text-[13px] font-normal text-white transition-all duration-300 hover:bg-[#111]"
                   onClick={handleCreateTask}
                 >
-                  {true ? (
+                  {!createWorkspaceLoading ? (
                     "Create"
                   ) : (
                     <span className="flex w-full items-center justify-center">
