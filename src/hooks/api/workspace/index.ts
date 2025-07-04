@@ -162,34 +162,41 @@ export const useAddMember = () => {
   return { loading, onAddMember };
 };
 
-// export const useCreateWorkspace = () => {
-//   const [loading, setLoading] = useState(false);
+export const useCreateWorkspace = (userId: string) => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<TWorkspace[]>([]);
 
-//   const OnCreateWorkspace = async ({
-//     payload,
-//     successCallback,
-//     errorCallback,
-//   }: {
-//     payload: TWorkspace;
-//     successCallback?: (data?: any) => void;
-//     errorCallback?: () => void;
-//   }) => {
-//     setLoading(true);
+  const OnCreateWorkspace = async ({
+    userId,
+    payload,
+    successCallback,
+    errorCallback,
+  }: {
+    userId: string;
+    payload: TWorkspace;
+    successCallback?: (data?: any) => void;
+    errorCallback?: (props: { message?: string; description?: string }) => void;
+  }) => {
+    setLoading(true);
 
-//     try {
-//       const res = await WorkspaceService.createTask({ payload });
+    try {
+      const res = await WorkspaceService.createWorkspace(userId, { payload });
+      const workspace = res?.data;
+      setData(workspace);
 
-//       successCallback?.(res?.data);
-//     } catch (error: Error | AxiosError | any) {
-//       showErrorToast({
-//         message: error?.response?.data?.message || "An error occurred!",
-//         description: error?.response?.data?.description || "",
-//       });
-//       errorCallback?.();
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+      console.log(workspace);
+      successCallback?.(res?.data);
+    } catch (error: Error | AxiosError | any) {
+      const message =
+        error?.response?.data?.message || "Failed to create wrokspace";
+      const description = error?.response?.data?.description || "";
 
-//   return { loading, OnCreateWorkspace };
-// };
+      showErrorToast({ message, description });
+      errorCallback?.({ message, description });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { data, loading, OnCreateWorkspace };
+};

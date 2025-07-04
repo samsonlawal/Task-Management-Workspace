@@ -43,9 +43,9 @@ class service {
     );
   }
 
-  // createWorkspace({ payload }: { payload: TWorkspace }) {
-  //   return axios.post(env.api.workspaces, payload);
-  // }
+  createWorkspace(userId: string, { payload }: { payload: TWorkspace }) {
+    return axios.post(env.api.workspaces + "/" + userId, payload);
+  }
 }
 
 const WorkspaceService = new service();

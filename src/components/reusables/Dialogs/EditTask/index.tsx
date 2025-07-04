@@ -46,7 +46,6 @@ export default function AddTask({ taskData }: any) {
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const [workspaceId, setWorkspaceId] = useState<string>("");
 
-  // const TasksData = useSelector((state: RootState) => state.TasksData);
 
   const MemberData = useSelector((state: RootState) => state.MemberData);
 
@@ -62,21 +61,6 @@ export default function AddTask({ taskData }: any) {
     status: "",
     priority: "",
   });
-
-  // Add this useEffect to populate task state with currentTask data
-  // useEffect(() => {
-  //   if (currentTask && isOpen) {
-  //     setTask({
-  //       description: currentTask.description || "",
-  //       workspace_id: currentTask.workspace_id || workspaceId,
-  //       assignee: currentTask.assignee.email || "",
-  //       deadline: currentTask.deadline || "",
-  //       status: currentTask.status || "to-do",
-  //       priority: currentTask.priority || "Low",
-  //     });
-  //     // setTaskAssignee(currentTask.assignee);
-  //   }
-  // }, [currentTask, isOpen, workspaceId]);
 
   const [taskAssignee, setTaskAssignee] = useState<any>();
   const { currentWorkspace } = useSelector(
@@ -166,18 +150,6 @@ export default function AddTask({ taskData }: any) {
 
           // Fetch new tasks
 
-          // onGetTasks({
-          //   workspaceId: workspace_id || "",
-          //   // successCallback: (tasks) => {
-          //   //   // Tasks are already set in state by onGetTasks
-          //   //   // But you can do additional logic here if needed
-          //   //   let all = tasks;
-          //   //   dispatch(setTasks(tasks));
-          //   //   console.log("Tasks refreshed:", tasks);
-          //   //   console.log("All tasks:", AllTasks);
-          //   // },
-          // });
-
           onGetTasks({
             workspaceId: workspace_id,
           });
@@ -201,19 +173,7 @@ export default function AddTask({ taskData }: any) {
     if (!singleWorkspaceLoading) {
       setIsEditOpen(true);
     }
-    // getFromLocalStorage({
-    //   key: "CurrentWorkspaceId",
-    //   cb: (id: string) => {
-    //     if (id) {
-    //       setWorkspaceId(id);
-    //       setTask((prevTask) => ({
-    //         ...prevTask,
-    //         workspace_id: id,
-    //       }));
-    //       // console.log(id);
-    //     }
-    //   },
-    // });
+
     OnGetSingleTask({
       id: currentTask?.id || "",
       successCallback: (fetchedTask) => {

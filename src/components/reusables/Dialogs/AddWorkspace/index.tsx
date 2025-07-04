@@ -105,12 +105,27 @@ export default function AddWorkspace() {
                   onClick={() => setIsOpen(false)}
                   className="bg-gray-200 text-black hover:bg-gray-300"
                 />
-                <Button
+                {/* <Button
                   text="Create"
                   onClick={() => setIsOpen(false)}
                   className="bg-[#222] px-7 text-white hover:bg-[#111]"
-                />
-                {/* <button onClick={() => setIsOpen(false)}>Invite</button> */}
+                /> */}
+                <button
+                  className="w-[100px] rounded bg-[#222] py-2 text-[13px] font-normal text-white transition-all duration-300 hover:bg-[#111]"
+                  // onClick={handleUpdateTask}
+                >
+                  {true ? (
+                    "Create"
+                  ) : (
+                    <span className="flex w-full items-center justify-center">
+                      <img
+                        src="/icons/loaderWhite.svg"
+                        alt=""
+                        className="w-4 animate-spin"
+                      />
+                    </span>
+                  )}
+                </button>
               </div>
             </div>
           </DialogPanel>
