@@ -7,14 +7,45 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CustomSelect } from "../../select";
 import Button from "../../Button";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useCreateWorkspace } from "@/hooks/api/workspace";
+import { TAddWorkspace } from "@/types";
 
 export default function AddWorkspace() {
   let [isOpen, setIsOpen] = useState(false);
+  const [workspace, setWorkspace] = useState<TAddWorkspace>({
+    name: "",
+    description: "",
+  });
+
+  useEffect(() => {
+    // getFromLocalStorage({
+    //   key: "CurrentWorkspaceId",
+    //   cb: (id: string) => {
+    //     if (id) {
+    //       setWorkspaceId(id);
+    //       setTask((prevTask) => ({
+    //         ...prevTask,
+    //         workspace_id: id,
+    //       }));
+    //     }
+    //   },
+    // });
+  }, []);
+
+  const {
+    data: workspaceData,
+    loading: createWorkspaceLoadin,
+    OnCreateWorkspace,
+  } = useCreateWorkspace();
+
+  function handleCreateTask() {
+    console.log(workspace.name);
+  }
 
   return (
     <>
@@ -63,6 +94,13 @@ export default function AddWorkspace() {
                   <input
                     name="spaceName"
                     type="text"
+                    value={workspace.name}
+                    onChange={(e) =>
+                      setWorkspace((prev) => ({
+                        ...prev,
+                        name: e.target.value,
+                      }))
+                    }
                     placeholder="Enter space name"
                     className="h-[36px] w-full rounded-md border-[1px] border-gray-400 px-2 text-[14px] font-light text-[#444] placeholder-[#999] outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
                   />
@@ -76,6 +114,13 @@ export default function AddWorkspace() {
                   <input
                     name="spaceName"
                     type="text"
+                    value={workspace.description}
+                    onChange={(e) =>
+                      setWorkspace((prev) => ({
+                        ...prev,
+                        description: e.target.value,
+                      }))
+                    }
                     placeholder="Enter description"
                     className="h-[36px] w-full rounded-md border-[1px] border-gray-400 px-2 text-[14px] font-light text-[#444] placeholder-[#999] outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
                   />
@@ -112,7 +157,7 @@ export default function AddWorkspace() {
                 /> */}
                 <button
                   className="w-[100px] rounded bg-[#222] py-2 text-[13px] font-normal text-white transition-all duration-300 hover:bg-[#111]"
-                  // onClick={handleUpdateTask}
+                  onClick={handleCreateTask}
                 >
                   {true ? (
                     "Create"

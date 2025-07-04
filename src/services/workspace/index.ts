@@ -1,6 +1,6 @@
 import axios from "axios";
 import env from "@/config/env";
-import { TAddMember, TWorkspace } from "@/types";
+import { TAddMember, TAddWorkspace, TWorkspace } from "@/types";
 
 class service {
   getWorkspace() {
@@ -43,7 +43,7 @@ class service {
     );
   }
 
-  createWorkspace(userId: string, { payload }: { payload: TWorkspace }) {
+  createWorkspace(userId: string, { payload }: { payload: TAddWorkspace }) {
     return axios.post(env.api.workspaces + "/" + userId, payload);
   }
 }

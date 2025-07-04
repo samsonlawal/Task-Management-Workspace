@@ -44,9 +44,17 @@ export type TAddTask = {
 export type TAddMember = {
   email: string;
   role: string;
-
 };
 
+export type TUser = {
+  _id: string;
+  fullname: string;
+  email: string;
+  username: string;
+  profileImage?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
 
 export type TRegister = {
   fullname: string;
@@ -62,6 +70,11 @@ export type TRegister = {
 export type TLogin = {
   email: string;
   password: string;
+};
+
+export type TAddWorkspace = {
+  name: string;
+  description?: string;
 };
 
 export type TWorkspace = {

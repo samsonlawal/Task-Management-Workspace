@@ -65,6 +65,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     onGetSingleWorkspace,
     loading: singleWorkspaceLoading,
   } = useGetSingleWorkspace(currentWorkspace);
+
   useEffect(() => {
     getFromLocalStorage({
       key: "CurrentWorkspaceId",

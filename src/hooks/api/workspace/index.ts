@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import WorkspaceService from "@/services/workspace";
-import { TAddMember, TWorkspace, TWorkspaceData } from "@/types";
+import { TAddMember, TAddWorkspace, TWorkspace, TWorkspaceData } from "@/types";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 import axios, { AxiosError } from "axios";
 import { useDispatch } from "react-redux";
@@ -162,7 +162,7 @@ export const useAddMember = () => {
   return { loading, onAddMember };
 };
 
-export const useCreateWorkspace = (userId: string) => {
+export const useCreateWorkspace = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<TWorkspace[]>([]);
 
@@ -173,7 +173,7 @@ export const useCreateWorkspace = (userId: string) => {
     errorCallback,
   }: {
     userId: string;
-    payload: TWorkspace;
+    payload: TAddWorkspace;
     successCallback?: (data?: any) => void;
     errorCallback?: (props: { message?: string; description?: string }) => void;
   }) => {
