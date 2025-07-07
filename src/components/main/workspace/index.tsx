@@ -180,7 +180,7 @@ function TabComponent() {
               </p>
             ) : (
               <div className="flex h-fit flex-row flex-wrap gap-1">
-                {tabContent[activeTab] ? (
+                {tabContent[activeTab] && tabContent[activeTab].length > 0 ? (
                   tabContent[activeTab]?.map((task, index) =>
                     task ? (
                       <SingleTask
@@ -197,11 +197,17 @@ function TabComponent() {
                         createdAt={task.createdAt}
                         // workspaceId={task.workspace_id}
                       />
-                    ) : null,
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <p className="text-center text-lg text-gray-500">
+                          No Task
+                        </p>
+                      </div>
+                    ),
                   )
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center">
-                    <p className="text-center text-lg text-gray-500">No Task</p>
+                  <div className="flex h-[300px] w-full items-center justify-center">
+                    <p className="text-md text-center text-gray-500">No Task</p>
                   </div>
                 )}
               </div>
