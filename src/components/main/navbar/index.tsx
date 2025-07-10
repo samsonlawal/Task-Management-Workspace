@@ -10,7 +10,7 @@ export default function Navbar() {
   const currentUI = useSelector((state: RootState) => state.ui.currentUI);
 
   return (
-    <div className="flex w-full items-center justify-between border-b-[1px] px-[32px] py-[10px]">
+    <div className="flex w-full items-center justify-between border-b-[1px] px-[32px] py-[7px]">
       {/* <h2 className="montserrat-bold text-xl">
         {currentUI === "tasks" ? "Workspace" : "Members"}
       </h2> */}

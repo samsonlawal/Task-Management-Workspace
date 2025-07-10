@@ -38,6 +38,26 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "@/utils/loader";
 
+
+const tabby = [
+  {
+    name: "Overview",
+    icon: "/icons/rows.svg",
+  },
+  {
+    name: "Board",
+    icon: "/icons/b1.svg",
+  },
+  {
+    name: "List",
+    icon: "/icons/list.svg",
+  },
+  {
+    name: "My Tasks",
+    icon: "/icons/cols.svg",
+  },
+];
+
 function TabComponent() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -105,7 +125,9 @@ function TabComponent() {
     DONE: "done",
   };
 
-  const tabs = ["All", "To-Do", "In-Progress", "In-Review", "Done"];
+  const tabs = ["Overview", "Board", "List", "My Tasks"];
+  // const tabs = ["Overview", "To-Do", "In-Progress", "In-Review", "Done"];
+
   const tabContent = useMemo(() => {
     const safeTasks = Array.isArray(tasks) ? tasks : [];
     return [
@@ -130,7 +152,7 @@ function TabComponent() {
   // );
 
   return (
-    <div className="poppins mb-4 flex h-screen w-full flex-1 flex-col gap-2">
+    <div className="poppins mb-4 flex h-screen w-full flex-1 flex-col">
       <div className="sticky top-0 w-full bg-white pb-6">
         <Navbar />
       </div>
@@ -140,14 +162,14 @@ function TabComponent() {
         <>
           {/* <div className="fixed top-16 z-10 w-full bg-white shadow-sm"> */}
 
-          <div className="mx-8 flex justify-between transition-all duration-300">
-            <div className="flex flex-row">
+          <div className="mx-8 mb-4 flex h-[44px] items-center justify-between transition-all duration-300">
+            {/* <div className="flex h-max flex-row">
               {tabs?.map((tab, index) => (
                 <div
                   key={index}
-                  className={`flex w-fit cursor-pointer select-none flex-row items-center gap-1 rounded-t-sm px-3 text-[12px] font-[500] ${
+                  className={`flex h-fit w-fit cursor-pointer select-none flex-row items-center gap-1 rounded-t-sm px-3 py-2 text-[12px] font-[500] ${
                     activeTab === index
-                      ? "border-b-2 border-black bg-gray-100 text-black"
+                      ? "border-b-2 border-black bg-gray-100/50 text-black"
                       : "text-gray-500 hover:text-black"
                   }`}
                   onClick={() => {
@@ -163,6 +185,26 @@ function TabComponent() {
                       </p>
                     </div>
                   )}
+                </div>
+              ))}
+            </div> */}
+
+            <div className="flex h-max flex-row gap-4">
+              {tabby?.map((tab, index) => (
+                <div
+                  key={index}
+                  className={`flex h-fit w-fit cursor-pointer select-none flex-row items-center gap-2 rounded-t-sm px-2 py-2 text-[12px] font-[500] ${
+                    activeTab === index
+                      ? "border-b-2 border-gray-500 text-gray-500"
+                      : "border-gray-500 text-gray-500 hover:border-b-2"
+                  } `}
+                  onClick={() => {
+                    setActiveTab(index);
+                    setActiveTabs(tabs[index]);
+                  }}
+                >
+                  <img src={tab.icon} alt="" className="h-4 w-4" />
+                  <p>{tab.name}</p>{" "}
                 </div>
               ))}
             </div>
