@@ -235,7 +235,7 @@ export default function AddTask({ taskData }: any) {
         <img
           src="/icons/edit.svg"
           alt=""
-          className="h-4 w-4 transition-all duration-300 hover:h-[18px] hover:w-[18px] hover:cursor-pointer"
+          className="h-4 w-4 transition-all duration-300 hover:cursor-pointer hover:text-black"
         />
       </button>
       <Dialog

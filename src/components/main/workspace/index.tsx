@@ -37,24 +37,32 @@ import { useGetTasks } from "@/hooks/api/tasks";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "@/utils/loader";
-
+import {
+  LayoutDashboard,
+  GalleryHorizontal,
+  SquareKanban,
+  List,
+  AlignLeft,
+  Library,
+} from "lucide-react";
 
 const tabby = [
   {
     name: "Overview",
-    icon: "/icons/rows.svg",
+    // icon: <LayoutDashboard strokeWidth={1} size={18} />,1
+    icon: <GalleryHorizontal strokeWidth={1.5} size={18} />,
   },
   {
     name: "Board",
-    icon: "/icons/b1.svg",
+    icon: <SquareKanban strokeWidth={1.5} size={18} />,
   },
   {
     name: "List",
-    icon: "/icons/list.svg",
+    icon: <AlignLeft strokeWidth={1.5} size={18} />,
   },
   {
     name: "My Tasks",
-    icon: "/icons/cols.svg",
+    icon: <Library strokeWidth={1.5} size={18} />,
   },
 ];
 
@@ -189,21 +197,24 @@ function TabComponent() {
               ))}
             </div> */}
 
-            <div className="flex h-max flex-row gap-4">
+            <div className="flex h-max flex-row gap-2">
               {tabby?.map((tab, index) => (
                 <div
                   key={index}
-                  className={`flex h-fit w-fit cursor-pointer select-none flex-row items-center gap-2 rounded-t-sm px-2 py-2 text-[12px] font-[500] ${
+                  className={`flex h-fit w-fit cursor-pointer select-none flex-row items-center gap-1 rounded-t-sm px-2 py-1.5 text-[12px] font-[500] ${
                     activeTab === index
-                      ? "border-b-2 border-gray-500 text-gray-500"
-                      : "border-gray-500 text-gray-500 hover:border-b-2"
+                      ? "border-b-2 border-gray-800 text-gray-800"
+                      : "border-gray-300 text-gray-500 hover:border-b-2"
                   } `}
                   onClick={() => {
                     setActiveTab(index);
                     setActiveTabs(tabs[index]);
                   }}
                 >
-                  <img src={tab.icon} alt="" className="h-4 w-4" />
+                  {/* <img src={tab.icon} alt="" className="h-4 w-4" />1
+                  1
+                   */}
+                  {/* {tab.icon} */}
                   <p>{tab.name}</p>{" "}
                 </div>
               ))}

@@ -283,7 +283,12 @@ export default function TaskDetails({
           /> */}
 
                       <div className="flex flex-row text-[12px] font-normal">
-                        {/* <EditTask /> */}
+                        <button
+                          className="ml-2 flex h-6 w-6 items-center justify-center rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                          aria-label="Task options"
+                        >
+                          <EditTask />
+                        </button>
 
                         <button
                           onClick={() => {
@@ -517,8 +522,6 @@ export default function TaskDetails({
 
                       {/* Promote Task */}
                       <div className="flex flex-row text-[12px] font-normal">
-                        {/* <EditTask /> */}
-
                         <button
                           onClick={() => {
                             handlePromoteTask();
