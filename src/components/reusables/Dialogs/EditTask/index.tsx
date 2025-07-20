@@ -60,6 +60,7 @@ export default function AddTask({ taskData }: any) {
     deadline: "",
     status: "",
     priority: "",
+    createdBy: "",
   });
 
   const [taskAssignee, setTaskAssignee] = useState<any>();
@@ -101,10 +102,26 @@ export default function AddTask({ taskData }: any) {
             ...prevTask,
             workspace_id: id,
           }));
+          console.log("THIS:", id);
         }
       },
     });
-  }, []);
+
+    getFromLocalStorage({
+      key: "STACKTASK_PERSISTOR",
+      cb: (data: any) => {
+        if (data) {
+          console.log("mercilessly:", data);
+          setTask((prevTask) => ({
+            ...prevTask,
+            createdBy: data?.user?._id,
+          }));
+          // setCreatedBy(data?.user?._id);
+          // console.log("THIS:", data?.user?._id);
+        }
+      },
+    });
+  }, [isEditOpen]);
 
   const handleDialogClose = () => {
     if (!isSelectOpen) {
@@ -120,8 +137,15 @@ export default function AddTask({ taskData }: any) {
   }, [taskAssignee]);
 
   const handleUpdateTask = () => {
-    const { description, workspace_id, assignee, deadline, status, priority } =
-      task;
+    const {
+      description,
+      workspace_id,
+      assignee,
+      deadline,
+      status,
+      priority,
+      createdBy,
+    } = task;
     let errorMsg = "";
 
     if (!task.description) {
@@ -144,6 +168,7 @@ export default function AddTask({ taskData }: any) {
           deadline,
           status,
           priority,
+          createdBy,
         },
         successCallback: async () => {
           showSuccessToast({ message: "Task Updated Successfully!" });
@@ -202,6 +227,7 @@ export default function AddTask({ taskData }: any) {
               "Medium",
               "High",
             ]),
+            createdBy: fetchedTask?.createdBy || "",
           });
           setTaskAssignee((fetchedTask.assignee as any)?._id || "");
         }

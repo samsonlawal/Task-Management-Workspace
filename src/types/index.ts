@@ -29,6 +29,7 @@ export type TSingleTask = {
   id: string;
   deadline: string;
   name?: string;
+  createdBy?: string;
 };
 
 export type TAddTask = {
@@ -39,6 +40,7 @@ export type TAddTask = {
   workspace_id: string;
   // createdAt: string;
   deadline: string;
+  createdBy: string;
 };
 
 export type TAddMember = {

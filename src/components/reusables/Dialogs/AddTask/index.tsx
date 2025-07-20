@@ -51,20 +51,10 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     deadline: "",
     status: "",
     priority: "",
+    createdBy: "",
   });
 
-  const [taskAssignee, setTaskAssignee] = useState();
-  const { currentWorkspace } = useSelector(
-    (state: any) => state.currentWorkspace,
-  );
-
-  const { onCreateTask, loading: creatTaskLoading } = useCreateTask();
-
-  const {
-    data: workspaceData,
-    onGetSingleWorkspace,
-    loading: singleWorkspaceLoading,
-  } = useGetSingleWorkspace(currentWorkspace);
+  // const [userId, setCreatedBy] = useState<string>("");
 
   useEffect(() => {
     getFromLocalStorage({
@@ -79,7 +69,34 @@ export default function AddTask({ onGetTasks, taskData }: any) {
         }
       },
     });
-  }, []);
+
+    getFromLocalStorage({
+      key: "STACKTASK_PERSISTOR",
+      cb: (data: any) => {
+        if (data) {
+          setTask((prevTask) => ({
+            ...prevTask,
+            createdBy: data?.user?._id,
+          }));
+          // setCreatedBy(data?.user?._id);
+          // console.log("THIS:", data?.user?._id);
+        }
+      },
+    });
+  }, [isOpen]);
+
+  const [taskAssignee, setTaskAssignee] = useState();
+  const { currentWorkspace } = useSelector(
+    (state: any) => state.currentWorkspace,
+  );
+
+  const { onCreateTask, loading: creatTaskLoading } = useCreateTask();
+
+  const {
+    data: workspaceData,
+    onGetSingleWorkspace,
+    loading: singleWorkspaceLoading,
+  } = useGetSingleWorkspace(currentWorkspace);
 
   const handleDialogClose = () => {
     if (!isSelectOpen) {
@@ -94,71 +111,80 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     }));
   }, [taskAssignee]);
 
-  const handleCreateTask = () =>
-    // e: React.MouseEvent<HTMLButtonElement> | React.FormEvent,
-    {
-      // e.preventDefault();
-      const {
-        description,
-        workspace_id,
-        assignee,
-        deadline,
-        status,
-        priority,
-      } = task;
-      let errorMsg = "";
+  const handleCreateTask = () => {
+    const {
+      description,
+      workspace_id,
+      assignee,
+      deadline,
+      status,
+      priority,
+      createdBy,
+    } = task;
+    let errorMsg = "";
 
-      console.log("deadline:", deadline);
-      console.log("deadline type:", typeof deadline);
-      console.log("parsed date:", new Date(deadline));
+    console.log("PAYLOAD:", {
+      description,
+      workspace_id,
+      assignee,
+      deadline,
+      status,
+      priority,
+      createdBy,
+    });
 
-      if (!task.description) {
-        errorMsg = "description is required.";
-      } else if (!task?.assignee) {
-        errorMsg = "assignee is required.";
-      }
+    // console.log("deadline type:", typeof deadline);
+    // console.log("parsed date:", new Date(deadline));
 
-      if (errorMsg) {
-        showErrorToast({ message: errorMsg });
-      } else {
-        // console.log(workspace_id);
+    if (!task.description) {
+      errorMsg = "description is required.";
+    } else if (!task?.assignee) {
+      errorMsg = "assignee is required.";
+    }
 
-        onCreateTask({
-          payload: {
-            description,
-            workspace_id,
-            assignee,
-            deadline,
-            status,
-            priority,
-          },
-          successCallback: async () => {
-            showSuccessToast({ message: "Task Created Successfully!" });
+    if (errorMsg) {
+      showErrorToast({ message: errorMsg });
+    } else {
+      // console.log(workspace_id);
 
-            // const updatedWorkspace = await onGetSingleWorkspace(workspace_id);
-            // if (updatedWorkspace) {
-            //   dispatch(setWorkspace(updatedWorkspace));
-            // }
-            // console.log("Task Added to:", workspace_id);
+      onCreateTask({
+        payload: {
+          description,
+          workspace_id,
+          assignee,
+          deadline,
+          status,
+          priority,
+          createdBy,
+        },
+        successCallback: async () => {
+          showSuccessToast({ message: "Task Created Successfully!" });
 
-            await onGetTasks({ workspaceId: workspace_id });
-            console.log("New tasks:", taskData);
-            setTask({
-              description: "",
-              workspace_id: "",
-              assignee: "",
-              deadline: "",
-              status: "",
-              priority: "",
-            });
-            handleDialogClose();
-          },
-          errorCallback: ({ message }) => {
-            showErrorToast({ message });
-          },
-        });
-      }
-    };
+          // const updatedWorkspace = await onGetSingleWorkspace(workspace_id);
+          // if (updatedWorkspace) {
+          //   dispatch(setWorkspace(updatedWorkspace));
+          // }
+          // console.log("Task Added to:", workspace_id);
+
+          await onGetTasks({ workspaceId: workspace_id });
+          console.log("New tasks:", taskData);
+          setTask({
+            description: "",
+            workspace_id: "",
+            assignee: "",
+            deadline: "",
+            status: "",
+            priority: "",
+            createdBy: "",
+          });
+          handleDialogClose();
+        },
+        errorCallback: ({ message }) => {
+          showErrorToast({ message });
+        },
+      });
+    }
+  };
 
   function checkWsId() {
     setIsOpen(true);
