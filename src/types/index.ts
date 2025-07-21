@@ -98,3 +98,19 @@ export type TWorkspaceData = {
   tasks: Record<string, any>;
   name: string;
 };
+
+export type TNotification = {
+  _id: string;
+  workspace: {
+    _id: string;
+    name: string;
+  };
+  type: number;
+  isRead: boolean;
+  triggeredBy: {
+    _id: string;
+    fullname: string;
+  };
+  createdAt: string;
+  message: string;
+};

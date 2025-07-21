@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 // import { useSelector } from "react-redux";
-
+import { useGetUserNotifications } from "@/hooks/api/Notification";
 
 export default function Navbar() {
   const currentUI = useSelector((state: RootState) => state.ui.currentUI);
@@ -31,6 +31,8 @@ import { useLogout } from "@/hooks/api/auth";
 import { useRouter } from "next/navigation";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { TNotification } from "@/types";
+import { BellOff } from "lucide-react";
 
 function DropdownMenu() {
   const { user, isLoggedIn } = useSelector((state: any) => state.auth);
@@ -118,14 +120,24 @@ function DropdownMenu() {
 }
 
 function Notification() {
-  const { user, isLoggedIn } = useSelector((state: any) => state.auth);
-  const router = useRouter();
+  const { user } = useSelector((state: any) => state.auth);
 
-  const { onLogout } = useLogout();
-  function handleLogout() {
-    onLogout();
-    router.push("/");
+  const {
+    loading: notificationLoading,
+    onGetUserNotification,
+    data: notificationData,
+  } = useGetUserNotifications();
+
+  function getNotif() {
+    onGetUserNotification(user?._id);
   }
+
+  console.log(user?._id);
+
+  // useEffect(() => {
+  //   if (!user?._id) return;
+  //   console.log(notificationData);
+  // }, []);
 
   return (
     <div className="poppins flex h-[50px] w-fit flex-row items-center justify-center gap-6 text-left">
@@ -133,7 +145,7 @@ function Notification() {
 
       {/* <div className="h-[80%] border-l-[1px]"></div> */}
       <Menu>
-        <MenuButton className="">
+        <MenuButton className="" onClick={getNotif}>
           <div className="group relative w-fit">
             <img
               src="/icons/bell-line.svg"
@@ -172,108 +184,52 @@ function Notification() {
 
             {/* Notifications */}
             <div className="flex flex-col">
-              <div className="poppins flex h-[80px] flex-row items-center gap-[10px] border-b-[1px] border-[#E4E4E4] bg-[#F3F3F3] px-6">
-                {/*icon  */}
-                <img src="/icons/profile.svg" alt="" />
+              <div>
+                {notificationLoading ? (
+                  <p>Loading....</p>
+                ) : Array.isArray(notificationData) &&
+                  notificationData.length > 0 ? (
+                  notificationData.map((notif: TNotification) => (
+                    <div
+                      key={notif._id}
+                      className={`poppins flex h-[80px] flex-row items-center gap-[10px] border-b-[1px] border-[#E4E4E4] px-6 ${!notif.isRead ? "bg-[#F3F3F3]" : ""}`}
+                    >
+                      {/* icon */}
+                      <img src="/icons/profile.svg" alt="" />
+                      {/* message */}
+                      <div className="flex flex-1 flex-row justify-between">
+                        <div className="flex flex-col">
+                          <p className="text-[12px] text-[#4E4E4E]">
+                            {notif.message}
+                          </p>
+                          <div className="flex flex-row gap-[10px] text-[10px] text-[#8c8c8c]">
+                            <p className="text-[12px]">{notif.createdAt}</p>
+                          </div>
+                        </div>
 
-                {/* message */}
-                <div className="flex flex-1 flex-row justify-between">
-                  <div className="flex flex-col">
-                    <p className="text-[12px] text-[#4E4E4E]">
-                      Your profile picture was successfully updated.
-                    </p>
-                    <div className="flex flex-row gap-[10px] text-[10px] text-[#8c8c8c]">
-                      <p className="text-[12px]">2 mins ago</p>
+                        {/* unread status */}
+                        {!notif.isRead && (
+                          <img src="/icons/unread.svg" alt="" />
+                        )}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  // ✅ No notification fallback
+                  <div className="flex flex-col items-center justify-center py-10">
+                    {/* <img
+                      src="/images/no-notification.png"
+                      alt="No notifications"
+                      className="h-[120px] w-[120px] opacity-70"
+                    /> */}
+                    <div className="flex h-[250px] flex-col items-center justify-center text-gray-500">
+                      <BellOff size={50} strokeWidth={1} />
+                      <p className="mt-4 text-sm font-semibold text-gray-500">
+                        No notifications yet
+                      </p>
                     </div>
                   </div>
-                  <img src="/icons/unread.svg" alt="" />
-                </div>
-              </div>
-
-              <div className="poppins flex h-[80px] flex-row items-center gap-[10px] border-b-[1px] border-[#E4E4E4] px-6">
-                {/*icon  */}
-                <img src="/icons/calendar-icon.svg" alt="" />
-
-                {/* message */}
-                <div className="flex flex-1 flex-row justify-between">
-                  <div className="flex flex-col">
-                    <p className="text-[12px] text-[#4E4E4E]">
-                      Client Feedback Round is due tomorrow.{" "}
-                    </p>
-                    <div className="flex flex-row gap-[10px] text-[10px] text-[#8c8c8c]">
-                      <p className="text-[12px]">2 mins ago</p>
-                    </div>
-                  </div>
-                  {/* <img src="/icons/unread.svg" alt="" /> */}
-                </div>
-              </div>
-
-              <div className="poppins flex h-[80px] flex-row items-center gap-[10px] border-b-[1px] border-[#E4E4E4] px-6">
-                {/*icon  */}
-                <img src="/icons/bell-icon.svg" alt="" />
-
-                {/* message */}
-                <div className="flex flex-1 flex-row justify-between">
-                  <div className="flex flex-col">
-                    <p className="text-[12px] text-[#4E4E4E]">
-                      New feature: Task dependencies are now available.
-                    </p>
-                    <div className="flex flex-row gap-[10px] text-[10px] text-[#8c8c8c]">
-                      <p className="text-[12px]">1 week ago</p>
-                      {/* <span className="flex- flex items-center justify-center gap-[2px]">
-                        <div className="h-3 w-3 rounded-sm bg-[#C0C0C0]"></div>
-                        <p className="text-[12px]">webbie</p>
-                      </span> */}
-                    </div>
-                  </div>
-                  {/* <img src="/icons/unread.svg" alt="" /> */}
-                </div>
-              </div>
-
-              <div className="poppins flex h-[80px] flex-row items-center gap-[10px] border-b-[1px] border-[#E4E4E4] px-6">
-                {/*icon  */}
-                <img src="/icons/chat-icon.svg" alt="" />
-
-                {/* message */}
-                <div className="flex flex-1 flex-row justify-between">
-                  <div className="flex flex-col">
-                    <p className="text-[12px] text-[#4E4E4E]">
-                      John replied to your comment on Landing Page Redesign.
-                    </p>
-                    <div className="flex flex-row gap-[10px] text-[10px] text-[#8c8c8c]">
-                      <p className="text-[12px]">2 mins ago</p>
-                      <span className="flex- flex items-center justify-center gap-[2px]">
-                        {/* <img src="" alt="" /> */}
-                        <div className="h-3 w-3 rounded-sm bg-[#C0C0C0]"></div>
-                        <p className="text-[12px]">webbie</p>
-                      </span>
-                    </div>
-                  </div>
-                  {/* <img src="/icons/chat-icon.svg" alt="" /> */}
-                </div>
-              </div>
-
-              <div className="poppins flex h-[80px] flex-row items-center gap-[10px] border-b-[1px] border-[#E4E4E4] px-6">
-                {/*icon  */}
-                <img src="/icons/chat-icon.svg" alt="" />
-
-                {/* message */}
-                <div className="flex flex-1 flex-row justify-between">
-                  <div className="flex flex-col">
-                    <p className="text-[12px] text-[#4E4E4E]">
-                      John replied to your comment on Landing Page Redesign.
-                    </p>
-                    <div className="flex flex-row gap-[10px] text-[10px] text-[#8c8c8c]">
-                      <p className="text-[12px]">2 mins ago</p>
-                      <span className="flex- flex items-center justify-center gap-[2px]">
-                        {/* <img src="" alt="" /> */}
-                        <div className="h-3 w-3 rounded-sm bg-[#C0C0C0]"></div>
-                        <p className="text-[12px]">webbie</p>
-                      </span>
-                    </div>
-                  </div>
-                  {/* <img src="/icons/chat-icon.svg" alt="" /> */}
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -283,3 +239,5 @@ function Notification() {
     </div>
   );
 }
+
+function NotificationPrototype() {}

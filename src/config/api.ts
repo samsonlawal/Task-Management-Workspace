@@ -6,6 +6,7 @@ const api = ({ inProduction }: { inProduction: boolean }) => {
     tasks: BASE_URL_LINK + "/tasks",
     profiles: BASE_URL_LINK + "/users",
     workspaces: BASE_URL_LINK + "/workspaces",
+    notification: BASE_URL_LINK + "/notification",
   };
 };
 
