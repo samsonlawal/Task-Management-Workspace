@@ -1,6 +1,6 @@
 "use client";
 
-import AddMemberUI from "@/components/reusables/Add MemberUI";
+import UpgradePlan from "@/components/reusables/UpgradePlan";
 import CurrentWorkspace from "@/components/reusables/currentWorkspace";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -132,7 +132,7 @@ export default function Sidebar() {
         </div>
       </div>
       <div className="flex h-fit w-full flex-col gap-[20px]">
-        <AddMemberUI />
+        <UpgradePlan />
         {/* <div className="flex h-fit flex-col gap-[14px] px-[18px] text-[15px] font-regular text-[#707070]">
           <span className="flex flex-row gap-[11px]">
             <img src="/icons/cog.svg" alt="" />
