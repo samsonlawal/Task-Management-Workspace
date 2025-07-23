@@ -70,8 +70,7 @@ export default function UpgradePlan() {
             Pro Plan Coming Soon
           </h4>
           <p className="text-xs text-[#6B7280]">
-            AI features, automation tools, third-party integration, and advanced
-            roles management.
+            AI features, automation tools, and third-party integration.
           </p>
         </div>
       </div>

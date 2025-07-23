@@ -8,11 +8,11 @@ class service {
   }
 
   MarkAsRead(id: string) {
-    return axios.get(env.api.notification + "/read/" + id);
+    return axios.patch(env.api.notification + "/read/" + id);
   }
 
   MarkAllAsRead(userId: string) {
-    return axios.get(env.api.notification + "/read-all/" + userId);
+    return axios.patch(env.api.notification + "/read-all/" + userId);
   }
 }
 

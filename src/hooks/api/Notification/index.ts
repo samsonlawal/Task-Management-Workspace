@@ -13,7 +13,7 @@ export const useGetUserNotifications = () => {
     setLoading(true);
     try {
       const res = await NotificationService.getUserNotifications(userId);
-      console.log(res?.data);
+      // console.log(res?.data);
 
       setData(res?.data?.data);
     } catch (error: Error | AxiosError | any) {
@@ -34,7 +34,7 @@ export const useReadNotification = () => {
     setLoading(true);
     try {
       const res = await NotificationService.MarkAsRead(id);
-      console.log(res?.data);
+      // console.log(res?.data);
 
       // setData(res?.data?.data);
     } catch (error: Error | AxiosError | any) {
@@ -55,7 +55,7 @@ export const useReadAllNotification = () => {
     setLoading(true);
     try {
       const res = await NotificationService.MarkAllAsRead(userId);
-      console.log(res?.data);
+      // console.log(res?.data);
 
       // setData(res?.data?.data);
     } catch (error: Error | AxiosError | any) {

@@ -4,7 +4,11 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 // import { useSelector } from "react-redux";
-import { useGetUserNotifications } from "@/hooks/api/Notification";
+import {
+  useGetUserNotifications,
+  useReadNotification,
+  useReadAllNotification,
+} from "@/hooks/api/Notification";
 
 export default function Navbar() {
   const currentUI = useSelector((state: RootState) => state.ui.currentUI);
@@ -47,16 +51,8 @@ function DropdownMenu() {
 
   return (
     <div className="flex h-[50px] w-fit flex-row items-center justify-center gap-6 text-left">
-      {/* <div className="group relative w-fit">
-        <img
-          src="/icons/bell-line.svg"
-          alt="Notifications"
-          className="h-[18px] w-[18px] cursor-pointer"
-        />
-        <span className="absolute -right-[1px] -top-[1px] h-2 w-2 rounded-full border border-white bg-red-500 transition-all duration-300 group-hover:-right-1 group-hover:-top-1"></span>
-      </div> */}
       <Menu>
-        <MenuButton className="flex w-[210px] items-center justify-center gap-2 rounded-md border-[1px] px-2 py-[8px] text-black shadow-inner shadow-white/10 transition-colors duration-500 hover:bg-gray-200/70 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
+        <MenuButton className="flex w-[210px] items-center justify-center gap-2 rounded-md border-[1px] border-[#EEEEEE] px-2 py-[8px] text-black shadow-inner shadow-white/10 transition-colors duration-500 hover:bg-gray-200/70 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
           <div className="flex w-full flex-row items-center gap-[8px]">
             {user?.profileImage === "none" ? (
               <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#99c485] text-white">
@@ -82,37 +78,41 @@ function DropdownMenu() {
         <MenuItems
           transition
           anchor="bottom end"
-          className="flex min-h-fit w-[230px] origin-top-right flex-col justify-between rounded-xl border-[1px] border-[#c7c7c7] bg-white px-3 py-4 text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          className="flex min-h-fit w-[240px] origin-top-right flex-col justify-between gap-1 rounded-[14px] border-[1px] border-[#EEEEEE] bg-white px-3 py-[14px] text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:10px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
-          <div className="flex flex-col gap-[10px]">
+          <div className="flex flex-col gap-[8px]">
             {/* </MenuItem> */}
             {/* <MenuItem> */}
-            <div className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] py-1 pl-2">
-              <div className="flex flex-col -space-y-[8px]">
-                <p className="text-[15px]">Theme</p>
-              </div>
+            <div className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-2">
+              <img src="/icons/menu/lamp.svg" alt="" />
+              <p className="poppins text-[14px] font-normal text-[#111]">
+                Theme
+              </p>
             </div>
             {/* </MenuItem> */}
-            <div className="my-1 h-px bg-[#c7c7c7]" />
+            {/* <div className="my-1 h-px bg-[#eeeeee]" /> */}
 
             <MenuItem>
-              <div className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] py-1 pl-2 hover:bg-gray-200/70">
-                <div className="flex flex-row items-center justify-center gap-2 -space-y-[8px]">
-                  <p className="text-[15px]">Profile</p>
-                </div>
-              </div>
-            </MenuItem>
-            {/* <div className="my-1 h-px bg-white/5" /> */}
-            <MenuItem>
               <div
-                onClick={() => handleLogout()}
-                className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] py-1 pl-2 hover:bg-gray-200/70"
+                onClick={() => {
+                  router.push("/profile");
+                }}
+                className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-2 hover:bg-gray-200/70"
               >
-                <div className="flex flex-col -space-y-[8px]">
-                  <p className="text-[15px]">Logout</p>
-                </div>
+                <img src="/icons/menu/user1.svg" alt="" />
+                <p className="poppins text-[14px] text-[#111]">Profile</p>
               </div>
             </MenuItem>
+            <div className="my-1 h-px bg-[#eeeeee]" />
+            {/* <MenuItem> */}
+            <div
+              onClick={() => handleLogout()}
+              className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-2 hover:bg-gray-200/70"
+            >
+              <img src="/icons/menu/signout.svg" alt="" />
+              <p className="poppins text-[14px] text-[#D32F2F]">Logout</p>
+            </div>
+            {/* </MenuItem> */}
           </div>
         </MenuItems>
       </Menu>
@@ -138,9 +138,33 @@ function Notification() {
     data: notificationData,
   } = useGetUserNotifications();
 
+  useEffect(() => {
+    if (user) {
+      onGetUserNotification(user?._id);
+    }
+  }, [user]);
+
+  const { loading: onReadLoading, onReadNotification } = useReadNotification();
+  const { loading: onReadAllLoading, onReadAllNotification } =
+    useReadAllNotification();
+
+  async function handleRead(id: string) {
+    await onReadNotification(id);
+    onGetUserNotification(user?._id);
+  }
+
+  async function handleReadAll() {
+    await onReadAllNotification(user?._id);
+    onGetUserNotification(user?._id);
+  }
+
   function getNotif() {
     onGetUserNotification(user?._id);
   }
+
+  const hasUnread: boolean = notificationData.some(
+    (notification) => !notification.isRead,
+  );
 
   return (
     <div className="poppins flex h-[50px] w-fit flex-row items-center justify-center gap-6 text-left">
@@ -148,7 +172,7 @@ function Notification() {
 
       {/* <div className="h-[80%] border-l-[1px]"></div> */}
       <Menu>
-        <MenuButton className="" onClick={getNotif}>
+        <MenuButton className="">
           <div className="group relative w-fit">
             <img
               src="/icons/bell-line.svg"
@@ -156,20 +180,27 @@ function Notification() {
               className="h-[18px] w-[18px] cursor-pointer"
             />
             {/* Notification badge */}
-            <span className="absolute -right-[1px] -top-[1px] h-2 w-2 rounded-full border border-white bg-red-500 transition-all duration-300 group-hover:-right-1 group-hover:-top-1"></span>
+            {hasUnread ? (
+              <span className="absolute -right-[1px] -top-[1px] h-2 w-2 rounded-full border border-white bg-red-500 transition-all duration-300 group-hover:-right-1 group-hover:-top-1"></span>
+            ) : (
+              ""
+            )}
           </div>
         </MenuButton>
 
         <MenuItems
           transition
           anchor="bottom end"
-          className="scrollbar-hide flex h-[431px] w-[458px] origin-top-right flex-col justify-between overflow-auto rounded-xl border-[1px] bg-white text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          className="scrollbar-hide flex h-[431px] w-[458px] origin-top-right flex-col justify-between overflow-auto rounded-xl border-[1px] bg-white text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:24px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
           <div className="flex flex-col">
             {/* <div className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] py-1 pl-2"> */}
             <div className="items poppins flex w-full flex-row items-center justify-between px-6 py-[20px]">
               <p className="text-[20px] font-semibold">Notification</p>
-              <button className="rounded-full bg-[#F3F3F3] px-[15px] py-[6px] text-[12px] font-normal">
+              <button
+                onClick={() => handleReadAll()}
+                className="rounded-full bg-[#F3F3F3] px-[15px] py-[6px] text-[12px] font-normal"
+              >
                 Mark all as read
               </button>
             </div>
@@ -188,14 +219,13 @@ function Notification() {
             {/* Notifications */}
             <div className="flex flex-col">
               <div>
-                {notificationLoading ? (
-                  <p>Loading....</p>
-                ) : Array.isArray(notificationData) &&
-                  notificationData.length > 0 ? (
+                {Array.isArray(notificationData) &&
+                notificationData.length > 0 ? (
                   notificationData.map((notif: TNotification) => (
                     <div
                       key={notif._id}
-                      className={`poppins flex h-[80px] flex-row items-center gap-[10px] border-b-[1px] border-[#E4E4E4] px-6 ${!notif.isRead ? "bg-[#F3F3F3]" : ""}`}
+                      className={`poppins flex h-[80px] cursor-pointer flex-row items-center gap-[10px] border-b-[1px] border-[#E4E4E4] px-6 ${!notif.isRead ? "bg-[#F3F3F3]" : ""}`}
+                      onClick={() => handleRead(notif._id)}
                     >
                       {/* icon */}
                       <img src={typeToIcon[notif.type]} alt="" />

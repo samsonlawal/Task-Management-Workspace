@@ -45,6 +45,7 @@ import {
   AlignLeft,
   Library,
 } from "lucide-react";
+import { useGetUserNotifications } from "@/hooks/api/Notification";
 
 const tabby = [
   {
@@ -110,7 +111,6 @@ function TabComponent() {
     }
   }, [user]);
 
-  // if (!user) return null;
 
   const [activeTab, setActiveTab] = useState<number>(0);
   const [activeTabs, setActiveTabs] = useState<string>("");
