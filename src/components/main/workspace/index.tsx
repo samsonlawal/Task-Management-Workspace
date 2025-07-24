@@ -51,19 +51,19 @@ const tabby = [
   {
     name: "Overview",
     // icon: <LayoutDashboard strokeWidth={1} size={18} />,1
-    icon: <GalleryHorizontal strokeWidth={1.5} size={18} />,
+    icon: <GalleryHorizontal strokeWidth={2} size={18} />,
   },
   {
     name: "Board",
-    icon: <SquareKanban strokeWidth={1.5} size={18} />,
+    icon: <SquareKanban strokeWidth={2} size={18} />,
   },
   {
     name: "List",
-    icon: <AlignLeft strokeWidth={1.5} size={18} />,
+    icon: <AlignLeft strokeWidth={2} size={18} />,
   },
   {
     name: "My Tasks",
-    icon: <Library strokeWidth={1.5} size={18} />,
+    icon: <Library strokeWidth={2} size={18} />,
   },
 ];
 
@@ -110,7 +110,6 @@ function TabComponent() {
       // router.push("/auth/sign-in");
     }
   }, [user]);
-
 
   const [activeTab, setActiveTab] = useState<number>(0);
   const [activeTabs, setActiveTabs] = useState<string>("");
@@ -211,10 +210,8 @@ function TabComponent() {
                     setActiveTabs(tabs[index]);
                   }}
                 >
-                  {/* <img src={tab.icon} alt="" className="h-4 w-4" />1
-                  1
-                   */}
-                  {/* {tab.icon} */}
+                  {/* <img src={tab.icon} alt="" className="h-4 w-4" /> */}
+                  {tab.icon}
                   <p>{tab.name}</p>{" "}
                 </div>
               ))}

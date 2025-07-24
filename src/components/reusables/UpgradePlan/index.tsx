@@ -29,7 +29,7 @@ export default function UpgradePlan() {
 
   return (
     <div className="flex w-full items-center justify-center">
-      <div className="poppins flex h-fit w-[100%] flex-col items-center justify-center gap-[16px] rounded-[6px] p-[6px] py-[10px]">
+      <div className="poppins flex h-fit w-[100%] flex-col items-center justify-center gap-[16px] rounded-[6px] py-[10px]">
         {/* <div className="mx-3 mt-6 rounded-2xl bg-[#F5F7FA] p-4 shadow-sm">
           <h4 className="text-sm font-semibold text-[#1A1A1A]">
             Upgrade to
@@ -52,7 +52,7 @@ export default function UpgradePlan() {
           </button>
         </div> */}
 
-        <div className="mx-3 mt-6 h-fit rounded-[10px] bg-[#F5F7FA] px-3 py-5 shadow-sm">
+        <div className="mx-3 mt-6 h-fit rounded-[10px] border-[1px] bg-[#F5F7FA] px-3 py-5 shadow-sm">
           <svg
             width="24"
             height="24"
