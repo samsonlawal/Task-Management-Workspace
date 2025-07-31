@@ -66,7 +66,7 @@ export default function UpgradePlan() {
             />
           </svg>
 
-          <h4 className="pt-1 text-base font-semibold text-[#1A1A1A]">
+          <h4 className="pt-1 text-[14px] font-semibold text-[#1A1A1A]">
             Pro Plan Coming Soon
           </h4>
           <p className="text-xs text-[#6B7280]">

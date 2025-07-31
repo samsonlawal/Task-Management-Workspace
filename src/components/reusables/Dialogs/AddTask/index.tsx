@@ -78,8 +78,6 @@ export default function AddTask({ onGetTasks, taskData }: any) {
             ...prevTask,
             createdBy: data?.user?._id,
           }));
-          // setCreatedBy(data?.user?._id);
-          // console.log("THIS:", data?.user?._id);
         }
       },
     });
@@ -132,9 +130,6 @@ export default function AddTask({ onGetTasks, taskData }: any) {
       priority,
       createdBy,
     });
-
-    // console.log("deadline type:", typeof deadline);
-    // console.log("parsed date:", new Date(deadline));
 
     if (!task.description) {
       errorMsg = "description is required.";
@@ -218,10 +213,10 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     <>
       <button
         onClick={checkWsId}
-        className="flex w-fit items-center justify-center gap-2 rounded-[6px] bg-[#242424] px-3 py-2.5 text-[12px] font-regular text-white transition-all duration-300 hover:bg-black"
+        className="flex w-fit items-center justify-center gap-2 rounded-[8px] bg-[#242424] px-4 py-2.5 text-[12px] font-normal text-white transition-all duration-300 hover:bg-[#111111]"
       >
         <FontAwesomeIcon icon={faPlus} />
-        New Task
+        Add Task
       </button>
       <Dialog
         open={isOpen}

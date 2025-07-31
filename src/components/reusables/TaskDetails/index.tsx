@@ -237,7 +237,7 @@ export default function TaskDetails({
 
   return (
     <>
-      <button
+      {/* <button
         onClick={() => {
           setIsDetailsOpen(true);
           getDetails?.();
@@ -245,6 +245,16 @@ export default function TaskDetails({
           console.log("Singletask:", taskData);
         }}
         className="absolute right-0 top-0 z-10 p-2 opacity-0 transition-opacity hover:opacity-100 focus:opacity-100"
+        aria-label="Task options"
+      > */}
+      <button
+        onClick={() => {
+          setIsDetailsOpen(true);
+          getDetails?.();
+          dispatch(setSingleTask(taskData));
+          console.log("Singletask:", taskData);
+        }}
+        className=""
         aria-label="Task options"
       >
         <FontAwesomeIcon

@@ -44,6 +44,7 @@ import {
   List,
   AlignLeft,
   Library,
+  Folder,
 } from "lucide-react";
 import { useGetUserNotifications } from "@/hooks/api/Notification";
 
@@ -63,7 +64,7 @@ const tabby = [
   },
   {
     name: "My Tasks",
-    icon: <Library strokeWidth={2} size={18} />,
+    icon: <Folder strokeWidth={2} size={18} />,
   },
 ];
 
@@ -83,22 +84,11 @@ function TabComponent() {
   // Update the tasks selector to ensure array type
   const tasks = useSelector(
     (state: RootState) =>
-      // Array.isArray(state.TasksData?.task) ? state.TasksData.task : [],
-      state.TasksData.task,
+      Array.isArray(state.TasksData?.task) ? state.TasksData.task : [],
+    // state.TasksData.task,
   );
 
-  // let allTasks = TasksData?.task;
-
   const { data: taskData, onGetTasks, loading: tasksLoading } = useGetTasks();
-
-  // useEffect(() => {
-  //   // if (user) {
-  //   // console.log(user);
-  //   // console.log("tasks:", tasks);
-  //   dispatch(setTasks(tasks));
-  //   // console.log(MemberData);
-  //   // }
-  // }, [MemberData, tasks, onGetTasks]);
 
   useEffect(() => {
     if (user) {
@@ -107,19 +97,21 @@ function TabComponent() {
     }
 
     if (!user) {
-      // router.push("/auth/sign-in");
     }
   }, [user]);
+
+  useEffect(() => {
+    console.log("USER ID:", user?._id);
+    console.log(
+      "Task Assignees:",
+      tasks.map((t) => t.assignee?._id),
+    );
+  }, [user, tasks]);
 
   const [activeTab, setActiveTab] = useState<number>(0);
   const [activeTabs, setActiveTabs] = useState<string>("");
 
   const currentUI = useSelector((state: RootState) => state.ui.currentUI);
-  // const { data: tasks, onGetTasks } = useGetTasks();
-
-  // const FilteredTask = tasks.filter(
-  //   (task) => task.workspace._id === currentWorkspace._id,
-  // );
 
   useEffect(() => {
     console.log(activeTabs);
@@ -135,16 +127,26 @@ function TabComponent() {
   const tabs = ["Overview", "Board", "List", "My Tasks"];
   // const tabs = ["Overview", "To-Do", "In-Progress", "In-Review", "Done"];
 
+  // const tabContent = useMemo(() => {
+  //   const safeTasks = Array.isArray(tasks) ? tasks : [];
+  //   return [
+  //     safeTasks,
+  //     safeTasks.filter((task) => task?.status === statusMap["TO-DO"]),
+  //     safeTasks.filter((task) => task?.status === statusMap["IN-PROGRESS"]),
+  //     safeTasks.filter((task) => task?.status === "in-review"),
+  //     safeTasks.filter((task) => task?.status === "done"),
+  //   ];
+  // }, [tasks]);
+
   const tabContent = useMemo(() => {
     const safeTasks = Array.isArray(tasks) ? tasks : [];
     return [
       safeTasks,
-      safeTasks.filter((task) => task?.status === statusMap["TO-DO"]),
       safeTasks.filter((task) => task?.status === statusMap["IN-PROGRESS"]),
       safeTasks.filter((task) => task?.status === "in-review"),
-      safeTasks.filter((task) => task?.status === "done"),
+      safeTasks.filter((task) => task?.assignee?._id === user?._id),
     ];
-  }, [tasks]);
+  }, [tasks, user]);
 
   // const tabContent = useMemo(
   //   () => [
@@ -159,8 +161,8 @@ function TabComponent() {
   // );
 
   return (
-    <div className="poppins mb-4 flex h-screen w-full flex-1 flex-col">
-      <div className="sticky top-0 w-full bg-white pb-6">
+    <div className="poppins mb-4 flex h-screen w-full flex-1 flex-col bg-white">
+      <div className="sticky top-0 w-full">
         <Navbar />
       </div>
       {/* Tabs Navigation */}
@@ -169,7 +171,7 @@ function TabComponent() {
         <>
           {/* <div className="fixed top-16 z-10 w-full bg-white shadow-sm"> */}
 
-          <div className="mx-8 mb-4 flex h-[44px] items-center justify-between transition-all duration-300">
+          <div className="flex h-fit items-center justify-between bg-[#565656]/10 px-8 pb-4 pt-6 transition-all duration-300">
             {/* <div className="flex h-max flex-row">
               {tabs?.map((tab, index) => (
                 <div
@@ -196,7 +198,7 @@ function TabComponent() {
               ))}
             </div> */}
 
-            <div className="flex h-max flex-row gap-2">
+            <div className="flex h-max flex-row gap-4">
               {tabby?.map((tab, index) => (
                 <div
                   key={index}
@@ -210,7 +212,6 @@ function TabComponent() {
                     setActiveTabs(tabs[index]);
                   }}
                 >
-                  {/* <img src={tab.icon} alt="" className="h-4 w-4" /> */}
                   {tab.icon}
                   <p>{tab.name}</p>{" "}
                 </div>
@@ -222,14 +223,14 @@ function TabComponent() {
             </div>
           </div>
           {/* Tab Content */}
-          <div className="flex-1 overflow-y-auto px-8 pb-8 pt-2">
+          <div className="scrollbar-hide w-full flex-1 overflow-y-auto bg-[#565656]/10 px-8 pb-8 pt-2">
             {tasksLoading ? (
               <p className="flex h-full items-center justify-center">
                 {" "}
                 <Loader loaderSize={40} />
               </p>
             ) : (
-              <div className="flex h-fit flex-row flex-wrap gap-1">
+              <div className="flex h-fit w-full flex-row flex-wrap justify-evenly gap-1">
                 {tabContent[activeTab] && tabContent[activeTab].length > 0 ? (
                   tabContent[activeTab]?.map((task, index) =>
                     task ? (

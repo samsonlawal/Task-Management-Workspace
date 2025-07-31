@@ -107,7 +107,7 @@ function DropdownMenu() {
             {/* <MenuItem> */}
             <div
               onClick={() => handleLogout()}
-              className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-2 hover:bg-gray-200/70"
+              className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-2 hover:bg-[#D32F2F]/20"
             >
               <img src="/icons/menu/signout.svg" alt="" />
               <p className="poppins text-[14px] text-[#D32F2F]">Logout</p>
