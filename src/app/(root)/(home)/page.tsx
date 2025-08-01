@@ -1,7 +1,7 @@
 "use client";
 
 import Sidebar from "@/components/main/sidebar";
-import Workspace from "@/components/main/workspace";
+import Workspace from "@/components/pages/workspace";
 import { useSelector } from "react-redux";
 
 export default function Home() {

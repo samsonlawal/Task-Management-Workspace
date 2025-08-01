@@ -1,6 +1,6 @@
 // pages/index.tsx or app/page.tsx
 import Sidebar from "@/components/main/sidebar";
-import Workspace from "@/components/main/workspace";
+import Workspace from "@/components/pages/workspace";
 
 export default function Home() {
   return (

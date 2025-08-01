@@ -70,16 +70,10 @@ export default function Sidebar() {
             className="flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] px-2 py-2 transition-all duration-300 hover:bg-gray-300/50"
             onClick={() => {
               dispatch(setCurrentUI("dashboard"));
-
               setCurrent("dashboard");
             }}
           >
             <LayoutDashboard strokeWidth={1.5} size={18} />
-            {/* {current === "dashboard" ? (
-              <img src="/icons/d2.svg" alt="" className="h-4.5 w-4.5" />
-            ) : (
-              <img src="/icons/d2.svg" alt="" className="h-5 w-5" />
-            )} */}{" "}
             Dashboard
           </span>
           {/* <span className="flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] px-2 py-2 transition-all duration-300 hover:bg-gray-300/50">
@@ -93,11 +87,6 @@ export default function Sidebar() {
             }}
             className={`flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] px-2 py-2 transition-all duration-300 hover:bg-gray-300/50 ${current === "tasks" ? "bg-gray-300/50" : ""}`}
           >
-            {/* {current === "tasks" ? (
-              <img src="/icons/checks.svg" alt="" className="h-5 w-5" />
-            ) : (
-              <img src="/icons/checks.svg" alt="" className="h-5 w-5" />
-            )} */}
             <CheckCheck strokeWidth={1.5} size={18} />
             Tasks
           </span>
@@ -109,11 +98,6 @@ export default function Sidebar() {
             }}
             className={`flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] px-2 py-2 transition-all duration-300 hover:bg-gray-300/50 ${current === "team" ? "bg-gray-300/50" : ""}`}
           >
-            {/* {current === "team" ? (
-              <img src="/icons/people.svg" alt="" className="h-5 w-5" />
-            ) : (
-              <img src="/icons/people.svg" alt="" className="h-5 w-5" />
-            )}{" "} */}
             <Users strokeWidth={1.5} size={18} />
             Team
           </span>
@@ -124,8 +108,6 @@ export default function Sidebar() {
           <span
             className={`flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] px-2 py-2 transition-all duration-300 hover:bg-gray-300/50 ${current === "settings" ? "bg-gray-300/50" : ""}`}
           >
-            {/* <img src="/icons/cog-outline.svg" alt="" className="h-4 w-4" /> */}
-            {/* <img src="/icons/settings.svg" alt="" className="h-5 w-5" />{" "} */}
             <Settings strokeWidth={1.5} size={18} />
             Settings
           </span>

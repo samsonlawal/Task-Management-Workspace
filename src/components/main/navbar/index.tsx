@@ -11,6 +11,14 @@ import {
 } from "@/hooks/api/Notification";
 
 export default function Navbar() {
+  // const labels = {
+  //   tasks: "Workspace",
+  //   team: "Team",
+  //   dashboard: "Dashboard",
+  //   settings: "Preferences",
+  // };
+
+  // labels[currentUI];
   const currentUI = useSelector((state: RootState) => state.ui.currentUI);
 
   return (
@@ -20,7 +28,13 @@ export default function Navbar() {
       </h2> */}
 
       <h2 className="poppins-semibold text-xl">
-        {currentUI === "tasks" ? "Workspace" : "Members"}
+        {currentUI === "tasks"
+          ? "Workspace"
+          : currentUI === "dashboard"
+            ? "Dashboard"
+            : currentUI === "team"
+              ? "Team"
+              : "settings"}
       </h2>
       <div className="flex flex-row gap-6">
         <Notification />

@@ -7,13 +7,13 @@ import {
   faMagnifyingGlass,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import AddMember from "../Dialogs/AddMember";
-import { CustomSelect } from "../select";
+import AddMember from "../../reusables/Dialogs/AddMember";
+import { CustomSelect } from "../../reusables/select";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import Loader from "@/utils/loader";
 
-function Dashboard() {
+function Team() {
   const members = useSelector(
     (state: RootState) => state.MemberData?.members || [],
   );
@@ -95,7 +95,7 @@ function Dashboard() {
 
   return (
     <div className="flex h-fit w-full flex-col gap-2 px-8 transition-all duration-300">
-      <div className="flex h-fit items-center justify-between pb-4 pt-6 transition-all duration-300">
+      <div className="flex h-fit items-center justify-between transition-all duration-300">
         {/* <div className="flex flex-row items-center justify-between"> */}
         <div className="flex flex-row items-center gap-4">
           <div className="flex flex-1 flex-row items-end gap-4">
@@ -142,6 +142,7 @@ function Dashboard() {
           <AddMember />
         </div>
       </div>
+
       {/* Table */}
       <div className="h-full w-[100%] rounded-[8px] border border-gray-300 shadow-sm">
         {members ? (
@@ -289,4 +290,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default Team;
