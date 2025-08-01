@@ -143,7 +143,7 @@ export default function AddMember() {
     <>
       <button
         onClick={toggleDialog}
-        className="flex w-fit items-center justify-center gap-2 rounded-[5px] bg-[#242424] px-3 py-2.5 text-[12px] font-regular text-white transition-all duration-300 hover:bg-black"
+        className="flex h-[44px] w-fit items-center justify-center gap-2 rounded-[8px] bg-[#242424] px-4 text-[12px] font-normal text-white transition-all duration-300 hover:bg-[#111111]"
       >
         {/* <FontAwesomeIcon icon={faCirclePlus} /> */}
         <FontAwesomeIcon icon={faUserPlus} />
