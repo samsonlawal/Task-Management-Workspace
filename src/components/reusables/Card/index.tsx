@@ -315,7 +315,7 @@ export default function Card({
       {/* Middle */}
       <div className="flex min-h-[55px] flex-col items-start justify-between gap-[6px] px-[14px]">
         {/* descritpion */}
-        <p className="line-clamp-2 h-fit text-[11px] font-normal leading-tight">
+        <p className="line-clamp-2 h-fit text-[11px] font-medium leading-tight text-[#565656]">
           {desc}
         </p>
 

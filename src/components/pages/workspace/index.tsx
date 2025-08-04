@@ -296,7 +296,7 @@ function TabComponent() {
                     tabContent[activeTab]?.map((task, index) =>
                       task ? (
                         <ListTask
-                          key={index}
+                          key={task._id}
                           desc={task.description}
                           // tags={task.tags}
                           deadline={task.deadline}
@@ -332,7 +332,7 @@ function TabComponent() {
                   tabContent[activeTab]?.map((task, index) =>
                     task ? (
                       <Card
-                        key={index}
+                        key={task._id}
                         desc={task.description}
                         // tags={task.tags}
                         deadline={task.deadline}
