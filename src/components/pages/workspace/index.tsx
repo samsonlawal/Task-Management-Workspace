@@ -310,7 +310,10 @@ function TabComponent() {
                           // workspaceId={task.workspace_id}
                         />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center">
+                        <div
+                          className="flex h-full w-full items-center justify-center"
+                          key={`no-task-${index}`}
+                        >
                           <p className="text-center text-lg text-gray-500">
                             No Task
                           </p>
@@ -346,7 +349,10 @@ function TabComponent() {
                         // workspaceId={task.workspace_id}
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center">
+                      <div
+                        className="flex h-full w-full items-center justify-center"
+                        key={`no-task-${index}`}
+                      >
                         <p className="text-center text-lg text-gray-500">
                           No Task
                         </p>
