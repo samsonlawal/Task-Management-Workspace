@@ -166,6 +166,12 @@ function TabComponent() {
   //   [tasks],
   // );
 
+  const [list, setList] = useState(false);
+
+  const changeView = () => {
+    setList((prevList) => !prevList);
+  };
+
   return (
     <div className="poppins mb-4 flex h-screen w-full flex-1 flex-col bg-white">
       <div className="sticky top-0 w-full">
@@ -224,16 +230,19 @@ function TabComponent() {
             </div>
 
             <div className="flex flex-row items-center justify-center gap-3 pb-1">
-              <div className="flex h-fit flex-row items-center gap-1 rounded-sm border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/20">
+              {/* <div className="flex h-fit flex-row items-center gap-1 rounded-sm border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/20">
                 <SquareKanban
                   className="text-center text-[#111]"
                   strokeWidth={1.5}
                   size={16}
                 />
                 <p>Card</p>
-              </div>
+              </div> */}
 
-              <div className="flex h-fit flex-row items-center gap-1 rounded-sm border-[1.7px] border-[#565656]/20 bg-[#565656]/10 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/20">
+              <div
+                className={`flex h-fit cursor-pointer flex-row items-center gap-1 rounded-sm border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 ${list ? "bg-[#565656]/10" : ""}`}
+                onClick={changeView}
+              >
                 <List
                   className="text-center text-[#111]"
                   strokeWidth={1.5}
@@ -252,7 +261,7 @@ function TabComponent() {
                 {" "}
                 <Loader loaderSize={40} />
               </p>
-            ) : (
+            ) : list ? (
               <div className="flex h-fit w-full flex-col flex-wrap justify-between gap-1 rounded-[18px] py-2 pb-[6px]">
                 <div className="flex min-h-fit w-full flex-row justify-between rounded-sm bg-[#565656]/5 px-3 py-3 text-[14px] font-medium text-[#565656]">
                   <div className="flex w-[250px] items-center justify-start">
@@ -316,6 +325,39 @@ function TabComponent() {
                     </div>
                   )}
                 </div>
+              </div>
+            ) : (
+              <div className="flex h-fit w-full flex-row flex-wrap justify-between gap-2 rounded-[18px] bg-[#565656]/10 p-2 pb-[6px]">
+                {tabContent[activeTab] && tabContent[activeTab].length > 0 ? (
+                  tabContent[activeTab]?.map((task, index) =>
+                    task ? (
+                      <Card
+                        key={index}
+                        desc={task.description}
+                        // tags={task.tags}
+                        deadline={task.deadline}
+                        name={task.assignee?.name || task.assignee?.fullname}
+                        email={task.assignee?.email}
+                        priority={task.priority}
+                        image={task.assignee?.profileImage}
+                        id={task._id}
+                        status={task.status}
+                        createdAt={task.createdAt}
+                        // workspaceId={task.workspace_id}
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <p className="text-center text-lg text-gray-500">
+                          No Task
+                        </p>
+                      </div>
+                    ),
+                  )
+                ) : (
+                  <div className="flex h-[300px] w-full items-center justify-center">
+                    <p className="text-md text-center text-gray-500">No Task</p>
+                  </div>
+                )}
               </div>
             )}
           </div>
