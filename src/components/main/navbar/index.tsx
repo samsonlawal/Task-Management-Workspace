@@ -205,7 +205,7 @@ function Notification() {
         <MenuItems
           transition
           anchor="bottom end"
-          className="scrollbar-hide flex h-[431px] w-[458px] origin-top-right flex-col justify-between overflow-auto rounded-xl border-[1px] bg-white text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:24px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          className="flex w-[458px] origin-top-right flex-col rounded-xl border-[1px] bg-white text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out scrollbar-hide [--anchor-gap:24px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
           <div className="flex flex-col">
             {/* <div className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] py-1 pl-2"> */}
@@ -231,7 +231,7 @@ function Notification() {
             </div>
 
             {/* Notifications */}
-            <div className="flex flex-col">
+            <div className="flex h-[350px] flex-col overflow-auto scrollbar-hide">
               <div>
                 {Array.isArray(notificationData) &&
                 notificationData.length > 0 ? (
