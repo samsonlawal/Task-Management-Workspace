@@ -1,6 +1,6 @@
 import React from "react";
 import Head from "./head";
-import SingleTask from "../singleTask";
+import SingleTask from "../Card";
 import tasks from "@/components/data";
 import AddTask from "../Dialogs/AddTask";
 

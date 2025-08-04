@@ -9,7 +9,7 @@ import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 
-export default function SingleTask({
+export default function Card({
   desc,
   deadline,
   name,
@@ -291,9 +291,7 @@ export default function SingleTask({
     //   </div>
     // </div>
 
-
-
-        <div className="group relative flex min-h-[96px] w-[250px] flex-col justify-between gap-2 rounded-[14px] border border-[#565656]/10 bg-white pt-2 text-[14px] font-[300]">
+    <div className="group relative flex min-h-[96px] w-[250px] flex-col justify-between gap-2 rounded-[14px] border border-[#565656]/10 bg-white pt-2 text-[14px] font-[300]">
       {/* Head */}
       <div className="flex flex-row justify-between px-[14px] pt-1 font-medium">
         <div className="flex flex-row items-center justify-center gap-2">

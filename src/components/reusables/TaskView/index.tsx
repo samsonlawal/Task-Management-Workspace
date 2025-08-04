@@ -1,5 +1,5 @@
 import tasks from "@/components/data";
-import SingleTask from "../singleTask";
+import SingleTask from "../Card";
 
 export default function TaskView() {
   return (

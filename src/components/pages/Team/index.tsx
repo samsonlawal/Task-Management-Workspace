@@ -95,9 +95,9 @@ function Team() {
 
   return (
     <div className="flex h-fit w-full flex-col gap-2 px-8 transition-all duration-300">
-      <div className="flex h-fit items-center justify-between transition-all duration-300">
+      <div className="flex h-fit items-center justify-between pt-6 transition-all duration-300">
         {/* <div className="flex flex-row items-center justify-between"> */}
-        <div className="flex flex-row items-center gap-4">
+        <div className="flex flex-row items-center gap-2">
           <div className="flex flex-1 flex-row items-end gap-4">
             {/* search */}
             <div className="relative w-auto flex-1 rounded-md border-[1px] border-gray-300">
@@ -142,7 +142,6 @@ function Team() {
           <AddMember />
         </div>
       </div>
-
       {/* Table */}
       <div className="h-full w-[100%] rounded-[8px] border border-gray-300 shadow-sm">
         {members ? (

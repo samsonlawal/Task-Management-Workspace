@@ -27,7 +27,9 @@
 import { useMemo, useState } from "react";
 import Navbar from "../../main/navbar";
 import tasks from "@/components/data";
-import SingleTask from "@/components/reusables/singleTask";
+import Card from "@/components/reusables/Card";
+import ListTask from "@/components/reusables/List";
+
 import AddTask from "@/components/reusables/Dialogs/AddTask";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -45,6 +47,7 @@ import {
   AlignLeft,
   Library,
   Folder,
+  Eye,
 } from "lucide-react";
 import { useGetUserNotifications } from "@/hooks/api/Notification";
 import Team from "@/components/pages/Team";
@@ -204,10 +207,10 @@ function TabComponent() {
               {tabby?.map((tab, index) => (
                 <div
                   key={index}
-                  className={`flex h-fit w-fit cursor-pointer select-none flex-row items-center gap-1 rounded-t-sm px-3 py-3 text-[12px] font-[500] ${
+                  className={`flex h-fit w-fit cursor-pointer select-none flex-row items-center gap-1 rounded-sm px-3 py-2 text-[12px] font-[500] ${
                     activeTab === index
-                      ? "border-b-[1.5px] border-[#565656]/20 bg-[#565656]/10 text-gray-800"
-                      : "hover:bg--[#565656]/10 border-gray-300 text-gray-500 hover:border-b-[1.5px]"
+                      ? "border border-[#565656]/10 bg-[#565656]/10 text-[#111]"
+                      : "border border-white text-gray-500 hover:border-[#565656]/10 hover:bg-[#565656]/10"
                   } `}
                   onClick={() => {
                     setActiveTab(index);
@@ -220,49 +223,99 @@ function TabComponent() {
               ))}
             </div>
 
-            <div className="pb-1">
+            <div className="flex flex-row items-center justify-center gap-3 pb-1">
+              <div className="flex h-fit flex-row items-center gap-1 rounded-sm border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/20">
+                <SquareKanban
+                  className="text-center text-[#111]"
+                  strokeWidth={1.5}
+                  size={16}
+                />
+                <p>Card</p>
+              </div>
+
+              <div className="flex h-fit flex-row items-center gap-1 rounded-sm border-[1.7px] border-[#565656]/20 bg-[#565656]/10 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/20">
+                <List
+                  className="text-center text-[#111]"
+                  strokeWidth={1.5}
+                  size={16}
+                />
+                <p>List</p>
+              </div>
+
               <AddTask onGetTasks={onGetTasks} taskData={taskData} />
             </div>
           </div>
           {/* Tab Content */}
-          <div className="w-full flex-1 overflow-y-auto bg-[#565656]/10 px-8 pb-8 pt-4 scrollbar-hide">
+          <div className="w-full flex-1 overflow-y-auto px-8 pb-8 pt-2 scrollbar-hide">
             {tasksLoading ? (
               <p className="flex h-full items-center justify-center">
                 {" "}
                 <Loader loaderSize={40} />
               </p>
             ) : (
-              <div className="flex h-fit w-full flex-row flex-wrap justify-between gap-2">
-                {tabContent[activeTab] && tabContent[activeTab].length > 0 ? (
-                  tabContent[activeTab]?.map((task, index) =>
-                    task ? (
-                      <SingleTask
-                        key={index}
-                        desc={task.description}
-                        // tags={task.tags}
-                        deadline={task.deadline}
-                        name={task.assignee?.name || task.assignee?.fullname}
-                        email={task.assignee?.email}
-                        priority={task.priority}
-                        image={task.assignee?.profileImage}
-                        id={task._id}
-                        status={task.status}
-                        createdAt={task.createdAt}
-                        // workspaceId={task.workspace_id}
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center">
-                        <p className="text-center text-lg text-gray-500">
-                          No Task
-                        </p>
-                      </div>
-                    ),
-                  )
-                ) : (
-                  <div className="flex h-[300px] w-full items-center justify-center">
-                    <p className="text-md text-center text-gray-500">No Task</p>
+              <div className="flex h-fit w-full flex-col flex-wrap justify-between gap-1 rounded-[18px] py-2 pb-[6px]">
+                <div className="flex min-h-fit w-full flex-row justify-between rounded-sm bg-[#565656]/5 px-3 py-3 text-[14px] font-medium text-[#565656]">
+                  <div className="flex w-[250px] items-center justify-start">
+                    <p className="line-clamp-1 h-fit text-[12px] leading-tight">
+                      Title
+                    </p>
                   </div>
-                )}
+                  <div className="flex w-[100px] items-center justify-start text-[#565656]">
+                    <p className="text-[12px]">Status</p>
+                  </div>
+                  <div className="flex w-[115px] items-center justify-start">
+                    <p className="text-[12px]">Assignee</p>
+                  </div>
+                  <div className="flex w-[120px] items-center justify-start">
+                    <p className="text-center text-[12px]">Deadline</p>
+                  </div>
+                  <div className="flex w-[70px] items-center justify-start">
+                    <div
+                      className={`flex h-fit w-fit flex-row items-center justify-center gap-1 rounded-[6px]`}
+                    >
+                      <p className={`text-[12px]`}>Priority</p>
+                    </div>
+                  </div>
+                  <div className="flex w-[70px] items-center justify-start">
+                    <p className="cursor-pointer text-center text-[12px]">
+                      Actions
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  {tabContent[activeTab] && tabContent[activeTab].length > 0 ? (
+                    tabContent[activeTab]?.map((task, index) =>
+                      task ? (
+                        <ListTask
+                          key={index}
+                          desc={task.description}
+                          // tags={task.tags}
+                          deadline={task.deadline}
+                          name={task.assignee?.name || task.assignee?.fullname}
+                          email={task.assignee?.email}
+                          priority={task.priority}
+                          image={task.assignee?.profileImage}
+                          id={task._id}
+                          status={task.status}
+                          createdAt={task.createdAt}
+                          // workspaceId={task.workspace_id}
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center">
+                          <p className="text-center text-lg text-gray-500">
+                            No Task
+                          </p>
+                        </div>
+                      ),
+                    )
+                  ) : (
+                    <div className="flex h-[300px] w-full items-center justify-center">
+                      <p className="text-md text-center text-gray-500">
+                        No Task
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>

@@ -67,7 +67,7 @@ export default function Sidebar() {
         <CurrentWorkspace />
         <div className="poppins-regular flex flex-col justify-between gap-1 px-[12px] text-[13px] font-[300] text-[#707070]">
           <span
-            className="flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] px-2 py-2 transition-all duration-300 hover:bg-gray-300/50"
+            className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-gray-300/50 ${current === "dashboard" ? "border border-[#565656]/10 bg-[#565656]/10" : "border-white"}`}
             onClick={() => {
               dispatch(setCurrentUI("dashboard"));
               setCurrent("dashboard");
@@ -85,7 +85,7 @@ export default function Sidebar() {
               dispatch(setCurrentUI("tasks"));
               setCurrent("tasks");
             }}
-            className={`flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] px-2 py-2 transition-all duration-300 hover:bg-gray-300/50 ${current === "tasks" ? "bg-gray-300/50" : ""}`}
+            className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-gray-300/50 ${current === "tasks" ? "border border-[#565656]/10 bg-[#565656]/10" : "border-white"}`}
           >
             <CheckCheck strokeWidth={1.5} size={18} />
             Tasks
@@ -96,7 +96,7 @@ export default function Sidebar() {
               dispatch(setCurrentUI("team"));
               setCurrent("team");
             }}
-            className={`flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] px-2 py-2 transition-all duration-300 hover:bg-gray-300/50 ${current === "team" ? "bg-gray-300/50" : ""}`}
+            className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-gray-300/50 ${current === "team" ? "border border-[#565656]/10 bg-[#565656]/10" : "border-white"}`}
           >
             <Users strokeWidth={1.5} size={18} />
             Team
@@ -106,7 +106,7 @@ export default function Sidebar() {
             AI Overview
           </span> */}
           <span
-            className={`flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] px-2 py-2 transition-all duration-300 hover:bg-gray-300/50 ${current === "settings" ? "bg-gray-300/50" : ""}`}
+            className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-gray-300/50 ${current === "settings" ? "border border-[#565656]/10 bg-[#565656]/10" : "border-white"}`}
           >
             <Settings strokeWidth={1.5} size={18} />
             Settings
