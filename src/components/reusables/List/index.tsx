@@ -8,6 +8,7 @@ import TaskDetails from "../TaskDetails";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
+import { Flag } from "lucide-react";
 
 export default function ListTask({
   desc,
@@ -91,18 +92,30 @@ export default function ListTask({
   // Helper function to get status display
   const getStatusDisplay = (status: string) => {
     const statusConfig = {
-      todo: { label: "To Do", color: "bg-gray-200", dotColor: "bg-gray-600" },
+      todo: {
+        label: "To Do",
+        color: "bg-gray-200",
+        dotColor: "bg-gray-600",
+        labelColor: "text-gray-600",
+      },
       "in-progress": {
         label: "In Progress",
         color: "bg-yellow-200",
         dotColor: "bg-yellow-700",
+        labelColor: "text-yellow-700",
       },
       "in-review": {
         label: "In Review",
         color: "bg-blue-200",
         dotColor: "bg-blue-700",
+        labelColor: "text-blue-700",
       },
-      done: { label: "Done", color: "bg-green-200", dotColor: "bg-green-700" },
+      done: {
+        label: "Done",
+        color: "bg-green-200",
+        dotColor: "bg-green-700",
+        labelColor: "text-green-700",
+      },
     };
 
     return (
@@ -129,7 +142,7 @@ export default function ListTask({
   const priorityDisplay = getPriorityDisplay(taskData.priority);
 
   return (
-    <div className="flex min-h-fit w-full flex-row justify-between border-b-[1px] border-[#565656]/10 px-3 py-2.5 text-[14px]">
+    <div className="flex min-h-fit w-full flex-row justify-between border-b-[1px] border-[#565656]/10 px-3 pb-1.5 pt-3 text-[14px] text-[#111]">
       <div className="flex w-[250px] items-center justify-start">
         <p className="line-clamp-1 h-fit text-[12px] font-normal leading-tight">
           {desc}
@@ -142,7 +155,9 @@ export default function ListTask({
           <div
             className={`h-1.5 w-1.5 rounded-full ${statusDisplay.dotColor}`}
           />
-          <p className="text-[11px] font-normal">{statusDisplay.label}</p>
+          <p className={`text-[11px] font-normal ${statusDisplay.labelColor}`}>
+            {statusDisplay.label}
+          </p>
         </div>
       </div>
       <div className="flex w-[115px] items-center justify-start">
@@ -150,7 +165,7 @@ export default function ListTask({
           className={`jusitfy-center flex flex-1 flex-row items-center gap-2`}
         >
           <div
-            className={`flex h-[20px] w-[20px] items-center justify-center rounded-full ${image === "none" || "" ? getBgColor(name || fullname || "") : ""}`}
+            className={`flex h-[24px] w-[24px] items-center justify-center rounded-full ${image === "none" || "" ? getBgColor(name || fullname || "") : ""}`}
           >
             {(image && image !== "none") || "" ? (
               <img
@@ -184,15 +199,20 @@ export default function ListTask({
       </div>
       <div className="flex w-[70px] items-center justify-start">
         <div
-          className={`flex h-fit w-fit flex-row items-center justify-center gap-1 rounded-[6px] ${priority && priorityColors[priority as keyof typeof priorityColors] ? priorityColors[priority as keyof typeof priorityColors] : "bg-gray-700"} px-1.5 py-[4px]`}
+          className={`flex h-fit w-fit flex-row items-center justify-center gap-1 rounded-[6px] px-1.5 py-[4px]`}
         >
-          <img
+          {/* <img
             src={`icons/task/${priority === "High" ? "high" : priority === "Medium" ? "medium" : "low"}.svg`}
             alt=""
             className="h-3.5 w-3.5"
+          /> */}
+
+          <Flag
+            size={14}
+            className={`${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"} fill-current`}
           />
           <p
-            className={`text-[10px] font-normal ${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"}`}
+            className={`text-[12px] font-normal ${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"}`}
           >
             {(priority || "")?.split(" ")[0].charAt(0).toUpperCase() +
               (priority || "")?.split(" ")[0].slice(1).toLowerCase()}

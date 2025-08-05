@@ -182,7 +182,7 @@ function TabComponent() {
         <>
           {/* <div className="fixed top-16 z-10 w-full bg-white shadow-sm"> */}
 
-          <div className="flex h-fit items-center justify-between px-8 pt-6 transition-all duration-300">
+          <div className="mb-2 flex h-fit items-center justify-between px-8 pt-6 transition-all duration-300">
             {/* <div className="flex h-max flex-row">
               {tabs?.map((tab, index) => (
                 <div
@@ -209,14 +209,14 @@ function TabComponent() {
               ))}
             </div> */}
 
-            <div className="flex h-max flex-row gap-3 rounded-md">
+            <div className="flex h-max flex-row gap-3 border-b border-[#565656]/20">
               {tabby?.map((tab, index) => (
                 <div
                   key={index}
-                  className={`flex h-fit w-fit cursor-pointer select-none flex-row items-center gap-1 rounded-sm px-3 py-2 text-[12px] font-[500] ${
+                  className={`flex h-fit w-fit cursor-pointer select-none flex-row items-center gap-1 px-3 py-2 text-[12px] font-[500] ${
                     activeTab === index
-                      ? "border border-[#565656]/10 bg-[#565656]/10 text-[#111]"
-                      : "border border-white text-gray-500 hover:border-[#565656]/10 hover:bg-[#565656]/10"
+                      ? "border-b-[2px] border-[#111] text-[#111]"
+                      : "border-b-[2px] border-white text-gray-500 hover:border-[#565656]/30"
                   } `}
                   onClick={() => {
                     setActiveTab(index);
@@ -246,7 +246,7 @@ function TabComponent() {
                 <List
                   className="text-center text-[#111]"
                   strokeWidth={1.5}
-                  size={16}
+                  size={14}
                 />
                 <p>List</p>
               </div>
@@ -254,43 +254,49 @@ function TabComponent() {
               <AddTask onGetTasks={onGetTasks} taskData={taskData} />
             </div>
           </div>
+          {list ? (
+            <div className="px-8">
+              <div className="flex min-h-fit w-full flex-row justify-between rounded-sm bg-[#565656]/5 px-3 py-4 text-[14px] font-medium text-[#565656]">
+                <div className="flex w-[250px] items-center justify-start">
+                  <p className="line-clamp-1 h-fit text-[12px] leading-tight">
+                    Title
+                  </p>
+                </div>
+                <div className="flex w-[100px] items-center justify-start text-[#565656]">
+                  <p className="text-[12px]">Status</p>
+                </div>
+                <div className="flex w-[115px] items-center justify-start">
+                  <p className="text-[12px]">Assignee</p>
+                </div>
+                <div className="flex w-[120px] items-center justify-start">
+                  <p className="text-center text-[12px]">Deadline</p>
+                </div>
+                <div className="flex w-[70px] items-center justify-start">
+                  <div
+                    className={`flex h-fit w-fit flex-row items-center justify-center gap-1 rounded-[6px]`}
+                  >
+                    <p className={`text-[12px]`}>Priority</p>
+                  </div>
+                </div>
+                <div className="flex w-[70px] items-center justify-start">
+                  <p className="cursor-pointer text-center text-[12px]">
+                    Actions
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
           {/* Tab Content */}
-          <div className="w-full flex-1 overflow-y-auto px-8 pb-8 pt-2 scrollbar-hide">
+          <div className="w-full flex-1 overflow-y-auto px-8 pb-8 scrollbar-hide">
             {tasksLoading ? (
               <p className="flex h-full items-center justify-center">
                 {" "}
                 <Loader loaderSize={40} />
               </p>
             ) : list ? (
-              <div className="flex h-fit w-full flex-col flex-wrap justify-between gap-1 rounded-[18px] py-2 pb-[6px]">
-                <div className="flex min-h-fit w-full flex-row justify-between rounded-sm bg-[#565656]/5 px-3 py-3 text-[14px] font-medium text-[#565656]">
-                  <div className="flex w-[250px] items-center justify-start">
-                    <p className="line-clamp-1 h-fit text-[12px] leading-tight">
-                      Title
-                    </p>
-                  </div>
-                  <div className="flex w-[100px] items-center justify-start text-[#565656]">
-                    <p className="text-[12px]">Status</p>
-                  </div>
-                  <div className="flex w-[115px] items-center justify-start">
-                    <p className="text-[12px]">Assignee</p>
-                  </div>
-                  <div className="flex w-[120px] items-center justify-start">
-                    <p className="text-center text-[12px]">Deadline</p>
-                  </div>
-                  <div className="flex w-[70px] items-center justify-start">
-                    <div
-                      className={`flex h-fit w-fit flex-row items-center justify-center gap-1 rounded-[6px]`}
-                    >
-                      <p className={`text-[12px]`}>Priority</p>
-                    </div>
-                  </div>
-                  <div className="flex w-[70px] items-center justify-start">
-                    <p className="cursor-pointer text-center text-[12px]">
-                      Actions
-                    </p>
-                  </div>
-                </div>
+              <div className="flex h-fit w-full flex-col flex-wrap justify-between gap-1 rounded-[18px] pb-[6px]">
                 <div>
                   {tabContent[activeTab] && tabContent[activeTab].length > 0 ? (
                     tabContent[activeTab]?.map((task, index) =>
@@ -330,7 +336,7 @@ function TabComponent() {
                 </div>
               </div>
             ) : (
-              <div className="flex h-fit w-full flex-row flex-wrap justify-between gap-2 rounded-[18px] bg-[#565656]/10 p-2 pb-[6px]">
+              <div className="flex h-fit w-full flex-row flex-wrap justify-between gap-2 rounded-[18px] p-2 pb-[6px]">
                 {tabContent[activeTab] && tabContent[activeTab].length > 0 ? (
                   tabContent[activeTab]?.map((task, index) =>
                     task ? (

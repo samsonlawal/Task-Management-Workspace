@@ -8,6 +8,14 @@ import TaskDetails from "../TaskDetails";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
+import {
+  Clock,
+  Flag,
+  Link2,
+  MessageSquare,
+  Paperclip,
+  Redo,
+} from "lucide-react";
 
 export default function Card({
   desc,
@@ -33,10 +41,10 @@ export default function Card({
   createdAt: string;
 }) {
   const priorityColors = {
-    High: "bg-[#CF1414]/20",
-    Medium: "bg-[#EEC642]/20",
-    Low: "bg-[#64BC21]/20",
-    low: "bg-[#64BC21]/20",
+    High: "bg-[#CF1414]/10",
+    Medium: "bg-[#EEC642]/10",
+    Low: "bg-[#64BC21]/10",
+    low: "bg-[#64BC21]/10",
   };
 
   const priorityTextColors = {
@@ -291,12 +299,12 @@ export default function Card({
     //   </div>
     // </div>
 
-    <div className="group relative flex min-h-[96px] w-[250px] flex-col justify-between gap-2 rounded-[14px] border border-[#565656]/10 bg-white pt-2 text-[14px] font-[300]">
+    <div className="group relative flex min-h-[96px] w-[250px] flex-col justify-between gap-2 rounded-[14px] border border-[#565656]/10 bg-[#565656]/10 pt-2 text-[14px] font-[300]">
       {/* Head */}
       <div className="flex flex-row justify-between px-[14px] pt-1 font-medium">
-        <div className="flex flex-row items-center justify-center gap-2">
+        <div className="flex flex-row items-center justify-center gap-1">
           {/* Status */}
-          <div className="bg-[#C5C5C5 flex h-[18px] w-[20px] items-center justify-center rounded-[2px]">
+          <div className="bg-[#C5C5C5 flex h-[18px] w-[20px] items-center justify-center rounded-[2px] bg-[#565656]/30">
             <img
               src={`icons/${status === "to-do" ? "circle-line" : status === "in-progress" ? "circle-half" : status === "in-review" ? "circle-full" : "circle-check"}.svg`}
               alt=""
@@ -313,50 +321,58 @@ export default function Card({
       </div>
 
       {/* Middle */}
-      <div className="flex min-h-[55px] flex-col items-start justify-between gap-[6px] px-[14px]">
+      <div className="flex min-h-[30px] flex-col items-start justify-between gap-[4px] px-[14px]">
         {/* descritpion */}
-        <p className="line-clamp-2 h-fit text-[11px] font-medium leading-tight text-[#565656]">
+        <p className="line-clamp-1 h-fit text-[11px] font-medium leading-tight text-[#565656]">
           {desc}
         </p>
 
-        <div className="flex flex-row gap-1">
+        <div className="flex flex-row items-center justify-center gap-1">
+          {/* <Redo size={12} className="scale-y-[-1] text-[#565656]" /> */}
           {/* comments */}
-          <div className="flex w-fit flex-row items-center justify-center gap-[4px] rounded-[6px] border border-gray-200 bg-[#565656]/10 px-1.5 py-[2px]">
+          <div className="flex w-fit flex-row items-center justify-center gap-[4px] rounded-[6px] border border-gray-200 bg-[#565656]/5 px-1 py-[1px]">
             <img
               src="/icons/chat-outline.svg"
               alt="chat-icon"
               className="h-[10px] w-[10px]"
             />
+            {/* <MessageSquare size={10} /> */}
             <p className="text-[10px] text-[#565656]">2</p>
           </div>
 
           {/* attache */}
-          <div className="flex w-fit flex-row items-center justify-center gap-[4px] rounded-[6px] border border-gray-200 bg-[#565656]/10 px-1.5 py-[2px]">
+          <div className="flex w-fit flex-row items-center justify-center gap-[4px] rounded-[6px] border border-gray-200 bg-[#565656]/5 px-1.5 py-[2px]">
             <img
               src="/icons/task/attach.svg"
               alt="attach-icon"
               className="h-[10px] w-[10px]"
             />
+            {/* <Paperclip size={10} /> */}
+
             <p className="text-[10px] text-[#565656]">1</p>
           </div>
 
           {/* links */}
-          <div className="flex w-fit flex-row items-center justify-center gap-[4px] rounded-[6px] border border-gray-200 bg-[#565656]/10 px-1.5 py-[2px]">
+          <div className="flex w-fit flex-row items-center justify-center gap-[4px] rounded-[6px] border border-gray-200 bg-[#565656]/5 px-1.5 py-[2px]">
             <img
               src="/icons/task/link.svg"
               alt="link-icon"
               className="h-[10px] w-[10px]"
             />
+            {/* <Link2 size={10} /> */}
+
             <p className="text-[10px] text-[#565656]">8</p>
           </div>
 
           {/* deadline */}
-          <div className="flex w-fit flex-row items-center justify-center gap-[4px] rounded-[6px] border border-gray-200 bg-[#565656]/10 px-1.5 py-[2px]">
+          <div className="flex w-fit flex-row items-center justify-center gap-[4px] rounded-[6px] border border-gray-200 bg-[#565656]/5 px-1.5 py-[2px]">
             <img
               src="/icons/task/cal.svg"
               alt="calendar-icon"
               className="h-[10px] w-[10px]"
             />
+            {/* <Clock size={10} /> */}
+
             <p className="text-center text-[10px] text-[#565656]">
               {DateTime.fromISO(deadline).toFormat("dd MMM")}
             </p>
@@ -398,15 +414,14 @@ export default function Card({
         </div>
 
         <div
-          className={`flex h-fit w-fit flex-row items-center justify-center gap-1 rounded-[6px] ${priority && priorityColors[priority as keyof typeof priorityColors] ? priorityColors[priority as keyof typeof priorityColors] : "bg-gray-700"} px-1.5 py-[4px]`}
+          className={`flex h-fit w-fit flex-row items-center justify-center gap-1 rounded-[8px] px-1.5 py-[4px]`}
         >
-          <img
-            src={`icons/task/${priority === "High" ? "high" : priority === "Medium" ? "medium" : "low"}.svg`}
-            alt=""
-            className="h-3.5 w-3.5"
+          <Flag
+            size={10}
+            className={`${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"} fill-current`}
           />
           <p
-            className={`text-[10px] font-regular ${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"}`}
+            className={`text-[10px] font-normal ${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"}`}
           >
             {(priority || "")?.split(" ")[0].charAt(0).toUpperCase() +
               (priority || "")?.split(" ")[0].slice(1).toLowerCase()}
