@@ -304,9 +304,9 @@ export default function Card({
       <div className="flex flex-row justify-between px-[14px] pt-1 font-medium">
         <div className="flex flex-row items-center justify-center gap-1">
           {/* Status */}
-          <div className="bg-[#C5C5C5 flex h-[18px] w-[20px] items-center justify-center rounded-[2px] bg-[#565656]/30">
+          <div className="bg-[#C5C5C5 flex h-[18px] w-[20px] items-center justify-center rounded-[2px]">
             <img
-              src={`icons/${status === "to-do" ? "circle-line" : status === "in-progress" ? "circle-half" : status === "in-review" ? "circle-full" : "circle-check"}.svg`}
+              src={`icons/task/${status === "to-do" ? "to-do" : status === "in-progress" ? "in-progress" : status === "in-review" ? "in-review" : "completed"}.svg`}
               alt=""
               className="h-3.5 w-3.5"
             />

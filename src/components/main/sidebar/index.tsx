@@ -107,6 +107,10 @@ export default function Sidebar() {
           </span> */}
           <span
             className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-gray-300/50 ${current === "settings" ? "border border-[#565656]/10 bg-[#565656]/10" : "border-white"}`}
+            onClick={() => {
+              dispatch(setCurrentUI("settings"));
+              setCurrent("settings");
+            }}
           >
             <Settings strokeWidth={1.5} size={18} />
             Settings

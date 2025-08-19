@@ -51,6 +51,7 @@ import {
 } from "lucide-react";
 import { useGetUserNotifications } from "@/hooks/api/Notification";
 import Team from "@/components/pages/Team";
+import Settings from "../Settings";
 
 const tabby = [
   {
@@ -108,7 +109,7 @@ function TabComponent() {
     console.log("USER ID:", user?._id);
     console.log(
       "Task Assignees:",
-      tasks.map((t) => t.assignee?._id),
+      tasks.map((t: any) => t.assignee?._id),
     );
   }, [user, tasks]);
 
@@ -376,8 +377,10 @@ function TabComponent() {
         </>
       ) : currentUI === "team" ? (
         <Team />
-      ) : (
+      ) : currentUI === "dashboard" ? (
         <Dashboard />
+      ) : (
+        <Settings />
       )}
     </div>
   );
