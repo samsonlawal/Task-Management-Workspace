@@ -48,7 +48,7 @@ const VerifyUser = () => {
 
   return (
     <AuthPageWrapper
-      showLogo={success?.show ? false : true}
+      // showLogo={success?.show ? false : true}
       title={success?.show ? undefined : "Email Verification in Progress"}
       subtitle={
         success?.show
