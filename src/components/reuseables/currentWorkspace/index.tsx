@@ -25,6 +25,9 @@ import {
 import Loader from "@/utils/loader";
 import { useGetTasks } from "@/hooks/api/tasks";
 
+import { setCurrentUI } from "@/redux/Slices/uiSlice";
+import { Settings } from "lucide-react";
+
 export default function CurrentWorkspace() {
   return (
     <div className="flex flex-col gap-[24px]">
@@ -48,6 +51,10 @@ function Workspace() {
     (state: any) => state.currentWorkspace,
   );
 
+  const [current, setCurrent] = useState<
+    "tasks" | "dashboard" | "team" | "settings"
+  >("tasks");
+
   // Use the unified hook
   const { data: taskData, onGetTasks, loading: tasksLoading } = useGetTasks();
 
@@ -69,7 +76,7 @@ function Workspace() {
     loading: singleWorkspaceLoading,
   } = useGetSingleWorkspace(currentWorkspace);
 
-  // Fixed useEffect - only fetch data when user changes
+  // only fetch data when user changes
   useEffect(() => {
     if (user) {
       onGetUserWorkspace(user?._id);
@@ -155,7 +162,7 @@ function Workspace() {
       <Menu>
         <MenuButton className="inline-flex w-full items-center gap-2 rounded-md border-[1px] bg-white px-2 py-1.5 text-black transition-all duration-300 hover:bg-gray-100 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
           <div
-            className="flex w-full flex-row items-center gap-[8px]"
+            className="poppins flex w-full flex-row items-center gap-[8px]"
             onClick={() => openWorkspaceDialog()}
           >
             {workspaceData?.name ? (
@@ -188,16 +195,38 @@ function Workspace() {
         <MenuItems
           transition
           anchor="bottom start"
-          className="poppins-medium flex min-h-[300px] w-[260px] origin-top-right flex-col justify-between rounded-md border-[1px] border-gray-300/60 bg-gray-100 px-3 py-4 text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-300 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          className="poppins-medium flex min-h-fit w-[260px] origin-top-right flex-col justify-between gap-2 rounded-md border-[1px] border-gray-300/60 bg-gray-100 px-3 py-2 text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-300 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
-          <div className="flex flex-col gap-[10px]">
+          {" "}
+          {workspaceData._id && (
+            <MenuItem>
+              <div
+                className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-gray-300/50 ${current === "settings" ? "border border-[#565656]/10 bg-[#565656]/10" : "border-none"}`}
+                onClick={() => {
+                  dispatch(setCurrentUI("settings"));
+                  setCurrent("settings");
+                }}
+              >
+                <Settings strokeWidth={1.5} size={18} />
+                Settings
+              </div>
+            </MenuItem>
+          )}
+          <div className="h-[1px] bg-gray-300/60" />
+          <div className="flex flex-col gap-[4px]">
             {/* <MenuItem> */}
-            <p className="px-2 pb-2 text-[14px] text-[#707070]">
-              Switch Workspace
-            </p>
+            {workspaceData._id ? (
+              <p className="px-2 text-[13px] text-[#707070]">
+                Switch Workspace
+              </p>
+            ) : (
+              <p className="px-2 text-[13px] text-[#707070]">
+                Select Workspace
+              </p>
+            )}
             {/* </MenuItem> */}
 
-            <div className="flex h-[180px] flex-col gap-[10px] overflow-y-auto rounded-sm">
+            <div className="flex h-fit flex-col gap-[10px] overflow-y-auto rounded-sm">
               {workspacingLoading && !filteredWorkspaces ? (
                 <div className="flex h-full w-full items-center justify-center">
                   <Loader loaderSize={50} />
@@ -208,14 +237,14 @@ function Workspace() {
                     filteredWorkspaces.map((workspace: any, index: any) => (
                       <MenuItem key={index}>
                         <div
-                          className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] py-1 pl-2 hover:bg-gray-200/70"
+                          className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] pl-2 hover:bg-gray-200/70"
                           onClick={() => switchWorkspace(workspace?._id)}
                         >
                           <div className="flex h-[32px] w-[32px] items-center justify-center rounded-[5px] bg-[#A8A8A8] text-[13px] text-white">
                             {workspace?.name.charAt(0).toUpperCase()}
                           </div>
                           <div className="flex flex-col -space-y-[8px]">
-                            <p className="text-[14px]">{workspace?.name}</p>
+                            <p className="text-[13px]">{workspace?.name}</p>
                             {/* Add number of users to the returend dara */}
                             <p className="text-[10px] font-normal text-[#707070]">
                               {workspace?.memberCount} Member
@@ -234,10 +263,10 @@ function Workspace() {
               )}
             </div>
           </div>
-
           <MenuItem>
             <AddWorkspace />
           </MenuItem>
+          <div></div>
         </MenuItems>
       </Menu>
     </div>

@@ -18,3 +18,24 @@ export type TLoginService = {
     password: string;
   };
 };
+
+export type TValidateTokenService = {
+  payload: {
+    token: string;
+  };
+};
+
+export type TForgotPasswordService = {
+  payload: {
+    email: string;
+  };
+};
+
+export type TResetPasswordService = {
+  payload: {
+    new_password: string;
+    confirm_new_password: string;
+    otp: number | null;
+  };
+};
+

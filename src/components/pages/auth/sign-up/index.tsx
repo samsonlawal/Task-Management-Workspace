@@ -70,46 +70,40 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex h-svh w-full items-center justify-center p-3">
+    <div className="poppins flex h-svh w-full items-center justify-center p-3">
       <div className="flex h-full w-full flex-row rounded-lg">
         {/* Left Section */}
         <div className="flex w-[50%] items-center justify-center rounded-lg bg-[#111] py-8 text-white">
-          <div className="flex h-full w-full flex-col items-center justify-end gap-3 px-10">
+          <div className="flex h-full w-full flex-col items-center justify-between gap-3 px-10">
             {/* Logo at the top */}
             <div className="flex items-center justify-center">
               <img src="/icons/new-logo2.svg" alt="Logo" className="h-8 w-8" />
-              <p className="text-[21px] font-[400]">StackTask</p>
+              <p className="text-[21px] font-[400]">taskstackhq</p>
             </div>
 
-            <div className="flex w-[260px] flex-col gap-6">
+            <div className="flex max-w-[280px] flex-col gap-6">
               <div>
                 <h2 className="text-center text-lg font-medium text-white">
                   Create Account
                 </h2>
-                <p className="text-center text-sm text-gray-400">
+                <p className="text-center text-xs text-gray-400">
                   Complete these easy steps to register your account.
                 </p>
               </div>
 
               <div className="flex flex-col gap-2">
-                <span className="flex flex-row gap-2 rounded-md bg-[white] p-3 text-xs text-black">
-                  <p className="h-4 w-4 rounded-full bg-gray-400 text-center">
-                    1
-                  </p>
+                <span className="flex flex-row gap-2 rounded-md bg-[white]/50 p-3 text-xs text-white">
+                  <p className="h-4 w-4 rounded-full text-center">1</p>
                   <p>Sign up your account</p>
                 </span>
 
-                <span className="flex flex-row gap-2 rounded-md bg-gray-100/50 p-3 text-xs text-black transition-all duration-300 hover:bg-white">
-                  <p className="h-4 w-4 rounded-full bg-gray-300 text-center">
-                    2
-                  </p>
+                <span className="flex flex-row gap-2 rounded-md bg-white/20 p-3 text-xs text-white transition-all duration-300">
+                  <p className="h-4 w-4 rounded-full text-center">2</p>
                   <p>Setup Workspace</p>
                 </span>
 
-                <span className="flex flex-row gap-2 rounded-md bg-gray-100/50 p-3 text-xs text-black transition-all duration-300 hover:bg-white">
-                  <p className="h-4 w-4 rounded-full bg-gray-300 text-center">
-                    3
-                  </p>
+                <span className="flex flex-row gap-2 rounded-md border-white/10 bg-white/10 p-3 text-xs text-white transition-all duration-300">
+                  <p className="h-4 w-4 rounded-full text-center">3</p>
                   <p>Add members, create tasks</p>
                 </span>
               </div>
@@ -125,20 +119,20 @@ export default function SignUp() {
         </div>
 
         {/* Right Section - Sign Up Form */}
-        <div className="flex w-[50%] items-center justify-center p-8 font-madei">
+        <div className="poppins flex w-[50%] items-center justify-center p-8">
           <form className="w-full max-w-sm space-y-5" onSubmit={handleSignUp}>
-            {/* <div className="flex flex-col gap-1 text-center">
-              <h2 className="text-center text-xl font-medium">
+            <div className="flex flex-col gap-1 pb-4 text-center">
+              <h2 className="text-center text-xl font-semibold">
                 Sign Up Account
               </h2>
-              <p className="text-sm text-gray-700">
+              <p className="text-sm font-normal text-gray-700">
                 Enter your personal data to create your account
               </p>
-            </div> */}
+            </div>
 
             {/* Google Sign-Up */}
-            <button className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 py-1 text-sm text-gray-700 hover:bg-gray-100">
-              {/* <img src="/icons/google.svg" alt="Google" className="h-5 w-5" /> */}
+            {/* <button className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 py-1 text-sm text-gray-700 hover:bg-gray-100">
+              <img src="/icons/google.svg" alt="Google" className="h-5 w-5" />
               <img src="/icons/google-g.svg" alt="Google" className="h-8 w-8" />
               Sign up with Google
             </button>
@@ -147,11 +141,11 @@ export default function SignUp() {
               <div className="h-px flex-1 bg-gray-300" />
               <span className="text-sm text-gray-500">or</span>
               <div className="h-px flex-1 bg-gray-300" />
-            </div>
+            </div> */}
 
             {/* Name Input */}
-            <div className="flex h-fit w-full flex-col gap-1">
-              <label className="text-sm">Full Name</label>
+            <div className="flex h-fit w-full flex-col">
+              <label className="text-[12px]">Full Name</label>
               <input
                 name="fullname"
                 value={formik.values.fullname}
@@ -159,12 +153,12 @@ export default function SignUp() {
                 onBlur={formik.handleBlur}
                 type="text"
                 placeholder="Full Name"
-                className="placeh w-full rounded-md border border-gray-300 p-2 text-sm focus:border-black focus:outline-none"
+                className="h-[36px] w-full rounded-md border border-gray-300 px-2 text-xs focus:border-black focus:outline-none"
               />
             </div>
 
-            <div className="flex h-fit w-full flex-col gap-1">
-              <label className="text-sm">Username</label>
+            <div className="flex h-fit w-full flex-col">
+              <label className="text-[12px]">Username</label>
               <input
                 name="username"
                 value={formik.values.username}
@@ -172,13 +166,13 @@ export default function SignUp() {
                 onBlur={formik.handleBlur}
                 type="text"
                 placeholder="username"
-                className="placeh w-full rounded-md border border-gray-300 p-2 text-sm focus:border-black focus:outline-none"
+                className="h-[36px] w-full rounded-md border border-gray-300 px-2 text-xs focus:border-black focus:outline-none"
               />
             </div>
 
             {/* Email Input */}
-            <div className="flex h-fit w-full flex-col gap-1">
-              <label className="text-sm">Email</label>
+            <div className="flex h-fit w-full flex-col">
+              <label className="text-[12px]">Email</label>
               <input
                 name="email"
                 value={formik.values.email}
@@ -186,13 +180,13 @@ export default function SignUp() {
                 onBlur={formik.handleBlur}
                 type="email"
                 placeholder="Email"
-                className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-black focus:outline-none"
+                className="h-[36px] w-full rounded-md border border-gray-300 px-2 text-xs focus:border-black focus:outline-none"
               />
             </div>
 
             {/* Password Input */}
-            <div className="flex w-full flex-col gap-1">
-              <label className="text-sm">Password</label>
+            <div className="flex w-full flex-col">
+              <label className="text-[12px]">Password</label>
 
               <div className="relative">
                 <input
@@ -203,7 +197,7 @@ export default function SignUp() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
-                  className={`mb-1 h-[40px] w-full rounded-md border border-gray-300 p-2 text-sm focus:border-black focus:outline-none`}
+                  className={`mb-1 h-[36px] w-full rounded-md border border-gray-300 px-2 text-xs focus:border-black focus:outline-none`}
                 />
                 <button
                   type="button"
@@ -270,7 +264,7 @@ export default function SignUp() {
             </div> */}
 
             {/* Terms & Conditions */}
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-xs">
               <input
                 type="checkbox"
                 name="terms"
@@ -279,7 +273,7 @@ export default function SignUp() {
                   formik.setFieldValue("terms", e.target.checked)
                 }
                 onBlur={formik.handleBlur}
-                className="h-4 w-4 text-black accent-black focus:ring-black"
+                className="h-3.5 w-3.5 text-black accent-black focus:ring-black"
               />
               <span>
                 I agree to the{" "}
@@ -292,7 +286,7 @@ export default function SignUp() {
             {/* Submit Button */}
             <button
               type="submit"
-              className="flex w-full flex-row items-center justify-center gap-2 rounded-md bg-black py-2 text-white hover:bg-black/85"
+              className="flex w-full flex-row items-center justify-center gap-2 rounded-md bg-black py-2 text-[13px] text-white transition-all duration-300 hover:bg-black/85"
             >
               Sign Up
               {loading ? (
@@ -308,7 +302,7 @@ export default function SignUp() {
               )}
             </button>
 
-            <p className="text-center text-sm text-gray-600">
+            <p className="text-center text-[13px] text-gray-600">
               Already have an account?{" "}
               <a href="/auth/sign-in" className="text-black hover:underline">
                 Sign In

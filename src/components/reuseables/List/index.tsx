@@ -126,8 +126,8 @@ export default function ListTask({
   // Helper function to get priority display
   const getPriorityDisplay = (priority: string) => {
     const priorityConfig = {
-      High: { color: "bg-red-300", textColor: "text-red-800" },
-      Medium: { color: "bg-yellow-300", textColor: "text-yellow-800" },
+      High: { color: "bg-red-200", textColor: "text-red-200" },
+      Medium: { color: "bg-yellow-300", textColor: "text-yellow-300" },
       Low: { color: "bg-green-300", textColor: "text-green-800" },
       low: { color: "bg-green-300", textColor: "text-green-800" },
     };

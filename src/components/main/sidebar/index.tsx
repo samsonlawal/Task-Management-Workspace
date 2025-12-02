@@ -1,7 +1,7 @@
 "use client";
 
-import UpgradePlan from "@/components/reusables/UpgradePlan";
-import CurrentWorkspace from "@/components/reusables/currentWorkspace";
+import UpgradePlan from "@/components/reuseables/UpgradePlan";
+import CurrentWorkspace from "@/components/reuseables/currentWorkspace";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
@@ -118,17 +118,7 @@ export default function Sidebar() {
         </div>
       </div>
       <div className="flex h-fit w-full flex-col gap-[20px]">
-        <UpgradePlan />
-        {/* <div className="flex h-fit flex-col gap-[14px] px-[18px] text-[15px] font-regular text-[#707070]">
-          <span className="flex flex-row gap-[11px]">
-            <img src="/icons/cog.svg" alt="" />
-            Settings
-          </span>
-          <span className="flex flex-row gap-[11px]">
-            <img src="/icons/logout.svg" alt="" />
-            Logout
-          </span>
-        </div> */}
+        {/* <UpgradePlan /> */}
       </div>
     </div>
   );

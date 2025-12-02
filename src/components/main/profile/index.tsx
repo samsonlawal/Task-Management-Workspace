@@ -6,7 +6,7 @@ function Profile() {
   const router = useRouter();
 
   function handleRoute() {
-    router.push("/workspace");
+    router.push("/workspaces");
   }
 
   return (
@@ -18,7 +18,7 @@ function Profile() {
       >
         {/* <FontAwesomeIcon icon={faListCheck} /> */}
         {/* <FontAwesomeIcon icon={faPlus} /> */}
-        workspace
+        View Workspaces
       </button>
     </>
   );

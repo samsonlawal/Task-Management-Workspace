@@ -78,11 +78,11 @@ export default function AddWorkspace() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="flex w-full cursor-pointer flex-row items-center rounded-[4px] py-2 pl-2 hover:bg-gray-200/70"
+        className="flex w-full cursor-pointer flex-row items-center rounded-[4px] bg-gray-200/70 py-2 pl-2 hover:bg-gray-200/90"
       >
         <img src="/icons/plus.svg" alt="" className="cursor-pointer" />
 
-        <p className="px-2 text-[14px] text-[#707070]">Create Workspace</p>
+        <p className="px-2 text-[13px] text-[#707070]">Create Workspace</p>
       </button>
       <Dialog
         open={isOpen}

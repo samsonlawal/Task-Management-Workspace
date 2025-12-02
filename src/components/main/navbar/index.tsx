@@ -94,15 +94,32 @@ function DropdownMenu() {
           anchor="bottom end"
           className="flex min-h-fit w-[240px] origin-top-right flex-col justify-between gap-1 rounded-[14px] border-[1px] border-[#EEEEEE] bg-white px-3 py-[14px] text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:10px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
-          <div className="flex flex-col gap-[8px]">
-            {/* </MenuItem> */}
-            {/* <MenuItem> */}
-            <div className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-2">
+          <div className="border-gray-200/700 flex cursor-pointer flex-row items-center justify-between gap-3 rounded-[8px] border-[1px] px-3 py-[2px] hover:bg-gray-200/70">
+            <div className="flex flex-row items-center gap-3">
+              <img src="/icons/menu/smiley.svg" alt="" />
+              <p className="poppins text-[14px] font-normal text-[#565656]">
+                Status
+              </p>
+            </div>
+          </div>
+
+          <div className="flex cursor-pointer flex-row items-center justify-between gap-3 rounded-[8px] px-3 py-2 hover:bg-gray-200/70">
+            <div className="flex flex-row items-center gap-3">
               <img src="/icons/menu/lamp.svg" alt="" />
               <p className="poppins text-[14px] font-normal text-[#111]">
                 Theme
               </p>
             </div>
+
+            <img src="/icons/menu/caret.svg" alt="" className="-rotate-90" />
+          </div>
+
+          <div className="my-1 h-px bg-[#eeeeee]" />
+
+          <div className="flex flex-col gap-[0px]">
+            {/* </MenuItem> */}
+            {/* <MenuItem> */}
+
             {/* </MenuItem> */}
             {/* <div className="my-1 h-px bg-[#eeeeee]" /> */}
 
@@ -117,14 +134,36 @@ function DropdownMenu() {
                 <p className="poppins text-[14px] text-[#111]">Profile</p>
               </div>
             </MenuItem>
+            <MenuItem>
+              <div
+                // onClick={() => {
+                //   router.push("/settings");
+                // }}
+                className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-2 hover:bg-gray-200/70"
+              >
+                <img src="/icons/menu/menucog.svg" alt="" />
+                <p className="poppins text-[14px] text-[#111]">Settings</p>
+              </div>
+            </MenuItem>
+            <MenuItem>
+              <div
+                // onClick={() => {
+                //   router.push("/help");
+                // }}
+                className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-2 hover:bg-gray-200/70"
+              >
+                <img src="/icons/menu/help.svg" alt="" />
+                <p className="poppins text-[14px] text-[#111]">Help</p>
+              </div>
+            </MenuItem>
             <div className="my-1 h-px bg-[#eeeeee]" />
             {/* <MenuItem> */}
             <div
               onClick={() => handleLogout()}
               className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-2 hover:bg-[#D32F2F]/20"
             >
-              <img src="/icons/menu/signout.svg" alt="" />
-              <p className="poppins text-[14px] text-[#D32F2F]">Logout</p>
+              <img src="/icons/menu/exit.svg" alt="" />
+              <p className="poppins text-[14px] text-[#111]">Logout</p>
             </div>
             {/* </MenuItem> */}
           </div>
@@ -247,13 +286,11 @@ function Notification() {
                       {/* message */}
                       <div className="flex flex-1 flex-row justify-between">
                         <div className="flex flex-col">
-                          <p className="text-[12px] text-[#4E4E4E]">
+                          <p className="text-[13px] font-medium text-[#4E4E4E]">
                             {notif.message}
                           </p>
                           <div className="flex flex-row gap-[10px] text-[10px] text-[#8c8c8c]">
-                            <p className="text-[12px]">
-                              {formatTimeAgo(notif.createdAt)}
-                            </p>
+                            <p className="">{formatTimeAgo(notif.createdAt)}</p>
                           </div>
                         </div>
 

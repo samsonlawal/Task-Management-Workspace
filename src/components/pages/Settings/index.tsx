@@ -7,8 +7,8 @@ import {
   faMagnifyingGlass,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import AddMember from "../../reusables/Dialogs/AddMember";
-import { CustomSelect } from "../../reusables/select";
+import AddMember from "../../reuseables/Dialogs/AddMember";
+import { CustomSelect } from "../../reuseables/select";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import Loader from "@/utils/loader";

@@ -27,10 +27,10 @@
 import { useMemo, useState } from "react";
 import Navbar from "../../main/navbar";
 import tasks from "@/components/data";
-import Card from "@/components/reusables/Card";
-import ListTask from "@/components/reusables/List";
+import Card from "@/components/reuseables/Card";
+import ListTask from "@/components/reuseables/List";
 
-import AddTask from "@/components/reusables/Dialogs/AddTask";
+import AddTask from "@/components/reuseables/Dialogs/AddTask";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setTasks } from "@/redux/Slices/taskSlice";
@@ -337,7 +337,7 @@ function TabComponent() {
                 </div>
               </div>
             ) : (
-              <div className="flex h-fit w-full flex-row flex-wrap justify-between gap-2 rounded-[18px] p-2 pb-[6px]">
+              <div className="flex h-fit w-full flex-row flex-wrap justify-start gap-2 rounded-[18px] p-2 pb-[6px]">
                 {tabContent[activeTab] && tabContent[activeTab].length > 0 ? (
                   tabContent[activeTab]?.map((task, index) =>
                     task ? (
