@@ -61,7 +61,7 @@ export default function Login() {
     <div className="flex h-svh w-full items-center justify-center p-5 font-madei">
       <div className="flex h-full w-full flex-row rounded-lg">
         {/* Left Section */}
-        <div className="flex w-[50%] items-center justify-center rounded-lg bg-[#111] py-8 text-white">
+        <div className="hidden w-[50%] items-center justify-center rounded-lg bg-[#111] py-8 text-white md:flex">
           <div className="flex h-full w-full flex-col items-center justify-end gap-3 px-10">
             {/* Logo at the top */}
             <div className="flex items-center justify-center">
@@ -113,7 +113,7 @@ export default function Login() {
         </div>
 
         {/* Right Section - Auth Form */}
-        <div className="flex w-[50%] items-center justify-center p-8 font-madei">
+        <div className="flex w-[100%] items-center justify-center p-1 font-madei md:w-[50%] md:p-8">
           <form className="w-full max-w-sm space-y-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1 text-center">
               <h2 className="text-center text-xl font-medium">
