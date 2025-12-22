@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetUserWorkspace } from "@/hooks/api/workspace";
 import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
+import Brand from "@/components/reuseables/Brand";
 
 function Workspaces() {
   const dispatch = useDispatch();
@@ -42,12 +43,7 @@ function Workspaces() {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-[20px] bg-white">
-      <div className="flex flex-row items-center px-[6px]">
-        <img src="/icons/new-logo2.svg" alt="" className="h-10 w-10" />
-        <Link href="/" className="poppins text-[18px] font-medium">
-          TaskStackhq
-        </Link>
-      </div>
+      <Brand />
       <div className="flex flex-col gap-4 rounded-lg border-[1px] border-[#565656]/20 p-4">
         {/* Header */}
         <div className="flex flex-col text-left">

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { signupSchema } from "@/components/pages/auth/schema/signupSchema";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 import { useRegister } from "@/hooks/api/auth";
+import Brand from "@/components/reuseables/Brand";
 
 export default function SignUp() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,16 +71,13 @@ export default function SignUp() {
   };
 
   return (
-    <div className="poppins flex h-svh w-full items-center justify-center p-3">
-      <div className="flex h-full w-full flex-row rounded-lg">
+    <div className="flex h-svh w-full items-center justify-center p-3 font-madei">
+      <div className="flexc-row flex h-full w-full rounded-lg">
         {/* Left Section */}
-        <div className="flex w-[50%] items-center justify-center rounded-lg bg-[#111] py-8 text-white">
+        <div className="hidden w-[50%] items-center justify-center rounded-lg bg-[#111] bg-[url('/icons/ccchaos.svg')] py-8 text-white md:flex">
           <div className="flex h-full w-full flex-col items-center justify-between gap-3 px-10">
             {/* Logo at the top */}
-            <div className="flex items-center justify-center">
-              <img src="/icons/new-logo2.svg" alt="Logo" className="h-8 w-8" />
-              <p className="text-[21px] font-[400]">taskstackhq</p>
-            </div>
+            <Brand />
 
             <div className="flex max-w-[280px] flex-col gap-6">
               <div>
@@ -92,18 +90,24 @@ export default function SignUp() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <span className="flex flex-row gap-2 rounded-md bg-[white]/50 p-3 text-xs text-white">
-                  <p className="h-4 w-4 rounded-full text-center">1</p>
+                <span className="flex flex-row gap-2 rounded-md bg-[white] p-3 text-xs text-black">
+                  <p className="h-4 w-4 rounded-full bg-gray-400 text-center">
+                    1
+                  </p>
                   <p>Sign up your account</p>
                 </span>
 
-                <span className="flex flex-row gap-2 rounded-md bg-white/20 p-3 text-xs text-white transition-all duration-300">
-                  <p className="h-4 w-4 rounded-full text-center">2</p>
+                <span className="flex flex-row gap-2 rounded-md bg-gray-100/50 p-3 text-xs text-black transition-all duration-300 hover:bg-white">
+                  <p className="h-4 w-4 rounded-full bg-gray-400 text-center">
+                    2
+                  </p>
                   <p>Setup Workspace</p>
                 </span>
 
-                <span className="flex flex-row gap-2 rounded-md border-white/10 bg-white/10 p-3 text-xs text-white transition-all duration-300">
-                  <p className="h-4 w-4 rounded-full text-center">3</p>
+                <span className="flex flex-row gap-2 rounded-md bg-gray-100/50 p-3 text-xs text-black transition-all duration-300 hover:bg-white">
+                  <p className="h-4 w-4 rounded-full bg-gray-400 text-center">
+                    3
+                  </p>
                   <p>Add members, create tasks</p>
                 </span>
               </div>
@@ -119,7 +123,10 @@ export default function SignUp() {
         </div>
 
         {/* Right Section - Sign Up Form */}
-        <div className="poppins flex w-[50%] items-center justify-center p-8">
+        <div className="flex w-[100%] flex-col items-center justify-start gap-8 px-1 py-4 font-madei md:w-[50%] md:justify-center md:p-8">
+          <div className="flex md:hidden">
+            <Brand />
+          </div>
           <form className="w-full max-w-sm space-y-5" onSubmit={handleSignUp}>
             <div className="flex flex-col gap-1 pb-4 text-center">
               <h2 className="text-center text-xl font-semibold">
@@ -145,7 +152,7 @@ export default function SignUp() {
 
             {/* Name Input */}
             <div className="flex h-fit w-full flex-col">
-              <label className="text-[12px]">Full Name</label>
+              <label className="text-sm">Full Name</label>
               <input
                 name="fullname"
                 value={formik.values.fullname}
@@ -153,12 +160,12 @@ export default function SignUp() {
                 onBlur={formik.handleBlur}
                 type="text"
                 placeholder="Full Name"
-                className="h-[36px] w-full rounded-md border border-gray-300 px-2 text-xs focus:border-black focus:outline-none"
+                className="w-full rounded-md border border-gray-300 px-2 py-2.5 text-sm focus:border-black focus:outline-none md:py-2"
               />
             </div>
 
             <div className="flex h-fit w-full flex-col">
-              <label className="text-[12px]">Username</label>
+              <label className="text-sm">Username</label>
               <input
                 name="username"
                 value={formik.values.username}
@@ -166,13 +173,13 @@ export default function SignUp() {
                 onBlur={formik.handleBlur}
                 type="text"
                 placeholder="username"
-                className="h-[36px] w-full rounded-md border border-gray-300 px-2 text-xs focus:border-black focus:outline-none"
+                className="w-full rounded-md border border-gray-300 px-2 py-2.5 text-sm focus:border-black focus:outline-none md:py-2"
               />
             </div>
 
             {/* Email Input */}
             <div className="flex h-fit w-full flex-col">
-              <label className="text-[12px]">Email</label>
+              <label className="text-sm">Email</label>
               <input
                 name="email"
                 value={formik.values.email}
@@ -180,13 +187,13 @@ export default function SignUp() {
                 onBlur={formik.handleBlur}
                 type="email"
                 placeholder="Email"
-                className="h-[36px] w-full rounded-md border border-gray-300 px-2 text-xs focus:border-black focus:outline-none"
+                className="w-full rounded-md border border-gray-300 px-2 py-2.5 text-sm focus:border-black focus:outline-none md:py-2"
               />
             </div>
 
             {/* Password Input */}
             <div className="flex w-full flex-col">
-              <label className="text-[12px]">Password</label>
+              <label className="text-sm">Password</label>
 
               <div className="relative">
                 <input
@@ -197,7 +204,7 @@ export default function SignUp() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
-                  className={`mb-1 h-[36px] w-full rounded-md border border-gray-300 px-2 text-xs focus:border-black focus:outline-none`}
+                  className={`w-full rounded-md border border-gray-300 px-2 py-2.5 text-sm focus:border-black focus:outline-none md:py-2`}
                 />
                 <button
                   type="button"
@@ -264,7 +271,7 @@ export default function SignUp() {
             </div> */}
 
             {/* Terms & Conditions */}
-            <div className="flex items-center gap-2 text-xs">
+            <div className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"
                 name="terms"

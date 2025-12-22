@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { showSuccessToast, showErrorToast } from "@/utils/toaster";
 import { useLogin } from "@/hooks/api/auth";
+import Brand from "@/components/reuseables/Brand";
 // import AlertError from "@/components/reusables/Alert";
 
 export default function Login() {
@@ -55,19 +56,17 @@ export default function Login() {
     }
 
     // console.log(formValues);
+    // font madei
   };
 
   return (
-    <div className="flex h-svh w-full items-center justify-center p-5 font-madei">
+    <div className="flex h-svh w-full items-center justify-center px-4 py-5 font-madei md:p-5">
       <div className="flex h-full w-full flex-row rounded-lg">
         {/* Left Section */}
-        <div className="hidden w-[50%] items-center justify-center rounded-lg bg-[#111] py-8 text-white md:flex">
-          <div className="flex h-full w-full flex-col items-center justify-end gap-3 px-10">
+        <div className="hidden w-[50%] items-center justify-center rounded-lg bg-[#111] bg-[url('/icons/ccchaos.svg')] py-8 text-white md:flex">
+          <div className="flex h-full w-full flex-col items-center justify-between gap-3 px-10">
             {/* Logo at the top */}
-            <div className="flex items-center justify-center">
-              <img src="/icons/new-logo2.svg" alt="Logo" className="h-8 w-8" />
-              <p className="text-[21px] font-[400]">StackTask</p>
-            </div>
+            <Brand />
 
             <div className="flex w-[260px] flex-col gap-6">
               <div>
@@ -113,20 +112,22 @@ export default function Login() {
         </div>
 
         {/* Right Section - Auth Form */}
-        <div className="flex w-[100%] items-center justify-center p-1 font-madei md:w-[50%] md:p-8">
+
+        <div className="flex w-[100%] flex-col items-center justify-start gap-8 px-1 py-12 font-madei md:w-[50%] md:justify-center md:p-8">
+          <div className="flex md:hidden">
+            <Brand />
+          </div>
           <form className="w-full max-w-sm space-y-5" onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-1 text-center">
-              <h2 className="text-center text-xl font-medium">
-                Sign In Account
-              </h2>
-              <p className="text-sm text-gray-700">
+            <div className="flex flex-col pb-4 text-center">
+              <h2 className="text-xl font-medium">Welcome Back</h2>
+              <p className="text-sm text-gray-500">
                 Enter your credentials to access your account
               </p>
             </div>
 
             {/* Google Sign-In */}
-            <button className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 py-1 text-sm text-gray-700 hover:bg-gray-100">
-              {/* <img src="/icons/google.svg" alt="Google" className="h-5 w-5" /> */}
+            {/* <button className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 py-1 text-sm text-gray-700 hover:bg-gray-100">
+              <img src="/icons/google.svg" alt="Google" className="h-5 w-5" />
               <img src="/icons/google-g.svg" alt="Google" className="h-8 w-8" />
               Sign in with Google
             </button>
@@ -135,7 +136,7 @@ export default function Login() {
               <div className="h-px flex-1 bg-gray-300" />
               <span className="text-sm text-gray-500">or</span>
               <div className="h-px flex-1 bg-gray-300" />
-            </div>
+            </div> */}
 
             {/* Email Input */}
             <div className="flex h-fit w-full flex-col gap-1">
@@ -145,7 +146,7 @@ export default function Login() {
                 type="email"
                 placeholder="Enter Email"
                 value={formValues.email}
-                className="mt-0 w-full rounded-md border border-gray-300 p-2 text-sm focus:border-black focus:outline-none"
+                className="mt-0 w-full rounded-md border border-gray-300 px-2 py-2.5 text-sm focus:border-black focus:outline-none md:p-2"
                 onChange={handleInputChange}
               />
             </div>
@@ -162,7 +163,7 @@ export default function Login() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter Password"
-                  className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-black focus:outline-none"
+                  className="w-full rounded-md border border-gray-300 px-2 py-2.5 text-sm focus:border-black focus:outline-none md:py-2"
                 />
                 <button
                   type="button"
@@ -194,7 +195,7 @@ export default function Login() {
                 />
                 Remember Me
               </label>
-              <a href="#" className="text-gray-600 hover:underline">
+              <a href="#" className="text-gray-500 hover:underline">
                 Forgot Password?
               </a>
             </div>
@@ -218,7 +219,7 @@ export default function Login() {
               )}
             </button>
 
-            <p className="text-center text-sm text-gray-600">
+            <p className="text-center text-sm text-gray-500">
               Don’t have an account?{" "}
               <a href="/auth/sign-up" className="text-black hover:underline">
                 Sign Up
