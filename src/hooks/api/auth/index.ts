@@ -71,8 +71,9 @@ export const useLogin = () => {
       router.push("/profile");
       setLoading(false);
     } catch (error: Error | AxiosError | any) {
+      console.log("error", error?.response?.data?.errors.formError);
       errorCallback?.({
-        message: error?.response?.data?.message || "An error occured!",
+        message: error?.response?.data?.errors.formError || "An error occured!",
         description: error?.response?.data?.description || "",
       });
       setLoading(false);

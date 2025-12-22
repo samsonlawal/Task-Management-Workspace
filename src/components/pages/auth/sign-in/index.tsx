@@ -60,7 +60,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex h-svh w-full items-center justify-center px-4 py-5 font-madei md:p-5">
+    <div className="flex h-svh w-full items-center justify-center p-3 font-madei">
       <div className="flex h-full w-full flex-row rounded-lg">
         {/* Left Section */}
         <div className="hidden w-[50%] items-center justify-center rounded-lg bg-[#111] bg-[url('/icons/ccchaos.svg')] py-8 text-white md:flex">
