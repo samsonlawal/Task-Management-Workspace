@@ -20,16 +20,16 @@ function Initializers({ children }: { children: ReactNode }) {
   return (
     <>
       <Provider store={store}>
-        {/* <AppThemeProvider> */}
-        {/* <AuthContextWrapper> */}
-        <NextTopLoader color="#000000" height={3} />
-        {/* {hideNavbar ? null : <Navbar />} */}
+        <AppThemeProvider>
+          {/* <AuthContextWrapper> */}
+          <NextTopLoader color="#000000" height={3} />
+          {/* {hideNavbar ? null : <Navbar />} */}
 
-        {children}
-        {/* {hideFooter ? null : <Footer />} */}
-        <Toaster richColors />
-        {/* </AuthContextWrapper> */}
-        {/* </AppThemeProvider> */}
+          {children}
+          {/* {hideFooter ? null : <Footer />} */}
+          <Toaster richColors />
+          {/* </AuthContextWrapper> */}
+        </AppThemeProvider>
         <AuthPersistenceWrapper />
       </Provider>
     </>

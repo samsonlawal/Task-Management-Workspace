@@ -60,7 +60,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex h-svh w-full items-center justify-center p-3 font-madei">
+    <div className="flex h-svh w-full items-center justify-center bg-white p-3 font-madei">
       <div className="flex h-full w-full flex-row rounded-lg">
         {/* Left Section */}
         <div className="hidden w-[50%] items-center justify-center rounded-lg bg-[#111] bg-[url('/icons/ccchaos.svg')] py-8 text-white md:flex">
@@ -119,7 +119,7 @@ export default function Login() {
           </div>
           <form className="w-full max-w-sm space-y-5" onSubmit={handleSubmit}>
             <div className="flex flex-col pb-4 text-center">
-              <h2 className="text-xl font-medium">Welcome Back</h2>
+              <h2 className="text-xl font-medium text-[#111]">Welcome Back</h2>
               <p className="text-sm text-gray-500">
                 Enter your credentials to access your account
               </p>
@@ -140,13 +140,13 @@ export default function Login() {
 
             {/* Email Input */}
             <div className="flex h-fit w-full flex-col gap-1">
-              <label className="text-sm">Email</label>
+              <label className="text-sm text-[#111]">Email</label>
               <input
                 name="email"
                 type="email"
                 placeholder="Enter Email"
                 value={formValues.email}
-                className="mt-0 w-full rounded-md border border-gray-300 px-2 py-2.5 text-sm focus:border-black focus:outline-none md:p-2"
+                className="mt-0 w-full rounded-md border border-gray-300 bg-white px-2 py-2.5 text-sm focus:border-black focus:outline-none md:p-2"
                 onChange={handleInputChange}
               />
             </div>
@@ -154,7 +154,7 @@ export default function Login() {
             {/* Password Input */}
 
             <div className="flex w-full flex-col gap-1">
-              <label className="text-sm">Password</label>
+              <label className="text-sm text-[#111]">Password</label>
               <div className="relative">
                 <input
                   name="password"
@@ -163,7 +163,7 @@ export default function Login() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter Password"
-                  className="w-full rounded-md border border-gray-300 px-2 py-2.5 text-sm focus:border-black focus:outline-none md:py-2"
+                  className="w-full rounded-md border border-gray-300 bg-white px-2 py-2.5 text-sm focus:border-black focus:outline-none md:py-2"
                 />
                 <button
                   type="button"
@@ -188,10 +188,10 @@ export default function Login() {
 
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2">
+              <label className="flex items-center gap-2 text-[#111]">
                 <input
                   type="checkbox"
-                  className="h-4 w-4 text-white accent-black focus:ring-black"
+                  className="h-4 w-4 bg-transparent text-white accent-black [color-scheme:light] focus:ring-black"
                 />
                 Remember Me
               </label>

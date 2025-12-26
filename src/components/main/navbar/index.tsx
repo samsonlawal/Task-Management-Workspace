@@ -9,6 +9,7 @@ import {
   useReadNotification,
   useReadAllNotification,
 } from "@/hooks/api/Notification";
+import ThemeSwitcher from "@/components/reuseables/ThemeSwitcher";
 
 export default function Navbar() {
   // const labels = {
@@ -111,7 +112,7 @@ function DropdownMenu() {
               </p>
             </div>
 
-            <img src="/icons/menu/caret.svg" alt="" className="-rotate-90" />
+            <ThemeSwitcher />
           </div>
 
           <div className="my-1 h-px bg-[#eeeeee]" />

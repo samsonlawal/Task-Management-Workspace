@@ -6,6 +6,7 @@ import { signupSchema } from "@/components/pages/auth/schema/signupSchema";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 import { useRegister } from "@/hooks/api/auth";
 import Brand from "@/components/reuseables/Brand";
+import ThemeSwitcher from "@/components/reuseables/ThemeSwitcher";
 
 export default function SignUp() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -71,7 +72,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex h-svh w-full items-center justify-center p-3 font-madei">
+    <div className="flex h-svh w-full items-center justify-center bg-white p-3 font-madei">
       <div className="flexc-row flex h-full w-full rounded-lg">
         {/* Left Section */}
         <div className="hidden w-[50%] items-center justify-center rounded-lg bg-[#111] bg-[url('/icons/ccchaos.svg')] py-8 text-white md:flex">
@@ -129,9 +130,10 @@ export default function SignUp() {
           </div>
           <form className="w-full max-w-sm space-y-5" onSubmit={handleSignUp}>
             <div className="flex flex-col gap-1 pb-4 text-center">
-              <h2 className="text-center text-xl font-semibold">
+              <h2 className="text-center text-xl font-semibold text-[#111]">
                 Sign Up Account
               </h2>
+
               <p className="text-sm font-normal text-gray-700">
                 Enter your personal data to create your account
               </p>
@@ -152,7 +154,7 @@ export default function SignUp() {
 
             {/* Name Input */}
             <div className="flex h-fit w-full flex-col">
-              <label className="text-sm">Full Name</label>
+              <label className="text-sm text-[#111]">Full Name</label>
               <input
                 name="fullname"
                 value={formik.values.fullname}
@@ -160,12 +162,12 @@ export default function SignUp() {
                 onBlur={formik.handleBlur}
                 type="text"
                 placeholder="Full Name"
-                className="w-full rounded-md border border-gray-300 px-2 py-2.5 text-sm focus:border-black focus:outline-none md:py-2"
+                className="w-full rounded-md border border-gray-300 bg-transparent px-2 py-2.5 text-sm text-[#111] focus:border-black focus:outline-none md:py-2"
               />
             </div>
 
             <div className="flex h-fit w-full flex-col">
-              <label className="text-sm">Username</label>
+              <label className="text-sm text-[#111]">Username</label>
               <input
                 name="username"
                 value={formik.values.username}
@@ -173,13 +175,13 @@ export default function SignUp() {
                 onBlur={formik.handleBlur}
                 type="text"
                 placeholder="username"
-                className="w-full rounded-md border border-gray-300 px-2 py-2.5 text-sm focus:border-black focus:outline-none md:py-2"
+                className="w-full rounded-md border border-gray-300 bg-transparent px-2 py-2.5 text-sm text-[#111] focus:border-black focus:outline-none md:py-2"
               />
             </div>
 
             {/* Email Input */}
             <div className="flex h-fit w-full flex-col">
-              <label className="text-sm">Email</label>
+              <label className="text-sm text-[#111]">Email</label>
               <input
                 name="email"
                 value={formik.values.email}
@@ -187,13 +189,13 @@ export default function SignUp() {
                 onBlur={formik.handleBlur}
                 type="email"
                 placeholder="Email"
-                className="w-full rounded-md border border-gray-300 px-2 py-2.5 text-sm focus:border-black focus:outline-none md:py-2"
+                className="w-full rounded-md border border-gray-300 bg-transparent px-2 py-2.5 text-sm text-[#111] focus:border-black focus:outline-none md:py-2"
               />
             </div>
 
             {/* Password Input */}
             <div className="flex w-full flex-col">
-              <label className="text-sm">Password</label>
+              <label className="text-sm text-[#111]">Password</label>
 
               <div className="relative">
                 <input
@@ -204,7 +206,7 @@ export default function SignUp() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
-                  className={`w-full rounded-md border border-gray-300 px-2 py-2.5 text-sm focus:border-black focus:outline-none md:py-2`}
+                  className={`w-full rounded-md border border-gray-300 bg-transparent px-2 py-2.5 text-sm text-[#111] focus:border-black focus:outline-none md:py-2`}
                 />
                 <button
                   type="button"
@@ -271,7 +273,7 @@ export default function SignUp() {
             </div> */}
 
             {/* Terms & Conditions */}
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm text-[#111]">
               <input
                 type="checkbox"
                 name="terms"
@@ -280,7 +282,7 @@ export default function SignUp() {
                   formik.setFieldValue("terms", e.target.checked)
                 }
                 onBlur={formik.handleBlur}
-                className="h-3.5 w-3.5 text-black accent-black focus:ring-black"
+                className="h-3.5 w-3.5 text-black accent-black [color-scheme:light] focus:ring-black"
               />
               <span>
                 I agree to the{" "}
