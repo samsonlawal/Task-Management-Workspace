@@ -10,7 +10,7 @@ import Initializers from "./Initializers";
 import Login from "@/components/pages/auth/sign-in";
 
 // In your layout.js or page.js file
-import { DM_Sans, Lexend, Outfit, Poppins, } from 'next/font/google'
+import { DM_Sans, Lexend, Outfit, Poppins } from "next/font/google";
 import { PostHogProvider } from "./provider";
 
 const lexend = Lexend({
@@ -39,7 +39,7 @@ export default function RootLayout({
           rel="stylesheet"
         ></link>
       </head>
-      <body className="">
+      <body className="bg-[#111]">
         {/* <PostHogProvider> */}
         <Initializers>{children}</Initializers>
         {/* </PostHogProvider> */}
