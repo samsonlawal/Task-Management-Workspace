@@ -146,7 +146,7 @@ export default function Login() {
                 type="email"
                 placeholder="Enter Email"
                 value={formValues.email}
-                className="mt-0 w-full rounded-md border border-gray-300 bg-white px-2 py-2.5 text-sm focus:border-black focus:outline-none md:p-2"
+                className="mt-0 w-full rounded-md border border-gray-300 bg-white px-2 py-2.5 text-sm text-[#111] focus:border-black focus:outline-none md:p-2"
                 onChange={handleInputChange}
               />
             </div>
@@ -163,7 +163,7 @@ export default function Login() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter Password"
-                  className="w-full rounded-md border border-gray-300 bg-white px-2 py-2.5 text-sm focus:border-black focus:outline-none md:py-2"
+                  className="w-full rounded-md border border-gray-300 bg-white px-2 py-2.5 text-sm text-[#111] focus:border-black focus:outline-none md:py-2"
                 />
                 <button
                   type="button"
