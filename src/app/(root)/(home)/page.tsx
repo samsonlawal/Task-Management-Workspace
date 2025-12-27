@@ -87,14 +87,14 @@ export default function Home() {
           </span>
         </div>
 
-        <div className="flex w-[205px] flex-row items-center gap-6">
+        <div className="flex w-[205px] flex-row items-center justify-end gap-6">
           {user ? (
             <div className="flex flex-col items-center gap-2">
               <a
-                href="/workspace"
-                className="rounded-[4px] border border-[#565656]/20 bg-[white] px-[24px] py-[8px] text-[14px] font-medium text-[#565656] transition-colors duration-300 hover:bg-[#565656]/20"
+                href="/workspaces"
+                className="rounded-[4px] border border-[#565656]/20 bg-[white] px-[24px] py-[8px] text-[13px] font-medium text-[#111] transition-colors duration-300 hover:bg-[white]/80"
               >
-                Workspace
+                Workspaces
               </a>
 
               {/* <button
@@ -110,14 +110,14 @@ export default function Home() {
               <div className="flex gap-3">
                 <a
                   href="/auth/sign-in"
-                  className="rounded-[4px] border border-[#565656]/20 bg-[#565656]/10 px-[24px] py-[8px] text-[14px] font-medium text-white transition-colors duration-300 hover:bg-[#565656]/20"
+                  className="rounded-[4px] border border-[#565656]/20 bg-[#565656]/10 px-[24px] py-[8px] text-[13px] font-medium text-white transition-colors duration-300 hover:bg-[#565656]/20"
                 >
                   Login
                 </a>
 
                 <a
                   href="/auth/sign-up"
-                  className="rounded-[4px] border border-[#565656]/20 bg-[white] px-[24px] py-[8px] text-[14px] font-medium text-[#111] transition-colors duration-300 hover:bg-[white]/90"
+                  className="rounded-[4px] border border-[#565656]/20 bg-[white] px-[24px] py-[8px] text-[13px] font-medium text-[#111] transition-colors duration-300 hover:bg-[white]/90"
                 >
                   Sign Up
                 </a>
