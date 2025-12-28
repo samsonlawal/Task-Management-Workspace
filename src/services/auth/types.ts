@@ -19,10 +19,8 @@ export type TLoginService = {
   };
 };
 
-export type TValidateTokenService = {
-  payload: {
-    token: string;
-  };
+export type TActivateAccountService = {
+  token: string;
 };
 
 export type TForgotPasswordService = {
@@ -38,4 +36,3 @@ export type TResetPasswordService = {
     otp: number | null;
   };
 };
-

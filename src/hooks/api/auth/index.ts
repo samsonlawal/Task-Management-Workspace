@@ -71,10 +71,10 @@ export const useLogin = () => {
       router.push("/profile");
       setLoading(false);
     } catch (error: Error | AxiosError | any) {
-      console.log("error", error?.response?.data?.errors.formError);
+      console.log("error", error?.response?.data);
       errorCallback?.({
-        message: error?.response?.data?.errors.formError || "An error occured!",
-        description: error?.response?.data?.description || "",
+        message: error?.response?.data?.message || "An error occured!",
+        description: error?.response?.data?.message || "",
       });
       setLoading(false);
     } finally {
@@ -135,21 +135,19 @@ export const useRegister = () => {
 export const useActivateUser = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onValidateToken = async ({
-    payload,
+  const onActivateUser = async ({
+    token,
     successCallback,
     errorCallback,
   }: {
-    payload: string;
+    token: string;
     successCallback?: (message: string) => void;
     errorCallback?: (message?: string) => void;
   }) => {
     setLoading(true);
 
     try {
-      const res = await AuthService.validateToken({
-        payload: { token: payload },
-      });
+      const res = await AuthService.activateAccount(token);
       console.log(res?.data?.message);
       successCallback?.(res?.data?.message);
     } catch (error: Error | any) {
@@ -166,7 +164,7 @@ export const useActivateUser = () => {
     }
   };
 
-  return { onValidateToken, loading };
+  return { onActivateUser, loading };
 };
 
 export const useLogout = () => {

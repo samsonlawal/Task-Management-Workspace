@@ -3,7 +3,7 @@ import env from "@/config/env";
 import {
   TLoginService,
   TRegisterService,
-  TValidateTokenService,
+  TActivateAccountService,
   TForgotPasswordService,
   TResetPasswordService,
 } from "./types";
@@ -17,8 +17,8 @@ class service {
     return axios.post(env.api.auth + "/register", payload);
   }
 
-  validateToken({ payload }: TValidateTokenService) {
-    return axios.post(env.api.auth + `/activate-account?token=${payload}`);
+  activateAccount(token: String) {
+    return axios.post(env.api.auth + `/activate-account?token=${token}`);
   }
 
   forgotPassword({ payload }: TForgotPasswordService) {
