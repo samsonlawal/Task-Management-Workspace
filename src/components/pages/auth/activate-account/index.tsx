@@ -37,10 +37,10 @@ const ActivateUser = () => {
               message: "Your email has been verified successfully!",
               show: true,
             }),
-          errorCallback: () =>
-            setTimeout(() => {
-              router.replace("/auth/sign-up");
-            }, 3000),
+          // errorCallback: () =>
+          //   setTimeout(() => {
+          //     router.replace("/auth/sign-up");
+          //   }, 3000),
         });
       }
     } else {
