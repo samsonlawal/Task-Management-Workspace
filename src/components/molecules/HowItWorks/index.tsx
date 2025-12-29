@@ -1,13 +1,13 @@
 export default function HowItWorks() {
   return (
     <div className="poppins flex min-h-screen w-full flex-col gap-[60px] py-[100px]">
-      <div className="poppins flex h-fit w-full flex-col gap-[8px]">
+      <div className="poppins flex h-fit w-full flex-col gap-3 md:gap-[8px]">
         <span className="flex w-fit items-center gap-2 rounded-full border border-[#565656]/20 bg-[#565656]/10 px-[14px] py-[7px] text-[12px] font-regular text-white transition-colors duration-300 hover:bg-[#565656]/20">
           How It Works
         </span>
         <div className="flex flex-col gap-2">
-          <h1 className="text-[34px] leading-[1.2] text-[#fff]">
-            Get your team set up in minutes <br /> and start managing tasks
+          <h1 className="text-[23px] leading-[1.2] text-[#fff] md:w-[630px] md:text-[34px]">
+            Get your team set up in minutes and start managing tasks
             effortlessly
           </h1>
           <p className="text-[15px] text-[#fff]/30">
@@ -17,8 +17,8 @@ export default function HowItWorks() {
         </div>
       </div>
 
-      <div className="flex flex-row gap-6">
-        <div className="flex w-1/3 flex-col items-center gap-4 rounded-[24px] border border-[#565656]/10 bg-[#1a1a1a] px-[24px] py-[32px]">
+      <div className="flex flex-col gap-6 md:flex-row">
+        <div className="flex w-full flex-col items-center gap-4 rounded-[24px] border border-[#565656]/10 bg-[#1a1a1a] px-[24px] py-[32px] md:w-1/3">
           <img src="/icons/create-workspace.svg" alt="" />
           <div className="flex flex-col gap-1">
             <h3 className="text-[16px] leading-[1.4] text-[#fff]">
@@ -31,7 +31,7 @@ export default function HowItWorks() {
           </div>
         </div>
 
-        <div className="flex w-1/3 flex-col items-center gap-4 rounded-[24px] border border-[#565656]/10 bg-[#1a1a1a] p-[24px]">
+        <div className="flex w-full flex-col items-center gap-4 rounded-[24px] border border-[#565656]/10 bg-[#1a1a1a] p-[24px] md:w-1/3">
           <img src="/icons/invite-members.svg" alt="" />
           <div className="flex flex-col gap-1">
             <h3 className="text-[16px] leading-[1.4] text-[#fff]">
@@ -44,7 +44,7 @@ export default function HowItWorks() {
           </div>
         </div>
 
-        <div className="flex w-1/3 flex-col items-center gap-4 rounded-[24px] border border-[#565656]/10 bg-[#1a1a1a] p-[24px]">
+        <div className="flex w-full flex-col items-center gap-4 rounded-[24px] border border-[#565656]/10 bg-[#1a1a1a] p-[24px] md:w-1/3">
           <img src="/icons/create-task.svg" alt="" />
           <div className="flex flex-col gap-1">
             <h3 className="text-[16px] leading-[1.4] text-[#fff]">
