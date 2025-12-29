@@ -18,7 +18,7 @@ class service {
   }
 
   activateAccount(token: String) {
-    return axios.post(env.api.auth + `/activate-account?token=${token}`);
+    return axios.get(env.api.auth + `/activate-account?token=${token}`);
   }
 
   forgotPassword({ payload }: TForgotPasswordService) {
