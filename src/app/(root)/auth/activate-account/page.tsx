@@ -1,12 +1,12 @@
 "use client";
 
 import { Suspense } from "react";
-import { VerifyUser } from "@/components/pages/auth/verify-user";
+import { ActivateUser } from "@/components/pages/auth/activate-account";
 
 export default function Page() {
   return (
     <Suspense>
-      <VerifyUser />
+      <ActivateUser />
     </Suspense>
   );
 }
