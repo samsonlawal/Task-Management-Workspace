@@ -25,10 +25,12 @@ export default function AddMember() {
   let [isOpen, setIsOpen] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [workspace_id, setWorkspaceId] = useState<string>("");
+  // const [workspace_name, setWorkspaceName] = useState<string>("");
 
   const [member, setMember] = useState<TAddMember>({
     email: "",
     role: "",
+    workspaceName: "",
   });
 
   const { currentWorkspace } = useSelector(
@@ -59,7 +61,7 @@ export default function AddMember() {
   };
 
   const handleAddMember = () => {
-    const { email, role } = member; // Make sure jobTitle is included
+    const { email, role, workspaceName } = member; // Make sure jobTitle is included
     let errorMsg = "";
 
     if (!email) {
@@ -73,13 +75,14 @@ export default function AddMember() {
       return;
     }
 
-    console.log(email, role);
+    console.log(email, role, workspaceName);
 
     onAddMember({
       workspaceId: workspace_id,
       payload: {
         email,
         role,
+        workspaceName,
         // jobTitle, // Include jobTitle in the payload
       },
       successCallback: async () => {
@@ -114,6 +117,18 @@ export default function AddMember() {
         }
       },
     });
+
+    getFromLocalStorage({
+      key: "WorkspaceData",
+      cb: (WorksapceData: { name?: string }) => {
+        if (!WorksapceData.name) return;
+
+        setMember({
+          ...member,
+          workspaceName: WorksapceData?.name,
+        });
+      },
+    });
   };
 
   // Only close the dialog if the select isn't open
@@ -130,6 +145,7 @@ export default function AddMember() {
       setMember({
         email: "",
         role: "",
+        workspaceName: "",
       });
     }
   };

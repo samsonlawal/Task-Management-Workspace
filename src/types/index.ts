@@ -46,6 +46,7 @@ export type TAddTask = {
 export type TAddMember = {
   email: string;
   role: string;
+  workspaceName: string;
 };
 
 export type TUser = {

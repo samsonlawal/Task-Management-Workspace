@@ -174,7 +174,7 @@ function TabComponent() {
   };
 
   return (
-    <div className="poppins mb-4 flex h-screen w-full flex-1 flex-col bg-white">
+    <div className="poppins flex h-full w-full flex-1 flex-col bg-white">
       <div className="sticky top-0 w-full">
         <Navbar />
       </div>
