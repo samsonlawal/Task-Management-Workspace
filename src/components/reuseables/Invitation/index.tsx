@@ -7,9 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useGetUserWorkspace } from "@/hooks/api/workspace";
 import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
 import Brand from "@/components/reuseables/Brand";
-import Invitation from "@/components/reuseables/Invitation";
 
-function Workspaces() {
+function Invitation() {
   const dispatch = useDispatch();
   const router = useRouter();
   const [selectedWorkspace, setSelectedWorkspace] = useState<string | null>(
@@ -43,21 +42,23 @@ function Workspaces() {
   }
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center gap-[20px] bg-[#111]">
-      <Brand />
-      <div className="flex flex-col gap-4 rounded-lg border-[1px] border-[#565656]/20 bg-[#1a1a1a]/50 p-6">
-        {/* Header */}
-        <div className="flex flex-col text-left">
-          <h1 className="poppins text-[15px] font-semibold text-white">
-            Select Workspace
-          </h1>
-          <p className="poppins text-[12px] text-[#fff]/50">
-            Choose where you want to continue your work or create.
-          </p>
-        </div>
+    <div className="flex w-[400px] flex-col gap-4 rounded-lg border-[1px] border-[#565656]/20 bg-[#1a1a1a]/50 p-6">
+      {/* Header */}
+      <div className="flex flex-col text-left">
+        <h1 className="poppins text-[15px] font-semibold text-white">
+          Invitation to join workspaceName
+        </h1>
+        <p className="poppins text-[12px] text-[#fff]/50">
+          You've been invited to join as an admin.
+        </p>
+      </div>
 
-        {/* List */}
-        <div className="flex flex-col gap-1 rounded-[6px] border-[1px] border-[#565656]/20 bg-[#111]/20 p-4 transition-all duration-300">
+      <p className="poppins text-[12px] text-[#fff]/50">
+        This invite expires in 7 days.
+      </p>
+
+      {/* List */}
+      {/* <div className="flex flex-col gap-1 rounded-[6px] border-[1px] border-[#565656]/20 bg-[#111]/20 p-4 transition-all duration-300">
           {workspacingLoading ? (
             <div className="flex justify-center p-4 transition-all duration-300">
               <p className="text-sm text-gray-500">Loading workspaces...</p>
@@ -81,7 +82,6 @@ function Workspaces() {
                   </p>
                 </div>
 
-                {/* Check */}
                 <span
                   className={`flex h-4 w-4 items-center justify-center rounded-full border border-[#565656]/40 transition-all duration-300 ${selectedWorkspace === ws._id ? "bg-white" : "bg-transparent"}`}
                 >
@@ -104,20 +104,17 @@ function Workspaces() {
               <p className="text-sm text-gray-500">No workspaces found</p>
             </div>
           )}
-        </div>
+        </div> */}
 
-        <button
-          className="poppins rounded-sm bg-[#fff] py-[10px] text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#fff] disabled:bg-[#565656]/10 disabled:text-[#565656]/50"
-          disabled={!selectedWorkspace}
-          onClick={handleContinue}
-        >
-          Select and Continue
-        </button>
-      </div>
-
-      {/* <Invitation /> */}
+      <button
+        className="poppins w-fit rounded-sm bg-[#fff] px-4 py-[10px] text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#fff]/80"
+        // disabled={!selectedWorkspace}
+        onClick={handleContinue}
+      >
+        Accept Invitation
+      </button>
     </div>
   );
 }
 
-export default Workspaces;
+export default Invitation;
