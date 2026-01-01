@@ -206,8 +206,8 @@ export default function AddMember() {
                 />
                 <CustomSelect
                   options={[
-                    { label: "Member", value: "member" },
-                    { label: "Admin", value: "admin" },
+                    { label: "Member", value: "Member" },
+                    { label: "Admin", value: "Admin" },
                   ]}
                   placeholder="Role"
                   value={member.role}

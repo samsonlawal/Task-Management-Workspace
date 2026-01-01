@@ -11,6 +11,10 @@ class service {
     return axios.get(env.api.workspaces + "/user/" + userId);
   }
 
+  getPendingInvites(userId: string) {
+    return axios.get(env.api.workspaces + "/invites/" + userId);
+  }
+
   getSingleWorkspace(workspaceId: string) {
     return axios.get(env.api.workspaces + "/" + workspaceId);
   }

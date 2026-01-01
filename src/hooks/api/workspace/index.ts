@@ -52,7 +52,39 @@ export const useGetUserWorkspace = (userId: string) => {
     }
   }, [userId]);
 
+  console.log("user workspaces:", data);
+
   return { onGetUserWorkspace, data, loading };
+};
+
+export const useGetPendingInvites = (userId: string) => {
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const [data, setData] = useState<TWorkspace[]>([]);
+
+  const onGetPendingInvites = async (userId: string) => {
+    setLoading(true);
+    try {
+      const res = await WorkspaceService.getPendingInvites(userId);
+      //   console.log(res?.data);
+
+      setData(res?.data);
+    } catch (error: Error | AxiosError | any) {
+      console.error("Error fetching tasks:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (userId) {
+      onGetPendingInvites(userId);
+    }
+  }, [userId]);
+
+  console.log("user workspaces:", data);
+
+  return { onGetPendingInvites, data, loading };
 };
 
 export const useGetSingleWorkspace = (workspaceId: string) => {
