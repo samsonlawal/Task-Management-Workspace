@@ -45,6 +45,7 @@ function Workspaces() {
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-[20px] bg-[#111]">
       <Brand />
+      <Invitation />
       <div className="flex flex-col gap-4 rounded-lg border-[1px] border-[#565656]/20 bg-[#1a1a1a]/50 p-6">
         {/* Header */}
         <div className="flex flex-col text-left">
@@ -107,15 +108,13 @@ function Workspaces() {
         </div>
 
         <button
-          className="poppins rounded-sm bg-[#fff] py-[10px] text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#fff] disabled:bg-[#565656]/10 disabled:text-[#565656]/50"
+          className="poppins rounded-sm bg-[#fff] py-[10px] text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#fff]/80 disabled:bg-[#565656]/10 disabled:text-[#565656]/50"
           disabled={!selectedWorkspace}
           onClick={handleContinue}
         >
           Select and Continue
         </button>
       </div>
-
-      <Invitation />
     </div>
   );
 }

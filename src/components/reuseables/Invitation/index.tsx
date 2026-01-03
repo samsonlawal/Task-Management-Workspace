@@ -1,15 +1,7 @@
 "use client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-import { useDispatch, useSelector } from "react-redux";
-import {
-  useGetPendingInvites,
-  useGetUserWorkspace,
-} from "@/hooks/api/workspace";
-import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
-import Brand from "@/components/reuseables/Brand";
+import { useSelector } from "react-redux";
+import { useAcceptInvite, useGetPendingInvites } from "@/hooks/api/workspace";
 
 interface Invite {
   workspaceName: string;
@@ -25,14 +17,9 @@ type InviteResponse = {
 };
 
 function Invitation() {
-  const dispatch = useDispatch();
-  const router = useRouter();
   const [invites, setInvites] = useState<InviteResponse>();
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-
-  // let currentItem = invites?.invites[currentIndex];
-  // const currentInvite = invites[currentIndex];
 
   const { user } = useSelector((state: any) => state.auth);
   const {
@@ -41,16 +28,6 @@ function Invitation() {
     loading: invitesLoading,
   } = useGetPendingInvites(user?._id);
 
-  // Helper to generate consistent colors from strings
-  const stringToColor = (str: string) => {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const c = (hash & 0x00ffffff).toString(16).toUpperCase();
-    return "#" + "00000".substring(0, 6 - c.length) + c;
-  };
-
   useEffect(() => {
     if (invite) {
       console.log("invitations", invite);
@@ -58,19 +35,24 @@ function Invitation() {
     }
   }, [invite]);
 
+  const { onAcceptInvite, loading: acceptInviteLoading } = useAcceptInvite();
+
   function handleAcceptInvite() {
-    if (invite) {
+    const token = invites?.data?.[currentIndex]?.inviteToken;
+
+    if (token) {
       console.log("data:", invites?.data);
+      onAcceptInvite(token);
     }
   }
 
   return (
     <>
       {/* {currentItem && ( */}
-      <div className="flex w-[400px] flex-col gap-4 rounded-lg border-[1px] border-[#565656]/20 bg-[#1a1a1a]/50 p-6">
+      <div className="flex w-[400px] flex-col gap-2 rounded-lg border-[1px] border-[#565656]/20 bg-[#1a1a1a]/50 p-5">
         {/* Header */}
         <div className="flex flex-col text-left">
-          <h1 className="poppins text-[15px] font-semibold text-white">
+          <h1 className="poppins text-[15px] font-medium text-white">
             Invitation to join{" "}
             <span>{invites?.data?.[currentIndex]?.workspaceName}</span>
           </h1>
@@ -91,11 +73,11 @@ function Invitation() {
         </p>
 
         <button
-          className="poppins w-fit rounded-sm bg-[#fff] px-4 py-[10px] text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#fff]/80"
+          className="poppins w-fit rounded-sm bg-[#fff] px-4 py-[6px] text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#fff]/80"
           // disabled={!selectedWorkspace}
           onClick={handleAcceptInvite}
         >
-          Accept Invitation
+          Accept
         </button>
       </div>
       {/* )} */}

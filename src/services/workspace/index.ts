@@ -18,7 +18,7 @@ class service {
   }
 
   acceptInvite(inviteToken: string) {
-    return axios.post(env.api.workspaces + "/invites/accept/" + inviteToken, {
+    return axios.post(env.api.workspaces + "/invites/accept", inviteToken, {
       withCredentials: true,
     });
   }

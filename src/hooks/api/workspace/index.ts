@@ -100,6 +100,28 @@ export const useGetPendingInvites = (userId: string) => {
   return { onGetPendingInvites, data, loading };
 };
 
+export const useAcceptInvite = () => {
+  const [data, setData] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const onAcceptInvite = async (token: string) => {
+    setLoading(true);
+    try {
+      const res = await WorkspaceService.acceptInvite(token);
+      console.log("api response", res);
+      setData(res?.data);
+    } catch (error: Error | AxiosError | any) {
+      console.error("Error fetching tasks:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  console.log("accpet invites:", data);
+
+  return { onAcceptInvite, data, loading };
+};
+
 export const useGetSingleWorkspace = (workspaceId: string) => {
   const [loading, setLoading] = useState<boolean>(false);
 
