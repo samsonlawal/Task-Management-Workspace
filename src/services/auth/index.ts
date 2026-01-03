@@ -10,7 +10,9 @@ import {
 
 class service {
   login({ payload }: TLoginService) {
-    return axios.post(env.api.auth + "/login", payload);
+    return axios.post(env.api.auth + "/login", payload, {
+      withCredentials: true,
+    });
   }
 
   register({ payload }: TRegisterService) {

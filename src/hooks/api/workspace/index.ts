@@ -6,6 +6,19 @@ import axios, { AxiosError } from "axios";
 import { useDispatch } from "react-redux";
 import { setMembers } from "@/redux/Slices/memberSlice";
 
+interface Invite {
+  workspaceName: string;
+  workspaceId: string;
+  role: string;
+  inviteExpires: string;
+  inviteToken: string;
+  email: string;
+}
+
+type InviteResponse = {
+  data: Invite[];
+};
+
 export const useGetWorkspace = () => {
   const [data, setData] = useState<TWorkspace[]>([]);
 
@@ -60,13 +73,13 @@ export const useGetUserWorkspace = (userId: string) => {
 export const useGetPendingInvites = (userId: string) => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [data, setData] = useState<TWorkspace[]>([]);
+  const [data, setData] = useState<InviteResponse>();
 
   const onGetPendingInvites = async (userId: string) => {
     setLoading(true);
     try {
       const res = await WorkspaceService.getPendingInvites(userId);
-      //   console.log(res?.data);
+      console.log("api response", res);
 
       setData(res?.data);
     } catch (error: Error | AxiosError | any) {
@@ -82,7 +95,7 @@ export const useGetPendingInvites = (userId: string) => {
     }
   }, [userId]);
 
-  console.log("user workspaces:", data);
+  console.log("user invites:", data);
 
   return { onGetPendingInvites, data, loading };
 };

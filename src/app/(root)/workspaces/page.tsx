@@ -115,7 +115,7 @@ function Workspaces() {
         </button>
       </div>
 
-      {/* <Invitation /> */}
+      <Invitation />
     </div>
   );
 }

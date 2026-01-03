@@ -12,7 +12,15 @@ class service {
   }
 
   getPendingInvites(userId: string) {
-    return axios.get(env.api.workspaces + "/invites/" + userId);
+    return axios.get(env.api.workspaces + "/invites/" + userId, {
+      withCredentials: true,
+    });
+  }
+
+  acceptInvite(inviteToken: string) {
+    return axios.post(env.api.workspaces + "/invites/accept/" + inviteToken, {
+      withCredentials: true,
+    });
   }
 
   getSingleWorkspace(workspaceId: string) {

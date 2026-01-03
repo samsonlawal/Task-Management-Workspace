@@ -1,26 +1,45 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useGetUserWorkspace } from "@/hooks/api/workspace";
+import {
+  useGetPendingInvites,
+  useGetUserWorkspace,
+} from "@/hooks/api/workspace";
 import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
 import Brand from "@/components/reuseables/Brand";
+
+interface Invite {
+  workspaceName: string;
+  workspaceId: string;
+  role: string;
+  inviteExpires: string;
+  inviteToken: string;
+  email: string;
+}
+
+type InviteResponse = {
+  data: Invite[];
+};
 
 function Invitation() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [selectedWorkspace, setSelectedWorkspace] = useState<string | null>(
-    null,
-  );
+  const [invites, setInvites] = useState<InviteResponse>();
+
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+  // let currentItem = invites?.invites[currentIndex];
+  // const currentInvite = invites[currentIndex];
 
   const { user } = useSelector((state: any) => state.auth);
   const {
-    data: workspaces,
-    onGetUserWorkspace,
-    loading: workspacingLoading,
-  } = useGetUserWorkspace(user?._id);
+    data: invite,
+    onGetPendingInvites,
+    loading: invitesLoading,
+  } = useGetPendingInvites(user?._id);
 
   // Helper to generate consistent colors from strings
   const stringToColor = (str: string) => {
@@ -32,88 +51,55 @@ function Invitation() {
     return "#" + "00000".substring(0, 6 - c.length) + c;
   };
 
-  console.log(selectedWorkspace);
+  useEffect(() => {
+    if (invite) {
+      console.log("invitations", invite);
+      setInvites(invite); // set the array directly
+    }
+  }, [invite]);
 
-  function handleContinue() {
-    if (selectedWorkspace) {
-      dispatch(setCurrentWorkspace(selectedWorkspace));
-      router.push("/workspace");
+  function handleAcceptInvite() {
+    if (invite) {
+      console.log("data:", invites?.data);
     }
   }
 
   return (
-    <div className="flex w-[400px] flex-col gap-4 rounded-lg border-[1px] border-[#565656]/20 bg-[#1a1a1a]/50 p-6">
-      {/* Header */}
-      <div className="flex flex-col text-left">
-        <h1 className="poppins text-[15px] font-semibold text-white">
-          Invitation to join workspaceName
-        </h1>
+    <>
+      {/* {currentItem && ( */}
+      <div className="flex w-[400px] flex-col gap-4 rounded-lg border-[1px] border-[#565656]/20 bg-[#1a1a1a]/50 p-6">
+        {/* Header */}
+        <div className="flex flex-col text-left">
+          <h1 className="poppins text-[15px] font-semibold text-white">
+            Invitation to join{" "}
+            <span>{invites?.data?.[currentIndex]?.workspaceName}</span>
+          </h1>
+          <p className="poppins text-[12px] text-[#fff]/50">
+            You've been invited to join as an{" "}
+            <span>{invites?.data?.[currentIndex]?.role}</span>.
+          </p>
+        </div>
+
         <p className="poppins text-[12px] text-[#fff]/50">
-          You've been invited to join as an admin.
+          This invite expires in{" "}
+          {Math.ceil(
+            (Number(invites?.data?.[currentIndex]?.inviteExpires) -
+              Date.now()) /
+              (1000 * 60 * 60 * 24),
+          )}{" "}
+          days.
         </p>
+
+        <button
+          className="poppins w-fit rounded-sm bg-[#fff] px-4 py-[10px] text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#fff]/80"
+          // disabled={!selectedWorkspace}
+          onClick={handleAcceptInvite}
+        >
+          Accept Invitation
+        </button>
       </div>
-
-      <p className="poppins text-[12px] text-[#fff]/50">
-        This invite expires in 7 days.
-      </p>
-
-      {/* List */}
-      {/* <div className="flex flex-col gap-1 rounded-[6px] border-[1px] border-[#565656]/20 bg-[#111]/20 p-4 transition-all duration-300">
-          {workspacingLoading ? (
-            <div className="flex justify-center p-4 transition-all duration-300">
-              <p className="text-sm text-gray-500">Loading workspaces...</p>
-            </div>
-          ) : workspaces && workspaces.length > 0 ? (
-            workspaces.map((ws) => (
-              <div
-                key={ws._id}
-                className={`flex h-[40px] w-[317px] cursor-pointer flex-row items-center justify-between rounded-[4px] p-[6px] transition-all duration-300 hover:bg-[#565656]/10 ${selectedWorkspace === ws._id ? "border-[1px] border-[#565656]/10 bg-[#565656]/10 text-[#111]" : "text-[#565656]"}`}
-                onClick={() => setSelectedWorkspace(ws._id)}
-              >
-                <div className="poppins flex flex-row items-center justify-center gap-2">
-                  <div
-                    className="flex h-[26px] w-[26px] items-center justify-center rounded-[4px] text-[13px] text-white"
-                    style={{ backgroundColor: stringToColor(ws.name) }}
-                  >
-                    {ws.name.charAt(0).toUpperCase()}
-                  </div>
-                  <p className="text-[13px] font-medium text-white">
-                    {ws.name}
-                  </p>
-                </div>
-
-                <span
-                  className={`flex h-4 w-4 items-center justify-center rounded-full border border-[#565656]/40 transition-all duration-300 ${selectedWorkspace === ws._id ? "bg-white" : "bg-transparent"}`}
-                >
-                  {selectedWorkspace === ws._id && (
-                    <svg
-                      className="h-3 w-3 text-[#111]"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={3}
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M5 12l5 5l10-10" />
-                    </svg>
-                  )}
-                </span>
-              </div>
-            ))
-          ) : (
-            <div className="flex justify-center p-4">
-              <p className="text-sm text-gray-500">No workspaces found</p>
-            </div>
-          )}
-        </div> */}
-
-      <button
-        className="poppins w-fit rounded-sm bg-[#fff] px-4 py-[10px] text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#fff]/80"
-        // disabled={!selectedWorkspace}
-        onClick={handleContinue}
-      >
-        Accept Invitation
-      </button>
-    </div>
+      {/* )} */}
+    </>
   );
 }
 
