@@ -13,6 +13,7 @@ interface Invite {
   inviteExpires: string;
   inviteToken: string;
   email: string;
+  membershipId: string;
 }
 
 type InviteResponse = {
@@ -42,15 +43,12 @@ export const useGetWorkspace = () => {
 
 export const useGetUserWorkspace = (userId: string) => {
   const [loading, setLoading] = useState<boolean>(false);
-
   const [data, setData] = useState<TWorkspace[]>([]);
 
   const onGetUserWorkspace = async (userId: string) => {
     setLoading(true);
     try {
       const res = await WorkspaceService.getUserWorkspace(userId);
-      //   console.log(res?.data);
-
       setData(res?.data);
     } catch (error: Error | AxiosError | any) {
       console.error("Error fetching tasks:", error);
@@ -65,22 +63,17 @@ export const useGetUserWorkspace = (userId: string) => {
     }
   }, [userId]);
 
-  console.log("user workspaces:", data);
-
   return { onGetUserWorkspace, data, loading };
 };
 
 export const useGetPendingInvites = (userId: string) => {
   const [loading, setLoading] = useState<boolean>(false);
-
   const [data, setData] = useState<InviteResponse>();
 
   const onGetPendingInvites = async (userId: string) => {
     setLoading(true);
     try {
       const res = await WorkspaceService.getPendingInvites(userId);
-      console.log("api response", res);
-
       setData(res?.data);
     } catch (error: Error | AxiosError | any) {
       console.error("Error fetching tasks:", error);
@@ -95,8 +88,6 @@ export const useGetPendingInvites = (userId: string) => {
     }
   }, [userId]);
 
-  console.log("user invites:", data);
-
   return { onGetPendingInvites, data, loading };
 };
 
@@ -104,10 +95,12 @@ export const useAcceptInvite = () => {
   const [data, setData] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onAcceptInvite = async (token: string) => {
+  const onAcceptInvite = async (membershipId: string) => {
     setLoading(true);
     try {
-      const res = await WorkspaceService.acceptInvite(token);
+      console.log("token:", membershipId);
+
+      const res = await WorkspaceService.acceptInvite({ membershipId });
       console.log("api response", res);
       setData(res?.data);
     } catch (error: Error | AxiosError | any) {
@@ -117,7 +110,12 @@ export const useAcceptInvite = () => {
     }
   };
 
-  console.log("accpet invites:", data);
+  // console.log("accpet invites:", data);
+  // useEffect(() => {
+  //   if (token) {
+  //     onAcceptInvite({token: token});
+  //   }
+  // }, [token]);
 
   return { onAcceptInvite, data, loading };
 };

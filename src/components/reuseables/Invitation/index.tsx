@@ -10,6 +10,7 @@ interface Invite {
   inviteExpires: string;
   inviteToken: string;
   email: string;
+  membershipId: string;
 }
 
 type InviteResponse = {
@@ -38,12 +39,11 @@ function Invitation() {
   const { onAcceptInvite, loading: acceptInviteLoading } = useAcceptInvite();
 
   function handleAcceptInvite() {
-    const token = invites?.data?.[currentIndex]?.inviteToken;
+    const membershipId = invites?.data?.[currentIndex]?.membershipId;
 
-    if (token) {
-      console.log("data:", invites?.data);
-      onAcceptInvite(token);
-    }
+    if (!membershipId) return;
+    // console.log("data:", token);
+    onAcceptInvite(membershipId);
   }
 
   return (

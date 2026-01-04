@@ -33,7 +33,7 @@ function Workspaces() {
     return "#" + "00000".substring(0, 6 - c.length) + c;
   };
 
-  console.log(selectedWorkspace);
+  // console.log(selectedWorkspace);
 
   function handleContinue() {
     if (selectedWorkspace) {
