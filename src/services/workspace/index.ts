@@ -18,9 +18,13 @@ class service {
   }
 
   acceptInvite({ membershipId }: { membershipId: string }) {
-    return axios.post(env.api.workspaces + "/invite/accept/" + membershipId, {
-      withCredentials: true,
-    });
+    return axios.post(
+      env.api.workspaces + "/invite/accept/" + membershipId,
+      {},
+      {
+        withCredentials: true,
+      },
+    );
   }
 
   getSingleWorkspace(workspaceId: string) {

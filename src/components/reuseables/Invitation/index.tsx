@@ -42,7 +42,7 @@ function Invitation() {
     const membershipId = invites?.data?.[currentIndex]?.membershipId;
 
     if (!membershipId) return;
-    // console.log("data:", token);
+    console.log("data:", invites?.data?.[currentIndex]);
     onAcceptInvite(membershipId);
   }
 
