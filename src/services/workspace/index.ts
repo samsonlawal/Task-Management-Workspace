@@ -17,10 +17,16 @@ class service {
     });
   }
 
-  acceptInvite({ membershipId }: { membershipId: string }) {
+  acceptInvite({
+    membershipId,
+    email,
+  }: {
+    membershipId: string;
+    email: string;
+  }) {
     return axios.post(
       env.api.workspaces + "/invite/accept/" + membershipId,
-      {},
+      { email },
       {
         withCredentials: true,
       },

@@ -40,7 +40,7 @@ export default function Navbar() {
           <div className="flex flex-col items-center gap-2">
             <Link
               href="/workspaces"
-              className="rounded-[4px] border border-[#565656]/20 bg-[white] px-[24px] py-[8px] text-[13px] font-medium text-[#111] transition-colors duration-300 hover:bg-[white]/80"
+              className="rounded-[4px] border border-[#565656]/20 bg-[white] px-[16px] py-[8px] text-[13px] font-medium text-[#111] transition-colors duration-300 hover:bg-[white]/80"
             >
               Workspaces
             </Link>

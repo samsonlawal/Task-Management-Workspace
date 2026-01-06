@@ -39,11 +39,14 @@ function Invitation() {
   const { onAcceptInvite, loading: acceptInviteLoading } = useAcceptInvite();
 
   function handleAcceptInvite() {
-    const membershipId = invites?.data?.[currentIndex]?.membershipId;
+    const invite = invites?.data?.[currentIndex];
 
-    if (!membershipId) return;
-    console.log("data:", invites?.data?.[currentIndex]);
-    onAcceptInvite(membershipId);
+    if (!invite) return;
+
+    const { membershipId, email } = invite;
+
+    console.log("data:", invite);
+    onAcceptInvite({ membershipId, email });
   }
 
   return (

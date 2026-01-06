@@ -1,6 +1,6 @@
 export default function HowItWorks() {
   return (
-    <div className="poppins flex min-h-screen w-full flex-col gap-[60px] py-[100px]">
+    <div className="poppins flex min-h-fit w-full flex-col gap-[60px] py-[100px]">
       <div className="poppins flex h-fit w-full flex-col gap-3 md:gap-[8px]">
         <span className="flex w-fit items-center gap-2 rounded-full border border-[#565656]/20 bg-[#565656]/10 px-[14px] py-[7px] text-[12px] font-regular text-white transition-colors duration-300 hover:bg-[#565656]/20">
           How It Works

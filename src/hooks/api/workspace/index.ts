@@ -95,12 +95,18 @@ export const useAcceptInvite = () => {
   const [data, setData] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onAcceptInvite = async (membershipId: string) => {
+  const onAcceptInvite = async ({
+    membershipId,
+    email,
+  }: {
+    membershipId: string;
+    email: string;
+  }) => {
     setLoading(true);
     try {
       console.log("token:", membershipId);
 
-      const res = await WorkspaceService.acceptInvite({ membershipId });
+      const res = await WorkspaceService.acceptInvite({ membershipId, email });
       console.log("api response", res);
       setData(res?.data);
     } catch (error: Error | AxiosError | any) {

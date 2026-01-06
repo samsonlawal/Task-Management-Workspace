@@ -3,6 +3,8 @@
 import { useSelector } from "react-redux";
 import Hero from "@/components/molecules/Hero";
 import HowItWorks from "@/components/molecules/HowItWorks";
+import Contact from "@/components/molecules/Contact";
+import FAQs from "@/components/molecules/FAQs";
 
 export default function Home() {
   const { user, isLoggedIn } = useSelector((state: any) => state.auth);
@@ -12,6 +14,8 @@ export default function Home() {
       <div className="max-screen-inner">
         <Hero />
         <HowItWorks />
+        <FAQs />
+        <Contact />
       </div>
     </div>
   );
