@@ -17,7 +17,7 @@ type InviteResponse = {
   data: Invite[];
 };
 
-function Invitation() {
+function Invitation({ onInviteAccepted }: { onInviteAccepted?: () => void }) {
   const [invites, setInvites] = useState<InviteResponse>();
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -45,9 +45,18 @@ function Invitation() {
 
     const { membershipId, email } = invite;
 
-    console.log("data:", invite);
-    onAcceptInvite({ membershipId, email });
+    // console.log("data:", invite);
+    onAcceptInvite({
+      membershipId,
+      email,
+      successCallback: () => {
+        onGetPendingInvites(user?._id);
+        onInviteAccepted?.();
+      },
+    });
   }
+
+  if (!invites?.data?.length) return null;
 
   return (
     <>

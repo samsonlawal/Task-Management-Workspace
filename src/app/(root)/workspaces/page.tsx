@@ -45,7 +45,8 @@ function Workspaces() {
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-[20px] bg-[#111]">
       <Brand />
-      <Invitation />
+      <Invitation onInviteAccepted={() => onGetUserWorkspace(user?._id)} />
+
       <div className="flex flex-col gap-4 rounded-lg border-[1px] border-[#565656]/20 bg-[#1a1a1a]/50 p-6">
         {/* Header */}
         <div className="flex flex-col text-left">

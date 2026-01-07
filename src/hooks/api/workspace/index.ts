@@ -98,9 +98,11 @@ export const useAcceptInvite = () => {
   const onAcceptInvite = async ({
     membershipId,
     email,
+    successCallback,
   }: {
     membershipId: string;
     email: string;
+    successCallback?: () => void;
   }) => {
     setLoading(true);
     try {
@@ -109,6 +111,7 @@ export const useAcceptInvite = () => {
       const res = await WorkspaceService.acceptInvite({ membershipId, email });
       console.log("api response", res);
       setData(res?.data);
+      successCallback?.();
     } catch (error: Error | AxiosError | any) {
       console.error("Error fetching tasks:", error);
     } finally {
