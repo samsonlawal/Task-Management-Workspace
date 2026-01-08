@@ -8,6 +8,7 @@ import { useGetUserWorkspace } from "@/hooks/api/workspace";
 import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
 import Brand from "@/components/reuseables/Brand";
 import Invitation from "@/components/reuseables/Invitation";
+import stringToColor from "@/utils/stringToColor";
 
 function Workspaces() {
   const dispatch = useDispatch();
@@ -22,16 +23,6 @@ function Workspaces() {
     onGetUserWorkspace,
     loading: workspacingLoading,
   } = useGetUserWorkspace(user?._id);
-
-  // Helper to generate consistent colors from strings
-  const stringToColor = (str: string) => {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const c = (hash & 0x00ffffff).toString(16).toUpperCase();
-    return "#" + "00000".substring(0, 6 - c.length) + c;
-  };
 
   // console.log(selectedWorkspace);
 

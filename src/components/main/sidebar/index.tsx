@@ -27,6 +27,7 @@ import {
   Users,
   Settings,
 } from "lucide-react";
+import Brand from "@/components/reuseables/Brand";
 
 export default function Sidebar() {
   const router = useRouter();
@@ -60,61 +61,50 @@ export default function Sidebar() {
   return (
     <div className="flex h-full w-full flex-1 flex-col justify-between py-[14px] dark:bg-[#1A1A1D]">
       <div className="flex flex-col gap-[34px]">
-        <div className="flex flex-row items-center px-[6px]">
-          <img src="/icons/new-logo2.svg" alt="" className="h-10 w-10" />
-          <p className="font-karst text-[18px] font-extrabold">taskstackHQ</p>
+        <div className="flex flex-row items-center px-[14px]">
+          {/* <img src="/icons/new-logo2.svg" alt="" className="h-10 w-10" />
+          
+          <p className="font-karst text-[18px] font-extrabold">taskstackHQ</p> */}
+          <Brand />
         </div>
         <CurrentWorkspace />
         <div className="poppins-regular flex flex-col justify-between gap-1 px-[12px] text-[13px] font-[300] text-[#707070]">
-          <span
-            className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-gray-300/50 ${current === "dashboard" ? "border border-[#565656]/10 bg-[#565656]/10" : "border-white"}`}
-            onClick={() => {
-              dispatch(setCurrentUI("dashboard"));
-              setCurrent("dashboard");
-            }}
-          >
-            <LayoutDashboard strokeWidth={1.5} size={18} />
-            Dashboard
-          </span>
-          {/* <span className="flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] px-2 py-2 transition-all duration-300 hover:bg-gray-300/50">
-            <img src="/icons/cog.svg" alt="" className="h-4 w-4" />
-            My Tasks
-          </span> */}
-          <span
-            onClick={() => {
-              dispatch(setCurrentUI("tasks"));
-              setCurrent("tasks");
-            }}
-            className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-gray-300/50 ${current === "tasks" ? "border border-[#565656]/10 bg-[#565656]/10" : "border-white"}`}
-          >
-            <CheckCheck strokeWidth={1.5} size={18} />
-            Tasks
-          </span>
-
-          <span
-            onClick={() => {
-              dispatch(setCurrentUI("team"));
-              setCurrent("team");
-            }}
-            className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-gray-300/50 ${current === "team" ? "border border-[#565656]/10 bg-[#565656]/10" : "border-white"}`}
-          >
-            <Users strokeWidth={1.5} size={18} />
-            Team
-          </span>
-          {/* <span className="flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] px-2 py-2 transition-all duration-300 hover:bg-gray-300/50">
-            <img src="/icons/ai-outline.svg" alt="" className="h-4 w-4" />
-            AI Overview
-          </span> */}
-          <span
-            className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-gray-300/50 ${current === "settings" ? "border border-[#565656]/10 bg-[#565656]/10" : "border-white"}`}
-            onClick={() => {
-              dispatch(setCurrentUI("settings"));
-              setCurrent("settings");
-            }}
-          >
-            <Settings strokeWidth={1.5} size={18} />
-            Settings
-          </span>
+          {(
+            [
+              {
+                label: "Dashboard",
+                value: "dashboard",
+                icon: <LayoutDashboard strokeWidth={1.5} size={18} />,
+              },
+              {
+                label: "Tasks",
+                value: "tasks",
+                icon: <CheckCheck strokeWidth={1.5} size={18} />,
+              },
+              {
+                label: "Team",
+                value: "team",
+                icon: <Users strokeWidth={1.5} size={18} />,
+              },
+              {
+                label: "Settings",
+                value: "settings",
+                icon: <Settings strokeWidth={1.5} size={18} />,
+              },
+            ] as const
+          ).map((link) => (
+            <span
+              key={link.value}
+              onClick={() => {
+                dispatch(setCurrentUI(link.value));
+                setCurrent(link.value);
+              }}
+              className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 ${current === link.value ? "border border-[#565656]/10 bg-[#565656]/10" : "border-[#111]"}`}
+            >
+              {link.icon}
+              {link.label}
+            </span>
+          ))}
         </div>
       </div>
       <div className="flex h-fit w-full flex-col gap-[20px]">

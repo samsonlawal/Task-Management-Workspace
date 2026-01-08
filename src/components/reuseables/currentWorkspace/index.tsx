@@ -27,6 +27,7 @@ import { useGetTasks } from "@/hooks/api/tasks";
 
 import { setCurrentUI } from "@/redux/Slices/uiSlice";
 import { Settings } from "lucide-react";
+import stringToColor from "@/utils/stringToColor";
 
 export default function CurrentWorkspace() {
   return (
@@ -160,14 +161,19 @@ function Workspace() {
   return (
     <div className="w-full text-left">
       <Menu>
-        <MenuButton className="inline-flex w-full items-center gap-2 rounded-md border-[1px] bg-white px-2 py-1.5 text-black transition-all duration-300 hover:bg-gray-100 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
+        <MenuButton className="inline-flex w-full items-center gap-2 rounded-md border-[1px] border-[#565656]/10 bg-[#565656]/10 px-2 py-1.5 text-black transition-all duration-300 hover:bg-[#565656]/20 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
           <div
-            className="poppins flex w-full flex-row items-center gap-[8px]"
+            className="poppins flex w-full flex-row items-center gap-[8px] text-white"
             onClick={() => openWorkspaceDialog()}
           >
             {workspaceData?.name ? (
               <>
-                <span className="poppins-medium flex h-[29px] w-[29px] items-center justify-center rounded-[5px] bg-[#A8A8A8] text-white">
+                <span
+                  className="poppins-medium flex h-[29px] w-[29px] items-center justify-center rounded-[5px] text-white"
+                  style={{
+                    backgroundColor: stringToColor(workspaceData?.name),
+                  }}
+                >
                   {workspaceData?.name.charAt(0).toUpperCase()}
                 </span>
                 <div className="flex flex-col items-start -space-y-1">
@@ -175,8 +181,8 @@ function Workspace() {
                     {workspaceData?.name}
                   </p>
                   <p className="poppins-medium text-[10px] font-normal text-[#707070]">
-                    {workspaceData?.memberCount}
-                    {" Members"}
+                    {workspaceData?.memberCount} Member
+                    {workspaceData?.memberCount === 1 ? "" : "s"}
                   </p>
                 </div>
               </>
@@ -186,16 +192,13 @@ function Workspace() {
               </div>
             )}
           </div>{" "}
-          <FontAwesomeIcon
-            icon={faChevronDown}
-            className="fa-xs text-gray-500"
-          />
+          <img src="/icons/dcaret.svg" alt="" className="w-1.5" />
         </MenuButton>
 
         <MenuItems
           transition
           anchor="bottom start"
-          className="poppins-medium flex min-h-fit w-[260px] origin-top-right flex-col justify-between gap-2 rounded-md border-[1px] border-gray-300/60 bg-gray-100 px-3 py-2 text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-300 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          className="poppins-medium flex min-h-fit w-[260px] origin-top-right flex-col justify-between gap-2 rounded-md border-[1px] border-[#565656]/10 bg-[#1a1a1a] px-3 py-2 text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-300 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
           {" "}
           {workspaceData._id && (
@@ -212,7 +215,7 @@ function Workspace() {
               </div>
             </MenuItem>
           )}
-          <div className="h-[1px] bg-gray-300/60" />
+          <div className="h-[1px] bg-[#565656]/30" />
           <div className="flex flex-col gap-[4px]">
             {/* <MenuItem> */}
             {workspaceData._id ? (
@@ -240,7 +243,12 @@ function Workspace() {
                           className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] pl-2 hover:bg-gray-200/70"
                           onClick={() => switchWorkspace(workspace?._id)}
                         >
-                          <div className="flex h-[32px] w-[32px] items-center justify-center rounded-[5px] bg-[#A8A8A8] text-[13px] text-white">
+                          <div
+                            className="flex h-[32px] w-[32px] items-center justify-center rounded-[5px] text-[13px] text-white"
+                            style={{
+                              backgroundColor: stringToColor(workspace?.name),
+                            }}
+                          >
                             {workspace?.name.charAt(0).toUpperCase()}
                           </div>
                           <div className="flex flex-col -space-y-[8px]">

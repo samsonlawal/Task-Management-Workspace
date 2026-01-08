@@ -4,9 +4,9 @@ import Workspace from "@/components/pages/workspace";
 
 export default function Home() {
   return (
-    <div className="flex h-screen w-full overflow-hidden">
+    <div className="flex h-screen w-full overflow-hidden bg-[#111]">
       {/* Fixed sidebar */}
-      <div className="h-screen w-64 flex-shrink-0 border-r border-gray-200 bg-white">
+      <div className="h-screen w-64 flex-shrink-0 border-r border-gray-200">
         <Sidebar />
       </div>
 
