@@ -200,7 +200,7 @@ function Workspace() {
           anchor="bottom start"
           className="poppins-medium flex min-h-fit w-[260px] origin-top-right flex-col justify-between gap-2 rounded-md border-[1px] border-[#565656]/10 bg-[#1a1a1a] px-3 py-2 text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-300 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
-          {" "}
+          {/* {" "}
           {workspaceData._id && (
             <MenuItem>
               <div
@@ -214,8 +214,7 @@ function Workspace() {
                 Settings
               </div>
             </MenuItem>
-          )}
-          <div className="h-[1px] bg-[#565656]/30" />
+          )} */}
           <div className="flex flex-col gap-[4px]">
             {/* <MenuItem> */}
             {workspaceData._id ? (
@@ -235,12 +234,12 @@ function Workspace() {
                   <Loader loaderSize={50} />
                 </div>
               ) : (
-                <div className="h-full">
+                <div className="flex h-full flex-col gap-1">
                   {workspaces && workspaces.length > 0 ? (
                     filteredWorkspaces.map((workspace: any, index: any) => (
                       <MenuItem key={index}>
                         <div
-                          className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] pl-2 hover:bg-gray-200/70"
+                          className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] border border-[#1a1a1a] pl-2 hover:border-[#565656]/10 hover:bg-[#565656]/10"
                           onClick={() => switchWorkspace(workspace?._id)}
                         >
                           <div
