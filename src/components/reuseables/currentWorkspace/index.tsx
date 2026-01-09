@@ -177,10 +177,10 @@ function Workspace() {
                   {workspaceData?.name.charAt(0).toUpperCase()}
                 </span>
                 <div className="flex flex-col items-start -space-y-1">
-                  <p className="poppins-medium text-[13px]">
+                  <p className="poppins-medium text-[13px] text-[#111] dark:text-white">
                     {workspaceData?.name}
                   </p>
-                  <p className="poppins-medium text-[10px] font-normal text-[#707070]">
+                  <p className="poppins text-[10px] font-normal text-[#707070]">
                     {workspaceData?.memberCount} Member
                     {workspaceData?.memberCount === 1 ? "" : "s"}
                   </p>

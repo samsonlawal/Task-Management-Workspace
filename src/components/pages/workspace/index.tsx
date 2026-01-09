@@ -52,6 +52,14 @@ import {
 import { useGetUserNotifications } from "@/hooks/api/Notification";
 import Team from "@/components/pages/Team";
 import Settings from "../Settings";
+import { icon } from "@fortawesome/fontawesome-svg-core";
+import { faAlignLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faCalendar,
+  faCircleCheck,
+} from "@fortawesome/free-regular-svg-icons";
 
 const tabby = [
   {
@@ -130,51 +138,28 @@ function TabComponent() {
   };
 
   const tabs = ["Overview", "My Tasks"];
-  // const tabs = ["Overview", "Board", "List", "My Tasks"];
-
-  // const tabs = ["Overview", "To-Do", "In-Progress", "In-Review", "Done"];
-
-  // const tabContent = useMemo(() => {
-  //   const safeTasks = Array.isArray(tasks) ? tasks : [];
-  //   return [
-  //     safeTasks,
-  //     safeTasks.filter((task) => task?.status === statusMap["TO-DO"]),
-  //     safeTasks.filter((task) => task?.status === statusMap["IN-PROGRESS"]),
-  //     safeTasks.filter((task) => task?.status === "in-review"),
-  //     safeTasks.filter((task) => task?.status === "done"),
-  //   ];
-  // }, [tasks]);
 
   const tabContent = useMemo(() => {
     const safeTasks = Array.isArray(tasks) ? tasks : [];
     return [
       safeTasks,
-      // safeTasks.filter((task) => task?.status === statusMap["IN-PROGRESS"]),
-      // safeTasks.filter((task) => task?.status === "in-review"),
+
       safeTasks.filter((task) => task?.assignee?._id === user?._id),
     ];
   }, [tasks, user]);
 
-  // const tabContent = useMemo(
-  //   () => [
-  //     tasks,
-  //     tasks?.filter((task) => task.status === statusMap["TO-DO"]),
-  //     tasks?.filter((task) => task.status === statusMap["IN-PROGRESS"]),
-  //     tasks?.filter((task) => task.status === statusMap["IN-REVIEW"]),
-  //     tasks?.filter((task) => task.status === statusMap["DONE"]),
-  //     // ...other tabs
-  //   ],
-  //   [tasks],
-  // );
+  const [view, setView] = useState<"board" | "list">("board");
 
-  const [list, setList] = useState(false);
+  const changeToListView = () => {
+    setView("list");
+  };
 
-  const changeView = () => {
-    setList((prevList) => !prevList);
+  const changeToBoardView = () => {
+    setView("board");
   };
 
   return (
-    <div className="poppins flex h-full w-full flex-1 flex-col bg-white">
+    <div className="poppins flex h-full w-full flex-1 flex-col bg-[white] dark:bg-[#111]">
       <div className="sticky top-0 w-full">
         <Navbar />
       </div>
@@ -184,7 +169,7 @@ function TabComponent() {
           {/* <div className="fixed top-16 z-10 w-full bg-white shadow-sm"> */}
 
           <div className="mb-2 flex h-fit items-center justify-between px-8 pt-6 transition-all duration-300">
-            {/* <div className="flex h-max flex-row">
+            <div className="flex h-max flex-row">
               {tabs?.map((tab, index) => (
                 <div
                   key={index}
@@ -208,9 +193,9 @@ function TabComponent() {
                   )}
                 </div>
               ))}
-            </div> */}
+            </div>
 
-            <div className="flex h-max flex-row gap-3 border-b border-[#565656]/20">
+            {/* <div className="flex h-max flex-row gap-3 border-b border-[#565656]/20">
               {tabby?.map((tab, index) => (
                 <div
                   key={index}
@@ -228,9 +213,9 @@ function TabComponent() {
                   <p>{tab.name}</p>{" "}
                 </div>
               ))}
-            </div>
+            </div> */}
 
-            <div className="flex flex-row items-center justify-center gap-3 pb-1">
+            <div className="flex flex-row items-center justify-center gap-2 pb-1">
               {/* <div className="flex h-fit flex-row items-center gap-1 rounded-sm border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/20">
                 <SquareKanban
                   className="text-center text-[#111]"
@@ -239,10 +224,21 @@ function TabComponent() {
                 />
                 <p>Card</p>
               </div> */}
+              <div
+                className={`flex h-[34px] cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 ${view === "board" ? "bg-[#565656]/10" : ""}`}
+                onClick={changeToBoardView}
+              >
+                <SquareKanban
+                  className="text-center text-[#111]"
+                  strokeWidth={1.5}
+                  size={14}
+                />
+                <p>Board</p>
+              </div>
 
               <div
-                className={`flex h-fit cursor-pointer flex-row items-center gap-1 rounded-sm border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 ${list ? "bg-[#565656]/10" : ""}`}
-                onClick={changeView}
+                className={`flex h-[34px] cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 ${view === "list" ? "bg-[#565656]/10" : ""}`}
+                onClick={changeToListView}
               >
                 <List
                   className="text-center text-[#111]"
@@ -255,31 +251,55 @@ function TabComponent() {
               <AddTask onGetTasks={onGetTasks} taskData={taskData} />
             </div>
           </div>
-          {list ? (
+          {view === "list" ? (
             <div className="px-8">
-              <div className="flex min-h-fit w-full flex-row justify-between rounded-sm bg-[#565656]/5 px-3 py-4 text-[14px] font-medium text-[#565656]">
-                <div className="flex w-[250px] items-center justify-start">
+              <div className="flex min-h-fit w-full flex-row justify-between rounded-sm bg-[#eee] px-3 py-3 text-[14px] font-medium text-[#787878]">
+                <div className="flex w-[250px] items-center justify-start gap-2">
+                  <FontAwesomeIcon
+                    icon={faAlignLeft}
+                    className="h-3 w-3 text-gray-500 hover:text-gray-700"
+                  />
                   <p className="line-clamp-1 h-fit text-[12px] leading-tight">
-                    Title
+                    Description
                   </p>
                 </div>
-                <div className="flex w-[100px] items-center justify-start text-[#565656]">
+                <div className="flex w-[100px] items-center justify-start gap-2 text-[#565656]">
+                  <FontAwesomeIcon
+                    icon={faSpinner}
+                    className="h-3 w-3 text-gray-500 hover:text-gray-700"
+                  />
                   <p className="text-[12px]">Status</p>
                 </div>
-                <div className="flex w-[115px] items-center justify-start">
+                <div className="flex w-[115px] items-center justify-start gap-2">
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    className="h-3 w-3 text-gray-500 hover:text-gray-700"
+                  />
                   <p className="text-[12px]">Assignee</p>
                 </div>
-                <div className="flex w-[120px] items-center justify-start">
+                <div className="flex w-[120px] items-center justify-start gap-2">
+                  <FontAwesomeIcon
+                    icon={faCalendar}
+                    className="h-3 w-3 text-gray-500 hover:text-gray-700"
+                  />
                   <p className="text-center text-[12px]">Deadline</p>
                 </div>
                 <div className="flex w-[70px] items-center justify-start">
                   <div
-                    className={`flex h-fit w-fit flex-row items-center justify-center gap-1 rounded-[6px]`}
+                    className={`flex h-fit w-fit flex-row items-center justify-center gap-2 rounded-[6px]`}
                   >
+                    <FontAwesomeIcon
+                      icon={faCircleCheck}
+                      className="h-3 w-3 text-gray-500 hover:text-gray-700"
+                    />
                     <p className={`text-[12px]`}>Priority</p>
                   </div>
                 </div>
-                <div className="flex w-[70px] items-center justify-start">
+                <div className="flex w-[70px] items-center justify-start gap-2">
+                  <FontAwesomeIcon
+                    icon={faCircleCheck}
+                    className="h-3 w-3 text-gray-500 hover:text-gray-700"
+                  />
                   <p className="cursor-pointer text-center text-[12px]">
                     Actions
                   </p>
@@ -296,7 +316,7 @@ function TabComponent() {
                 {" "}
                 <Loader loaderSize={40} />
               </p>
-            ) : list ? (
+            ) : view === "list" ? (
               <div className="flex h-fit w-full flex-col flex-wrap justify-between gap-1 rounded-[18px] pb-[6px]">
                 <div>
                   {tabContent[activeTab] && tabContent[activeTab].length > 0 ? (

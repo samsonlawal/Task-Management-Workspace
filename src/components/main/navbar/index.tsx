@@ -23,12 +23,12 @@ export default function Navbar() {
   const currentUI = useSelector((state: RootState) => state.ui.currentUI);
 
   return (
-    <div className="poppins flex w-full items-center justify-between border-b-[1px] px-[32px] py-[7px]">
+    <div className="poppins flex w-full items-center justify-between border-b-[1px] border-[#565656]/10 px-[32px] py-[7px]">
       {/* <h2 className="montserrat-bold text-xl">
         {currentUI === "tasks" ? "Workspace" : "Members"}
       </h2> */}
 
-      <h2 className="poppins-semibold text-xl">
+      <h2 className="poppins-medium text-xl text-[#111] dark:text-white">
         {currentUI === "tasks"
           ? "Workspace"
           : currentUI === "dashboard"
@@ -53,6 +53,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TNotification } from "@/types";
 import { BellOff } from "lucide-react";
 import { formatTimeAgo } from "@/utils/formatTimeAgo";
+import stringToColor from "@/utils/stringToColor";
 
 function DropdownMenu() {
   const { user, isLoggedIn } = useSelector((state: any) => state.auth);
@@ -67,10 +68,14 @@ function DropdownMenu() {
   return (
     <div className="flex h-[50px] w-fit flex-row items-center justify-center gap-6 text-left">
       <Menu>
-        <MenuButton className="flex w-[210px] items-center justify-center gap-2 rounded-md border-[1px] border-[#EEEEEE] px-2 py-[8px] text-black shadow-inner shadow-white/10 transition-colors duration-500 hover:bg-gray-200/70 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
+        <MenuButton className="flex w-[210px] items-center justify-center gap-2 rounded-md border-[1px] border-[#565656]/10 px-2 py-[8px] text-black transition-colors duration-500 hover:bg-[#565656]/20">
+          {/* <MenuButton className="flex w-[210px] items-center justify-center gap-2 rounded-md border-[1px] border-[#565656]/10 px-2 py-[8px] text-black shadow-inner shadow-white/10 transition-colors duration-500 hover:bg-gray-200/70 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white"> */}
           <div className="flex w-full flex-row items-center gap-[8px]">
             {user?.profileImage === "none" ? (
-              <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#99c485] text-white">
+              <span
+                className="flex h-[26px] w-[26px] items-center justify-center rounded-full text-[14px] text-white"
+                style={{ backgroundColor: stringToColor(user?.fullname) }}
+              >
                 {user?.fullname.charAt(0).toUpperCase()}
               </span>
             ) : (
@@ -82,7 +87,7 @@ function DropdownMenu() {
                 />
               </span>
             )}
-            <div className="flex flex-col items-start -space-y-[5px] leading-5">
+            <div className="flex flex-col items-start -space-y-[5px] leading-5 text-[#111] dark:text-white">
               <p className="text-[14px]">{user?.fullname}</p>
               {/* <p className="text-[10px] text-[#707070]">{user?.email}</p> */}
             </div>
@@ -93,21 +98,21 @@ function DropdownMenu() {
         <MenuItems
           transition
           anchor="bottom end"
-          className="flex min-h-fit w-[240px] origin-top-right flex-col justify-between gap-1 rounded-[14px] border-[1px] border-[#EEEEEE] bg-white px-3 py-[14px] text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:10px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          className="flex min-h-fit w-[240px] origin-top-right flex-col justify-between gap-1 rounded-[14px] border-[1px] border-[#565656]/20 bg-white px-3 py-[14px] text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:10px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 dark:bg-[#111]"
         >
-          <div className="border-gray-200/700 flex cursor-pointer flex-row items-center justify-between gap-3 rounded-[8px] border-[1px] px-3 py-[2px] hover:bg-gray-200/70">
+          <div className="border-gray-200/700 flex cursor-pointer flex-row items-center justify-between gap-3 rounded-[8px] border-[1px] border-[#565656]/10 bg-[#565656]/10 px-3 py-[2px] hover:bg-[#565656]/20">
             <div className="flex flex-row items-center gap-3">
               <img src="/icons/menu/smiley.svg" alt="" />
-              <p className="poppins text-[14px] font-normal text-[#565656]">
+              <p className="poppins text-[14px] font-regular text-[#565656]">
                 Status
               </p>
             </div>
           </div>
 
-          <div className="flex cursor-pointer flex-row items-center justify-between gap-3 rounded-[8px] px-3 py-2 hover:bg-gray-200/70">
+          <div className="flex cursor-pointer flex-row items-center justify-between gap-3 rounded-[8px] px-3 py-1">
             <div className="flex flex-row items-center gap-3">
               <img src="/icons/menu/lamp.svg" alt="" />
-              <p className="poppins text-[14px] font-normal text-[#111]">
+              <p className="poppins text-[14px] text-[#111] dark:text-white">
                 Theme
               </p>
             </div>
@@ -115,7 +120,7 @@ function DropdownMenu() {
             <ThemeSwitcher />
           </div>
 
-          <div className="my-1 h-px bg-[#eeeeee]" />
+          <div className="my-1 h-px bg-[#565656]/20" />
 
           <div className="flex flex-col gap-[0px]">
             {/* </MenuItem> */}
@@ -129,10 +134,12 @@ function DropdownMenu() {
                 onClick={() => {
                   router.push("/profile");
                 }}
-                className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-2 hover:bg-gray-200/70"
+                className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-1.5 hover:bg-[#565656]/30"
               >
                 <img src="/icons/menu/user1.svg" alt="" />
-                <p className="poppins text-[14px] text-[#111]">Profile</p>
+                <p className="poppins text-[14px] text-[#111] dark:text-white">
+                  Profile
+                </p>
               </div>
             </MenuItem>
             <MenuItem>
@@ -140,10 +147,12 @@ function DropdownMenu() {
                 // onClick={() => {
                 //   router.push("/settings");
                 // }}
-                className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-2 hover:bg-gray-200/70"
+                className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-1.5 hover:bg-[#565656]/30"
               >
                 <img src="/icons/menu/menucog.svg" alt="" />
-                <p className="poppins text-[14px] text-[#111]">Settings</p>
+                <p className="poppins text-[14px] text-[#111] dark:text-white">
+                  Settings
+                </p>
               </div>
             </MenuItem>
             <MenuItem>
@@ -151,20 +160,24 @@ function DropdownMenu() {
                 // onClick={() => {
                 //   router.push("/help");
                 // }}
-                className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-2 hover:bg-gray-200/70"
+                className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-1.5 hover:bg-[#565656]/0"
               >
                 <img src="/icons/menu/help.svg" alt="" />
-                <p className="poppins text-[14px] text-[#111]">Help</p>
+                <p className="poppins text-[14px] text-[#111] dark:text-white">
+                  Help
+                </p>
               </div>
             </MenuItem>
-            <div className="my-1 h-px bg-[#eeeeee]" />
+            <div className="my-1 h-px bg-[#565656]/20" />
             {/* <MenuItem> */}
             <div
               onClick={() => handleLogout()}
-              className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-2 hover:bg-[#D32F2F]/20"
+              className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-1.5 hover:bg-[#D32F2F]/20"
             >
               <img src="/icons/menu/exit.svg" alt="" />
-              <p className="poppins text-[14px] text-[#111]">Logout</p>
+              <p className="poppins text-[14px] text-[#111] dark:text-white">
+                Logout
+              </p>
             </div>
             {/* </MenuItem> */}
           </div>

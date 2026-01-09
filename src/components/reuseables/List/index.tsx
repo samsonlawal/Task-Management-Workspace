@@ -94,27 +94,27 @@ export default function ListTask({
     const statusConfig = {
       todo: {
         label: "To Do",
-        color: "bg-gray-200",
-        dotColor: "bg-gray-600",
-        labelColor: "text-gray-600",
+        color: "bg-[#14CF14]/30",
+        dotColor: "bg-[#129312]",
+        labelColor: "text-[#129312]",
       },
       "in-progress": {
         label: "In Progress",
-        color: "bg-yellow-200",
-        dotColor: "bg-yellow-700",
-        labelColor: "text-yellow-700",
+        color: "bg-[#4314CF]/30",
+        dotColor: "bg-[#1E30A2]",
+        labelColor: "text-[#1E30A2]",
       },
       "in-review": {
         label: "In Review",
-        color: "bg-blue-200",
-        dotColor: "bg-blue-700",
-        labelColor: "text-blue-700",
+        color: "bg-[#CFB314]/30",
+        dotColor: "bg-[#B59017]",
+        labelColor: "text-[#B59017]",
       },
       done: {
         label: "Done",
-        color: "bg-green-200",
-        dotColor: "bg-green-700",
-        labelColor: "text-green-700",
+        color: "bg-[#111]",
+        dotColor: "bg-[#CFB314]",
+        labelColor: "text-[#fff]",
       },
     };
 
@@ -143,14 +143,15 @@ export default function ListTask({
 
   return (
     <div className="flex min-h-fit w-full flex-row justify-between border-b-[1px] border-[#565656]/10 px-3 pb-1.5 pt-3 text-[14px] text-[#111]">
-      <div className="flex w-[250px] items-center justify-start">
+      <div className="flex w-[250px] items-center justify-start gap-2">
+        <input type="checkbox" />
         <p className="line-clamp-1 h-fit text-[12px] font-normal leading-tight">
           {desc}
         </p>
       </div>
       <div className="flex w-[100px] items-center justify-start">
         <div
-          className={`flex flex-row items-center gap-1 rounded-full ${statusDisplay.color} px-2 py-[3px]`}
+          className={`flex flex-row items-center gap-1 rounded-[4px] ${statusDisplay.color} px-2 py-[3px]`}
         >
           <div
             className={`h-1.5 w-1.5 rounded-full ${statusDisplay.dotColor}`}

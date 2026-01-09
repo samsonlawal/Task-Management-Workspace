@@ -39,7 +39,7 @@ export default function RootLayout({
           rel="stylesheet"
         ></link>
       </head>
-      <body className="bg-[#111]">
+      <body className="bg-white dark:bg-[#111]">
         {/* <PostHogProvider> */}
         <Initializers>{children}</Initializers>
         {/* </PostHogProvider> */}

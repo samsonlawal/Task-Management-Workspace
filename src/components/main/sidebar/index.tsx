@@ -59,7 +59,7 @@ export default function Sidebar() {
   // }
 
   return (
-    <div className="flex h-full w-full flex-1 flex-col justify-between py-[14px] dark:bg-[#1A1A1D]">
+    <div className="flex h-full w-full flex-1 flex-col justify-between bg-white py-[14px] dark:bg-[#111]">
       <div className="flex flex-col gap-[34px]">
         <div className="flex flex-row items-center px-[14px]">
           {/* <img src="/icons/new-logo2.svg" alt="" className="h-10 w-10" />
@@ -99,7 +99,7 @@ export default function Sidebar() {
                 dispatch(setCurrentUI(link.value));
                 setCurrent(link.value);
               }}
-              className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 ${current === link.value ? "border border-[#565656]/10 bg-[#565656]/10" : "border-[#111]"}`}
+              className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 ${current === link.value ? "border border-[#565656]/10 bg-[#565656]/10" : "border-[white] dark:border-[#111]"}`}
             >
               {link.icon}
               {link.label}

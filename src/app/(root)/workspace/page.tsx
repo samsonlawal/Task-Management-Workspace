@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="flex h-screen w-full overflow-hidden bg-[#111]">
       {/* Fixed sidebar */}
-      <div className="h-screen w-64 flex-shrink-0 border-r border-gray-200">
+      <div className="h-screen w-64 flex-shrink-0 border-r border-[white]/90 dark:border-[#565656]/20">
         <Sidebar />
       </div>
 

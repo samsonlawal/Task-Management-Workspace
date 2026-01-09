@@ -6,7 +6,10 @@ export default function Brand() {
       {/* <img src="/icons/new-logo2.svg" alt="" className="h-10 w-10" /> */}
       <img src="/icons/leest.svg" alt="" className="h-10 w-10" />
 
-      <Link href="/" className="poppins text-[18px] font-medium text-white">
+      <Link
+        href="/"
+        className="poppins text-[18px] font-medium text-[#111] dark:text-white"
+      >
         TaskStackhq
       </Link>
     </div>

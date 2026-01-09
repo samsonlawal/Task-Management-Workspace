@@ -29,6 +29,12 @@ export default function Navbar() {
         <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
           Pricing
         </span>
+        {/* <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
+          Products
+        </span>
+        <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
+          Integrations
+        </span> */}
         <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
           FAQs
         </span>
@@ -86,6 +92,12 @@ export default function Navbar() {
             <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
               Pricing
             </span>
+            {/* <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
+              Products
+            </span>
+            <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
+              Integrations
+            </span> */}
             <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
               FAQs
             </span>
@@ -114,7 +126,7 @@ export default function Navbar() {
                   href="/auth/sign-up"
                   className="flex w-full justify-center rounded-[4px] border border-[#565656]/20 bg-[white] px-[24px] py-[12px] text-[13px] font-medium text-[#111] transition-colors duration-300 hover:bg-[white]/90"
                 >
-                  Sign Up
+                  Get Started
                 </Link>
               </div>
             )}
