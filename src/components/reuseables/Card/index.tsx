@@ -11,6 +11,8 @@ import { useSelector } from "react-redux";
 import {
   Clock,
   Flag,
+  FlagIcon,
+  FlagOffIcon,
   Link2,
   MessageSquare,
   Paperclip,
@@ -41,17 +43,17 @@ export default function Card({
   createdAt: string;
 }) {
   const priorityColors = {
-    High: "bg-[#CF1414]/10",
-    Medium: "bg-[#EEC642]/10",
-    Low: "bg-[#64BC21]/10",
-    low: "bg-[#64BC21]/10",
+    High: "fill-[#CF1414]",
+    Medium: "fill-[#EEC642]",
+    Low: "fill-[#64BC21]",
+    low: "fill-[#64BC21]",
   };
 
   const priorityTextColors = {
-    High: "text-[#A21E1E]",
-    Medium: "text-[#8F7727]",
-    Low: "text-[#4C7D26]",
-    low: "text-[#4C7D26]",
+    High: "text-[#CF1414]",
+    Medium: "text-[#EEC642]",
+    Low: "text-[#64BC21]",
+    low: "text-[#64BC21]",
   };
 
   const getBgColor = (firstName: string) => {
@@ -97,32 +99,22 @@ export default function Card({
   }
 
   return (
-    <div className="group relative flex h-[98px] w-[250px] flex-col justify-between gap-[6px] rounded-[4px] border border-[#565656]/10 bg-[#fff] py-[10px] text-[14px] font-[300]">
+    <div className="group relative flex h-[98px] w-[250px] flex-col justify-between gap-[6px] rounded-[4px] border border-[#565656]/10 bg-[#fff] py-[10px] text-[14px] font-[300] dark:bg-[#565656]/20">
       <div className="flex flex-col gap-[1px]">
         {/* Head */}
         <div className="flex flex-row justify-between px-[14px] font-medium">
           <div className="flex flex-row items-center justify-center gap-1">
             {/* Status */}
             {/* <div className="bg-[#C5C5C5 flex h-[18px] w-[20px] items-center justify-center rounded-[2px]">
-            <img
-              src={`icons/task/${status === "to-do" ? "to-do" : status === "in-progress" ? "in-progress" : status === "in-review" ? "in-review" : "completed"}.svg`}
-              alt=""
-              className="h-3.5 w-3.5"
-            />
-          </div> */}
+              <img
+                src={`icons/task/${status === "to-do" ? "to-do" : status === "in-progress" ? "in-progress" : status === "in-review" ? "in-review" : "completed"}.svg`}
+                alt=""
+                className="h-3.5 w-3.5"
+              />
+            </div> */}
 
             {/* TITLE */}
             <p className="text-[13px] font-medium">Review Jobs</p>
-            <div
-              className={`flex h-fit w-fit flex-row items-center justify-center gap-1 rounded-[8px] px-1.5`}
-            >
-              {/* <p
-              className={`text-[10px] font-normal ${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"}`}
-            >
-              {(priority || "")?.split(" ")[0].charAt(0).toUpperCase() +
-                (priority || "")?.split(" ")[0].slice(1).toLowerCase()}
-            </p> */}
-            </div>
           </div>
           <div className="cursor-pointer" onClick={gettaskdetails}>
             {/* Pass taskData to TaskDetails component */}
@@ -132,8 +124,7 @@ export default function Card({
 
         {/* Middle */}
         <div className="flex h-fit flex-col items-start justify-between gap-[4px] px-[14px]">
-          {/* descritpion */}
-          <p className="line-clamp-2 h-fit text-[11px] font-medium leading-tight text-[#565656]">
+          <p className="line-clamp-2 h-fit text-[11px] font-medium leading-tight text-[#111] dark:text-[#fff]/50">
             {desc}
           </p>
         </div>
@@ -147,14 +138,36 @@ export default function Card({
           <div className="flex flex-row items-center justify-center gap-1">
             {/* <Redo size={12} className="scale-y-[-1] text-[#565656]" /> */}
             {/* comments */}
+            <div
+              className={`flex h-fit w-fit flex-row items-center justify-center gap-1 rounded-[8px]`}
+            >
+              <p
+                className={`text-[10px] font-normal ${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"}`}
+              >
+                <FlagIcon
+                  size={10}
+                  className={
+                    priorityColors[priority as keyof typeof priorityColors]
+                  }
+                />
+                {/* {(priority || "")?.split(" ")[0].charAt(0).toUpperCase() +
+                  (priority || "")?.split(" ")[0].slice(1).toLowerCase()} */}
+              </p>
+            </div>
+
             <div className="flex w-fit flex-row items-center justify-center gap-[4px] px-1 py-[1px]">
-              <img
+              {/* <img
                 src="/icons/chat-outline.svg"
                 alt="chat-icon"
                 className="h-[11px] w-[11px]"
+              /> */}
+              <MessageSquare
+                size={10}
+                className="text-[#565656] dark:text-[#fff]/70"
               />
-              {/* <MessageSquare size={10} /> */}
-              <p className="text-[11px] text-[#565656]">2</p>
+              <p className="text-[11px] text-[#565656] dark:text-[#fff]/70">
+                2
+              </p>
             </div>
 
             {/* links */}
@@ -171,9 +184,13 @@ export default function Card({
               alt="calendar-icon"
               className="h-[10px] w-[10px]"
             /> */}
-              <Clock size={11} strokeWidth={1} />
+              <Clock
+                size={11}
+                strokeWidth={2}
+                className="text-[#565656] dark:text-[#fff]/70"
+              />
 
-              <p className="text-center text-[10px] text-[#565656]">
+              <p className="text-center text-[10px] text-[#565656] dark:text-[#fff]/70">
                 {DateTime.fromISO(deadline).toFormat("dd MMM")}
               </p>
             </div>

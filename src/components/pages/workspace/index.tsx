@@ -1,27 +1,3 @@
-// import Criteria from "@/components/reusables/Criteria";
-// import WSHeading from "@/components/reusables/WSHeading";
-// import React from "react";
-// import tasks from "@/components/data";
-// import Navbar from "../navbar";
-// import Dashboard from "@/components/reusables/Dashboard";
-
-// export default function Workspace() {
-//   const CriteriaList = ["TO-DO", "IN-PROGRESS", "AWAITING REVIEW"];
-//   return (
-//     <div className="flex flex-1 flex-col gap-6 font-madei">
-//       <Navbar />
-//       {/* <WSHeading /> */}
-//       <div className="flex flex-row flex-wrap items-start justify-between gap-5 px-[32px]">
-//         {/* {CriteriaList.map((text, index) => (
-//           <Criteria key={index} text={text} />
-//         ))} */}
-//         {/* <Dashboard /> */}
-
-//       </div>
-//     </div>
-//   );
-// }
-
 "use client";
 
 import { useMemo, useState } from "react";
@@ -29,6 +5,7 @@ import Navbar from "../../main/navbar";
 import tasks from "@/components/data";
 import Card from "@/components/reuseables/Card";
 import ListTask from "@/components/reuseables/List";
+import ListHeader from "@/components/reuseables/List/ListHeader";
 
 import AddTask from "@/components/reuseables/Dialogs/AddTask";
 import { useDispatch, useSelector } from "react-redux";
@@ -52,19 +29,14 @@ import {
 import { useGetUserNotifications } from "@/hooks/api/Notification";
 import Team from "@/components/pages/Team";
 import Settings from "../Settings";
-import { icon } from "@fortawesome/fontawesome-svg-core";
-import { faAlignLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser,
-  faCalendar,
-  faCircleCheck,
-} from "@fortawesome/free-regular-svg-icons";
+
+import Notification from "@/components/reuseables/Notification";
+import { useTheme } from "next-themes";
 
 const tabby = [
   {
     name: "Overview",
-    // icon: <LayoutDashboard strokeWidth={1} size={18} />,1
+    // icon: <LayoutDashboard strokeWidth={1} size={18} />,
     icon: <GalleryHorizontal strokeWidth={2} size={18} />,
   },
   // {
@@ -85,20 +57,23 @@ function TabComponent() {
   const router = useRouter();
   const dispatch = useDispatch();
 
+  const [byStatus, setByStatus] = useState<boolean>(true);
+  const STATUSES = ["to-do", "in-progress", "in-review", "done"] as const;
+
+  const { resolvedTheme } = useTheme();
+
   const { user } = useSelector((state: any) => state.auth);
   const { currentWorkspace } = useSelector(
     (state: any) => state.currentWorkspace,
   );
 
-  const WorkspaceData = useSelector((state: RootState) => state.WorkspaceData);
+  // const WorkspaceData = useSelector((state: RootState) => state.WorkspaceData);
 
-  const MemberData = useSelector((state: RootState) => state.MemberData);
+  // const MemberData = useSelector((state: RootState) => state.MemberData);
 
   // Update the tasks selector to ensure array type
-  const tasks = useSelector(
-    (state: RootState) =>
-      Array.isArray(state.TasksData?.task) ? state.TasksData.task : [],
-    // state.TasksData.task,
+  const tasks = useSelector((state: RootState) =>
+    Array.isArray(state.TasksData?.task) ? state.TasksData.task : [],
   );
 
   const { data: taskData, onGetTasks, loading: tasksLoading } = useGetTasks();
@@ -130,14 +105,27 @@ function TabComponent() {
     console.log(activeTabs);
   }, [activeTab]);
 
-  const statusMap = {
-    "TO-DO": "to-do",
-    "IN-PROGRESS": "in-progress",
-    "IN-REVIEW": "in-review",
-    DONE: "done",
+  const STATUS_SECTIONS = [
+    "TO-DO",
+    "IN-PROGRESS",
+    "IN-REVIEW",
+    "DONE",
+  ] as const;
+
+  const normalizeStatus = (status?: string) => {
+    if (!status) return "TO-DO";
+
+    const s = status.toLowerCase();
+
+    if (s === "to-do") return "TO-DO";
+    if (s === "in-progress") return "IN-PROGRESS";
+    if (s === "in-review") return "IN-REVIEW";
+    if (s === "done") return "DONE";
+
+    return "TO-DO";
   };
 
-  const tabs = ["Overview", "My Tasks"];
+  const tabs = ["Overview", "My Issues"];
 
   const tabContent = useMemo(() => {
     const safeTasks = Array.isArray(tasks) ? tasks : [];
@@ -147,6 +135,27 @@ function TabComponent() {
       safeTasks.filter((task) => task?.assignee?._id === user?._id),
     ];
   }, [tasks, user]);
+
+  const groupedTasks = useMemo(() => {
+    const activeTasks = tabContent[activeTab] ?? [];
+
+    // pre-fill sections so they ALWAYS exist
+    const initial = STATUS_SECTIONS.reduce<Record<string, any[]>>(
+      (acc, status) => {
+        acc[status] = [];
+        return acc;
+      },
+      {},
+    );
+
+    return activeTasks.reduce((acc, task) => {
+      const status = normalizeStatus(task.status);
+      acc[status].push(task);
+      return acc;
+    }, initial);
+  }, [tabContent, activeTab]);
+
+  console.log("GROUPED TASKS:", groupedTasks);
 
   const [view, setView] = useState<"board" | "list">("board");
 
@@ -161,7 +170,55 @@ function TabComponent() {
   return (
     <div className="poppins flex h-full w-full flex-1 flex-col bg-[white] dark:bg-[#111]">
       <div className="sticky top-0 w-full">
-        <Navbar />
+        <div className="poppins flex w-full items-center justify-between border-b-[1px] border-[#565656]/10 px-[32px] py-[7px]">
+          <h2 className="poppins-medium text-xl text-[#111] dark:text-white">
+            {currentUI === "tasks"
+              ? "Issues"
+              : currentUI === "dashboard"
+                ? "Dashboard"
+                : currentUI === "team"
+                  ? "Team"
+                  : "Preferences"}
+          </h2>
+          <div className="flex flex-row items-center justify-center gap-2">
+            <Notification />
+
+            <button
+              className={`flex h-[36px] cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 ${byStatus ? "dark:bg-[#565656]/20" : ""}`}
+              // disabled={true}
+              onClick={() => setByStatus(!byStatus)}
+            >
+              <img
+                src={
+                  resolvedTheme === "dark"
+                    ? "/icons/gbs-dark.svg"
+                    : "/icons/gbs.svg"
+                }
+                alt=""
+                className="w-3"
+              />
+              <p>Group by status</p>
+            </button>
+
+            <button
+              className="flex h-[36px] cursor-not-allowed flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50"
+              disabled={true}
+            >
+              <img
+                src={
+                  resolvedTheme === "dark"
+                    ? "/icons/funnel-dark.svg"
+                    : "/icons/funnel.svg"
+                }
+                alt=""
+                className="w-3"
+              />
+              <p>Filter</p>
+            </button>
+
+            <AddTask onGetTasks={onGetTasks} taskData={taskData} />
+          </div>
+        </div>
       </div>
       {/* Tabs Navigation */}
       {currentUI === "tasks" ? (
@@ -169,14 +226,14 @@ function TabComponent() {
           {/* <div className="fixed top-16 z-10 w-full bg-white shadow-sm"> */}
 
           <div className="mb-2 flex h-fit items-center justify-between px-8 pt-6 transition-all duration-300">
-            <div className="flex h-max flex-row">
+            <div className="flex h-max flex-row rounded-md bg-[#eee] px-1 py-1 dark:bg-[#1a1a1a]">
               {tabs?.map((tab, index) => (
                 <div
                   key={index}
-                  className={`flex h-fit w-fit cursor-pointer select-none flex-row items-center gap-1 rounded-t-sm px-3 py-2 text-[12px] font-[500] ${
+                  className={`flex h-fit w-fit cursor-pointer select-none flex-row items-center gap-1 rounded-sm px-3 py-1.5 text-[12px] font-[500] ${
                     activeTab === index
-                      ? "border-b-2 border-black bg-gray-100/50 text-black"
-                      : "text-gray-500 hover:text-black"
+                      ? "border-[#565656]/20 bg-white text-black dark:bg-[#565656]/20 dark:text-white"
+                      : "text-gray-500 hover:text-black dark:text-white/50"
                   }`}
                   onClick={() => {
                     setActiveTab(index);
@@ -186,7 +243,7 @@ function TabComponent() {
                   {tab}
                   {index === activeTab && (
                     <div className="flex h-4 w-4 items-center justify-center rounded-sm bg-gray-400/40">
-                      <p className="text-[10px] font-normal">
+                      <p className="text-[10px] font-regular">
                         {tabContent[activeTab]?.length}
                       </p>
                     </div>
@@ -216,20 +273,12 @@ function TabComponent() {
             </div> */}
 
             <div className="flex flex-row items-center justify-center gap-2 pb-1">
-              {/* <div className="flex h-fit flex-row items-center gap-1 rounded-sm border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/20">
-                <SquareKanban
-                  className="text-center text-[#111]"
-                  strokeWidth={1.5}
-                  size={16}
-                />
-                <p>Card</p>
-              </div> */}
               <div
-                className={`flex h-[34px] cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 ${view === "board" ? "bg-[#565656]/10" : ""}`}
+                className={`flex h-[34px] cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 ${view === "board" ? "bg-[#565656]/10 dark:bg-[#565656]/20" : ""}`}
                 onClick={changeToBoardView}
               >
                 <SquareKanban
-                  className="text-center text-[#111]"
+                  className="text-center text-[#111] dark:text-[#fff]/50"
                   strokeWidth={1.5}
                   size={14}
                 />
@@ -237,79 +286,25 @@ function TabComponent() {
               </div>
 
               <div
-                className={`flex h-[34px] cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 ${view === "list" ? "bg-[#565656]/10" : ""}`}
+                className={`flex h-[34px] cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 ${view === "list" ? "bg-[#565656]/10 dark:bg-[#565656]/20" : ""}`}
                 onClick={changeToListView}
               >
                 <List
-                  className="text-center text-[#111]"
+                  className="text-center text-[#111] dark:text-[#fff]/50"
                   strokeWidth={1.5}
                   size={14}
                 />
                 <p>List</p>
               </div>
-
-              <AddTask onGetTasks={onGetTasks} taskData={taskData} />
             </div>
           </div>
-          {view === "list" ? (
-            <div className="px-8">
-              <div className="flex min-h-fit w-full flex-row justify-between rounded-sm bg-[#eee] px-3 py-3 text-[14px] font-medium text-[#787878]">
-                <div className="flex w-[250px] items-center justify-start gap-2">
-                  <FontAwesomeIcon
-                    icon={faAlignLeft}
-                    className="h-3 w-3 text-gray-500 hover:text-gray-700"
-                  />
-                  <p className="line-clamp-1 h-fit text-[12px] leading-tight">
-                    Description
-                  </p>
-                </div>
-                <div className="flex w-[100px] items-center justify-start gap-2 text-[#565656]">
-                  <FontAwesomeIcon
-                    icon={faSpinner}
-                    className="h-3 w-3 text-gray-500 hover:text-gray-700"
-                  />
-                  <p className="text-[12px]">Status</p>
-                </div>
-                <div className="flex w-[115px] items-center justify-start gap-2">
-                  <FontAwesomeIcon
-                    icon={faUser}
-                    className="h-3 w-3 text-gray-500 hover:text-gray-700"
-                  />
-                  <p className="text-[12px]">Assignee</p>
-                </div>
-                <div className="flex w-[120px] items-center justify-start gap-2">
-                  <FontAwesomeIcon
-                    icon={faCalendar}
-                    className="h-3 w-3 text-gray-500 hover:text-gray-700"
-                  />
-                  <p className="text-center text-[12px]">Deadline</p>
-                </div>
-                <div className="flex w-[70px] items-center justify-start">
-                  <div
-                    className={`flex h-fit w-fit flex-row items-center justify-center gap-2 rounded-[6px]`}
-                  >
-                    <FontAwesomeIcon
-                      icon={faCircleCheck}
-                      className="h-3 w-3 text-gray-500 hover:text-gray-700"
-                    />
-                    <p className={`text-[12px]`}>Priority</p>
-                  </div>
-                </div>
-                <div className="flex w-[70px] items-center justify-start gap-2">
-                  <FontAwesomeIcon
-                    icon={faCircleCheck}
-                    className="h-3 w-3 text-gray-500 hover:text-gray-700"
-                  />
-                  <p className="cursor-pointer text-center text-[12px]">
-                    Actions
-                  </p>
-                </div>
-              </div>
-            </div>
+
+          {/* {view === "list" ? (
+
           ) : (
             ""
-          )}
-          {/* Tab Content */}
+          )} */}
+          {/* Tasks Content */}
           <div className="w-full flex-1 overflow-y-auto px-8 pb-8 scrollbar-hide">
             {tasksLoading ? (
               <p className="flex h-full items-center justify-center">
@@ -319,13 +314,115 @@ function TabComponent() {
             ) : view === "list" ? (
               <div className="flex h-fit w-full flex-col flex-wrap justify-between gap-1 rounded-[18px] pb-[6px]">
                 <div>
-                  {tabContent[activeTab] && tabContent[activeTab].length > 0 ? (
-                    tabContent[activeTab]?.map((task, index) =>
+                  <div className="flex h-fit w-full flex-row flex-wrap justify-start gap-5 rounded-[18px] pb-[6px]">
+                    {byStatus ? (
+                      STATUS_SECTIONS.map((status) => (
+                        <div
+                          key={status}
+                          className="flex w-full flex-col gap-1 rounded-md bg-[#eee] p-2 dark:bg-[#565656]/10"
+                        >
+                          <div className="flex min-h-fit w-full flex-row justify-between rounded-sm px-2 py-2 text-[14px] font-medium text-[#787878]">
+                            {status}
+                          </div>
+
+                          <ListHeader />
+
+                          <div
+                            // key={status}
+                            className="flex h-fit w-full flex-row flex-wrap justify-start rounded-[18px]"
+                          >
+                            {groupedTasks[status].length
+                              ? groupedTasks[status].map((task: any) => (
+                                  <ListTask
+                                    key={task._id}
+                                    desc={task.description}
+                                    deadline={task.deadline}
+                                    name={
+                                      task.assignee?.name ||
+                                      task.assignee?.fullname
+                                    }
+                                    email={task.assignee?.email}
+                                    priority={task.priority}
+                                    image={task.assignee?.profileImage}
+                                    id={task._id}
+                                    status={task.status}
+                                    createdAt={task.createdAt}
+                                  />
+                                ))
+                              : null}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="flex h-fit w-full flex-col flex-wrap justify-start rounded-[18px]">
+                        <ListHeader />
+                        {tabContent[activeTab]?.map((task) =>
+                          task ? (
+                            <ListTask
+                              key={task._id}
+                              desc={task.description}
+                              deadline={task.deadline}
+                              name={
+                                task.assignee?.name || task.assignee?.fullname
+                              }
+                              email={task.assignee?.email}
+                              priority={task.priority}
+                              image={task.assignee?.profileImage}
+                              id={task._id}
+                              status={task.status}
+                              createdAt={task.createdAt}
+                            />
+                          ) : null,
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex h-fit w-full flex-row flex-wrap justify-start gap-5 rounded-[18px] pb-[6px]">
+                {byStatus ? (
+                  STATUS_SECTIONS.map((status) => (
+                    <div
+                      key={status}
+                      className="flex w-full flex-col gap-1 rounded-md bg-[#eee] p-2 dark:bg-[#565656]/10"
+                    >
+                      <div className="flex min-h-fit w-full flex-row justify-between rounded-sm px-2 py-2 text-[14px] font-medium text-[#787878]">
+                        {status}
+                      </div>
+
+                      <div
+                        // key={status}
+                        className="flex h-fit w-full flex-row flex-wrap justify-start gap-2 rounded-[18px]"
+                      >
+                        {groupedTasks[status].length
+                          ? groupedTasks[status].map((task: any) => (
+                              <Card
+                                key={task._id}
+                                desc={task.description}
+                                deadline={task.deadline}
+                                name={
+                                  task.assignee?.name || task.assignee?.fullname
+                                }
+                                email={task.assignee?.email}
+                                priority={task.priority}
+                                image={task.assignee?.profileImage}
+                                id={task._id}
+                                status={task.status}
+                                createdAt={task.createdAt}
+                              />
+                            ))
+                          : null}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex h-fit w-full flex-row flex-wrap justify-start gap-2 rounded-[18px] pb-[6px]">
+                    {tabContent[activeTab]?.map((task) =>
                       task ? (
-                        <ListTask
+                        <Card
                           key={task._id}
                           desc={task.description}
-                          // tags={task.tags}
                           deadline={task.deadline}
                           name={task.assignee?.name || task.assignee?.fullname}
                           email={task.assignee?.email}
@@ -334,61 +431,9 @@ function TabComponent() {
                           id={task._id}
                           status={task.status}
                           createdAt={task.createdAt}
-                          // workspaceId={task.workspace_id}
                         />
-                      ) : (
-                        <div
-                          className="flex h-full w-full items-center justify-center"
-                          key={`no-task-${index}`}
-                        >
-                          <p className="text-center text-lg text-gray-500">
-                            No Task
-                          </p>
-                        </div>
-                      ),
-                    )
-                  ) : (
-                    <div className="flex h-[300px] w-full items-center justify-center">
-                      <p className="text-md text-center text-gray-500">
-                        No Task
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <div className="flex h-fit w-full flex-row flex-wrap justify-start gap-2 rounded-[18px] p-2 pb-[6px]">
-                {tabContent[activeTab] && tabContent[activeTab].length > 0 ? (
-                  tabContent[activeTab]?.map((task, index) =>
-                    task ? (
-                      <Card
-                        key={task._id}
-                        desc={task.description}
-                        // tags={task.tags}
-                        deadline={task.deadline}
-                        name={task.assignee?.name || task.assignee?.fullname}
-                        email={task.assignee?.email}
-                        priority={task.priority}
-                        image={task.assignee?.profileImage}
-                        id={task._id}
-                        status={task.status}
-                        createdAt={task.createdAt}
-                        // workspaceId={task.workspace_id}
-                      />
-                    ) : (
-                      <div
-                        className="flex h-full w-full items-center justify-center"
-                        key={`no-task-${index}`}
-                      >
-                        <p className="text-center text-lg text-gray-500">
-                          No Task
-                        </p>
-                      </div>
-                    ),
-                  )
-                ) : (
-                  <div className="flex h-[300px] w-full items-center justify-center">
-                    <p className="text-md text-center text-gray-500">No Task</p>
+                      ) : null,
+                    )}
                   </div>
                 )}
               </div>

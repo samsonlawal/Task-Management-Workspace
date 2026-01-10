@@ -213,10 +213,10 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     <>
       <button
         onClick={checkWsId}
-        className="flex h-[36px] w-fit items-center justify-center gap-2 rounded-[6px] bg-[#111] px-4 text-[12px] font-normal text-white transition-all duration-300 hover:bg-[#242424] dark:bg-[white] dark:text-[#111]"
+        className="flex h-[34px] w-fit items-center justify-center gap-2 rounded-[6px] bg-[#111] px-3 text-[12px] font-normal text-[#fff] transition-all duration-300 hover:bg-[#242424] dark:bg-[white] dark:text-[#111]"
       >
         <FontAwesomeIcon icon={faPlus} />
-        Add Task
+        New Task
       </button>
       <Dialog
         open={isOpen}
@@ -224,12 +224,9 @@ export default function AddTask({ onGetTasks, taskData }: any) {
         transition
         className="poppins fixed inset-0 flex w-screen select-none items-center justify-center bg-black/30 p-4 font-madei transition duration-300 ease-out data-[closed]:opacity-0"
       >
-        {/* The backdrop, rendered as a fixed sibling to the panel container */}
         <DialogBackdrop className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
 
-        {/* Full-screen container to center the panel */}
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-          {/* The actual dialog panel  */}
           <DialogPanel
             className="h-fit w-[600px] space-y-1 rounded-xl bg-white px-8 py-8"
             onClick={(e) => e.stopPropagation()}

@@ -76,9 +76,8 @@ export default function ListTask({
       image,
     },
     priority,
-    // Add other task properties as needed
-    status, // You might want to pass this as a prop too
-    createdAt, // You might want to pass this as a prop
+    status,
+    createdAt,
     workspaceName: workspaceData?.name,
     workspaceId: workspaceData?._id,
   };
@@ -95,26 +94,38 @@ export default function ListTask({
       todo: {
         label: "To Do",
         color: "bg-[#14CF14]/30",
+        darkColor: "dark:bg-[#14CF14]/20",
         dotColor: "bg-[#129312]",
+        darkDotColor: "dark:bg-[#129312]",
         labelColor: "text-[#129312]",
+        darkLabelColor: "dark:text-[#129312]",
       },
       "in-progress": {
         label: "In Progress",
         color: "bg-[#4314CF]/30",
+        darkColor: "dark:bg-[#4314CF]/20",
         dotColor: "bg-[#1E30A2]",
-        labelColor: "text-[#1E30A2]",
+        darkDotColor: "dark:bg-[#6A7DFA]",
+        labelColor: "text-[#4314CF]",
+        darkLabelColor: "dark:text-[#6A7DFA]",
       },
       "in-review": {
         label: "In Review",
         color: "bg-[#CFB314]/30",
+        darkColor: "dark:bg-[#CFB314]/20",
         dotColor: "bg-[#B59017]",
+        darkDotColor: "dark:bg-[#B59017]",
         labelColor: "text-[#B59017]",
+        darkLabelColor: "dark:text-[#B59017]",
       },
       done: {
         label: "Done",
         color: "bg-[#111]",
-        dotColor: "bg-[#CFB314]",
+        darkColor: "dark:bg-[#565656]/10",
+        dotColor: "bg-[#fff]",
+        darkDotColor: "dark:bg-[#565656]",
         labelColor: "text-[#fff]",
+        darkLabelColor: "dark:text-[#565656]",
       },
     };
 
@@ -142,21 +153,23 @@ export default function ListTask({
   const priorityDisplay = getPriorityDisplay(taskData.priority);
 
   return (
-    <div className="flex min-h-fit w-full flex-row justify-between border-b-[1px] border-[#565656]/10 px-3 pb-1.5 pt-3 text-[14px] text-[#111]">
+    <div className="flex min-h-fit w-full flex-row justify-between border-b-[1px] border-[#565656]/10 px-3 py-3.5 text-[14px] text-[#111] dark:text-[#eee]/60">
       <div className="flex w-[250px] items-center justify-start gap-2">
         <input type="checkbox" />
-        <p className="line-clamp-1 h-fit text-[12px] font-normal leading-tight">
+        <p className="line-clamp-1 h-fit text-[12px] font-normal leading-[12px]">
           {desc}
         </p>
       </div>
       <div className="flex w-[100px] items-center justify-start">
         <div
-          className={`flex flex-row items-center gap-1 rounded-[4px] ${statusDisplay.color} px-2 py-[3px]`}
+          className={`flex flex-row items-center gap-1 rounded-[4px] ${statusDisplay.color} ${statusDisplay.darkColor} px-2 py-[3px]`}
         >
-          <div
-            className={`h-1.5 w-1.5 rounded-full ${statusDisplay.dotColor}`}
-          />
-          <p className={`text-[11px] font-normal ${statusDisplay.labelColor}`}>
+          {/* <div
+            className={`h-1.5 w-1.5 rounded-full ${statusDisplay.dotColor} ${statusDisplay.darkDotColor}`}
+          /> */}
+          <p
+            className={`text-[11px] font-normal ${statusDisplay.labelColor} ${statusDisplay.darkLabelColor}`}
+          >
             {statusDisplay.label}
           </p>
         </div>
@@ -212,12 +225,12 @@ export default function ListTask({
             size={14}
             className={`${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"} fill-current`}
           />
-          <p
+          {/* <p
             className={`text-[12px] font-normal ${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"}`}
           >
             {(priority || "")?.split(" ")[0].charAt(0).toUpperCase() +
               (priority || "")?.split(" ")[0].slice(1).toLowerCase()}
-          </p>
+          </p> */}
         </div>
       </div>
       <div className="flex w-[70px] items-center justify-start">
