@@ -82,7 +82,7 @@ export default function ListTask({
     <div className="flex min-h-fit w-full flex-row justify-between border-b-[1px] border-[#565656]/10 px-3 py-3.5 text-[14px] text-[#111] dark:text-[#eee]/60">
       <div className="flex w-[250px] items-center justify-start gap-2">
         <input type="checkbox" />
-        <p className="line-clamp-1 h-fit text-[12px] font-normal leading-[12px]">
+        <p className="line-clamp-1 h-fit text-[12px] font-normal leading-4">
           {desc}
         </p>
       </div>
