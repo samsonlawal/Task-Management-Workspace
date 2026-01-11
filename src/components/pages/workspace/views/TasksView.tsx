@@ -4,6 +4,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "next-themes";
 import { SquareKanban, List, Folder, GalleryHorizontal } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { RootState } from "@/redux/store";
 import { useGetTasks } from "@/hooks/api/tasks";
@@ -44,6 +45,13 @@ function TasksView() {
   const [activeTabs, setActiveTabs] = useState<string>("");
   const [byStatus, setByStatus] = useState<boolean>(true);
   const [view, setView] = useState<"board" | "list">("board");
+  const [collapsedGroups, setCollapsedGroups] = useState<
+    Record<string, boolean>
+  >({});
+
+  const toggleGroup = (status: string) => {
+    setCollapsedGroups((prev) => ({ ...prev, [status]: !prev[status] }));
+  };
 
   const tabs = ["Overview", "My Issues"];
 
@@ -105,7 +113,7 @@ function TasksView() {
 
   useEffect(() => {
     console.log(activeTabs);
-  }, [activeTab]); // activeTabs in dep array of original was missing, but console.log uses it. logic wise it logs updated value? actually activeTabs state update is distinct. keeping as is.
+  }, [activeTab]);
 
   return (
     <div className="flex h-full w-full flex-col">
@@ -232,32 +240,68 @@ function TasksView() {
                       key={status}
                       className="flex w-full flex-col gap-1 rounded-md bg-[#eee] p-2 dark:bg-[#565656]/10"
                     >
-                      <div className="flex min-h-fit w-full flex-row justify-between rounded-sm px-2 py-2 text-[14px] font-medium text-[#787878]">
-                        {status}
+                      <div
+                        className="flex min-h-fit w-full cursor-pointer flex-row justify-between rounded-sm px-2 py-2.5 text-[14px] font-medium text-[#787878] transition-colors hover:bg-gray-200 dark:bg-[#565656]/10 dark:hover:bg-[#565656]/20"
+                        onClick={() => toggleGroup(status)}
+                      >
+                        <div className="flex w-fit flex-row items-center gap-1">
+                          <img
+                            src={`icons/task/${status === "TO-DO" ? "to-do" : status === "IN-PROGRESS" ? "in-progress" : status === "IN-REVIEW" ? "in-review" : "completed"}.svg`}
+                            alt=""
+                            className="h-3.5 w-3.5"
+                          />
+                          <p className="text-[12px]">{status} </p>
+                          <span className="flex h-4 w-4 items-center justify-center rounded-[4px] bg-[#565656]/20 text-[10px]">
+                            {groupedTasks[status].length}
+                          </span>
+                        </div>
+                        <img
+                          src="/icons/caret-down-bold.svg"
+                          alt=""
+                          className={`w-2 transition-transform duration-200 ${collapsedGroups[status] ? "-rotate-0" : "rotate-180"}`}
+                        />
                       </div>
 
-                      <ListHeader />
+                      <AnimatePresence initial={false}>
+                        {!collapsedGroups[status] && (
+                          <motion.div
+                            key="content"
+                            initial="collapsed"
+                            animate="open"
+                            exit="collapsed"
+                            variants={{
+                              open: { opacity: 1, height: "auto" },
+                              collapsed: { opacity: 0, height: 0 },
+                            }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="overflow-hidden"
+                          >
+                            <ListHeader />
 
-                      <div className="flex h-fit w-full flex-row flex-wrap justify-start rounded-[18px]">
-                        {groupedTasks[status].length
-                          ? groupedTasks[status].map((task: any) => (
-                              <ListTask
-                                key={task._id}
-                                desc={task.description}
-                                deadline={task.deadline}
-                                name={
-                                  task.assignee?.name || task.assignee?.fullname
-                                }
-                                email={task.assignee?.email}
-                                priority={task.priority}
-                                image={task.assignee?.profileImage}
-                                id={task._id}
-                                status={task.status}
-                                createdAt={task.createdAt}
-                              />
-                            ))
-                          : null}
-                      </div>
+                            <div className="flex h-fit w-full flex-row flex-wrap justify-start rounded-[18px]">
+                              {groupedTasks[status].length
+                                ? groupedTasks[status].map((task: any) => (
+                                    <ListTask
+                                      key={task._id}
+                                      desc={task.description}
+                                      deadline={task.deadline}
+                                      name={
+                                        task.assignee?.name ||
+                                        task.assignee?.fullname
+                                      }
+                                      email={task.assignee?.email}
+                                      priority={task.priority}
+                                      image={task.assignee?.profileImage}
+                                      id={task._id}
+                                      status={task.status}
+                                      createdAt={task.createdAt}
+                                    />
+                                  ))
+                                : null}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
                   ))
                 ) : (
@@ -292,30 +336,66 @@ function TasksView() {
                   key={status}
                   className="flex w-full flex-col gap-1 rounded-md bg-[#eee] p-2 dark:bg-[#565656]/10"
                 >
-                  <div className="flex min-h-fit w-full flex-row justify-between rounded-sm px-2 py-2 text-[14px] font-medium text-[#787878]">
-                    {status}
+                  <div
+                    className="flex min-h-fit w-full cursor-pointer flex-row justify-between rounded-sm px-2 py-2.5 text-[14px] font-medium text-[#787878] transition-colors hover:bg-gray-200 dark:bg-[#565656]/10 dark:hover:bg-[#565656]/20"
+                    onClick={() => toggleGroup(status)}
+                  >
+                    <div className="flex w-fit flex-row items-center gap-1">
+                      <img
+                        src={`icons/task/${status === "TO-DO" ? "to-do" : status === "IN-PROGRESS" ? "in-progress" : status === "IN-REVIEW" ? "in-review" : "completed"}.svg`}
+                        alt=""
+                        className="h-3.5 w-3.5"
+                      />
+                      <p className="text-[12px]">{status} </p>
+                      <span className="flex h-4 w-4 items-center justify-center rounded-[4px] bg-[#565656]/20 text-[10px]">
+                        {groupedTasks[status].length}
+                      </span>
+                    </div>
+                    <img
+                      src="/icons/caret-down-bold.svg"
+                      alt=""
+                      className={`w-2 transition-transform duration-200 ${collapsedGroups[status] ? "-rotate-0" : "rotate-180"}`}
+                    />
                   </div>
 
-                  <div className="flex h-fit w-full flex-row flex-wrap justify-start gap-2 rounded-[18px]">
-                    {groupedTasks[status].length
-                      ? groupedTasks[status].map((task: any) => (
-                          <Card
-                            key={task._id}
-                            desc={task.description}
-                            deadline={task.deadline}
-                            name={
-                              task.assignee?.name || task.assignee?.fullname
-                            }
-                            email={task.assignee?.email}
-                            priority={task.priority}
-                            image={task.assignee?.profileImage}
-                            id={task._id}
-                            status={task.status}
-                            createdAt={task.createdAt}
-                          />
-                        ))
-                      : null}
-                  </div>
+                  <AnimatePresence initial={false}>
+                    {!collapsedGroups[status] && (
+                      <motion.div
+                        key="content"
+                        initial="collapsed"
+                        animate="open"
+                        exit="collapsed"
+                        variants={{
+                          open: { opacity: 1, height: "auto" },
+                          collapsed: { opacity: 0, height: 0 },
+                        }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <div className="flex h-fit w-full flex-row flex-wrap justify-start gap-2 rounded-[18px]">
+                          {groupedTasks[status].length
+                            ? groupedTasks[status].map((task: any) => (
+                                <Card
+                                  key={task._id}
+                                  desc={task.description}
+                                  deadline={task.deadline}
+                                  name={
+                                    task.assignee?.name ||
+                                    task.assignee?.fullname
+                                  }
+                                  email={task.assignee?.email}
+                                  priority={task.priority}
+                                  image={task.assignee?.profileImage}
+                                  id={task._id}
+                                  status={task.status}
+                                  createdAt={task.createdAt}
+                                />
+                              ))
+                            : null}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               ))
             ) : (

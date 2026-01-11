@@ -51,8 +51,8 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
       >
         <SelectTrigger
           className={cn(
-            "w-[110px] border-gray-300 bg-gray-200 font-light text-black outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1",
             className,
+            `flex h-[36px] cursor-pointer flex-row items-center gap-3 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#565656]`,
           )}
           onClick={(e) => {
             // Stop propagation to prevent parent dialog from closing

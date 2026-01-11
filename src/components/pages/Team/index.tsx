@@ -12,6 +12,7 @@ import { CustomSelect } from "../../reuseables/select";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import Loader from "@/utils/loader";
+import stringToColor from "@/utils/stringToColor";
 
 function Team() {
   const members = useSelector(
@@ -23,6 +24,7 @@ function Team() {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
+  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
     console.log("Members:", members);
@@ -100,19 +102,22 @@ function Team() {
         <div className="flex flex-row items-center gap-2">
           <div className="flex flex-1 flex-row items-end gap-4">
             {/* search */}
-            <div className="relative w-auto flex-1 rounded-md border-[1px] border-gray-300">
+            <div className="relative w-auto flex-1 rounded-md">
               {/* Search input */}
               <input
                 type="text"
                 placeholder="Search Users"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-md bg-white py-2 pl-8 pr-8 text-sm outline-none"
+                className="w-full rounded-md border-[1px] border-[#565656]/20 bg-transparent py-2.5 pl-8 pr-8 text-xs outline-none placeholder:text-[#565656]/80 focus:border-[#565656] dark:text-[#eee]"
               />
 
               {/* Magnifier icon */}
               <div className="pointer-events-none absolute left-[1px] top-1/2 flex h-[90%] -translate-y-1/2 items-center justify-center rounded-md px-2 text-gray-400">
-                <FontAwesomeIcon icon={faMagnifyingGlass} />
+                <FontAwesomeIcon
+                  icon={faMagnifyingGlass}
+                  className="text-[12px] dark:text-[#565656]/80"
+                />
               </div>
 
               {/* Clear button */}
@@ -121,12 +126,17 @@ function Team() {
                   onClick={() => setSearch("")}
                   className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  <FontAwesomeIcon icon={faXmark} />
+                  <FontAwesomeIcon
+                    icon={faXmark}
+                    className="text-[12px] dark:text-[#565656]/80"
+                  />
                 </button>
               )}
             </div>
           </div>
+        </div>
 
+        <div className="flex w-fit flex-row gap-3">
           <CustomSelect
             options={[
               { label: "All", value: "All" },
@@ -136,18 +146,15 @@ function Team() {
             placeholder="Filter"
             onChange={handleStatusFilterChange}
           />
-        </div>
-
-        <div className="flex w-fit flex-row gap-5">
           <AddMember />
         </div>
       </div>
       {/* Table */}
-      <div className="h-full w-[100%] rounded-[8px] border border-gray-300 shadow-sm">
+      <div className="border-gray- h-full w-[100%] rounded-[8px] border shadow-sm dark:border-[#565656]/20">
         {members ? (
           <div className="h-full w-full rounded-[8px]">
             {/* Header */}
-            <div className="grid h-[50px] w-full grid-cols-[20px_50px_2fr_2.5fr_1fr_1fr_0.7fr] items-center justify-center gap-5 rounded-t-[8px] bg-gray-100 px-4 text-sm font-medium text-gray-600">
+            <div className="grid h-[50px] w-full grid-cols-[20px_50px_2fr_2.5fr_1fr_1fr_0.7fr] items-center justify-center gap-5 rounded-t-[8px] bg-gray-100 px-4 text-sm text-gray-600 dark:bg-[#565656]/20 dark:text-[#787878]">
               <div className="flex items-center justify-center">
                 <input
                   type="checkbox"
@@ -169,7 +176,7 @@ function Team() {
               <div>Status</div>
               <div>Actions</div>
             </div>
-            <div className="w-full border-b border-gray-300" />
+            <div className="w-full border-b border-gray-300 dark:border-[#565656]/20" />
 
             {/* Body */}
             {currentItems.length > 0 ? (
@@ -177,19 +184,22 @@ function Team() {
                 // Normalize data access
                 const userData = user.userId || {};
                 const imageSrc =
-                  userData.profileImage ||
-                  user.profileImage ||
-                  "/default-avatar.png";
-                const email = userData.email || user.email || "No email";
-                const fullname = userData.fullname || userData.name || "-";
-                const jobTitle = userData.jobTitle || user.jobTitle || "-";
+                  userData.profileImage?.trim() ||
+                  user.profileImage?.trim() ||
+                  null;
+
+                const email = userData.email || user.email;
+                const fullname = userData.fullname || userData.name || "none";
+                const jobTitle = userData.jobTitle || user.jobTitle || null;
                 const role = user.role || "-";
                 const status = user.status || "pending";
+
+                console.log(fullname);
 
                 return (
                   <div
                     key={user._id || index}
-                    className="grid w-full grid-cols-[20px_50px_2fr_2.5fr_1fr_1fr_0.7fr] items-center gap-5 border-b border-gray-300 px-4 py-3 text-[13px] font-[400] text-gray-800"
+                    className="dark:text=[#eee] grid w-full grid-cols-[20px_50px_2fr_2.5fr_1fr_1fr_0.7fr] items-center gap-5 border-b border-gray-300 px-4 py-3 text-[13px] font-[400] text-gray-800 dark:border-[#565656]/20 dark:text-[#eee]"
                   >
                     <div className="flex items-center">
                       <input
@@ -201,11 +211,28 @@ function Team() {
                     </div>
                     <div className="">{startIndex + index + 1}</div>
                     <div className="flex flex-row items-center gap-2">
-                      <img
-                        src={imageSrc}
-                        alt="User"
-                        className="h-7 w-7 rounded-full object-cover"
-                      />
+                      {imageSrc !== "none" ? (
+                        <img
+                          src={imageSrc}
+                          alt="user"
+                          className="h-6 w-6 rounded-full object-cover"
+                          onError={() => setImgError(true)}
+                        />
+                      ) : fullname !== "none" ? (
+                        <div
+                          className="flex h-6 w-6 items-center justify-center rounded-full text-[13px] font-medium text-[#111] dark:text-white"
+                          style={{ backgroundColor: stringToColor(fullname) }}
+                        >
+                          {fullname.charAt(0).toUpperCase()}
+                        </div>
+                      ) : (
+                        <div
+                          className="flex h-6 w-6 items-center justify-center rounded-full text-[13px] font-medium text-[#111] dark:text-white"
+                          style={{ backgroundColor: stringToColor("pending") }}
+                        >
+                          {/* {fullname.charAt(0).toUpperCase()} */}
+                        </div>
+                      )}
                       <p className="truncate">{fullname}</p>
                     </div>
                     <div className="truncate">{email}</div>
@@ -215,15 +242,15 @@ function Team() {
                       <div
                         className={`flex w-[70px] flex-row items-center justify-center gap-1 rounded-full py-1 ${
                           status.toLowerCase() === "active"
-                            ? "bg-[#66FF00]/30 text-[green]"
-                            : "bg-gray-200 text-gray-600"
+                            ? "bg-[#66FF00]/20 text-[green] dark:bg-[#66FF00]/10"
+                            : "bg-[#565656]/20 text-[#565656] dark:bg-[#565656]/20 dark:text-[#fff]/50"
                         }`}
                       >
                         <div
                           className={`h-1.5 w-1.5 rounded-full ${
                             status.toLowerCase() === "active"
                               ? "animate-pulse bg-[green]"
-                              : "bg-gray-500"
+                              : "bg-[#565656]/10 dark:bg-[#787878]"
                           }`}
                         ></div>
                         <p className="text-[11px] capitalize">{status}</p>
@@ -245,9 +272,9 @@ function Team() {
             )}
 
             {/* Footer */}
-            <div className="flex items-center justify-between px-4 py-3">
+            <div className="flex items-center justify-between px-4 py-3 text-gray-600 dark:text-[#787878]">
               {/* Showing x of y */}
-              <div className="text-[12px] text-gray-600">
+              <div className="text-[12px]">
                 {totalItems > 0 ? (
                   <>
                     Showing {Math.min(startIndex + 1, totalItems)} -{" "}
@@ -260,7 +287,7 @@ function Team() {
               </div>
 
               {/* Pagination */}
-              <div className="flex items-center gap-3 text-[12px] text-gray-600">
+              <div className="flex items-center gap-3 text-[12px]">
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}

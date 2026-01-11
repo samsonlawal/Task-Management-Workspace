@@ -18,6 +18,7 @@ import {
   Paperclip,
   Redo,
 } from "lucide-react";
+import { getPriorityStyles } from "@/utils/taskStyles";
 
 export default function Card({
   desc,
@@ -42,19 +43,7 @@ export default function Card({
   status: string;
   createdAt: string;
 }) {
-  const priorityColors = {
-    High: "fill-[#CF1414]",
-    Medium: "fill-[#EEC642]",
-    Low: "fill-[#64BC21]",
-    low: "fill-[#64BC21]",
-  };
-
-  const priorityTextColors = {
-    High: "text-[#CF1414]",
-    Medium: "text-[#EEC642]",
-    Low: "text-[#64BC21]",
-    low: "text-[#64BC21]",
-  };
+  const priorityStyles = getPriorityStyles(priority);
 
   const getBgColor = (firstName: string) => {
     const colors: any = {
@@ -141,15 +130,8 @@ export default function Card({
             <div
               className={`flex h-fit w-fit flex-row items-center justify-center gap-1 rounded-[8px]`}
             >
-              <p
-                className={`text-[10px] font-normal ${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"}`}
-              >
-                <FlagIcon
-                  size={10}
-                  className={
-                    priorityColors[priority as keyof typeof priorityColors]
-                  }
-                />
+              <p className={`text-[10px] font-normal ${priorityStyles.text}`}>
+                <FlagIcon size={10} className={priorityStyles.fill} />
                 {/* {(priority || "")?.split(" ")[0].charAt(0).toUpperCase() +
                   (priority || "")?.split(" ")[0].slice(1).toLowerCase()} */}
               </p>

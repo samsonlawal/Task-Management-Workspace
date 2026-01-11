@@ -9,6 +9,7 @@ import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 import { Flag } from "lucide-react";
+import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
 
 export default function ListTask({
   desc,
@@ -33,19 +34,8 @@ export default function ListTask({
   status: string;
   createdAt: string;
 }) {
-  const priorityColors = {
-    High: "bg-[#CF1414]/20",
-    Medium: "bg-[#EEC642]/20",
-    Low: "bg-[#64BC21]/20",
-    low: "bg-[#64BC21]/20",
-  };
-
-  const priorityTextColors = {
-    High: "text-[#A21E1E]",
-    Medium: "text-[#8F7727]",
-    Low: "text-[#4C7D26]",
-    low: "text-[#4C7D26]",
-  };
+  const priorityStyles = getPriorityStyles(priority);
+  const statusStyles = getStatusStyles(status);
 
   const getBgColor = (firstName: string) => {
     const colors: any = {
@@ -88,70 +78,6 @@ export default function ListTask({
     // console.log(workspaceData);
   }
 
-  // Helper function to get status display
-  const getStatusDisplay = (status: string) => {
-    const statusConfig = {
-      todo: {
-        label: "To Do",
-        color: "bg-[#14CF14]/30",
-        darkColor: "dark:bg-[#14CF14]/20",
-        dotColor: "bg-[#129312]",
-        darkDotColor: "dark:bg-[#129312]",
-        labelColor: "text-[#129312]",
-        darkLabelColor: "dark:text-[#129312]",
-      },
-      "in-progress": {
-        label: "In Progress",
-        color: "bg-[#4314CF]/30",
-        darkColor: "dark:bg-[#4314CF]/20",
-        dotColor: "bg-[#1E30A2]",
-        darkDotColor: "dark:bg-[#6A7DFA]",
-        labelColor: "text-[#4314CF]",
-        darkLabelColor: "dark:text-[#6A7DFA]",
-      },
-      "in-review": {
-        label: "In Review",
-        color: "bg-[#CFB314]/30",
-        darkColor: "dark:bg-[#CFB314]/20",
-        dotColor: "bg-[#B59017]",
-        darkDotColor: "dark:bg-[#B59017]",
-        labelColor: "text-[#B59017]",
-        darkLabelColor: "dark:text-[#B59017]",
-      },
-      done: {
-        label: "Done",
-        color: "bg-[#111]",
-        darkColor: "dark:bg-[#565656]/10",
-        dotColor: "bg-[#fff]",
-        darkDotColor: "dark:bg-[#565656]",
-        labelColor: "text-[#fff]",
-        darkLabelColor: "dark:text-[#565656]",
-      },
-    };
-
-    return (
-      statusConfig[status as keyof typeof statusConfig] || statusConfig["todo"]
-    );
-  };
-
-  // Helper function to get priority display
-  const getPriorityDisplay = (priority: string) => {
-    const priorityConfig = {
-      High: { color: "bg-red-200", textColor: "text-red-200" },
-      Medium: { color: "bg-yellow-300", textColor: "text-yellow-300" },
-      Low: { color: "bg-green-300", textColor: "text-green-800" },
-      low: { color: "bg-green-300", textColor: "text-green-800" },
-    };
-
-    return (
-      priorityConfig[priority as keyof typeof priorityConfig] ||
-      priorityConfig["Low"]
-    );
-  };
-
-  const statusDisplay = getStatusDisplay(taskData.status);
-  const priorityDisplay = getPriorityDisplay(taskData.priority);
-
   return (
     <div className="flex min-h-fit w-full flex-row justify-between border-b-[1px] border-[#565656]/10 px-3 py-3.5 text-[14px] text-[#111] dark:text-[#eee]/60">
       <div className="flex w-[250px] items-center justify-start gap-2">
@@ -162,15 +88,15 @@ export default function ListTask({
       </div>
       <div className="flex w-[100px] items-center justify-start">
         <div
-          className={`flex flex-row items-center gap-1 rounded-[4px] ${statusDisplay.color} ${statusDisplay.darkColor} px-2 py-[3px]`}
+          className={`flex flex-row items-center gap-1 rounded-[4px] ${statusStyles.bg} ${statusStyles.darkBg} px-2 py-[3px]`}
         >
           {/* <div
-            className={`h-1.5 w-1.5 rounded-full ${statusDisplay.dotColor} ${statusDisplay.darkDotColor}`}
+            className={`h-1.5 w-1.5 rounded-full ${statusStyles.dot} ${statusStyles.darkDot}`}
           /> */}
           <p
-            className={`text-[11px] font-normal ${statusDisplay.labelColor} ${statusDisplay.darkLabelColor}`}
+            className={`text-[11px] font-normal ${statusStyles.text} ${statusStyles.darkText}`}
           >
-            {statusDisplay.label}
+            {statusStyles.label}
           </p>
         </div>
       </div>
@@ -179,7 +105,7 @@ export default function ListTask({
           className={`jusitfy-center flex flex-1 flex-row items-center gap-2`}
         >
           <div
-            className={`flex h-[24px] w-[24px] items-center justify-center rounded-full ${image === "none" || "" ? getBgColor(name || fullname || "") : ""}`}
+            className={`flex h-[20px] w-[20px] items-center justify-center rounded-full ${image === "none" || "" ? getBgColor(name || fullname || "") : ""}`}
           >
             {(image && image !== "none") || "" ? (
               <img
@@ -221,12 +147,9 @@ export default function ListTask({
             className="h-3.5 w-3.5"
           /> */}
 
-          <Flag
-            size={14}
-            className={`${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"} fill-current`}
-          />
+          <Flag size={14} className={`${priorityStyles.text} fill-current`} />
           {/* <p
-            className={`text-[12px] font-normal ${priority && priorityTextColors[priority as keyof typeof priorityTextColors] ? priorityTextColors[priority as keyof typeof priorityTextColors] : "text-gray-700"}`}
+            className={`text-[12px] font-normal ${priorityStyles.text}`}
           >
             {(priority || "")?.split(" ")[0].charAt(0).toUpperCase() +
               (priority || "")?.split(" ")[0].slice(1).toLowerCase()}

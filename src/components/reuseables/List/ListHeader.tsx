@@ -12,7 +12,7 @@ import {
 import React from "react";
 
 const ListHeader = () => (
-  <div className="flex min-h-fit w-full flex-row justify-between rounded-sm bg-[#eee] px-3 py-3 text-[14px] font-medium text-[#787878] dark:bg-[#565656]/20">
+  <div className="flex min-h-fit w-full flex-row justify-between rounded-sm bg-[#eee] px-3 py-3 text-[14px] font-medium text-[#787878] dark:bg-[#565656]/10">
     <div className="flex w-[250px] items-center justify-start gap-2">
       <FontAwesomeIcon
         icon={faAlignLeft}

@@ -38,6 +38,7 @@ import {
   usePromoteTask,
 } from "@/hooks/api/tasks";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
+import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
 
 interface TaskData {
   id: string;
@@ -86,45 +87,8 @@ export default function TaskDetails({
 
   const [spaceData, setSpaceData] = useState<TWorkspaceData>();
 
-  // Helper function to get status display
-  const getStatusDisplay = (status: string) => {
-    const statusConfig = {
-      todo: { label: "To Do", color: "bg-gray-200", dotColor: "bg-gray-600" },
-      "in-progress": {
-        label: "In Progress",
-        color: "bg-yellow-200",
-        dotColor: "bg-yellow-700",
-      },
-      "in-review": {
-        label: "In Review",
-        color: "bg-blue-200",
-        dotColor: "bg-blue-700",
-      },
-      done: { label: "Done", color: "bg-green-200", dotColor: "bg-green-700" },
-    };
-
-    return (
-      statusConfig[status as keyof typeof statusConfig] || statusConfig["todo"]
-    );
-  };
-
-  // Helper function to get priority display
-  const getPriorityDisplay = (priority: string) => {
-    const priorityConfig = {
-      High: { color: "bg-red-300", textColor: "text-red-800" },
-      Medium: { color: "bg-yellow-300", textColor: "text-yellow-800" },
-      Low: { color: "bg-green-300", textColor: "text-green-800" },
-      low: { color: "bg-green-300", textColor: "text-green-800" },
-    };
-
-    return (
-      priorityConfig[priority as keyof typeof priorityConfig] ||
-      priorityConfig["Low"]
-    );
-  };
-
-  const statusDisplay = getStatusDisplay(taskData.status);
-  const priorityDisplay = getPriorityDisplay(taskData.priority);
+  const statusDisplay = getStatusStyles(taskData.status);
+  const priorityDisplay = getPriorityStyles(taskData.priority);
 
   useEffect(() => {
     getFromLocalStorage({
@@ -274,11 +238,11 @@ export default function TaskDetails({
 
             <div className="fixed inset-0 flex w-screen items-center justify-end p-2">
               <DialogPanel
-                className="h-[100%] w-[400px] space-y-1 rounded-xl bg-gray-100 px-8 py-6"
+                className="h-[100%] w-[400px] space-y-1 rounded-xl bg-gray-100 px-8 py-6 dark:bg-[#111]"
                 onClick={(e) => e.stopPropagation()}
               >
                 <DialogTitle className="flex flex-col items-start justify-center gap-8 pb-4 font-medium">
-                  <div className="flex w-full flex-row items-center justify-between border-b-[1px] pb-2">
+                  <div className="flex w-full flex-row items-center justify-between border-b-[1px] pb-2 dark:border-[#565656]/20">
                     <img
                       src="/icons/cancel.svg"
                       alt=""
@@ -326,10 +290,10 @@ export default function TaskDetails({
                   </div>
 
                   <div className="flex w-full flex-col items-start justify-between">
-                    <div className="text-[12px] font-normal">
-                      <p className="text-gray-400">
+                    <div className="text-[12px] font-normal dark:text-[#787878]">
+                      <p className="text-gray-400 dark:text-[#787878]">
                         Project {`> `}
-                        <span className="text-gray-400">
+                        <span className="text-gray-400 dark:text-[#787878]">
                           {taskData.workspaceName}
                         </span>
                       </p>
@@ -348,9 +312,9 @@ export default function TaskDetails({
                       <div className="flex w-[90px] items-center justify-start gap-1">
                         <FontAwesomeIcon
                           icon={faClock}
-                          className="h-3 w-3 text-gray-500 hover:text-gray-700"
+                          className="h-3 w-3 text-gray-500 dark:text-[#787878]"
                         />
-                        <label className="text-[11px] text-gray-500">
+                        <label className="text-[11px] text-gray-500 dark:text-[#787878]">
                           Created At:
                         </label>
                       </div>
@@ -366,19 +330,21 @@ export default function TaskDetails({
                       <div className="flex w-[90px] items-center justify-start gap-1">
                         <FontAwesomeIcon
                           icon={faSpinner}
-                          className="h-3 w-3 text-gray-500 hover:text-gray-700"
+                          className="h-3 w-3 text-gray-500 dark:text-[#787878]"
                         />
-                        <label className="text-[11px] text-gray-500">
+                        <label className="text-[11px] text-gray-500 dark:text-[#787878]">
                           Status:
                         </label>
                       </div>
                       <div
-                        className={`flex flex-row items-center gap-1 rounded-sm ${statusDisplay.color} px-1.5 py-0.5`}
+                        className={`flex flex-row items-center gap-1 rounded-sm ${statusDisplay.bg} px-1.5 py-0.5`}
                       >
                         <div
-                          className={`h-1.5 w-1.5 rounded-full ${statusDisplay.dotColor}`}
+                          className={`h-1.5 w-1.5 rounded-full ${statusDisplay.dot}`}
                         />
-                        <p className="text-[11px] font-normal">
+                        <p
+                          className={`text-[11px] font-normal ${statusDisplay.text}`}
+                        >
                           {statusDisplay.label}
                         </p>
                       </div>
@@ -389,17 +355,17 @@ export default function TaskDetails({
                       <div className="flex w-[90px] items-center justify-start gap-1">
                         <FontAwesomeIcon
                           icon={faCircleCheck}
-                          className="h-3 w-3 text-gray-500 hover:text-gray-700"
+                          className="h-3 w-3 text-gray-500 dark:text-[#787878]"
                         />
-                        <label className="text-[11px] text-gray-500">
+                        <label className="text-[11px] text-gray-500 dark:text-[#787878]">
                           Priority:
                         </label>
                       </div>
                       <div
-                        className={`flex flex-row items-center gap-1 rounded-sm ${priorityDisplay.color} px-1.5 py-0.5`}
+                        className={`flex flex-row items-center gap-1 rounded-sm ${priorityDisplay.bg} px-1.5 py-0.5`}
                       >
                         <p
-                          className={`text-[11px] font-normal ${priorityDisplay.textColor}`}
+                          className={`text-[11px] font-normal ${priorityDisplay.text}`}
                         >
                           {taskData.priority.charAt(0).toUpperCase() +
                             taskData.priority.slice(1).toLowerCase()}
@@ -412,9 +378,9 @@ export default function TaskDetails({
                       <div className="flex w-[90px] items-center justify-start gap-1">
                         <FontAwesomeIcon
                           icon={faCalendar}
-                          className="h-3 w-3 text-gray-500 hover:text-gray-700"
+                          className="h-3 w-3 text-gray-500 dark:text-[#787878]"
                         />
-                        <label className="text-[11px] text-gray-500">
+                        <label className="text-[11px] text-gray-500 dark:text-[#787878]">
                           Due Date:
                         </label>
                       </div>
@@ -430,9 +396,9 @@ export default function TaskDetails({
                       <div className="flex w-[90px] items-center justify-start gap-1">
                         <FontAwesomeIcon
                           icon={faUser}
-                          className="h-3 w-3 text-gray-500 hover:text-gray-700"
+                          className="h-3 w-3 text-gray-500 dark:text-[#787878]"
                         />
-                        <label className="text-[11px] text-gray-500">
+                        <label className="text-[11px] text-gray-500 dark:text-[#787878]">
                           Assignee:
                         </label>
                       </div>
@@ -462,9 +428,9 @@ export default function TaskDetails({
                       <div className="flex w-[90px] items-center justify-start gap-1">
                         <FontAwesomeIcon
                           icon={faAlignLeft}
-                          className="h-3 w-3 text-gray-500 hover:text-gray-700"
+                          className="h-3 w-3 text-gray-500 dark:text-[#787878]"
                         />
-                        <label className="text-[11px] text-gray-500">
+                        <label className="text-[11px] text-gray-500 dark:text-[#787878]">
                           Description:
                         </label>
                       </div>
@@ -479,9 +445,9 @@ export default function TaskDetails({
                     <div className="flex w-[90px] items-center justify-start gap-1">
                       <FontAwesomeIcon
                         icon={faCircleCheck}
-                        className="h-3 w-3 text-gray-500 hover:text-gray-700"
+                        className="h-3 w-3 text-gray-500 dark:text-[#787878]"
                       />
-                      <label className="text-[11px] text-gray-500">
+                      <label className="text-[11px] text-gray-500 dark:text-[#787878]">
                         Actions:
                       </label>
                     </div>
@@ -495,7 +461,7 @@ export default function TaskDetails({
                             handleDemoteTask();
                           }}
                           disabled={markAsDoneLoading}
-                          className="flex h-7 w-7 items-center justify-center rounded-sm bg-slate-300 hover:bg-gray-300/70 focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:cursor-not-allowed"
+                          className="flex h-7 w-7 items-center justify-center rounded-sm bg-slate-300 text-[11px] font-normal text-gray-500 transition-all duration-300 hover:bg-gray-300/70 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:cursor-not-allowed dark:bg-[#565656]/20 dark:text-[#eee] dark:hover:bg-[#565656]/30"
                           aria-label="Task options"
                         >
                           {demoteLoading ? (
@@ -517,7 +483,7 @@ export default function TaskDetails({
                           handleMarkAsDone();
                         }}
                         disabled={markAsDoneLoading}
-                        className="h-7 w-16 rounded-sm bg-slate-300 px-2.5 text-[11px] font-normal text-gray-500 hover:bg-gray-300/70 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:cursor-not-allowed"
+                        className="h-7 w-16 rounded-sm bg-slate-300 px-2.5 text-[11px] font-normal text-gray-500 transition-all duration-300 hover:bg-gray-300/70 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:cursor-not-allowed dark:bg-[#565656]/20 dark:text-[#eee] dark:hover:bg-[#565656]/30"
                       >
                         {markAsDoneLoading ? (
                           <img
@@ -537,7 +503,7 @@ export default function TaskDetails({
                             handlePromoteTask();
                           }}
                           disabled={markAsDoneLoading}
-                          className="flex h-7 w-7 items-center justify-center rounded-sm bg-slate-300 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:cursor-not-allowed"
+                          className="flex h-7 w-7 items-center justify-center rounded-sm bg-slate-300 text-[11px] font-normal text-gray-500 transition-all duration-300 hover:bg-gray-300/70 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:cursor-not-allowed dark:bg-[#565656]/20 dark:text-[#eee] dark:hover:bg-[#565656]/30"
                           aria-label="Task options"
                         >
                           {!promoteLoading ? (
@@ -557,22 +523,22 @@ export default function TaskDetails({
                   <div className="flex gap-3 pt-4 text-[12px]">
                     <div className="mt-6 w-full">
                       {/* Tab Headers */}
-                      <div className="flex border-b border-gray-200">
+                      <div className="flex border-b border-gray-200 dark:border-[#565656]/20">
                         <button
                           onClick={() => setActiveTab("activity")}
-                          className={`px-4 py-2 font-medium ${activeTab === "activity" ? "border-b-2 border-black font-semibold text-black" : "text-gray-500 hover:text-gray-700"}`}
+                          className={`px-4 py-2 font-medium ${activeTab === "activity" ? "border- border-b-2 font-semibold text-black dark:border-white dark:text-white" : "text-[#565656] hover:text-[#111] dark:hover:text-white"}`}
                         >
                           Activity
                         </button>
                         <button
                           onClick={() => setActiveTab("comments")}
-                          className={`px-4 py-2 font-medium ${activeTab === "comments" ? "border-b-2 border-black font-semibold text-black" : "text-gray-500 hover:text-gray-700"}`}
+                          className={`px-4 py-2 font-medium ${activeTab === "comments" ? "border-b-2 border-black font-semibold text-black dark:border-[#eee] dark:text-white" : "text-[#565656] hover:text-[#111] dark:hover:text-white"}`}
                         >
                           Comments
                         </button>
                         <button
                           onClick={() => setActiveTab("attachments")}
-                          className={`px-4 py-2 font-medium ${activeTab === "attachments" ? "border-b-2 border-black font-semibold text-black" : "text-gray-500 hover:text-gray-700"}`}
+                          className={`px-4 py-2 font-medium ${activeTab === "attachments" ? "border-b-2 border-black font-semibold text-black dark:border-[#eee] dark:text-white" : "text-[#565656] hover:text-[#111] dark:hover:text-white"}`}
                         >
                           Attachments
                         </button>
