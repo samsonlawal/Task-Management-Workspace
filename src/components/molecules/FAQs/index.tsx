@@ -42,7 +42,7 @@ export default function FAQs() {
 
   return (
     <div className="poppins flex h-fit w-full flex-col items-center justify-center gap-3 pt-[0px] md:gap-[8px]">
-      <div className="flex h-[500px] w-full flex-col items-center justify-center gap-6 md:flex-row">
+      <div className="flex h-[500px] w-full flex-col items-start justify-center gap-6 py-10 md:flex-row">
         {/* LHS */}
         <div className="poppins flex h-fit w-full flex-col gap-3 md:w-[450px] md:gap-[8px]">
           <div className="flex flex-col gap-2">
