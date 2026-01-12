@@ -79,7 +79,7 @@ export default function ListTask({
   }
 
   return (
-    <div className="flex min-h-fit w-full flex-row justify-between border-b-[1px] border-[#565656]/10 px-3 py-3.5 text-[14px] text-[#111] dark:text-[#eee]/60">
+    <div className="flex min-h-fit w-full flex-row justify-between border-t-[1px] border-[#565656]/10 px-3 py-3.5 text-[14px] text-[#111] dark:text-[#eee]/60">
       <div className="flex w-[250px] items-center justify-start gap-2">
         <input type="checkbox" />
         <p className="line-clamp-1 h-fit text-[12px] font-normal leading-4">
@@ -148,17 +148,15 @@ export default function ListTask({
           /> */}
 
           <Flag size={14} className={`${priorityStyles.text} fill-current`} />
-          {/* <p
-            className={`text-[12px] font-normal ${priorityStyles.text}`}
-          >
+          <p className={`text-[10px] font-normal ${priorityStyles.text}`}>
             {(priority || "")?.split(" ")[0].charAt(0).toUpperCase() +
               (priority || "")?.split(" ")[0].slice(1).toLowerCase()}
-          </p> */}
+          </p>
         </div>
       </div>
-      <div className="flex w-[70px] items-center justify-start">
+      <div className="flex w-[10px] items-center justify-start">
         <div
-          className="flex rotate-90 cursor-pointer items-center justify-start"
+          className="flex cursor-pointer items-center justify-start"
           onClick={gettaskdetails}
         >
           {/* Pass taskData to TaskDetails component */}

@@ -8,11 +8,13 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import AddMember from "../../reuseables/Dialogs/AddMember";
-import { CustomSelect } from "../../reuseables/select";
+import { CustomSelect } from "../../reuseables/TeamSelect";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import Loader from "@/utils/loader";
 import stringToColor from "@/utils/stringToColor";
+import AddTask from "@/components/reuseables/Dialogs/EditTask";
+import Notification from "@/components/reuseables/Notification";
 
 function Team() {
   const members = useSelector(
@@ -20,7 +22,8 @@ function Team() {
   );
 
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [statusFilter, setStatusFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("Status");
+  const [roleFilter, setRoleFilter] = useState("Role");
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
@@ -32,6 +35,10 @@ function Team() {
 
   const handleStatusFilterChange = (value: string) => {
     setStatusFilter(value);
+  };
+
+  const handleRoleFilterChange = (value: string) => {
+    setRoleFilter(value);
   };
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,6 +75,7 @@ function Team() {
     const email = user.userId?.email || user.email || "";
     const jobTitle = user.userId?.jobTitle || user.jobTitle || "";
     const status = user.status?.toLowerCase() || "";
+    const role = user.role?.toLowerCase() || "";
 
     const matchesSearch =
       fullname.toLowerCase().includes(search.toLowerCase()) ||
@@ -75,9 +83,12 @@ function Team() {
       jobTitle.toLowerCase().includes(search.toLowerCase());
 
     const matchesStatus =
-      statusFilter === "All" || status === statusFilter.toLowerCase();
+      statusFilter === "Status" || status === statusFilter.toLowerCase();
 
-    return matchesSearch && matchesStatus;
+    const matchesRole =
+      roleFilter === "Role" || role === roleFilter.toLowerCase();
+
+    return matchesSearch && matchesStatus && matchesRole;
   });
 
   // Calculate the range of items to display
@@ -96,11 +107,44 @@ function Team() {
   };
 
   return (
-    <div className="flex h-fit w-full flex-col gap-2 px-8 transition-all duration-300">
+    <div className="flex h-fit w-full flex-col gap-2 px-8">
+      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111]">
+        <div className="poppins flex w-full items-center justify-between border-[#565656]/10 py-[7px]">
+          <h2 className="text-xl text-[#111] dark:text-white">
+            Team
+            {/* <span className="pl-1 text-[14px] text-[#565656] dark:text-[#fff]/50">
+              {members?.length} Members
+            </span> */}
+          </h2>
+          <div className="flex flex-row items-center justify-center gap-3">
+            <Notification />
+
+            <CustomSelect
+              options={[
+                { label: "Role", value: "Role" },
+                { label: "Admin", value: "Admin" },
+                { label: "Member", value: "Member" },
+              ]}
+              placeholder="Role"
+              onChange={handleRoleFilterChange}
+            />
+            <CustomSelect
+              options={[
+                { label: "Status", value: "Status" },
+                { label: "Active", value: "Active" },
+                { label: "Pending", value: "invited" },
+              ]}
+              placeholder="Status"
+              onChange={handleStatusFilterChange}
+            />
+          </div>
+        </div>
+      </div>
+
       <div className="flex h-fit items-center justify-between pt-6 transition-all duration-300">
         {/* <div className="flex flex-row items-center justify-between"> */}
         <div className="flex flex-row items-center gap-2">
-          <div className="flex flex-1 flex-row items-end gap-4">
+          <div className="flex flex-1 flex-row items-end gap-2">
             {/* search */}
             <div className="relative w-auto flex-1 rounded-md">
               {/* Search input */}
@@ -109,7 +153,7 @@ function Team() {
                 placeholder="Search Users"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-md border-[1px] border-[#565656]/20 bg-transparent py-2.5 pl-8 pr-8 text-xs outline-none placeholder:text-[#565656]/80 focus:border-[#565656] dark:text-[#eee]"
+                className="w-[300px] rounded-md border-[1px] border-[#565656]/50 bg-transparent py-2.5 pl-8 pr-8 text-xs outline-none placeholder:text-[#565656]/80 focus:border-[#565656] dark:text-[#eee]"
               />
 
               {/* Magnifier icon */}
@@ -137,15 +181,6 @@ function Team() {
         </div>
 
         <div className="flex w-fit flex-row gap-3">
-          <CustomSelect
-            options={[
-              { label: "All", value: "All" },
-              { label: "Active", value: "Active" },
-              { label: "Pending", value: "invited" },
-            ]}
-            placeholder="Filter"
-            onChange={handleStatusFilterChange}
-          />
           <AddMember />
         </div>
       </div>
@@ -154,7 +189,7 @@ function Team() {
         {members ? (
           <div className="h-full w-full rounded-[8px]">
             {/* Header */}
-            <div className="grid h-[50px] w-full grid-cols-[20px_50px_2fr_2.5fr_1fr_1fr_0.7fr] items-center justify-center gap-5 rounded-t-[8px] bg-gray-100 px-4 text-sm text-gray-600 dark:bg-[#565656]/20 dark:text-[#787878]">
+            <div className="grid h-[50px] w-full grid-cols-[20px_0.8fr_1.2fr_0.4fr_0.5fr_0.5fr_0.4fr_20px] items-center justify-center gap-5 rounded-t-[8px] bg-gray-100 px-4 text-[13px] text-gray-600 dark:bg-[#565656]/20 dark:text-[#787878]">
               <div className="flex items-center justify-center">
                 <input
                   type="checkbox"
@@ -168,13 +203,15 @@ function Team() {
                   className="h-4 w-4"
                 />
               </div>
-              <div>ID</div>
-              <div>Full Name</div>
-              <div>Email</div>
+              {/* <div>ID</div> */}
+              <div className="">Name</div>
+              <div className="">Email</div>
               {/* <div>Job Title</div> */}
-              <div>Role</div>
-              <div>Status</div>
-              <div>Actions</div>
+              <div className="">Role</div>
+              <div className="">Last active</div>
+              <div className="">Date added</div>
+              <div className="">Status</div>
+              <div className=""></div>
             </div>
             <div className="w-full border-b border-gray-300 dark:border-[#565656]/20" />
 
@@ -189,7 +226,7 @@ function Team() {
                   null;
 
                 const email = userData.email || user.email;
-                const fullname = userData.fullname || userData.name || "none";
+                const fullname = userData.fullname || userData.name || "-";
                 const jobTitle = userData.jobTitle || user.jobTitle || null;
                 const role = user.role || "-";
                 const status = user.status || "pending";
@@ -199,7 +236,7 @@ function Team() {
                 return (
                   <div
                     key={user._id || index}
-                    className="dark:text=[#eee] grid w-full grid-cols-[20px_50px_2fr_2.5fr_1fr_1fr_0.7fr] items-center gap-5 border-b border-gray-300 px-4 py-3 text-[13px] font-[400] text-gray-800 dark:border-[#565656]/20 dark:text-[#eee]"
+                    className="dark:text=[#eee] grid w-full grid-cols-[20px_0.8fr_1.2fr_0.4fr_0.5fr_0.5fr_0.4fr_20px] items-center gap-5 border-b border-gray-300 px-4 py-3 text-[13px] font-[400] text-gray-800 dark:border-[#565656]/20 dark:text-[#eee]"
                   >
                     <div className="flex items-center">
                       <input
@@ -209,7 +246,7 @@ function Team() {
                         className="h-4 w-4"
                       />
                     </div>
-                    <div className="">{startIndex + index + 1}</div>
+                    {/* <div className="">{startIndex + index + 1}</div> */}
                     <div className="flex flex-row items-center gap-2">
                       {imageSrc !== "none" ? (
                         <img
@@ -238,6 +275,8 @@ function Team() {
                     <div className="truncate">{email}</div>
                     {/* <div>{jobTitle}</div> */}
                     <div>{role}</div>
+                    <div>Jan 3, 2026</div>
+                    <div>Jan 3, 2026</div>
                     <div>
                       <div
                         className={`flex w-[70px] flex-row items-center justify-center gap-1 rounded-full py-1 ${
@@ -259,7 +298,7 @@ function Team() {
                     <div className="flex items-center justify-center">
                       <FontAwesomeIcon
                         icon={faEllipsisVertical}
-                        className="rounded-md px-3 py-2 hover:bg-gray-200"
+                        className="rounded-md px-3 py-2 hover:bg-gray-200 dark:hover:bg-[#565656]/20"
                       />
                     </div>
                   </div>
@@ -291,7 +330,7 @@ function Team() {
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="rounded-md bg-gray-200 px-3 py-1 hover:bg-gray-300 disabled:opacity-50"
+                  className="rounded-md bg-gray-200 px-3 py-1 hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-[#565656]/20 dark:text-[#fff]/50 dark:hover:bg-[#565656]/10"
                 >
                   Prev
                 </button>
@@ -301,7 +340,7 @@ function Team() {
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages || totalItems === 0}
-                  className="rounded-md bg-gray-200 px-3 py-1 hover:bg-gray-300 disabled:opacity-50"
+                  className="rounded-md bg-gray-200 px-3 py-1 hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-[#565656]/20 dark:text-[#fff]/50 dark:hover:bg-[#565656]/10"
                 >
                   Next
                 </button>

@@ -54,12 +54,12 @@ const ListHeader = () => (
         <p className={`text-[12px]`}>Priority</p>
       </div>
     </div>
-    <div className="flex w-[70px] items-center justify-start gap-2">
-      <FontAwesomeIcon
+    <div className="flex w-[10px] items-center justify-start gap-2">
+      {/* <FontAwesomeIcon
         icon={faRegularCircleCheck}
         className="h-3 w-3 text-gray-500 hover:text-gray-700"
       />
-      <p className="cursor-pointer text-center text-[12px]">Actions</p>
+      <p className="cursor-pointer text-center text-[12px]">Actions</p> */}
     </div>
   </div>
 );
