@@ -20,9 +20,6 @@ class Service {
 
   updateAvatar(formData: FormData) {
     return axios.put(env.api.profiles + `/update-avatar`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
       withCredentials: true,
     });
   }
