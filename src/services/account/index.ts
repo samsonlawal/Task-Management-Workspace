@@ -12,17 +12,27 @@ class Service {
   //     return axios.put(env.api.profiles + `/${username}/update-profile`, payload);
   //   }
 
-  getUserProfile({ id, accessToken }: { id?: string; accessToken?: string }) {
-    return axios.get(
-      env.api.profiles + `/${id}`,
-      !accessToken
-        ? undefined
-        : {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-            },
-          },
-    );
+  getProfile(id: string) {
+    return axios.get(env.api.profiles + `/profile/${id}`, {
+      withCredentials: true,
+    });
+  }
+
+  updateAvatar(formData: FormData) {
+    return axios.put(env.api.profiles + `/update-avatar`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true,
+    });
+  }
+
+  getUserProfile({ id, accessToken }: { id: string; accessToken: string }) {
+    return axios.get(env.api.profiles + `/${id}`, {
+      headers: {
+        Authorization: "Bearer " + accessToken,
+      },
+    });
   }
 }
 

@@ -200,7 +200,7 @@ function DropdownMenu() {
             <MenuItem>
               <div
                 onClick={() => {
-                  router.push("/profile");
+                  router.push("/user/profile");
                 }}
                 className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-1.5 hover:bg-[#565656]/30"
               >

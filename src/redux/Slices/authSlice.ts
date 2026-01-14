@@ -1,5 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+// type User = {
+//   id: string;
+//   email: string;
+//   username: string;
+//   fullname: string;
+//   profileImage: string;
+// };
+
 const INITIAL_STATE = {
   accessToken: "",
   //   refreshToken: "",
