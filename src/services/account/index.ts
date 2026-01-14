@@ -1,5 +1,6 @@
 import axios from "axios";
 import env from "@/config/env";
+import { TUpdateDetailsService } from "@/types";
 // import { TChangePasswordService } from './types';
 // import { TUser } from '@/types';
 
@@ -14,6 +15,12 @@ class Service {
 
   getProfile(id: string) {
     return axios.get(env.api.profiles + `/profile/${id}`, {
+      withCredentials: true,
+    });
+  }
+
+  updateDetails(payload: TUpdateDetailsService) {
+    return axios.put(env.api.profiles + `/update-details`, payload, {
       withCredentials: true,
     });
   }

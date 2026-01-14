@@ -115,3 +115,11 @@ export type TNotification = {
   createdAt: string;
   message: string;
 };
+
+export type TUpdateDetailsService = {
+  payload: {
+    fullname?: string;
+    email?: string;
+    username?: string;
+  };
+};
