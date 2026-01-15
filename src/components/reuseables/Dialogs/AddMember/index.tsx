@@ -159,35 +159,37 @@ export default function AddMember() {
     <>
       <button
         onClick={toggleDialog}
-        className="flex h-[36px] w-fit items-center justify-center gap-1 rounded-[6px] bg-[#111] px-3 text-[12px] font-normal text-[#fff] transition-all duration-300 hover:bg-[#242424] dark:bg-[white] dark:text-[#111]"
+        className="poppins flex h-[36px] w-fit items-center justify-center gap-2 rounded-[6px] bg-[#111] px-3 text-[12px] font-normal text-[#fff] transition-all duration-300 hover:bg-[#242424] dark:bg-[white] dark:text-[#111]"
       >
         {/* <FontAwesomeIcon icon={faCirclePlus} /> */}
         <FontAwesomeIcon icon={faUserPlus} />
-        Add Member
+        Invite Member
         {/* <FontAwesomeIcon icon={faChevronDown} /> */}
       </button>
       <Dialog
         open={isOpen}
         onClose={handleDialogClose}
         transition
-        className="fixed inset-0 flex w-screen items-center justify-center bg-black/30 p-4 font-madei transition duration-300 ease-out data-[closed]:opacity-0"
+        className="fixed inset-0 flex w-screen items-center justify-center bg-black/30 p-4 transition duration-300 ease-out data-[closed]:opacity-0"
       >
         <DialogBackdrop className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-          <DialogPanel className="h-fit max-w-[540px] space-y-2 rounded-xl bg-white px-8 py-8">
+          <DialogPanel className="poppins h-fit rounded-xl bg-white px-8 py-8 dark:bg-[#111] md:w-[540px]">
             <DialogTitle className="flex flex-row items-center justify-between font-medium">
-              <p className="text-[18px]">Invite New Member</p>
+              <p className="text-[15px]">Invite Member</p>
               <div
                 onClick={() => setIsOpen(false)}
-                className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-black"
+                className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full"
               >
-                <FontAwesomeIcon icon={faXmark} className="fa-sm text-white" />
+                {/* <FontAwesomeIcon
+                  icon={faXmark}
+                  className="fa-sm text-[#111] dark:text-white"
+                /> */}
               </div>
             </DialogTitle>
             <Description className="pb-6">
-              <p className="w-[80%] text-[14px] font-light leading-4 text-[#777]">
-                New members will gain access to your workspace and can start
-                collaborating immediately.
+              <p className="w-[80%] text-[12px] leading-4 text-[#777]">
+                Invite your team to review and collaborate on this project
               </p>
             </Description>
             <div
@@ -200,7 +202,7 @@ export default function AddMember() {
                   type="email"
                   value={member.email}
                   placeholder="Enter email address"
-                  className="h-[36px] flex-1 rounded-md border-[1px] border-gray-400 px-2 text-[14px] font-light text-[#444] placeholder-[#999] outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                  className="h-[36px] flex-1 rounded-md border-[1px] border-gray-400 px-2 text-[12px] font-light text-[#444] placeholder-[#777] placeholder-[12px] outline-none focus:ring-2 focus:ring-[#565656]/30 focus:ring-offset-1 dark:border-[#565656]/30 dark:bg-[#565656]/10 dark:text-[#fff]/50"
                   onChange={handleEmailChange}
                   required
                 />
@@ -213,25 +215,26 @@ export default function AddMember() {
                   value={member.role}
                   onChange={handleRoleChange}
                   onOpenChange={handleSelectOpenChange}
+                  className="w-[110px] bg-[#565656]/10 dark:border-[#565656]/20"
                 />
               </div>
               <div className="flex gap-3 text-[14px]">
-                <Button
+                {/* <Button
                   text="Cancel"
                   onClick={() => setIsOpen(false)}
                   className="bg-gray-200 text-black hover:bg-gray-300"
-                />
+                /> */}
                 {/* <Button
                   text="Invite"
                   onClick={handleAddMember}
                   className="bg-[#222] px-7 text-white hover:bg-[#111]"
                 /> */}
                 <button
-                  className="w-[100px] rounded bg-[#222] py-2 font-normal text-white transition-all duration-300 hover:bg-[#111]"
+                  className="rounded bg-[#222] px-5 py-2 text-[12px] font-normal text-white transition-all duration-300 hover:bg-[#111] dark:bg-[#fff] dark:text-[#111]"
                   onClick={handleAddMember}
                 >
                   {!addMemberLoading ? (
-                    "Invite"
+                    "Send Invite"
                   ) : (
                     <span className="flex w-full items-center justify-center">
                       <img

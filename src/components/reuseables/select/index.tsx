@@ -65,7 +65,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
           <SelectValue placeholder={placeholder} className="text-white" />
         </SelectTrigger>
         <SelectContent
-          className="bg-white"
+          className="border-[1.7px] border-[#565656]/20 bg-white dark:border-[#111] dark:bg-[#565656]/20"
           // We do need some event prevention to avoid closing parent dialog
           onPointerDownOutside={(e) => {
             if (isSelectOpen) {
@@ -74,12 +74,16 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
           }}
         >
           <SelectGroup>
-            {label && <SelectLabel>{label}</SelectLabel>}
+            {label && (
+              <SelectLabel className="dark:text-[#565656] dark:hover:bg-[#565656]/20">
+                {label}
+              </SelectLabel>
+            )}
             {options.map((option) => (
               <SelectItem
                 key={option.value}
                 value={option.value}
-                className="hover:bg-gray-200"
+                className="hover:bg-[#565656]/20"
               >
                 {option.label}
               </SelectItem>

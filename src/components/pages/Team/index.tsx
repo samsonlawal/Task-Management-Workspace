@@ -184,6 +184,7 @@ function Team() {
               ]}
               placeholder="Role"
               onChange={handleRoleFilterChange}
+              // className="w-[110px] bg-[#565656]/10 dark:border-[#565656]/20"
             />
             <CustomSelect
               options={[
@@ -193,6 +194,7 @@ function Team() {
               ]}
               placeholder="Status"
               onChange={handleStatusFilterChange}
+              // className="w-[110px] bg-[#565656]/10 dark:border-[#565656]/20"
             />
           </div>
         </div>
