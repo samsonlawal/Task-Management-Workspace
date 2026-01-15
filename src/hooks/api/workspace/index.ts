@@ -274,3 +274,123 @@ export const useCreateWorkspace = () => {
 
   return { data, loading, OnCreateWorkspace };
 };
+
+export const useEditMemberRole = () => {
+  const [loading, setLoading] = useState(false);
+
+  const onEditMemberRole = async ({
+    workspaceId,
+    memberId,
+    payload,
+    successCallback,
+    errorCallback,
+  }: {
+    workspaceId: string;
+    memberId: string;
+    payload: { role: string };
+    successCallback?: (data?: any) => void;
+    errorCallback?: (props: { message?: string; description?: string }) => void;
+  }) => {
+    setLoading(true);
+
+    try {
+      const res = await WorkspaceService.editMemberRole({
+        workspaceId,
+        memberId,
+        payload,
+      });
+
+      successCallback?.(res?.data);
+      showSuccessToast({ message: "Member role updated successfully!" });
+    } catch (error: Error | AxiosError | any) {
+      const message =
+        error?.response?.data?.message || "Failed to update member role";
+      const description = error?.response?.data?.description || "";
+
+      showErrorToast({ message, description });
+      errorCallback?.({ message, description });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, onEditMemberRole };
+};
+
+export const useSuspendMember = () => {
+  const [loading, setLoading] = useState(false);
+
+  const onSuspendMember = async ({
+    workspaceId,
+    memberId,
+    successCallback,
+    errorCallback,
+  }: {
+    workspaceId: string;
+    memberId: string;
+    successCallback?: (data?: any) => void;
+    errorCallback?: (props: { message?: string; description?: string }) => void;
+  }) => {
+    setLoading(true);
+
+    try {
+      const res = await WorkspaceService.suspendMember({
+        workspaceId,
+        memberId,
+      });
+
+      successCallback?.(res?.data);
+      showSuccessToast({ message: "Member suspended successfully!" });
+    } catch (error: Error | AxiosError | any) {
+      const message =
+        error?.response?.data?.message || "Failed to suspend member";
+      const description = error?.response?.data?.description || "";
+
+      showErrorToast({ message, description });
+      errorCallback?.({ message, description });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, onSuspendMember };
+};
+
+export const useRemoveMember = () => {
+  const [loading, setLoading] = useState(false);
+
+  const onRemoveMember = async ({
+    workspaceId,
+    memberId,
+    successCallback,
+    errorCallback,
+  }: {
+    workspaceId: string;
+    memberId: string;
+    successCallback?: (data?: any) => void;
+    errorCallback?: (props: { message?: string; description?: string }) => void;
+  }) => {
+    setLoading(true);
+
+    try {
+      const res = await WorkspaceService.removeMember({
+        workspaceId,
+        memberId,
+      });
+
+      successCallback?.(res?.data);
+      showSuccessToast({ message: "Member removed successfully!" });
+    } catch (error: Error | AxiosError | any) {
+      const message =
+        error?.response?.data?.message || "Failed to remove member";
+      const description = error?.response?.data?.description || "";
+
+      showErrorToast({ message, description });
+      errorCallback?.({ message, description });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, onRemoveMember };
+};

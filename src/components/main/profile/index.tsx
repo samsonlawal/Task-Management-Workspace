@@ -1,18 +1,19 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useGetUserProfile, useUpdateDetails } from "@/hooks/api/account";
+import { useUpdateDetails } from "@/hooks/api/account";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { TUser } from "@/types";
 import stringToColor from "@/utils/stringToColor";
 import UploadImage from "@/components/reuseables/Dialogs/UploadImage";
+import { useGetUserProfile } from "@/hooks/api/account";
+import data from "@/components/data";
 
 type UserUpdate = {
-  email: string;
   username: string;
+  email: string;
   fullname: string;
-  // profileImage: string;
 };
 
 function Profile() {
@@ -20,8 +21,8 @@ function Profile() {
 
   const [image, setImage] = useState<string | null>(null);
   const [form, setForm] = useState<UserUpdate>({
-    email: "",
     username: "",
+    email: "",
     fullname: "",
     // profileImage: "",
   });
@@ -44,14 +45,13 @@ function Profile() {
   }, [user]);
 
   useEffect(() => {
-    if (data) {
-      setForm({
-        email: data.email,
-        username: data.username,
-        fullname: data.fullname,
-      });
-      setImage(data.profileImage);
-    }
+    setForm({
+      username: data?.username,
+      email: data?.email,
+      fullname: data?.fullname,
+    });
+    setImage(data?.profileImage);
+
     console.log(data);
   }, [data]);
 
@@ -59,17 +59,19 @@ function Profile() {
     router.push("/workspaces");
   }
 
+  const handleSave = () => {
+    onUpdateDetails({ payload: form });
+  };
+
   const isDirty =
     data &&
     (form.fullname !== data.fullname ||
-      form.email !== data.email ||
-      form.username !== data.username);
+      form.username !== data.username ||
+      form.email !== data.email);
 
   if (useGetProfileLoading) {
     return <div>Loading...</div>;
   }
-
-  // {ws.name.charAt(0).toUpperCase()}
 
   return (
     <>
@@ -114,7 +116,7 @@ function Profile() {
                           backgroundColor: stringToColor(form.fullname),
                         }}
                       >
-                        {form.fullname.charAt(0).toUpperCase()}
+                        {form.fullname?.charAt(0).toUpperCase() || "U"}
                       </span>
                     )}
                     <div className="flex flex-col gap-2">
@@ -132,18 +134,25 @@ function Profile() {
                   <div className="flex w-full flex-col gap-6">
                     <div className="flex flex-col gap-1">
                       <h1 className="text-[13px]">Username</h1>
-                      <input
-                        type="text"
-                        placeholder="Username"
-                        value={form.username}
-                        onChange={(e) =>
-                          setForm((prev) => ({
-                            ...prev,
-                            username: e.target.value,
-                          }))
-                        }
-                        className="h-[40px] rounded-[6px] border-[1px] border-[#565656]/70 bg-transparent px-[12px] text-[12px] placeholder:text-[#565656] focus:border-[#fff]/100 focus:outline-none dark:text-[#fff]/80"
-                      />
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="Username"
+                          value={form.username}
+                          onChange={(e) =>
+                            setForm((prev) => ({
+                              ...prev,
+                              username: e.target.value,
+                            }))
+                          }
+                          className={`h-[40px] w-full rounded-[6px] border-[1px] border-[#565656]/70 bg-transparent px-[12px] text-[12px] placeholder:text-[#565656] focus:border-[#fff]/100 focus:outline-none dark:text-[#fff]/80`}
+                        />
+                      </div>
+                      {/* {errors.username && (
+                        <p className="text-[11px] text-red-500">
+                          {errors.username}
+                        </p>
+                      )} */}
                     </div>
 
                     <div className="flex flex-col gap-1">
@@ -164,18 +173,20 @@ function Profile() {
 
                     <div className="flex flex-col gap-1">
                       <h1 className="text-[13px]">Email</h1>
-                      <input
-                        type="text"
-                        placeholder="Email"
-                        value={form.email}
-                        onChange={(e) =>
-                          setForm((prev) => ({
-                            ...prev,
-                            email: e.target.value,
-                          }))
-                        }
-                        className="h-[40px] rounded-[6px] border-[1px] border-[#565656]/70 bg-transparent px-[12px] text-[12px] placeholder:text-[#565656] focus:border-[#fff]/100 focus:outline-none dark:text-[#fff]/80"
-                      />
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="Email"
+                          value={form.email}
+                          onChange={(e) =>
+                            setForm((prev) => ({
+                              ...prev,
+                              email: e.target.value,
+                            }))
+                          }
+                          className={`h-[40px] w-full rounded-[6px] border-[1px] border-[#565656]/70 bg-transparent px-[12px] text-[12px] placeholder:text-[#565656] focus:border-[#fff]/100 focus:outline-none dark:text-[#fff]/80`}
+                        />
+                      </div>
                     </div>
 
                     <div className="flex flex-col gap-1">
@@ -192,9 +203,15 @@ function Profile() {
 
             <div className="mt-4 flex w-full items-center justify-end rounded-b-[14px] p-6 dark:bg-[#1a1a1a]">
               <button
-                className={`rounded-md border-[1px] border-[#565656]/60 px-[12px] py-1 text-[11px] font-medium transition-colors duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 hover:text-white/50 ${isDirty ? "bg-[white] text-[#111]" : "bg-[#565656]/10 text-[#fff]"}`}
+                onClick={handleSave}
+                disabled={!isDirty || updateLoading}
+                className={`rounded-md border-[1px] border-[#565656]/60 px-[12px] py-1 text-[11px] font-medium transition-colors duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 hover:text-white/50 ${
+                  isDirty
+                    ? "bg-[white] text-[#111]"
+                    : "cursor-not-allowed bg-[#565656]/10 text-[#fff] opacity-50"
+                }`}
               >
-                Save Changes
+                {updateLoading ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </div>

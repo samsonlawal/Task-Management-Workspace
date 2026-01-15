@@ -68,7 +68,7 @@ export const useLogin = () => {
         message: "Login success 🚀",
         description: login_res?.data?.description || "",
       });
-      router.push("user/profile");
+      router.push("/user/profile");
       setLoading(false);
     } catch (error: Error | AxiosError | any) {
       console.log("error", error?.response?.data);

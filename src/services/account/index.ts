@@ -19,7 +19,7 @@ class Service {
     });
   }
 
-  updateDetails(payload: TUpdateDetailsService) {
+  updateDetails({ payload }: TUpdateDetailsService) {
     return axios.put(env.api.profiles + `/update-details`, payload, {
       withCredentials: true,
     });
@@ -37,6 +37,14 @@ class Service {
         Authorization: "Bearer " + accessToken,
       },
     });
+  }
+
+  checkUsername(username: string) {
+    return axios.post(env.api.profiles + `/check-username`, { username });
+  }
+
+  checkEmail(email: string) {
+    return axios.post(env.api.profiles + `/check-email`, { email });
   }
 }
 

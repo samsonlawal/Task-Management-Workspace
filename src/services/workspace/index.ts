@@ -65,6 +65,45 @@ class service {
     );
   }
 
+  editMemberRole({
+    workspaceId,
+    memberId,
+    payload,
+  }: {
+    workspaceId: string;
+    memberId: string;
+    payload: { role: string };
+  }) {
+    return axios.patch(
+      env.api.workspaces + "/" + workspaceId + "/members/edit-role/" + memberId,
+      payload,
+    );
+  }
+
+  suspendMember({
+    workspaceId,
+    memberId,
+  }: {
+    workspaceId: string;
+    memberId: string;
+  }) {
+    return axios.patch(
+      env.api.workspaces + "/" + workspaceId + "/members/suspend/" + memberId,
+    );
+  }
+
+  removeMember({
+    workspaceId,
+    memberId,
+  }: {
+    workspaceId: string;
+    memberId: string;
+  }) {
+    return axios.delete(
+      env.api.workspaces + "/" + workspaceId + "/members/remove/" + memberId,
+    );
+  }
+
   createWorkspace(userId: string, { payload }: { payload: TAddWorkspace }) {
     return axios.post(env.api.workspaces + "/" + userId, payload);
   }

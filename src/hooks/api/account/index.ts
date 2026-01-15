@@ -78,3 +78,27 @@ export const useUpdateDetails = () => {
 
   return { onUpdateDetails, loading };
 };
+
+export const useCheckAvailability = () => {
+  const [loading, setLoading] = useState(false);
+
+  const onCheckUsername = async (username: string) => {
+    try {
+      const res = await accountService.checkUsername(username);
+      return res.data;
+    } catch (error) {
+      return { available: false };
+    }
+  };
+
+  const onCheckEmail = async (email: string) => {
+    try {
+      const res = await accountService.checkEmail(email);
+      return res.data;
+    } catch (error) {
+      return { available: false };
+    }
+  };
+
+  return { onCheckUsername, onCheckEmail, loading };
+};

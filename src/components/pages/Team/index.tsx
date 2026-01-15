@@ -15,6 +15,13 @@ import Loader from "@/utils/loader";
 import stringToColor from "@/utils/stringToColor";
 import AddTask from "@/components/reuseables/Dialogs/EditTask";
 import Notification from "@/components/reuseables/Notification";
+import TeamMenu from "./TeamMenu";
+import {
+  useEditMemberRole,
+  useSuspendMember,
+  useRemoveMember,
+  useGetMembers,
+} from "@/hooks/api/workspace";
 
 function Team() {
   const members = useSelector(
@@ -32,6 +39,56 @@ function Team() {
   useEffect(() => {
     console.log("Members:", members);
   }, [members]);
+
+  const { currentWorkspace } = useSelector(
+    (state: any) => state.currentWorkspace,
+  );
+
+  const { onGetMembers } = useGetMembers();
+  const { onEditMemberRole } = useEditMemberRole();
+  const { onSuspendMember } = useSuspendMember();
+  const { onRemoveMember } = useRemoveMember();
+
+  const handleEditRole = (userId: string, currentRole: string) => {
+    const newRole = window.prompt(
+      "Enter new role (Admin/Member):",
+      currentRole,
+    );
+    if (newRole && newRole !== currentRole) {
+      onEditMemberRole({
+        workspaceId: currentWorkspace,
+        memberId: userId,
+        payload: { role: newRole },
+        successCallback: () => {
+          onGetMembers({ workspaceId: currentWorkspace });
+        },
+      });
+    }
+  };
+
+  const handleSuspend = (userId: string) => {
+    if (window.confirm("Are you sure you want to suspend this member?")) {
+      onSuspendMember({
+        workspaceId: currentWorkspace,
+        memberId: userId,
+        successCallback: () => {
+          onGetMembers({ workspaceId: currentWorkspace });
+        },
+      });
+    }
+  };
+
+  const handleRemove = (userId: string) => {
+    if (window.confirm("Are you sure you want to remove this member?")) {
+      onRemoveMember({
+        workspaceId: currentWorkspace,
+        memberId: userId,
+        successCallback: () => {
+          onGetMembers({ workspaceId: currentWorkspace });
+        },
+      });
+    }
+  };
 
   const handleStatusFilterChange = (value: string) => {
     setStatusFilter(value);
@@ -296,9 +353,14 @@ function Team() {
                       </div>
                     </div>
                     <div className="flex items-center justify-center">
-                      <FontAwesomeIcon
+                      {/* <FontAwesomeIcon
                         icon={faEllipsisVertical}
                         className="rounded-md px-3 py-2 hover:bg-gray-200 dark:hover:bg-[#565656]/20"
+                      /> */}
+                      <TeamMenu
+                        onEdit={() => handleEditRole(user._id, role)}
+                        onSuspend={() => handleSuspend(user._id)}
+                        onDelete={() => handleRemove(user._id)}
                       />
                     </div>
                   </div>
