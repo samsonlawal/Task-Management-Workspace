@@ -15,6 +15,8 @@ import {
   faListCheck,
   faPlus,
   faXmark,
+  faArrowLeft,
+  faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MemberSelect from "../../MemberSelect";
@@ -39,6 +41,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
 
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const [workspaceId, setWorkspaceId] = useState<string>("");
+  const [step, setStep] = useState<number>(1);
 
   const TasksData = useSelector((state: RootState) => state.TasksData);
 
@@ -52,6 +55,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     status: "",
     priority: "",
     createdBy: "",
+    title: "",
   });
 
   // const [userId, setCreatedBy] = useState<string>("");
@@ -99,6 +103,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
   const handleDialogClose = () => {
     if (!isSelectOpen) {
       setIsOpen(false);
+      setStep(1);
     }
   };
 
@@ -118,6 +123,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
       status,
       priority,
       createdBy,
+      title,
     } = task;
     let errorMsg = "";
 
@@ -129,6 +135,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
       status,
       priority,
       createdBy,
+      title,
     });
 
     if (!task.description) {
@@ -151,6 +158,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
           status,
           priority,
           createdBy,
+          title,
         },
         successCallback: async () => {
           showSuccessToast({ message: "Task Created Successfully!" });
@@ -171,6 +179,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
             status: "",
             priority: "",
             createdBy: "",
+            title: "",
           });
           handleDialogClose();
         },
@@ -228,260 +237,288 @@ export default function AddTask({ onGetTasks, taskData }: any) {
 
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
           <DialogPanel
-            className="h-fit w-[600px] space-y-1 rounded-xl bg-white px-8 py-8"
+            className="flex h-fit w-[600px] flex-col gap-6 rounded-xl bg-white px-8 py-8 dark:bg-[#111]"
             onClick={(e) => e.stopPropagation()}
           >
-            <DialogTitle className="flex flex-row items-center justify-between font-medium">
-              <p className="poppins-bold text-[18px]">Create Task</p>
+            <DialogTitle className="flex flex-row items-start justify-between font-medium">
+              <div className="flex flex-col items-start gap-3">
+                {step === 2 && (
+                  <Button
+                    text="Back"
+                    onClick={() => setStep(step - 1)}
+                    className="flex w-fit flex-row items-center justify-center gap-2 rounded bg-[#222] text-[13px] font-normal text-white transition-all duration-300 hover:bg-[#111] dark:bg-transparent dark:text-[#fff]/50 dark:hover:text-[#fff]"
+                    leftIcon
+                    leftIconSrc={<FontAwesomeIcon icon={faArrowLeft} />}
+                  />
+                )}
+                <div>
+                  <p className="poppins-medium text-[16px] dark:text-white">
+                    {step === 1 ? "Create Task" : ""}
+                  </p>
+                  <p className="w-[100%] text-[13px] font-regular leading-4 text-black dark:text-[#fff]/50">
+                    {step === 1
+                      ? "Add a new task to your workspace and start organizing your work."
+                      : ""}
+                  </p>
+                </div>
+              </div>
               <div
                 onClick={() => setIsOpen(false)}
-                className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-black"
+                className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full"
               >
-                <FontAwesomeIcon icon={faXmark} className="fa-sm text-white" />
+                <FontAwesomeIcon
+                  icon={faXmark}
+                  className="text-[18px] text-black dark:text-[#565656]"
+                />
               </div>
             </DialogTitle>
-            <Description className="pb-6">
-              <p className="w-[95%] text-[13px] font-light leading-4 text-black">
-                Add a new task to your workspace and start organizing your work.
+            {/* <Description className="pb-6">
+              <p className="w-[95%] text-[13px] leading-4 text-black dark:text-[#fff]/50">
+                {step === 1
+                  ? "Add a new task to your workspace and start organizing your work."
+                  : "Set priority, status, deadline, and assignee for your task."}
               </p>
-            </Description>
+            </Description> */}
             <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-4">
-                {/* description */}
-                <div className="flex flex-col gap-1">
-                  <label
-                    htmlFor="spaceName"
-                    className="text-[14px] font-semibold"
-                  >
-                    Description
-                    {/* <span className="font-light text-[#999]">(optional)</span> */}
-                  </label>
-                  <textarea
-                    name="description"
-                    placeholder="Enter description"
-                    value={task.description}
-                    onChange={(e) =>
-                      setTask((prev) => ({
-                        ...prev,
-                        description: e.target.value,
-                      }))
-                    }
-                    className="h-[80px] max-h-[100px] w-full rounded-md border-[1px] border-gray-300 px-2 py-2 text-xs text-[black] placeholder-gray-600 outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
-                  />
-                </div>
-
-                <div className="flex flex-row gap-2">
-                  {/* Priority */}
-                  <div className="flex w-52 flex-col items-start gap-2">
-                    <span className="poppins-semibold text-[14px]">
-                      Priority:
-                    </span>
-
-                    <div className="poppins-regular flex flex-row gap-2">
+              {step === 1 && (
+                <div className="flex flex-col gap-4">
+                  {/* title amd description */}
+                  <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-1">
                       <label
-                        className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1.5 ${task.priority === "Low" ? "bg-gray-200" : "bg-none"}`}
+                        htmlFor="spaceName"
+                        className="text-[14px] font-medium dark:text-[#565656]"
                       >
-                        <input
-                          type="checkbox"
-                          name="priority"
-                          value={task.priority}
-                          checked={task.priority === "Low"}
-                          onChange={() =>
-                            setTask((prev) => ({ ...prev, priority: "Low" }))
-                          }
-                          className={`peer hidden checked:accent-black`}
-                        />
-                        <span className="text-xs text-gray-700">Low</span>
+                        Title
+                        {/* <span className="font-light text-[#999]">(optional)</span> */}
                       </label>
-
-                      <label
-                        className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1 ${task.priority === "Medium" ? "bg-gray-200" : "bg-none"}`}
-                      >
-                        {" "}
-                        <input
-                          type="checkbox"
-                          name="priority"
-                          value={task.priority}
-                          checked={task.priority === "Medium"}
-                          onChange={() =>
-                            setTask((prev) => ({ ...prev, priority: "Medium" }))
-                          }
-                          className={`peer hidden checked:accent-black`}
-                        />
-                        <span className="text-xs text-gray-700">Medium</span>
-                      </label>
-
-                      <label
-                        className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1 ${task.priority === "High" ? "bg-gray-200" : "bg-none"}`}
-                      >
-                        {" "}
-                        <input
-                          type="checkbox"
-                          name="priority"
-                          value={task.priority}
-                          checked={task.priority === "High"}
-                          onChange={() =>
-                            setTask((prev) => ({ ...prev, priority: "High" }))
-                          }
-                          className={`peer hidden checked:accent-black`}
-                        />
-                        <span className="text-xs text-gray-700">High</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Status */}
-                  <div className="flex flex-col items-start gap-2">
-                    <span className="poppins-semibold text-[14px]">
-                      Status:
-                    </span>
-
-                    <div className="poppins-regular flex flex-row gap-2">
-                      <label
-                        className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1.5 ${task.status === "to-do" ? "bg-gray-200" : "bg-none"}`}
-                      >
-                        <input
-                          type="checkbox"
-                          name="status"
-                          value={task.status}
-                          checked={task.status === "to-do"}
-                          onChange={() =>
-                            setTask((prev) => ({ ...prev, status: "to-do" }))
-                          }
-                          className={`peer hidden checked:accent-black`}
-                        />
-                        <span className="text-xs text-gray-700">To-Do</span>
-                      </label>
-
-                      <label
-                        className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1 ${task.status === "in-progress" ? "bg-gray-200" : "bg-none"}`}
-                      >
-                        {" "}
-                        <input
-                          type="checkbox"
-                          name="status"
-                          value={task.status}
-                          checked={task.status === "in-progress"}
-                          onChange={() =>
-                            setTask((prev) => ({
-                              ...prev,
-                              status: "in-progress",
-                            }))
-                          }
-                          className={`peer hidden checked:accent-black`}
-                        />
-                        <span className="text-xs text-gray-700">
-                          In-Progress
-                        </span>
-                      </label>
-
-                      {/* <label
-                        className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1 ${task.priority === "High" ? "bg-gray-200" : "bg-none"}`}
-                      >
-                        {" "}
-                        <input
-                          type="checkbox"
-                          name="priority"
-                          value={task.priority}
-                          checked={task.priority === "High"}
-                          onChange={() =>
-                            setTask((prev) => ({ ...prev, priority: "High" }))
-                          }
-                          className={`peer hidden checked:accent-black`}
-                        />
-                        <span className="text-xs text-gray-700">High</span>
-                      </label> */}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Others */}
-                <div className="flex flex-row-reverse gap-2">
-                  <div className="flex flex-1 flex-col gap-1">
-                    <label
-                      htmlFor="deadline"
-                      className="poppins-semibold text-[14px]"
-                    >
-                      Deadline
-                    </label>
-                    <input
-                      name="deadline"
-                      type="date"
-                      placeholder="Add deadline"
-                      value={task.deadline}
-                      className="h-[40px] w-full select-none rounded-md border-[1px] border-gray-300 px-2 text-xs font-light text-gray-700 placeholder-gray-700 outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
-                      onChange={(e) =>
-                        setTask((prev) => ({
-                          ...prev,
-                          deadline: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
-
-                  <div className="flex w-fit flex-col gap-1">
-                    <label
-                      htmlFor="spaceName"
-                      className="text-[14px] font-semibold"
-                    >
-                      Assignee:
-                    </label>
-                    {/* <CustomSelect
-                      options={[
-                        { label: "Member", value: "member" },
-                        { label: "Admin", value: "admin" },
-                      ]}
-                      placeholder="Assignee"
-                      onChange={(value: any) => console.log("Selected:", value)}
-                      className="w-[200px] bg-none"
-                      onOpenChange={setIsSelectOpen}
-                    /> */}
-                    <MemberSelect setTaskAssignee={setTaskAssignee} />
-                  </div>
-                </div>
-
-                {/* <div className="flex flex-row items-center gap-2">
-                  <span className="text-[14px]">High priority:</span>
-                  <label className="relative inline-flex cursor-pointer items-center">
-                    <input
-                      type="checkbox"
-                      checked={isToggled}
-                      onChange={() => setIsToggled(!isToggled)}
-                      className="peer sr-only"
-                    />
-                    <div className="peer h-4 w-8 rounded-full bg-gray-300 after:absolute after:left-1 after:top-0.5 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-all peer-checked:bg-blue-500 peer-checked:after:translate-x-3" />
-                  </label>
-                </div> */}
-              </div>
-
-              <div className="flex gap-3 pt-4 text-[14px]">
-                <Button
-                  text="Cancel"
-                  onClick={() => setIsOpen(false)}
-                  className="bg-gray-200 text-[13px] text-black hover:bg-gray-300"
-                />
-                {/* <Button
-                  text="Create"
-                  onClick={handleCreateTask}
-                  className="bg-[#222] px-7 text-white hover:bg-[#111]"
-                /> */}
-
-                <button
-                  className="w-[100px] rounded bg-[#222] py-2 text-[13px] font-normal text-white transition-all duration-300 hover:bg-[#111]"
-                  onClick={handleCreateTask}
-                >
-                  {!creatTaskLoading ? (
-                    "Create"
-                  ) : (
-                    <span className="flex w-full items-center justify-center">
-                      <img
-                        src="/icons/loaderWhite.svg"
-                        alt=""
-                        className="w-4 animate-spin"
+                      <input
+                        name="title"
+                        placeholder="Enter title"
+                        value={task.title}
+                        onChange={(e) =>
+                          setTask((prev) => ({
+                            ...prev,
+                            title: e.target.value,
+                          }))
+                        }
+                        className="h-[42px] max-h-[100px] w-full rounded-md border-[1px] border-gray-300 px-2 py-2 text-xs font-regular text-[black] placeholder-gray-600 outline-none focus:ring-1 focus:ring-white/50 dark:border-[#565656]/30 dark:bg-transparent dark:text-[#fff] dark:placeholder-[#fff]/50"
                       />
-                    </span>
-                  )}
-                </button>
+                    </div>
+
+                    {/* description */}
+                    <div className="flex flex-col gap-1">
+                      <label
+                        htmlFor="spaceName"
+                        className="text-[14px] font-medium dark:text-[#565656]"
+                      >
+                        Description
+                        {/* <span className="font-light text-[#999]">(optional)</span> */}
+                      </label>
+                      <textarea
+                        name="description"
+                        placeholder="Enter description"
+                        value={task.description}
+                        onChange={(e) =>
+                          setTask((prev) => ({
+                            ...prev,
+                            description: e.target.value,
+                          }))
+                        }
+                        className="h-[80px] max-h-[100px] w-full rounded-md border-[1px] border-gray-300 px-2 py-2 text-xs font-regular text-[black] placeholder-gray-600 outline-none focus:ring-1 focus:ring-white/50 dark:border-[#565656]/30 dark:bg-transparent dark:text-[#fff] dark:placeholder-[#fff]/50"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {step === 2 && (
+                <div className="flex flex-col gap-8">
+                  {/* assingments */}
+                  <div className="flex flex-row gap-2">
+                    {/* Priority */}
+                    <div className="flex w-52 flex-col items-start gap-2">
+                      <span className="poppins-medium text-[14px] dark:text-[#565656]">
+                        Priority:
+                      </span>
+
+                      <div className="poppins-regular flex flex-row gap-2">
+                        <label
+                          className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1.5 font-regular ${task.priority === "Low" ? "bg-gray-200 dark:bg-[#565656]/20" : "bg-none"} dark:border-[#565656]/30`}
+                        >
+                          <input
+                            type="checkbox"
+                            name="priority"
+                            value={task.priority}
+                            checked={task.priority === "Low"}
+                            onChange={() =>
+                              setTask((prev) => ({ ...prev, priority: "Low" }))
+                            }
+                            className={`peer hidden checked:accent-black`}
+                          />
+                          <span className="text-xs text-gray-700 dark:text-[#fff]/50">
+                            Low
+                          </span>
+                        </label>
+
+                        <label
+                          className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1.5 font-regular ${task.priority === "Medium" ? "bg-gray-200 dark:bg-[#565656]/20" : "bg-none"} dark:border-[#565656]/30`}
+                        >
+                          {" "}
+                          <input
+                            type="checkbox"
+                            name="priority"
+                            value={task.priority}
+                            checked={task.priority === "Medium"}
+                            onChange={() =>
+                              setTask((prev) => ({
+                                ...prev,
+                                priority: "Medium",
+                              }))
+                            }
+                            className={`peer hidden checked:accent-black`}
+                          />
+                          <span className="text-xs font-regular text-gray-700 dark:text-[#fff]/50">
+                            Medium
+                          </span>
+                        </label>
+
+                        <label
+                          className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1.5 font-regular ${task.priority === "High" ? "bg-gray-200 dark:bg-[#565656]/20" : "bg-none"} dark:border-[#565656]/30`}
+                        >
+                          {" "}
+                          <input
+                            type="checkbox"
+                            name="priority"
+                            value={task.priority}
+                            checked={task.priority === "High"}
+                            onChange={() =>
+                              setTask((prev) => ({ ...prev, priority: "High" }))
+                            }
+                            className={`peer hidden checked:accent-black`}
+                          />
+                          <span className="text-xs font-regular text-gray-700 dark:text-[#fff]/50">
+                            High
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Status */}
+                    <div className="flex flex-col items-start gap-2">
+                      <span className="poppins-medium text-[14px] dark:text-[#565656]">
+                        Status:
+                      </span>
+
+                      <div className="poppins-regular flex flex-row gap-2">
+                        <label
+                          className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1.5 ${task.status === "to-do" ? "bg-gray-200 dark:bg-[#565656]/20" : "bg-none"} dark:border-[#565656]/30`}
+                        >
+                          <input
+                            type="checkbox"
+                            name="status"
+                            value={task.status}
+                            checked={task.status === "to-do"}
+                            onChange={() =>
+                              setTask((prev) => ({ ...prev, status: "to-do" }))
+                            }
+                            className={`peer hidden checked:accent-black`}
+                          />
+                          <span className="text-xs font-regular text-gray-700 dark:text-[#fff]/50">
+                            To-Do
+                          </span>
+                        </label>
+
+                        <label
+                          className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1 ${task.status === "in-progress" ? "bg-gray-200 dark:bg-[#565656]/20" : "bg-none"} dark:border-[#565656]/30`}
+                        >
+                          {" "}
+                          <input
+                            type="checkbox"
+                            name="status"
+                            value={task.status}
+                            checked={task.status === "in-progress"}
+                            onChange={() =>
+                              setTask((prev) => ({
+                                ...prev,
+                                status: "in-progress",
+                              }))
+                            }
+                            className={`peer hidden checked:accent-black`}
+                          />
+                          <span className="text-xs font-regular text-gray-700 dark:text-[#fff]/50">
+                            In-Progress
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Others */}
+                  <div className="flex flex-row-reverse gap-2">
+                    <div className="flex flex-1 flex-col gap-1">
+                      <label
+                        htmlFor="deadline"
+                        className="text-[14px] dark:text-[#565656]"
+                      >
+                        Deadline
+                      </label>
+                      <input
+                        name="deadline"
+                        type="date"
+                        placeholder="Add deadline"
+                        value={task.deadline}
+                        className="h-[40px] w-full select-none rounded-md border-[1px] border-gray-300 bg-transparent px-2 text-xs font-light text-gray-700 placeholder-gray-700 outline-none focus:ring-1 focus:ring-[#fff]/50 dark:border-[#565656]/30 dark:bg-transparent dark:text-[#fff]/50 dark:placeholder-[#fff]/50"
+                        onChange={(e) =>
+                          setTask((prev) => ({
+                            ...prev,
+                            deadline: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+
+                    <div className="flex w-fit flex-col gap-1">
+                      <label
+                        htmlFor="spaceName"
+                        className="text-[14px] dark:text-[#565656]"
+                      >
+                        Assignee:
+                      </label>
+
+                      <MemberSelect setTaskAssignee={setTaskAssignee} />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-end gap-3 pt-4 text-[14px]">
+                {step === 1 ? (
+                  <Button
+                    text="Next"
+                    onClick={() => setStep(2)}
+                    className="flex w-fit flex-row items-center justify-center gap-2 rounded bg-[#222] px-5 py-1 text-[13px] font-normal text-white transition-all duration-300 hover:bg-[#111] dark:bg-transparent dark:text-[#fff]/50 dark:hover:text-[#fff]"
+                    rightIcon
+                    rightIconSrc={<FontAwesomeIcon icon={faArrowRight} />}
+                  />
+                ) : (
+                  <button
+                    className="w-fit rounded bg-[#222] px-4 py-2 text-[13px] font-normal text-white transition-all duration-300 hover:bg-[#111] dark:bg-white dark:text-black dark:hover:bg-gray-200"
+                    onClick={handleCreateTask}
+                  >
+                    {!creatTaskLoading ? (
+                      "Create"
+                    ) : (
+                      <span className="flex w-full items-center justify-center">
+                        <img
+                          src="/icons/loaderWhite.svg"
+                          alt=""
+                          className="w-4 animate-spin"
+                        />
+                      </span>
+                    )}
+                  </button>
+                )}
               </div>
             </div>
           </DialogPanel>

@@ -72,7 +72,7 @@ export default function MemberSelect({ setTaskAssignee, value }: any) {
       }}
     >
       <div className="relative w-52">
-        <ListboxButton className="flex h-[40px] w-full items-center gap-3 rounded-md border border-gray-300 px-3 py-2 text-left shadow-none">
+        <ListboxButton className="flex h-[40px] w-full items-center gap-3 rounded-md border border-gray-300 px-3 py-2 text-left shadow-none dark:border-[#565656]/30">
           {selectedMember ? (
             <>
               <img
@@ -88,7 +88,7 @@ export default function MemberSelect({ setTaskAssignee, value }: any) {
                 {/* <span className="text-sm font-medium">
                   {selectedMember.name}
                 </span> */}
-                <span className="w-[95%] overflow-hidden text-ellipsis text-xs text-black">
+                <span className="w-[95%] overflow-hidden text-ellipsis text-xs text-black dark:text-[#fff]/50">
                   {selectedMember.userId
                     ? selectedMember.userId.email
                     : selectedMember.email}
@@ -96,19 +96,19 @@ export default function MemberSelect({ setTaskAssignee, value }: any) {
               </div>
             </>
           ) : (
-            <span className="flex h-[40px] w-full flex-row items-center justify-between border-gray-300 text-xs text-gray-700">
+            <span className="flex h-[40px] w-full flex-row items-center justify-between border-gray-300 text-xs text-gray-700 dark:border-[#565656] dark:text-[#565656]">
               <p>Assign member</p>
               <FontAwesomeIcon icon={faChevronDown} />
             </span>
           )}
         </ListboxButton>
 
-        <ListboxOptions className="absolute z-10 mt-1 w-full rounded-md border border-gray-300 bg-white p-1">
+        <ListboxOptions className="absolute z-10 mt-1 w-full rounded-md border border-gray-300 bg-white p-1 dark:border-[#565656]/20 dark:bg-[#111]">
           {members?.map((member, index) => (
             <ListboxOption
               key={index}
               value={member}
-              className="flex cursor-pointer items-center gap-3 text-ellipsis rounded-md px-3 py-2 hover:bg-red-200/70"
+              className="flex cursor-pointer items-center gap-3 text-ellipsis rounded-md px-3 py-2 hover:bg-[#565656]/20 dark:hover:bg-[#565656]/20"
             >
               <img
                 src={
@@ -119,9 +119,9 @@ export default function MemberSelect({ setTaskAssignee, value }: any) {
                 alt=""
                 className="h-6 w-6 rounded-full object-cover"
               />
-              <div className="flex- flex flex-1">
+              <div className="flex- flex flex-1 overflow-hidden">
                 {/* <span className="text-sm font-medium">{member.name}</span> */}
-                <span className="w-[95%] overflow-hidden text-ellipsis text-xs text-[black]">
+                <span className="w-[95%] overflow-hidden text-ellipsis whitespace-nowrap text-xs text-[black] dark:text-[#fff]/50">
                   {member.userId ? member.userId.email : member.email}
                 </span>
               </div>

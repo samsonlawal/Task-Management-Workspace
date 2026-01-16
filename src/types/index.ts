@@ -33,6 +33,7 @@ export type TSingleTask = {
 };
 
 export type TAddTask = {
+  title: string;
   description: string;
   status: string;
   priority: string;

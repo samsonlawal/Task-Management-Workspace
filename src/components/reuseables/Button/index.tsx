@@ -6,6 +6,10 @@ interface ButtonProps {
   color?: string;
   className?: string;
   onClick?: () => void;
+  leftIcon?: boolean;
+  leftIconSrc?: string | React.ReactNode;
+  rightIcon?: boolean;
+  rightIconSrc?: string | React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -13,17 +17,31 @@ const Button: React.FC<ButtonProps> = ({
   color = "blue",
   className,
   onClick,
+  leftIcon,
+  leftIconSrc,
+  rightIcon,
+  rightIconSrc,
 }) => {
   return (
     <button
       className={cn(
-        "rounded px-4 py-2 font-normal text-white transition-all duration-300",
+        "font-normal text-white transition-all duration-300",
         `bg-${color}-500 hover:bg-${color}-600`,
         className,
       )}
       onClick={onClick}
     >
+      {leftIcon && typeof leftIconSrc === "string" ? (
+        <img src={leftIconSrc} alt="" className="w-4" />
+      ) : (
+        leftIconSrc
+      )}
       {text}
+      {rightIcon && typeof rightIconSrc === "string" ? (
+        <img src={rightIconSrc} alt="" className="w-4" />
+      ) : (
+        rightIconSrc
+      )}
     </button>
   );
 };

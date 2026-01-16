@@ -12,6 +12,7 @@ import { CustomSelect } from "../../reuseables/select";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import Loader from "@/utils/loader";
+import Notification from "@/components/reuseables/Notification";
 
 function Dashboard() {
   const members = useSelector(
@@ -95,7 +96,24 @@ function Dashboard() {
 
   return (
     <div className="flex h-fit w-full flex-col gap-2 px-8 transition-all duration-300">
-      <h1>Dashboard</h1>
+      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111]">
+        <div className="poppins flex w-full items-center justify-between border-[#565656]/10 py-[7px]">
+          <h2 className="text-xl text-[#111] dark:text-white">Dashboard</h2>
+          <div className="flex flex-row items-center justify-center gap-3">
+            <Notification />
+            <CustomSelect
+              options={[
+                { label: "Samson's", value: "Samson's" },
+                { label: "Space's", value: "Space's" },
+                { label: "Global", value: "Global" },
+              ]}
+              placeholder="Samson's"
+              // onChange={handleRoleFilterChange}
+              // className="w-[110px] bg-[#565656]/10 dark:border-[#565656]/20"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
