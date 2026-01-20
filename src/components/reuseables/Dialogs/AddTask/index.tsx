@@ -55,7 +55,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     status: "",
     priority: "",
     createdBy: "",
-    title: "",
+    // title: "",
   });
 
   // const [userId, setCreatedBy] = useState<string>("");
@@ -123,7 +123,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
       status,
       priority,
       createdBy,
-      title,
+      // title,
     } = task;
     let errorMsg = "";
 
@@ -135,7 +135,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
       status,
       priority,
       createdBy,
-      title,
+      // title,
     });
 
     if (!task.description) {
@@ -158,7 +158,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
           status,
           priority,
           createdBy,
-          title,
+          // title,
         },
         successCallback: async () => {
           showSuccessToast({ message: "Task Created Successfully!" });
@@ -179,7 +179,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
             status: "",
             priority: "",
             createdBy: "",
-            title: "",
+            // title: "",
           });
           handleDialogClose();
         },
@@ -284,13 +284,12 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                 <div className="flex flex-col gap-4">
                   {/* title amd description */}
                   <div className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-1">
+                    {/* <div className="flex flex-col gap-1">
                       <label
                         htmlFor="spaceName"
                         className="text-[14px] font-medium dark:text-[#565656]"
                       >
                         Title
-                        {/* <span className="font-light text-[#999]">(optional)</span> */}
                       </label>
                       <input
                         name="title"
@@ -304,7 +303,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
                         }
                         className="h-[42px] max-h-[100px] w-full rounded-md border-[1px] border-gray-300 px-2 py-2 text-xs font-regular text-[black] placeholder-gray-600 outline-none focus:ring-1 focus:ring-white/50 dark:border-[#565656]/30 dark:bg-transparent dark:text-[#fff] dark:placeholder-[#fff]/50"
                       />
-                    </div>
+                    </div> */}
 
                     {/* description */}
                     <div className="flex flex-col gap-1">
