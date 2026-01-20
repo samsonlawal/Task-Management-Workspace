@@ -42,7 +42,7 @@ export default function FAQs() {
 
   return (
     <div className="poppins flex h-fit w-full flex-col items-center justify-center gap-3 pt-[0px] md:gap-[8px]">
-      <div className="flex h-[500px] w-full flex-col items-start justify-center gap-6 py-10 md:flex-row">
+      <div className="flex h-[500px] w-full flex-col items-center justify-center gap-14 py-10 md:flex-row md:items-start">
         {/* LHS */}
         <div className="poppins flex h-fit w-full flex-col gap-3 md:w-[450px] md:gap-[8px]">
           <div className="flex flex-col gap-2">
@@ -65,17 +65,19 @@ export default function FAQs() {
           </button>
         </div>
         {/* RHS- Questions */}
-        <div className="flex items-start justify-start">
-          <div className="rounded-[14px] bg-[#1a1a1a] p-[30px]">
+        <div className="flex w-full items-start justify-center md:w-fit">
+          <div className="w-full rounded-[14px] bg-[#1a1a1a] p-[20px] md:p-[30px]">
             <div className="space-y-2">
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className={`w-[500px] cursor-pointer rounded-lg border border-[#565656]/20 bg-[#111] p-4 transition-all duration-300 hover:bg-[#565656]/10 ${openIndex === index ? "bg-[#565656]/10" : ""}`}
+                  className={`w-full cursor-pointer rounded-lg border border-[#565656]/20 bg-[#111] p-4 transition-all duration-300 hover:bg-[#565656]/10 md:w-[500px] ${openIndex === index ? "bg-[#565656]/10" : ""}`}
                   onClick={() => toggle(index)}
                 >
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-[15px] text-[#fff]">{faq.question}</h3>
+                  <div className="flex items-start justify-between md:items-center">
+                    <h3 className="text-[12px] text-[#fff] md:text-[15px]">
+                      {faq.question}
+                    </h3>
                     <motion.span
                       animate={{ rotate: openIndex === index ? 0 : 180 }}
                       transition={{ duration: 0.3 }}
@@ -95,7 +97,9 @@ export default function FAQs() {
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                         className="mt-2 overflow-hidden"
                       >
-                        <p className="text-sm text-[#fff]/30">{faq.answer}</p>
+                        <p className="text-[12px] text-[#fff]/30 md:text-sm">
+                          {faq.answer}
+                        </p>
                       </motion.div>
                     )}
                   </AnimatePresence>

@@ -337,7 +337,7 @@ function TasksView() {
                   className="flex w-full flex-col gap-1 rounded-md bg-[#eee] p-2 dark:bg-[#565656]/10"
                 >
                   <div
-                    className="flex min-h-fit w-full cursor-pointer flex-row justify-between rounded-sm px-2 py-2.5 text-[14px] font-medium text-[#787878] transition-colors hover:bg-gray-200 dark:bg-[#565656]/10 dark:hover:bg-[#565656]/20"
+                    className="flex min-h-fit w-full cursor-pointer flex-row justify-between rounded-sm px-2 py-2 text-[14px] font-medium text-[#787878] transition-colors hover:bg-gray-200 dark:bg-[#565656]/0 dark:hover:bg-[#565656]/0"
                     onClick={() => toggleGroup(status)}
                   >
                     <div className="flex w-fit flex-row items-center gap-1">

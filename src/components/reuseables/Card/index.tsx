@@ -88,7 +88,7 @@ export default function Card({
   }
 
   return (
-    <div className="group relative flex h-[98px] w-[250px] flex-col justify-between gap-[6px] rounded-[4px] border border-[#565656]/10 bg-[#fff] py-[10px] text-[14px] font-[300] dark:bg-[#565656]/20">
+    <div className="group relative flex h-[98px] w-[250px] flex-col justify-between gap-[6px] rounded-[4px] border border-[#565656]/10 bg-[#fff] py-[10px] text-[14px] font-[300] dark:bg-[#565656]/10">
       <div className="flex flex-col gap-[1px]">
         {/* Head */}
         <div className="flex flex-row justify-between px-[14px] font-medium">

@@ -11,7 +11,7 @@ export default function Home() {
 
   return (
     <div className="max-screen-wrapper poppins flex h-fit w-full flex-col items-center justify-between bg-[#111]">
-      <div className="max-screen-inner">
+      <div className="max-screen-inner flex flex-col gap-20">
         <Hero />
         <HowItWorks />
         <FAQs />

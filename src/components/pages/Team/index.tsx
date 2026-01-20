@@ -22,6 +22,7 @@ import {
   useRemoveMember,
   useGetMembers,
 } from "@/hooks/api/workspace";
+import EditRole from "../../reuseables/Dialogs/EditRole";
 
 function Team() {
   const members = useSelector(
@@ -35,6 +36,16 @@ function Team() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
   const [imgError, setImgError] = useState(false);
+
+  const [editRoleState, setEditRoleState] = useState<{
+    isOpen: boolean;
+    userId: string | null;
+    currentRole: string;
+  }>({
+    isOpen: false,
+    userId: null,
+    currentRole: "",
+  });
 
   useEffect(() => {
     console.log("Members:", members);
@@ -50,20 +61,11 @@ function Team() {
   const { onRemoveMember } = useRemoveMember();
 
   const handleEditRole = (userId: string, currentRole: string) => {
-    const newRole = window.prompt(
-      "Enter new role (Admin/Member):",
+    setEditRoleState({
+      isOpen: true,
+      userId,
       currentRole,
-    );
-    if (newRole && newRole !== currentRole) {
-      onEditMemberRole({
-        workspaceId: currentWorkspace,
-        memberId: userId,
-        payload: { role: newRole },
-        successCallback: () => {
-          onGetMembers({ workspaceId: currentWorkspace });
-        },
-      });
-    }
+    });
   };
 
   const handleSuspend = (userId: string) => {
@@ -415,6 +417,15 @@ function Team() {
           <Loader loaderSize={50} />
         )}
       </div>
+      <EditRole
+        isOpen={editRoleState.isOpen}
+        onClose={() =>
+          setEditRoleState({ isOpen: false, userId: null, currentRole: "" })
+        }
+        userId={editRoleState.userId}
+        currentRole={editRoleState.currentRole}
+        onSuccess={() => onGetMembers({ workspaceId: currentWorkspace })}
+      />
     </div>
   );
 }

@@ -9,14 +9,14 @@ export default function Hero() {
       <Navbar />
 
       {/* Hero Section */}
-      <div className="flex h-[500px] w-full flex-row items-center justify-between gap-20 md:gap-10">
-        <div className="flex w-full flex-col items-center justify-center gap-4 pt-10 md:flex-col md:items-start md:gap-6">
-          <h1 className="text-center text-[34px] font-regular leading-[1.1] text-white md:w-[520px] md:text-start md:text-[44px]">
+      <div className="flex h-full w-full flex-col items-center justify-center gap-8 md:h-fit md:gap-10">
+        <div className="flex h-[380px] w-full flex-col items-center justify-center gap-4 pt-10 md:h-[460px] md:flex-col md:items-center md:gap-6">
+          <h1 className="text-center text-[30px] font-regular leading-[1.1] text-white md:w-[520px] md:text-center md:text-[44px]">
             A clearer way for teams to manage work.
           </h1>
 
-          <div className="flex h-fit w-full flex-col items-center justify-between gap-4 md:w-[430px] md:items-start">
-            <p className="text-center text-[16px] text-[#CDCDCD] md:text-start">
+          <div className="flex h-fit w-full flex-col items-center justify-between gap-4 md:w-[430px] md:items-center">
+            <p className="text-center text-[14px] md:text-[16px] text-[#CDCDCD] md:text-center">
               Everything your team needs to plan, assign, and finish work
               without unnecessary complexity.
             </p>
@@ -35,7 +35,7 @@ export default function Hero() {
           <img
             src="/icons/task-ui-hero.svg"
             alt=""
-            className="w-[100%] md:w-[75%]"
+            className="w-[100%] md:w-[100%]"
           />
         </div>
       </div>

@@ -18,8 +18,10 @@ function TabComponent() {
         <Team />
       ) : currentUI === "dashboard" ? (
         <Dashboard />
-      ) : (
+      ) : currentUI === "settings" ? (
         <Settings />
+      ) : (
+        <div></div>
       )}
     </div>
   );

@@ -36,7 +36,7 @@ function Workspaces() {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-[20px] bg-white dark:bg-[#111]">
-      <ThemeSwitcher />
+      {/* <ThemeSwitcher /> */}
 
       <Brand />
       <Invitation onInviteAccepted={() => onGetUserWorkspace(user?._id)} />
@@ -44,10 +44,10 @@ function Workspaces() {
       <div className="flex flex-col gap-4 rounded-lg border-[1px] border-[#EEEEEE] bg-white p-6 dark:border-[#565656]/20 dark:bg-[#1a1a1a]/50">
         {/* Header */}
         <div className="flex flex-col text-left">
-          <h1 className="poppins text-[15px] font-semibold text-[#111] dark:text-white">
+          <h1 className="poppins text-[15px] font-medium text-[#111] dark:text-white">
             Select Workspace
           </h1>
-          <p className="poppins text-[12px] text-[#565656] dark:text-[#fff]/50">
+          <p className="poppins text-[12px] font-regular text-[#565656] dark:text-[#fff]/50">
             Choose where you want to continue your work or create.
           </p>
         </div>

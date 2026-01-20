@@ -1,14 +1,14 @@
 export default function Contact() {
   return (
     <div className="poppins flex h-fit w-full flex-col items-center justify-center gap-3 py-[100px] md:gap-[8px]">
-      <div className="flex flex-col items-center justify-center gap-6 rounded-[24px] bg-[#1a1a1a] p-[60px] md:flex-row">
+      <div className="flex flex-col items-center justify-center gap-6 rounded-[24px] bg-[#1a1a1a] px-[30px] py-[60px] md:flex-row md:p-[60px]">
         {/* LHS */}
         <div className="poppins flex h-fit w-full flex-col gap-3 md:w-[400px] md:gap-[8px]">
           <div className="flex flex-col gap-2">
             <h1 className="text-[23px] leading-[1.2] text-[#fff] md:text-[34px]">
               Ready to Streamline your workflow?
             </h1>
-            <p className="text-[15px] font-regular text-[#fff]/30">
+            <p className="text-[15px] font-regular text-[#fff]/30 md:text-[15px]">
               Set up a workspace, invite your team, and start tracking work in
               minutes.
             </p>
@@ -24,7 +24,7 @@ export default function Contact() {
           </button>
         </div>
         {/* RHS */}
-        <div className="flex items-start justify-start">
+        <div className="hidden items-start justify-start md:flex">
           <img src="/icons/molecules.svg" alt="" />
         </div>
       </div>

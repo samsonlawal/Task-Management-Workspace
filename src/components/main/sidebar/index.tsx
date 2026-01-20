@@ -34,8 +34,8 @@ export default function Sidebar() {
   const { user } = useSelector((state: any) => state.auth);
 
   const [current, setCurrent] = useState<
-    "tasks" | "dashboard" | "team" | "settings"
-  >("tasks");
+    "tasks" | "dashboard" | "team" | "settings" | ""
+  >("");
 
   const { data: workspace, onGetWorksapce } = useGetWorkspace();
 
@@ -130,14 +130,14 @@ function DropdownMenu() {
   }
 
   return (
-    <div className="flex h-[50px] w-full flex-row items-center justify-center gap-6 text-left">
+    <div className="flex h-[50px] w-full flex-row items-center justify-center gap-6 text-right">
       <Menu>
-        <MenuButton className="flex w-full items-center justify-center gap-2 rounded-md border-[1px] border-[#565656]/10 px-2 py-[8px] text-black transition-colors duration-500 hover:bg-[#565656]/20">
+        <MenuButton className="flex w-full items-center justify-center gap-2 rounded-sm border-[1px] border-[#565656]/10 px-2 py-[8px] text-black transition-colors duration-500 hover:bg-[#565656]/20">
           {/* <MenuButton className="flex w-[210px] items-center justify-center gap-2 rounded-md border-[1px] border-[#565656]/10 px-2 py-[8px] text-black shadow-inner shadow-white/10 transition-colors duration-500 hover:bg-gray-200/70 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white"> */}
           <div className="flex w-full flex-row items-center gap-[8px]">
             {user?.profileImage === "none" ? (
               <span
-                className="flex h-[26px] w-[26px] items-center justify-center rounded-full text-[14px] text-white"
+                className="flex h-[26px] w-[26px] items-center justify-center rounded-sm text-[14px] text-white"
                 style={{ backgroundColor: stringToColor(user?.fullname) }}
               >
                 {user?.fullname.charAt(0).toUpperCase()}
@@ -165,30 +165,19 @@ function DropdownMenu() {
 
         <MenuItems
           transition
-          anchor="bottom end"
-          className="flex min-h-fit w-[240px] origin-top-right flex-col justify-between gap-1 rounded-[14px] border-[1px] border-[#565656]/20 bg-white px-3 py-[14px] text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:10px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 dark:bg-[#111]"
+          anchor="top start"
+          className="flex min-h-fit w-[220px] origin-top-left flex-col justify-between gap-1 rounded-[8px] border-[1px] border-[#565656]/20 bg-white px-3 py-[14px] text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:10px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 dark:bg-[#111]"
         >
-          <div className="border-gray-200/700 flex cursor-pointer flex-row items-center justify-between gap-3 rounded-[8px] border-[1px] border-[#565656]/10 bg-[#565656]/10 px-3 py-[2px] hover:bg-[#565656]/20">
+          {/* <div className="border-gray-200/700 flex cursor-pointer flex-row items-center justify-between gap-3 rounded-[8px] border-[1px] border-[#565656]/10 bg-[#565656]/10 px-3 py-[2px] hover:bg-[#565656]/20">
             <div className="flex flex-row items-center gap-3">
               <img src="/icons/menu/smiley.svg" alt="" />
-              <p className="poppins text-[14px] font-regular text-[#565656]">
+              <p className="poppins text-[13px] font-regular text-[#565656]">
                 Status
               </p>
             </div>
-          </div>
+          </div> */}
 
-          <div className="flex cursor-pointer flex-row items-center justify-between gap-3 rounded-[8px] px-3 py-1">
-            <div className="flex flex-row items-center gap-3">
-              <img src="/icons/menu/lamp.svg" alt="" />
-              <p className="poppins text-[14px] text-[#111] dark:text-white">
-                Theme
-              </p>
-            </div>
-
-            <ThemeSwitcher />
-          </div>
-
-          <div className="my-1 h-px bg-[#565656]/20" />
+          {/* <div className="my-1 h-px bg-[#565656]/20" /> */}
 
           <div className="flex flex-col gap-[0px]">
             {/* </MenuItem> */}
@@ -202,10 +191,10 @@ function DropdownMenu() {
                 onClick={() => {
                   router.push("/user/profile");
                 }}
-                className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-1.5 hover:bg-[#565656]/30"
+                className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-1.5 hover:bg-[#565656]/10"
               >
-                <img src="/icons/menu/user1.svg" alt="" />
-                <p className="poppins text-[14px] text-[#111] dark:text-white">
+                <img src="/icons/menu/user1.svg" alt="" className="w-[18px]" />
+                <p className="poppins text-[13px] text-[#111] dark:text-white">
                   Profile
                 </p>
               </div>
@@ -215,10 +204,14 @@ function DropdownMenu() {
                 // onClick={() => {
                 //   router.push("/settings");
                 // }}
-                className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-1.5 hover:bg-[#565656]/30"
+                className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-1.5 hover:bg-[#565656]/10"
               >
-                <img src="/icons/menu/menucog.svg" alt="" />
-                <p className="poppins text-[14px] text-[#111] dark:text-white">
+                <img
+                  src="/icons/menu/menucog.svg"
+                  alt=""
+                  className="w-[18px]"
+                />
+                <p className="poppins text-[13px] text-[#111] dark:text-white">
                   Settings
                 </p>
               </div>
@@ -228,22 +221,32 @@ function DropdownMenu() {
                 // onClick={() => {
                 //   router.push("/help");
                 // }}
-                className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-1.5 hover:bg-[#565656]/0"
+                className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-1.5 hover:bg-[#565656]/10"
               >
-                <img src="/icons/menu/help.svg" alt="" />
-                <p className="poppins text-[14px] text-[#111] dark:text-white">
+                <img src="/icons/menu/help.svg" alt="" className="w-[18px]" />
+                <p className="poppins text-[13px] text-[#111] dark:text-white">
                   Help
                 </p>
               </div>
             </MenuItem>
-            <div className="my-1 h-px bg-[#565656]/20" />
+            <div className="flex cursor-pointer flex-row items-center justify-between gap-3 rounded-[8px] px-3 py-1">
+              <div className="flex flex-row items-center gap-3">
+                <img src="/icons/menu/lamp.svg" alt="" className="w-[18px]" />
+                <p className="poppins text-[13px] text-[#111] dark:text-white">
+                  Theme
+                </p>
+              </div>
+
+              <ThemeSwitcher />
+            </div>
+            <div className="my-2 h-px bg-[#565656]/20" />
             {/* <MenuItem> */}
             <div
               onClick={() => handleLogout()}
-              className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-1.5 hover:bg-[#D32F2F]/20"
+              className="flex cursor-pointer flex-row items-center gap-3 rounded-[8px] px-3 py-1.5 hover:bg-[#D32F2F]/10"
             >
-              <img src="/icons/menu/exit.svg" alt="" />
-              <p className="poppins text-[14px] text-[#111] dark:text-white">
+              <img src="/icons/menu/exit.svg" alt="" className="w-[18px]" />
+              <p className="poppins text-[13px] text-[#111] dark:text-white">
                 Logout
               </p>
             </div>

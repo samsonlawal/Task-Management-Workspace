@@ -187,8 +187,11 @@ function Workspace() {
                 </div>
               </>
             ) : (
-              <div className="flex h-[29px] items-center">
-                <Loader loaderSize={10} />
+              <div className="flex h-[29px] flex-row items-center gap-2">
+                {/* <Loader loaderSize={10} /> */}
+                <p className="text-[12px] font-regular text-[#fff]/50">
+                  Select Workspace
+                </p>
               </div>
             )}
           </div>{" "}
@@ -230,8 +233,11 @@ function Workspace() {
 
             <div className="flex h-fit flex-col gap-[10px] overflow-y-auto rounded-sm">
               {workspacingLoading && !filteredWorkspaces ? (
-                <div className="flex h-full w-full items-center justify-center">
-                  <Loader loaderSize={50} />
+                <div className="flex w-full items-center justify-center px-2 py-10">
+                  {/* <Loader loaderSize={50} /> */}
+                  <p className="text-[12px] font-regular text-[#fff]">
+                    Getting workspaces...
+                  </p>
                 </div>
               ) : (
                 <div className="flex h-full flex-col gap-1">
@@ -262,8 +268,10 @@ function Workspace() {
                       </MenuItem>
                     ))
                   ) : (
-                    <div>
-                      <p>No workspace available.</p>
+                    <div className="flex w-full items-center justify-center px-2 py-10">
+                      <p className="text-[12px] font-regular text-[#fff]">
+                        No workspace available.
+                      </p>
                     </div>
                   )}
                 </div>
