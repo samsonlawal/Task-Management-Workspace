@@ -16,13 +16,7 @@ import stringToColor from "@/utils/stringToColor";
 import AddTask from "@/components/reuseables/Dialogs/EditTask";
 import Notification from "@/components/reuseables/Notification";
 import TeamMenu from "./TeamMenu";
-import {
-  useEditMemberRole,
-  useSuspendMember,
-  useRemoveMember,
-  useGetMembers,
-} from "@/hooks/api/workspace";
-import EditRole from "../../reuseables/Dialogs/EditRole";
+import { useGetMembers } from "@/hooks/api/workspace";
 
 function Team() {
   const members = useSelector(
@@ -37,60 +31,11 @@ function Team() {
   const itemsPerPage = 7;
   const [imgError, setImgError] = useState(false);
 
-  const [editRoleState, setEditRoleState] = useState<{
-    isOpen: boolean;
-    userId: string | null;
-    currentRole: string;
-  }>({
-    isOpen: false,
-    userId: null,
-    currentRole: "",
-  });
-
-  useEffect(() => {
-    console.log("Members:", members);
-  }, [members]);
-
-  const { currentWorkspace } = useSelector(
+  const { currentWorkspaceId } = useSelector(
     (state: any) => state.currentWorkspace,
   );
 
   const { onGetMembers } = useGetMembers();
-  const { onEditMemberRole } = useEditMemberRole();
-  const { onSuspendMember } = useSuspendMember();
-  const { onRemoveMember } = useRemoveMember();
-
-  const handleEditRole = (userId: string, currentRole: string) => {
-    setEditRoleState({
-      isOpen: true,
-      userId,
-      currentRole,
-    });
-  };
-
-  const handleSuspend = (userId: string) => {
-    if (window.confirm("Are you sure you want to suspend this member?")) {
-      onSuspendMember({
-        workspaceId: currentWorkspace,
-        memberId: userId,
-        successCallback: () => {
-          onGetMembers({ workspaceId: currentWorkspace });
-        },
-      });
-    }
-  };
-
-  const handleRemove = (userId: string) => {
-    if (window.confirm("Are you sure you want to remove this member?")) {
-      onRemoveMember({
-        workspaceId: currentWorkspace,
-        memberId: userId,
-        successCallback: () => {
-          onGetMembers({ workspaceId: currentWorkspace });
-        },
-      });
-    }
-  };
 
   const handleStatusFilterChange = (value: string) => {
     setStatusFilter(value);
@@ -164,6 +109,22 @@ function Team() {
       setCurrentPage(page);
     }
   };
+
+  // const handleEditRole = (
+  //   userId: string,
+  //   currentRole: string,
+  //   email: string,
+  // ) => {
+  //   setEditRoleState({
+  //     isOpen: true,
+  //     userId,
+  //     currentRole,
+  //     email,
+  //     workspaceId: currentWorkspaceId,
+  //   });
+
+  //   console.log(currentWorkspaceId);
+  // };
 
   return (
     <div className="flex h-fit w-full flex-col gap-2 px-8">
@@ -292,8 +253,6 @@ function Team() {
                 const role = user.role || "-";
                 const status = user.status || "pending";
 
-                console.log(fullname);
-
                 return (
                   <div
                     key={user._id || index}
@@ -362,9 +321,13 @@ function Team() {
                         className="rounded-md px-3 py-2 hover:bg-gray-200 dark:hover:bg-[#565656]/20"
                       /> */}
                       <TeamMenu
-                        onEdit={() => handleEditRole(user._id, role)}
-                        onSuspend={() => handleSuspend(user._id)}
-                        onDelete={() => handleRemove(user._id)}
+                        userId={user._id}
+                        userEmail={email}
+                        currentRole={role}
+                        userName={fullname}
+                        onSuccess={() =>
+                          onGetMembers({ workspaceId: currentWorkspaceId })
+                        }
                       />
                     </div>
                   </div>
@@ -417,15 +380,6 @@ function Team() {
           <Loader loaderSize={50} />
         )}
       </div>
-      <EditRole
-        isOpen={editRoleState.isOpen}
-        onClose={() =>
-          setEditRoleState({ isOpen: false, userId: null, currentRole: "" })
-        }
-        userId={editRoleState.userId}
-        currentRole={editRoleState.currentRole}
-        onSuccess={() => onGetMembers({ workspaceId: currentWorkspace })}
-      />
     </div>
   );
 }

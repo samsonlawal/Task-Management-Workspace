@@ -19,6 +19,8 @@ interface EditRoleProps {
   onClose: () => void;
   userId: string | null;
   currentRole: string;
+  email: string;
+  workspaceId: string;
   onSuccess: () => void;
 }
 
@@ -27,12 +29,14 @@ export default function EditRole({
   onClose,
   userId,
   currentRole,
+  email,
+  workspaceId,
   onSuccess,
 }: EditRoleProps) {
   const [role, setRole] = useState(currentRole);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
-  const { currentWorkspace } = useSelector(
+  const { currentWorkspaceId } = useSelector(
     (state: any) => state.currentWorkspace,
   );
 
@@ -42,14 +46,16 @@ export default function EditRole({
     if (isOpen) {
       setRole(currentRole);
     }
-  }, [isOpen, currentRole]);
+  }, [isOpen, currentRole, userId, email]);
 
   const handleRoleChange = (value: string) => {
     setRole(value);
   };
 
   const handleSave = () => {
-    if (!userId) return;
+    if (!userId) {
+      return;
+    }
 
     if (role === currentRole) {
       onClose();
@@ -57,11 +63,10 @@ export default function EditRole({
     }
 
     onEditMemberRole({
-      workspaceId: currentWorkspace,
+      workspaceId: currentWorkspaceId,
       memberId: userId,
       payload: { role },
       successCallback: () => {
-        showSuccessToast({ message: "Role updated successfully!" });
         onSuccess();
         onClose();
       },
@@ -86,9 +91,9 @@ export default function EditRole({
     >
       <DialogBackdrop className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-        <DialogPanel className="poppins h-fit rounded-xl bg-white px-8 py-8 dark:bg-[#111] md:w-[400px]">
-          <DialogTitle className="flex flex-row items-center justify-between font-medium">
-            <p className="text-[15px]">Edit Role</p>
+        <DialogPanel className="poppins flex h-fit flex-col gap-4 rounded-xl bg-white px-8 py-8 dark:bg-[#111] md:w-[500px]">
+          <DialogTitle className="flex flex-row items-center justify-between">
+            <p className="text-[14px]">Assign new role</p>
             <div
               onClick={onClose}
               className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full"
@@ -96,43 +101,46 @@ export default function EditRole({
               {/* Close Icon if needed */}
             </div>
           </DialogTitle>
-          <Description className="pb-6">
-            <p className="w-[100%] text-[12px] leading-4 text-[#777]">
-              Change the role of this member.
-            </p>
-          </Description>
           <div
             className="flex flex-col gap-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex flex-row gap-2">
-              <CustomSelect
-                options={[
-                  { label: "Member", value: "Member" },
-                  { label: "Admin", value: "Admin" },
-                ]}
-                placeholder="Role"
-                value={role}
-                onChange={handleRoleChange}
-                onOpenChange={setIsSelectOpen}
-                className="w-full bg-[#565656]/10 dark:border-[#565656]/20"
-              />
+            <div className="flex flex-row items-end justify-center gap-2">
+              <div className="flex flex-1 flex-col gap-1">
+                <label className="text-[12px] text-[#fff]/50">Email</label>
+                <input
+                  type="text"
+                  value={email}
+                  disabled
+                  className="w-full cursor-not-allowed rounded-md border border-[#565656]/5 bg-[#565656]/5 px-3 py-2 text-[13px] text-[#565656]"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <CustomSelect
+                  options={[
+                    { label: "Member", value: "Member" },
+                    { label: "Admin", value: "Admin" },
+                  ]}
+                  placeholder="Role"
+                  value={role}
+                  onChange={handleRoleChange}
+                  onOpenChange={setIsSelectOpen}
+                  className="w-full bg-[#565656]/10 dark:border-[#565656]/20"
+                />
+              </div>
             </div>
-            <div className="mt-2 flex justify-end gap-3 text-[14px]">
+
+            <div className="flex justify-start gap-3 text-[14px]">
               <button
-                className="rounded bg-gray-200 px-5 py-2 text-[12px] font-normal text-black transition-all duration-300 hover:bg-gray-300 dark:bg-[#333] dark:text-white dark:hover:bg-[#444]"
-                onClick={onClose}
-              >
-                Cancel
-              </button>
-              <button
-                className="rounded bg-[#222] px-5 py-2 text-[12px] font-normal text-white transition-all duration-300 hover:bg-[#111] dark:bg-[#fff] dark:text-[#111]"
+                className="rounded-sm bg-[#222] px-4 py-2 text-[12px] font-normal text-white transition-all duration-300 hover:bg-[#111] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-[#fff] dark:text-[#111]"
                 onClick={handleSave}
+                disabled={loading}
               >
                 {!loading ? (
-                  "Save Changes"
+                  "Save"
                 ) : (
-                  <span className="flex w-full items-center justify-center">
+                  <span className="flex w-full items-center justify-center gap-2">
+                    Saving
                     <img
                       src="/icons/loaderWhite.svg"
                       alt=""

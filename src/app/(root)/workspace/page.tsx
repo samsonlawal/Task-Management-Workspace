@@ -1,4 +1,3 @@
-// pages/index.tsx or app/page.tsx
 import Sidebar from "@/components/main/sidebar";
 import Workspace from "@/components/pages/workspace";
 
@@ -10,7 +9,7 @@ export default function Home() {
         <Sidebar />
       </div>
 
-      {/* Main content area */}
+      {/* Main content area  */}
       <div className="flex flex-1 flex-col border-none">
         <Workspace />
       </div>

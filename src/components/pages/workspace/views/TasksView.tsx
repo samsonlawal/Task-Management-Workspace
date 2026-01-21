@@ -95,25 +95,25 @@ function TasksView() {
   const changeToListView = () => setView("list");
   const changeToBoardView = () => setView("board");
 
-  useEffect(() => {
-    // Debug logging preserved from original
-    if (user) {
-      console.log("USER:", user);
-      console.log("USER_ID:", user?._id);
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   Debug logging preserved from original
+  //   if (user) {
+  //     console.log("USER:", user);
+  //     console.log("USER_ID:", user?._id);
+  //   }
+  // }, [user]);
 
-  useEffect(() => {
-    console.log("USER ID:", user?._id);
-    console.log(
-      "Task Assignees:",
-      tasks.map((t: any) => t.assignee?._id),
-    );
-  }, [user, tasks]);
+  // useEffect(() => {
+  //   console.log("USER ID:", user?._id);
+  //   console.log(
+  //     "Task Assignees:",
+  //     tasks.map((t: any) => t.assignee?._id),
+  //   );
+  // }, [user, tasks]);
 
-  useEffect(() => {
-    console.log(activeTabs);
-  }, [activeTab]);
+  // useEffect(() => {
+  //   console.log(activeTabs);
+  // }, [activeTab]);
 
   return (
     <div className="flex h-full w-full flex-col">
