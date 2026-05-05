@@ -11,12 +11,12 @@ export default function Hero() {
       {/* Hero Section */}
       <div className="flex h-full w-full flex-col items-center justify-center gap-8 md:h-fit md:gap-10">
         <div className="flex h-[380px] w-full flex-col items-center justify-center gap-4 pt-10 md:h-[460px] md:flex-col md:items-center md:gap-6">
-          <h1 className="text-center text-[30px] font-regular leading-[1.1] text-white md:w-[520px] md:text-center md:text-[44px]">
+          <h1 className="text-center text-[30px] font-[400] leading-[1.1] text-white md:w-[600px] md:text-center md:text-[44px]">
             A clearer way for teams to manage work.
           </h1>
 
-          <div className="flex h-fit w-full flex-col items-center justify-between gap-4 md:w-[430px] md:items-center">
-            <p className="text-center text-[14px] md:text-[16px] text-[#CDCDCD] md:text-center">
+          <div className="flex h-fit w-full flex-col items-center justify-between gap-4 md:w-[600px] md:items-center">
+            <p className="text-center text-[14px] text-[#CDCDCD] md:text-center md:text-[18px]">
               Everything your team needs to plan, assign, and finish work
               without unnecessary complexity.
             </p>
