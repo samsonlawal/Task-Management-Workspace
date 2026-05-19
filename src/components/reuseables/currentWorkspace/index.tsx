@@ -159,7 +159,7 @@ function Workspace() {
   }, [workspaceData, memberData, taskData, dispatch]);
 
   return (
-    <div className="w-full text-left">
+    <div className="w-full text-left z-100">
       <Menu>
         <MenuButton className="inline-flex w-full items-center gap-2 rounded-md border-[1px] border-[#565656]/10 bg-[#565656]/10 px-2 py-1.5 text-black transition-all duration-300 hover:bg-[#565656]/20 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
           <div
@@ -201,7 +201,7 @@ function Workspace() {
         <MenuItems
           transition
           anchor="bottom start"
-          className="poppins-medium flex min-h-fit w-[260px] origin-top-right flex-col justify-between gap-2 rounded-md border-[1px] border-[#565656]/10 bg-[#1a1a1a] px-3 py-2 text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-300 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          className="poppins-medium z-50 flex min-h-fit w-[260px] origin-top-right flex-col justify-between gap-2 rounded-md border-[1px] border-[#565656]/10 bg-[#1a1a1a] px-3 py-2 text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-300 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
           {/* {" "}
           {workspaceData._id && (

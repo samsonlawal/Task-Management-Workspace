@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 interface CustomSelectProps {
   label?: string;
-  options: { label: string; value: string }[];
+  options: { label: string; value: string; icon?: React.ReactNode }[];
   placeholder?: string;
   className?: string;
   value?: string; // <-- Add this
@@ -81,7 +81,12 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
                 value={option.value}
                 className="hover:bg-gray-200 dark:hover:bg-[#111]"
               >
+                {/* <div className="flex flex-row items-center gap-2">
+                {option.icon && <span className="flex items-center">{option.icon}</span>}
+                <p className="poppins text-[12px] font-medium text-[#111] dark:text-[#fff]">{option.label}</p>
+                </div> */}
                 {option.label}
+
               </SelectItem>
             ))}
           </SelectGroup>

@@ -112,7 +112,7 @@ function Settings() {
             <p className="text-[12px] text-[#565656]">Basic workspace info.</p>
           </div>
           {/* Actions and data */}
-          <div className="flex flex-col gap-[20px] rounded-[14px] border-[0.5px] border-[#565656]/10 bg-[#F4F4F4] px-6 py-5">
+          <div className="flex flex-col gap-[20px] rounded-[14px] border-[0.5px] border-[#565656]/10 bg-[#F4F4F4] dark:bg-[#565656]/10 px-6 py-5">
             <div className="flex flex-row items-center justify-start gap-4">
               <span className="flex h-[50px] w-[50px] items-center justify-center rounded-[8px] bg-[#563892] font-semibold text-white">
                 T

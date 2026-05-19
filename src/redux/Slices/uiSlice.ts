@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type UIState = {
   currentUI: "tasks" | "team" | "dashboard" | "settings" | "";
+  isSidebarOpen: boolean;
 };
 
 const initialState: UIState = {
   currentUI: "tasks",
+  isSidebarOpen: false,
 };
 
 const uiSlice = createSlice({
@@ -18,8 +20,14 @@ const uiSlice = createSlice({
     ) => {
       state.currentUI = action.payload;
     },
+    toggleSidebar: (state) => {
+      state.isSidebarOpen = !state.isSidebarOpen;
+    },
+    setSidebar: (state, action: PayloadAction<boolean>) => {
+      state.isSidebarOpen = action.payload;
+    },
   },
 });
 
-export const { setCurrentUI } = uiSlice.actions;
+export const { setCurrentUI, toggleSidebar, setSidebar } = uiSlice.actions;
 export default uiSlice.reducer;

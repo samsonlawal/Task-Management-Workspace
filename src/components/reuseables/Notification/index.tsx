@@ -64,7 +64,7 @@ export default function Notification() {
       {/* <div className="h-[80%] border-l-[1px]"></div> */}
       <Menu>
         <MenuButton className="">
-          <div className="group relative w-fit">
+          <div className="group relative w-fit bg-[#565656]/10 p-2 rounded-sm">
             <img
               src="/icons/bell-line.svg"
               alt="Notifications"

@@ -130,7 +130,7 @@ function DropdownMenu() {
   }
 
   return (
-    <div className="flex h-[50px] w-full flex-row items-center justify-center gap-6 text-right">
+    <div className="flex h-[50px] w-full flex-row items-center justify-center gap-6 md:z-30 text-right">
       <Menu>
         <MenuButton className="flex w-full items-center justify-center gap-2 rounded-sm border-[1px] border-[#565656]/10 px-2 py-[8px] text-black transition-colors duration-500 hover:bg-[#565656]/20">
           {/* <MenuButton className="flex w-[210px] items-center justify-center gap-2 rounded-md border-[1px] border-[#565656]/10 px-2 py-[8px] text-black shadow-inner shadow-white/10 transition-colors duration-500 hover:bg-gray-200/70 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white"> */}
@@ -166,7 +166,7 @@ function DropdownMenu() {
         <MenuItems
           transition
           anchor="top start"
-          className="flex min-h-fit w-[220px] origin-top-left flex-col justify-between gap-1 rounded-[8px] border-[1px] border-[#565656]/20 bg-white px-3 py-[14px] text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:10px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 dark:bg-[#111]"
+          className="flex min-h-fit z-50 w-[220px] origin-top-left flex-col justify-between gap-1 rounded-[8px] border-[1px] border-[#565656]/20 bg-white px-3 py-[14px] text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:10px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 dark:bg-[#111]"
         >
           {/* <div className="border-gray-200/700 flex cursor-pointer flex-row items-center justify-between gap-3 rounded-[8px] border-[1px] border-[#565656]/10 bg-[#565656]/10 px-3 py-[2px] hover:bg-[#565656]/20">
             <div className="flex flex-row items-center gap-3">

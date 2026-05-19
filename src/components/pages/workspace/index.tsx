@@ -1,13 +1,13 @@
 "use client";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import Dashboard from "@/components/pages/Dashboard";
 import Team from "@/components/pages/Team";
 import Settings from "../Settings";
 import TasksView from "./views/TasksView";
 
-function TabComponent() {
+function Workspace() {
   const currentUI = useSelector((state: RootState) => state.ui.currentUI);
 
   return (
@@ -18,6 +18,7 @@ function TabComponent() {
         <Team />
       ) : currentUI === "dashboard" ? (
         <Dashboard />
+        
       ) : currentUI === "settings" ? (
         <Settings />
       ) : (
@@ -27,4 +28,4 @@ function TabComponent() {
   );
 }
 
-export default TabComponent;
+export default Workspace;

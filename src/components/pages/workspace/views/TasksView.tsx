@@ -2,8 +2,10 @@
 
 import { useMemo, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toggleSidebar } from "@/redux/Slices/uiSlice"
+
 import { useTheme } from "next-themes";
-import { SquareKanban, List, Folder, GalleryHorizontal } from "lucide-react";
+import { SquareKanban, List, Folder, GalleryHorizontal, PanelLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { RootState } from "@/redux/store";
@@ -14,6 +16,9 @@ import ListTask from "@/components/reuseables/List";
 import ListHeader from "@/components/reuseables/List/ListHeader";
 import AddTask from "@/components/reuseables/Dialogs/AddTask";
 import Notification from "@/components/reuseables/Notification";
+import { CustomSelect } from "@/components/reuseables/TeamSelect";
+
+
 
 const tabby = [
   {
@@ -32,7 +37,9 @@ function TasksView() {
   const dispatch = useDispatch();
   const { resolvedTheme } = useTheme();
 
-  const { user } = useSelector((state: any) => state.auth);
+
+
+  const { user } = useSelector((state: RootState) => state.auth) as { user: any };
 
   // Tasks Logic
   const tasks = useSelector((state: RootState) =>
@@ -120,14 +127,22 @@ function TasksView() {
       {/* Navbar / Header for Tasks */}
       <div className="sticky top-0 w-full bg-[white] dark:bg-[#111]">
         <div className="poppins flex w-full items-center justify-between border-b-[1px] border-[#565656]/10 px-[32px] py-[7px]">
-          <h2 className="poppins-medium text-xl text-[#111] dark:text-white">
+        <div className="flex flex-row justify-center items-center">
+          <button
+          onClick={() => dispatch(toggleSidebar())}
+          className="flex lg:hidden px-1 lg:p-2 text-[#707070] hover:text-[#111] dark:hover:text-white transition-all duration-300"
+          >
+            <PanelLeft size={18} strokeWidth={1.6} />
+          </button>
+          <h2 className="poppins-medium text-md lg:text-xl text-[#111] dark:text-white">
             Issues
           </h2>
+        </div>
           <div className="flex flex-row items-center justify-center gap-2">
             <Notification />
 
             <button
-              className={`flex h-[36px] cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 ${
+              className={`lg:flex h-[36px] cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 hidden ${
                 byStatus ? "dark:bg-[#565656]/20" : ""
               }`}
               onClick={() => setByStatus(!byStatus)}
@@ -145,7 +160,7 @@ function TasksView() {
             </button>
 
             <button
-              className="flex h-[36px] cursor-not-allowed flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50"
+              className="lg:flex h-[36px] cursor-not-allowed flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 hidden"
               disabled={true}
             >
               <img
@@ -160,7 +175,6 @@ function TasksView() {
               <p>Filter</p>
             </button>
 
-            <AddTask onGetTasks={onGetTasks} taskData={taskData} />
           </div>
         </div>
       </div>
@@ -171,7 +185,7 @@ function TasksView() {
           {tabs?.map((tab, index) => (
             <div
               key={index}
-              className={`flex h-fit w-fit cursor-pointer select-none flex-row items-center gap-1 rounded-sm px-3 py-1.5 text-[12px] font-[500] ${
+              className={`flex h-fit w-fit cursor-pointer select-none flex-row items-center gap-1 rounded-sm px-3 py-1.5 text-[12px] font-[400] ${
                 activeTab === index
                   ? "border-[#565656]/20 bg-white text-black dark:bg-[#565656]/20 dark:text-white"
                   : "text-gray-500 hover:text-black dark:text-white/50"
@@ -194,8 +208,29 @@ function TasksView() {
         </div>
 
         <div className="flex flex-row items-center justify-center gap-2 pb-1">
+
+          {/* <CustomSelect
+            options={[
+                { label: "Board",
+                  value: "board",
+                  icon: <SquareKanban size={18} strokeWidth={1.6} />
+                },
+                { label: "List",
+                  value: "list",
+                  icon: <List size={18} strokeWidth={1.6} />
+                }
+              ]}
+              value={view}
+              placeholder={view}
+              onChange={(selectedView) => {
+                selectedView === 'board' ? changeToBoardView() : changeToListView()
+              }}
+            /> */}
+
+        <div className="flex flex-row items-center justify-center rounded-md px-1 py-1 bg-[#565656]/10 gap-1">
+
           <div
-            className={`flex h-[34px] cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 ${
+            className={`flex h-[28px] cursor-pointer flex-row items-center gap-1 rounded-[4px]  px-2 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 ${
               view === "board" ? "bg-[#565656]/10 dark:bg-[#565656]/20" : ""
             }`}
             onClick={changeToBoardView}
@@ -205,11 +240,11 @@ function TasksView() {
               strokeWidth={1.5}
               size={14}
             />
-            <p>Board</p>
+            {/* <p>Board</p> */}
           </div>
 
           <div
-            className={`flex h-[34px] cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 ${
+            className={`flex h-[28px] cursor-pointer flex-row items-center gap-1 rounded-[4px]  px-2 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 ${
               view === "list" ? "bg-[#565656]/10 dark:bg-[#565656]/20" : ""
             }`}
             onClick={changeToListView}
@@ -219,8 +254,12 @@ function TasksView() {
               strokeWidth={1.5}
               size={14}
             />
-            <p>List</p>
+            {/* <p>List</p> */}
           </div>
+        </div>
+
+            <AddTask onGetTasks={onGetTasks} taskData={taskData} />
+
         </div>
       </div>
 
