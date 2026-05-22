@@ -36,9 +36,6 @@ const STATUS_SECTIONS = ["TO-DO", "IN-PROGRESS", "IN-REVIEW", "DONE"] as const;
 function TasksView() {
   const dispatch = useDispatch();
   const { resolvedTheme } = useTheme();
-
-
-
   const { user } = useSelector((state: RootState) => state.auth) as { user: any };
 
   // Tasks Logic
@@ -126,7 +123,7 @@ function TasksView() {
     <div className="flex h-full w-full flex-col">
       {/* Navbar / Header for Tasks */}
       <div className="sticky top-0 w-full bg-[white] dark:bg-[#111]">
-        <div className="poppins flex w-full items-center justify-between border-b-[1px] border-[#565656]/10 px-[32px] py-[7px]">
+        <div className="poppins flex w-full items-center justify-between border-b-[1px] border-[#565656]/10 px-4 lg:px-8 py-[7px]">
         <div className="flex flex-row justify-center items-center">
           <button
           onClick={() => dispatch(toggleSidebar())}
@@ -180,7 +177,7 @@ function TasksView() {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="mb-2 flex h-fit items-center justify-between px-8 pt-6 transition-all duration-300">
+      <div className="mb-5 flex h-fit items-center justify-between px-4 lg:px-8 pt-6 transition-all duration-300">
         <div className="flex h-max flex-row rounded-md bg-[#eee] px-1 py-1 dark:bg-[#1a1a1a]">
           {tabs?.map((tab, index) => (
             <div
@@ -264,7 +261,7 @@ function TasksView() {
       </div>
 
       {/* Tasks Content */}
-      <div className="w-full flex-1 overflow-y-auto px-8 pb-8 scrollbar-hide">
+      <div className="w-full flex-1 overflow-y-auto px-4 lg:px-8 pb-8 scrollbar-hide">
         {tasksLoading ? (
           <p className="flex h-full items-center justify-center">
             <Loader loaderSize={40} />
@@ -272,15 +269,15 @@ function TasksView() {
         ) : view === "list" ? (
           <div className="flex h-fit w-full flex-col flex-wrap justify-between gap-1 rounded-[18px] pb-[6px]">
             <div>
-              <div className="flex h-fit w-full flex-row flex-wrap justify-start gap-5 rounded-[18px] pb-[6px]">
+              <div className="flex h-fit w-full flex-row flex-wrap justify-start gap-5 rounded-[18px] pb-[0px]">
                 {byStatus ? (
                   STATUS_SECTIONS.map((status) => (
                     <div
                       key={status}
-                      className="flex w-full flex-col gap-1 rounded-md bg-[#eee] p-2 dark:bg-[#565656]/10"
+                      className="flex w-full flex-col gap-1 rounded-md bg-[#eee] p-2 dark:bg-[#565656]/10 dark:hover:bg-[#565656]/4"
                     >
                       <div
-                        className="flex min-h-fit w-full cursor-pointer flex-row justify-between rounded-sm px-2 py-2.5 text-[14px] font-medium text-[#787878] transition-colors hover:bg-gray-200 dark:bg-[#565656]/10 dark:hover:bg-[#565656]/20"
+                        className="flex min-h-fit w-full cursor-pointer flex-row justify-between rounded-sm px-2 py-2 text-[14px] font-medium text-[#787878] transition-colors hover:bg-gray-200 dark:bg-[#565656]/0 dark:hover:bg-[#565656]/0"
                         onClick={() => toggleGroup(status)}
                       >
                         <div className="flex w-fit flex-row items-center gap-1">
@@ -373,7 +370,7 @@ function TasksView() {
               STATUS_SECTIONS.map((status) => (
                 <div
                   key={status}
-                  className="flex w-full flex-col gap-1 rounded-md bg-[#eee] p-2 dark:bg-[#565656]/10"
+                  className="flex w-full flex-col gap-1 rounded-md bg-[#eee] dark:bg-[#565656]/10 p-2 dark:hover:bg-[#565656]/4 "
                 >
                   <div
                     className="flex min-h-fit w-full cursor-pointer flex-row justify-between rounded-sm px-2 py-2 text-[14px] font-medium text-[#787878] transition-colors hover:bg-gray-200 dark:bg-[#565656]/0 dark:hover:bg-[#565656]/0"
