@@ -319,6 +319,7 @@ function TasksView() {
                                 ? groupedTasks[status].map((task: any) => (
                                     <ListTask
                                       key={task._id}
+                                      title={task.title}
                                       desc={task.description}
                                       deadline={task.deadline}
                                       name={
@@ -347,6 +348,8 @@ function TasksView() {
                       task ? (
                         <ListTask
                           key={task._id}
+                      title={task.title}
+
                           desc={task.description}
                           deadline={task.deadline}
                           name={task.assignee?.name || task.assignee?.fullname}
@@ -413,6 +416,7 @@ function TasksView() {
                             ? groupedTasks[status].map((task: any) => (
                                 <Card
                                   key={task._id}
+                                  title={task.title}
                                   desc={task.description}
                                   deadline={task.deadline}
                                   name={
@@ -440,6 +444,7 @@ function TasksView() {
                   task ? (
                     <Card
                       key={task._id}
+                      title={task.title}
                       desc={task.description}
                       deadline={task.deadline}
                       name={task.assignee?.name || task.assignee?.fullname}

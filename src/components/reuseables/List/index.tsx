@@ -12,6 +12,7 @@ import { Flag } from "lucide-react";
 import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
 
 export default function ListTask({
+  title,
   desc,
   deadline,
   name,
@@ -23,6 +24,7 @@ export default function ListTask({
   status,
   createdAt,
 }: {
+  title: string;
   desc: string;
   deadline: any;
   name?: string;
@@ -58,6 +60,7 @@ export default function ListTask({
   // Create task object to pass to TaskDetails
   const taskData = {
     id,
+    title,
     description: desc,
     deadline,
     assignee: {

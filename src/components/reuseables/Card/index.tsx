@@ -21,6 +21,7 @@ import {
 import { getPriorityStyles } from "@/utils/taskStyles";
 
 export default function Card({
+  title,
   desc,
   deadline,
   name,
@@ -32,6 +33,7 @@ export default function Card({
   status,
   createdAt,
 }: {
+  title: string;
   desc: string;
   deadline: any;
   name?: string;
@@ -66,6 +68,7 @@ export default function Card({
   // Create task object to pass to TaskDetails
   const taskData = {
     id,
+    title,
     description: desc,
     deadline,
     assignee: {
@@ -103,7 +106,7 @@ export default function Card({
             </div> */}
 
             {/* TITLE */}
-            <p className="text-[13px] font-medium">Review Jobs</p>
+            <p className="text-[13px] font-medium">{title || "No Title"}</p>
           </div>
           <div className="cursor-pointer" onClick={gettaskdetails}>
             {/* Pass taskData to TaskDetails component */}
