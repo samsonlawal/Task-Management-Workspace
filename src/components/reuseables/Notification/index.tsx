@@ -58,7 +58,7 @@ export default function Notification() {
   );
 
   return (
-    <div className="poppins flex h-[50px] w-fit flex-row items-center justify-center gap-6 text-left">
+    <div className="poppins dark:bg-[#565656]/10 bg-[red] flex h-[50px] w-fit flex-row items-center justify-center gap-6 text-left">
       {/* <FontAwesomeIcon icon={faBell} className="" /> */}
 
       {/* <div className="h-[80%] border-l-[1px]"></div> */}
@@ -82,27 +82,27 @@ export default function Notification() {
         <MenuItems
           transition
           anchor="bottom end"
-          className="flex w-[458px] origin-top-right flex-col rounded-xl border-[1px] bg-white text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out scrollbar-hide [--anchor-gap:24px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          className="flex w-[458px] origin-top-right flex-col rounded-xl border-[1px] dark:border-[#fff]/10 dark:bg-[#111] bg-white text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out scrollbar-hide [--anchor-gap:24px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
-          <div className="flex flex-col">
+          <div className="flex flex-col dark:bg-[#111]">
             {/* <div className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] py-1 pl-2"> */}
             <div className="items poppins flex w-full flex-row items-center justify-between px-6 py-[20px]">
-              <p className="text-[20px] font-semibold">Notification</p>
+              <p className="text-[20px] font-semibold dark:text-[#fff]">Notification</p>
               <button
                 onClick={() => handleReadAll()}
-                className="rounded-full bg-[#F3F3F3] px-[15px] py-[6px] text-[12px] font-normal"
+                className="rounded-[6px] bg-[#F3F3F3] px-[15px] py-[6px] text-[12px] font-normal dark:bg-[#fff]"
               >
                 Mark all as read
               </button>
             </div>
 
             {/* Tabs */}
-            <div className="poppins flex flex-row gap-4 border-b-[1px] border-[#E4E4E4] px-6">
-              <button className="border-b-2 border-[#4E4E4E] px-[6px] py-[3px] text-[12px] font-medium">
+            <div className="poppins flex flex-row gap-4 border-b-[1px] border-[#E4E4E4] dark:border-[#111] px-6">
+              <button className="border-b-2 border-[#4E4E4E] px-[6px] py-[3px] text-[12px] dark:text-[#fff]/80 font-medium">
                 Updates
               </button>
 
-              <button className="px-[6px] py-[3px] text-[12px] font-medium text-[#4E4E4E]">
+              <button className="px-[6px] py-[3px] text-[12px] font-medium text-[#4E4E4E] dark:text-[#fff]/80">
                 Unread
               </button>
             </div>
@@ -115,7 +115,7 @@ export default function Notification() {
                   notificationData.map((notif: TNotification) => (
                     <div
                       key={notif._id}
-                      className={`poppins flex h-[80px] cursor-pointer flex-row items-center gap-[10px] border-b-[1px] border-[#E4E4E4] px-6 ${!notif.isRead ? "bg-[#F3F3F3]" : ""}`}
+                      className={`poppins flex h-[80px] cursor-pointer flex-row items-center gap-[10px] border-b-[1px] border-[#E4E4E4] dark:border-[#4E4E4E]/30 px-6 ${!notif.isRead ? "bg-[#F3F3F3]/5" : ""}`}
                       onClick={() => handleRead(notif._id)}
                     >
                       {/* icon */}

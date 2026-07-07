@@ -142,7 +142,7 @@ function Workspace() {
 
   // FIXED: Simplified useEffect to prevent clearing
   useEffect(() => {
-    if (workspaceData) {
+    if (workspaceData && workspaceData._id) {
       dispatch(setCurrentWorkspace(workspaceData?._id));
       dispatch(setWorkspace(workspaceData));
     }

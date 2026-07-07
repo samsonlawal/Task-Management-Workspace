@@ -7,6 +7,7 @@ import {
   getFromLocalStorage,
 } from "@/utils/localStorage/AsyncStorage";
 import { setAuthState } from "@/redux/Slices/authSlice";
+import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
 
 const PERSIST_AUTH_KEY = env?.auth?.PERSIST_AUTH_KEY;
 const INITIAL_APP_STATE = env?.auth?.INITIAL_APP_STATE;
@@ -21,6 +22,15 @@ const usePersistAppContext = () => {
       cb: (storedState: any) => {
         if (storedState) {
           dispatch(setAuthState(storedState));
+        }
+      },
+    });
+
+    getFromLocalStorage({
+      key: "CurrentWorkspaceId",
+      cb: (storedWorkspaceId: any) => {
+        if (storedWorkspaceId) {
+          dispatch(setCurrentWorkspace(storedWorkspaceId));
         }
       },
     });

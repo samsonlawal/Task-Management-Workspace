@@ -106,7 +106,11 @@ export default function Card({
             </div> */}
 
             {/* TITLE */}
-            <p className="text-[13px] font-medium">{title || "No Title"}</p>
+            {/* <p className="text-[13px] font-medium">{title || "No Title"}</p> */}
+
+          <p className="line-clamp-2 h-fit text-[11px] font-medium leading-tight text-[#565656] dark:text-[#fff]/50">
+            STK-01
+          </p>
           </div>
           <div className="cursor-pointer" onClick={gettaskdetails}>
             {/* Pass taskData to TaskDetails component */}
@@ -116,9 +120,10 @@ export default function Card({
 
         {/* Middle */}
         <div className="flex h-fit flex-col items-start justify-between gap-[4px] px-[14px]">
-          <p className="line-clamp-2 h-fit text-[11px] font-medium leading-tight text-[#565656] dark:text-[#fff]/50">
+          {/* <p className="line-clamp-2 h-fit text-[11px] font-medium leading-tight text-[#565656] dark:text-[#fff]/50">
             {desc}
-          </p>
+          </p> */}
+            <p className="text-[13px] font-normal">{title || "No Title"}</p>
         </div>
       </div>
 
