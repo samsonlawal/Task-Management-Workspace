@@ -42,9 +42,9 @@ import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
 
 interface TaskData {
   id: string;
-  title: string;
+  title?: string;
   description: string;
-  deadline: string;
+  deadline?: string;
   assignee: {
     name: string;
     email: string;
@@ -53,8 +53,8 @@ interface TaskData {
   priority: string;
   status: string;
   createdAt: string;
-  workspaceName: string;
-  workspaceId: string;
+  workspaceName?: string;
+  workspaceId?: string;
 }
 
 export default function TaskDetails({
@@ -103,7 +103,7 @@ export default function TaskDetails({
       // updatedAt: new Date(Date.now() - 3600000).toISOString(),
     },
     {
-      id: "c2",
+      id: "c4",
       taskId: taskData?.id || "1",
       comment: "Looks great Jane! Just one quick note: can we make sure the padding on the cards is exactly 16px to match the design system?",
       commenter: "Mark Johnson",
@@ -113,7 +113,7 @@ export default function TaskDetails({
       // updatedAt: new Date(Date.now() - 43200000).toISOString(),
     },
     {
-      id: "c3",
+      id: "c5",
       taskId: taskData?.id || "1",
       comment: "Good catch Mark. I'll update that right now and push the changes. We can use this to create other modals too.",
       commenter: "Jane Smith",
@@ -162,7 +162,7 @@ export default function TaskDetails({
 
   function handleDeleteTask() {
     // console.log(taskData.id);
-    const { id, workspaceId } = taskData;
+    const { id, workspaceId = "" } = taskData;
     console.log(taskData);
 
     if (id) {
@@ -186,7 +186,7 @@ export default function TaskDetails({
 
   function handlePromoteTask() {
     // console.log(taskData.id);
-    const { id, workspaceId } = taskData;
+    const { id, workspaceId = "" } = taskData;
     console.log(taskData);
 
     if (id) {
@@ -209,7 +209,7 @@ export default function TaskDetails({
 
   function handleDemoteTask() {
     // console.log(taskData.id);
-    const { id, workspaceId } = taskData;
+    const { id, workspaceId = "" } = taskData;
     console.log(taskData);
 
     if (id) {
@@ -232,7 +232,7 @@ export default function TaskDetails({
 
   function handleMarkAsDone() {
     // console.log(taskData.id);
-    const { id, workspaceId } = taskData;
+    const { id, workspaceId = "" } = taskData;
     console.log(taskData);
 
     if (id) {
@@ -252,7 +252,6 @@ export default function TaskDetails({
       });
     }
   }
-
 
   const [value, setValue] = useState('')
 
@@ -456,9 +455,9 @@ let newCommentObject = {
                         </label>
                       </div>
                       <p className="text-[11px] font-normal">
-                        {DateTime.fromISO(taskData.deadline).toFormat(
-                          "dd MMMM, yyyy",
-                        )}
+                        {taskData?.deadline ? DateTime.fromISO(taskData?.deadline).toFormat(
+                          "dd MMMM, yyyy"
+                        ) : "Not Set"}
                       </p>
                     </div>
 
@@ -638,7 +637,7 @@ let newCommentObject = {
                             {comments && Object.keys(comments).length > 0 ? (
                               comments.map((comment,key) => {
                                 return(
-                                    <div className="flex flex-row justify-start items-start py-1 gap-2 ">
+                                    <div key={comment.id} className="flex flex-row justify-start items-start py-1 gap-2 ">
                             <div className="flex flex-row items-center justify-center gap-1">
                         {comment?.commenterImage &&
                         comment?.commenterImage !== "none" ? (

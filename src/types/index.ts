@@ -20,6 +20,7 @@ export type TTask = {
 };
 
 export type TSingleTask = {
+  title?: string;
   description: string;
   status?: string;
   priority: string;
@@ -33,7 +34,7 @@ export type TSingleTask = {
 };
 
 export type TAddTask = {
-  title: string;
+  title?: string;
   description: string;
   status: string;
   priority: string;

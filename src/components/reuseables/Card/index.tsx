@@ -33,7 +33,7 @@ export default function Card({
   status,
   createdAt,
 }: {
-  title: string;
+  title?: string;
   desc: string;
   deadline: any;
   name?: string;

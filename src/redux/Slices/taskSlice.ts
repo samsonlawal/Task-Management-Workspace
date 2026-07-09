@@ -2,9 +2,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { saveToLocalStorage } from "@/utils/localStorage/AsyncStorage";
 
 interface TaskData {
+  title?: string;
   id: string;
   description: string;
-  deadline: string;
+  deadline?: string;
   assignee: {
     name: string;
     email: string;
@@ -14,8 +15,8 @@ interface TaskData {
   priority: string;
   status: string;
   createdAt: string;
-  workspaceName: string;
-  // workspaceId: string;
+  workspaceName?: string;
+  workspaceId?: string;
 }
 
 // Define proper types for your task state

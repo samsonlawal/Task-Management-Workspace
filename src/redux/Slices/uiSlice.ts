@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type UIState = {
-  currentUI: "tasks" | "team" | "dashboard" | "settings" | "";
+  currentUI:     "tasks" | "dashboard" | "team" | "settings" | "notifications" | "chat" | "integrations" | ""
   isSidebarOpen: boolean;
 };
 
@@ -16,7 +16,7 @@ const uiSlice = createSlice({
   reducers: {
     setCurrentUI: (
       state,
-      action: PayloadAction<"tasks" | "team" | "dashboard" | "settings">,
+      action: PayloadAction<    "tasks" | "dashboard" | "team" | "settings" | "notifications" | "chat" | "integrations" | "">,
     ) => {
       state.currentUI = action.payload;
     },

@@ -24,7 +24,11 @@ import {
   AlignLeft,
   Library,
   CheckCheck,
-  Users,
+  UsersRound,
+  MessageCircle,
+  Bell,
+  Blocks,
+  Workflow,
   Settings,
 } from "lucide-react";
 import Brand from "@/components/reuseables/Brand";
@@ -34,7 +38,7 @@ export default function Sidebar() {
   const { user } = useSelector((state: any) => state.auth);
 
   const [current, setCurrent] = useState<
-    "tasks" | "dashboard" | "team" | "settings" | ""
+    "tasks" | "dashboard" | "team" | "settings" | "notifications" | "chat" | "integrations" | ""
   >("");
 
   const { data: workspace, onGetWorksapce } = useGetWorkspace();
@@ -73,22 +77,45 @@ export default function Sidebar() {
                 label: "Dashboard",
                 value: "dashboard",
                 icon: <LayoutDashboard strokeWidth={1.5} size={18} />,
+                disabled: false,
+
               },
               {
                 label: "Tasks",
                 value: "tasks",
                 icon: <CheckCheck strokeWidth={1.5} size={18} />,
+                disabled: false,
+
               },
               {
                 label: "Team",
                 value: "team",
-                icon: <Users strokeWidth={1.5} size={18} />,
+                icon: <UsersRound strokeWidth={1.5} size={18} />,
+                disabled: false,
               },
               {
-                label: "Settings",
-                value: "settings",
-                icon: <Settings strokeWidth={1.5} size={18} />,
+                label: "Chat",
+                value: "chat",
+                icon: <MessageCircle strokeWidth={1.5} size={18} />,
+                disabled: true,
               },
+              // {
+              //   label: "Notifications",
+              //   value: "notification",
+              //   icon: <Bell strokeWidth={1.5} size={18} />,
+              // },
+              {
+                label: "Integrations",
+                value: "integrations",
+                icon: <Workflow strokeWidth={1.5} size={18} />,
+                disabled: true,
+              },
+              
+              // {
+              //   label: "Settings",
+              //   value: "settings",
+              //   icon: <Settings strokeWidth={1.5} size={18} />,
+              // }
             ] as const
           ).map((link) => (
             <span
@@ -97,7 +124,7 @@ export default function Sidebar() {
                 dispatch(setCurrentUI(link.value));
                 setCurrent(link.value);
               }}
-              className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 ${current === link.value ? "border border-[#565656]/10 bg-[#565656]/10" : "border-[white] dark:border-[#111]"}`}
+              className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 ${current === link.value ? "border border-[#565656]/10 bg-[#565656]/10" : "border-[white] dark:border-[#111]"} ${link.disabled ? "opacity-70 hover:cursor-not-allowed" : ""}`}
             >
               {link.icon}
               {link.label}

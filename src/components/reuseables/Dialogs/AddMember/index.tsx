@@ -188,9 +188,9 @@ export default function AddMember() {
               </div>
             </DialogTitle>
             <Description className="pb-6">
-              <p className="w-[80%] text-[12px] leading-4 text-[#777]">
+              <span className="w-[80%] text-[12px] leading-4 text-[#777]">
                 Invite your team to review and collaborate on this project
-              </p>
+              </span>
             </Description>
             <div
               className="flex flex-col gap-4"

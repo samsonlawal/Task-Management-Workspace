@@ -54,6 +54,7 @@ export default function AddTask({ taskData }: any) {
   );
 
   const [task, setTask] = useState<TAddTask>({
+    title: "",
     description: "",
     workspace_id: "",
     assignee: "",
@@ -212,6 +213,7 @@ export default function AddTask({ taskData }: any) {
           };
 
           setTask({
+            // title: fetchedTask.title || "",
             description: fetchedTask.description || "",
             workspace_id: fetchedTask.workspace_id || workspaceId,
             assignee: fetchedTask.assignee?.email || "",
