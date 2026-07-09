@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import Dashboard from "@/components/pages/Dashboard";
 import Team from "@/components/pages/Team";
-import Settings from "../Settings";
+import Chat from "@/components/pages/Chats";
+import Integrations from "@/components/pages/Integrations";
+import Settings from "@/components/pages/Settings";
 import TasksView from "./views/TasksView";
 
 function Workspace() {
@@ -18,9 +20,12 @@ function Workspace() {
         <Team />
       ) : currentUI === "dashboard" ? (
         <Dashboard />
-        
       ) : currentUI === "settings" ? (
         <Settings />
+      ) : currentUI === "chat" ? (
+        <Chat />
+      ) : currentUI === "integrations" ? (
+        <Integrations />
       ) : (
         <div></div>
       )}

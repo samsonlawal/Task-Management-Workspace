@@ -56,7 +56,7 @@ function Workspaces() {
         <div className="flex flex-col gap-1 rounded-[6px] border-[1px] border-[#565656]/20 bg-[#EEEEEE]/20 p-4 transition-all duration-300 dark:bg-[#111]/20">
           {workspacingLoading ? (
             <div className="flex justify-center p-4 transition-all duration-300">
-              <p className="text-sm text-[#565656]/20">Loading workspaces...</p>
+              <p className="text-sm text-[#fff]40">Loading workspaces...</p>
             </div>
           ) : workspaces && workspaces.length > 0 ? (
             workspaces.map((ws) => (
@@ -97,7 +97,7 @@ function Workspaces() {
             ))
           ) : (
             <div className="flex justify-center p-4">
-              <p className="text-sm text-gray-500">No workspaces found</p>
+              <p className="text-sm text-[#fff]/60">No workspaces found</p>
             </div>
           )}
         </div>
