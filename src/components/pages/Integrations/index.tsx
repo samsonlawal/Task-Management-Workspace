@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSidebar } from "@/redux/Slices/uiSlice"
+import { PanelLeft } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMagnifyingGlass,
@@ -8,6 +11,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Notification from "@/components/reuseables/Notification";
 import { showSuccessToast } from "@/utils/toaster";
+
+
+
 
 const SlackIcon = () => (
   <svg viewBox="0 0 24 24" className="h-6 w-6">
@@ -116,6 +122,8 @@ function Integrations() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [connected, setConnected] = useState<string[]>(["slack", "google-calendar"]);
 
+  const dispatch = useDispatch()
+
   const handleToggleConnection = (id: string, name: string) => {
     if (connected.includes(id)) {
       setConnected((prev) => prev.filter((item) => item !== id));
@@ -141,7 +149,19 @@ function Integrations() {
     <div className="flex h-fit w-full flex-col gap-2 px-8 transition-all duration-300">
       <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] z-10">
         <div className="poppins flex w-full items-center justify-between border-b border-[#565656]/10 py-[7px]">
-          <h2 className="text-xl text-[#111] dark:text-white">Integrations</h2>
+
+<div className="flex flex-row justify-center items-center">
+          <button
+          onClick={() => dispatch(toggleSidebar())}
+          className="flex lg:hidden px-1 lg:p-2 text-[#707070] hover:text-[#111] dark:hover:text-white transition-all duration-300"
+          >
+            <PanelLeft size={18} strokeWidth={1.6} />
+          </button>
+          <h2 className="poppins-medium text-md lg:text-xl text-[#111] dark:text-white">
+            Issues
+          </h2>
+        </div>
+
           <div className="flex flex-row items-center justify-center gap-3">
             <Notification />
           </div>

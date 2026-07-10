@@ -9,12 +9,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import AddMember from "../../reuseables/Dialogs/AddMember";
 import { CustomSelect } from "../../reuseables/select";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSidebar } from "@/redux/Slices/uiSlice"
+import { PanelLeft } from "lucide-react";
 import { RootState } from "@/redux/store";
 import Loader from "@/utils/loader";
 import Notification from "@/components/reuseables/Notification";
 
 function Dashboard() {
+
+  const dispatch = useDispatch()
+
   const members = useSelector(
     (state: RootState) => state.MemberData?.members || [],
   );
@@ -98,7 +103,17 @@ function Dashboard() {
     <div className="flex h-fit w-full flex-col gap-2 px-8 transition-all duration-300">
       <div className="sticky top-0 w-full bg-[white] dark:bg-[#111]">
         <div className="poppins flex w-full items-center justify-between border-[#565656]/10 py-[7px]">
-          <h2 className="text-xl text-[#111] dark:text-white">Dashboard</h2>
+        <div className="flex flex-row justify-center items-center">
+          <button
+          onClick={() => dispatch(toggleSidebar())}
+          className="flex lg:hidden px-1 lg:p-2 text-[#707070] hover:text-[#111] dark:hover:text-white transition-all duration-300"
+          >
+            <PanelLeft size={18} strokeWidth={1.6} />
+          </button>
+          <h2 className="poppins-medium text-md lg:text-xl text-[#111] dark:text-white">
+          Dashboard
+          </h2>
+        </div>
           <div className="flex flex-row items-center justify-center gap-3">
             <Notification />
             <CustomSelect

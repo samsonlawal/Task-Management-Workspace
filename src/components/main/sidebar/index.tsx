@@ -97,7 +97,7 @@ export default function Sidebar() {
                 label: "Chat",
                 value: "chat",
                 icon: <MessageCircle strokeWidth={1.5} size={18} />,
-                disabled: true,
+                disabled: false,
               },
               // {
               //   label: "Notifications",
