@@ -9,7 +9,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import AddMember from "../../reuseables/Dialogs/AddMember";
 import { CustomSelect } from "../../reuseables/TeamSelect";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleSidebar } from "@/redux/Slices/uiSlice";
+import { PanelLeft } from "lucide-react";
 import { RootState } from "@/redux/store";
 import Loader from "@/utils/loader";
 import stringToColor from "@/utils/stringToColor";
@@ -19,6 +21,7 @@ import TeamMenu from "./TeamMenu";
 import { useGetMembers } from "@/hooks/api/workspace";
 
 function Team() {
+  const dispatch = useDispatch();
   const members = useSelector(
     (state: RootState) => state.MemberData?.members || [],
   );
@@ -128,14 +131,20 @@ function Team() {
 
   return (
     <div className="flex h-fit w-full flex-col gap-2 px-8">
-      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111]">
+      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] z-10">
         <div className="poppins flex w-full items-center justify-between border-[#565656]/10 py-[7px]">
-          <h2 className="text-xl text-[#111] dark:text-white">
-            Team
-            {/* <span className="pl-1 text-[14px] text-[#565656] dark:text-[#fff]/50">
-              {members?.length} Members
-            </span> */}
-          </h2>
+          <div className="flex flex-row items-center">
+            <button
+              onClick={() => dispatch(toggleSidebar())}
+              className="flex lg:hidden px-1 lg:p-2 text-[#707070] hover:text-[#111] dark:hover:text-white transition-all duration-300 mr-2"
+              title="Toggle Navigation Sidebar"
+            >
+              <PanelLeft size={18} strokeWidth={1.6} />
+            </button>
+            <h2 className="text-xl text-[#111] dark:text-white">
+              Team
+            </h2>
+          </div>
           <div className="flex flex-row items-center justify-center gap-3">
             <Notification />
 
@@ -163,19 +172,18 @@ function Team() {
         </div>
       </div>
 
-      <div className="flex h-fit items-center justify-between pt-6 transition-all duration-300">
-        {/* <div className="flex flex-row items-center justify-between"> */}
-        <div className="flex flex-row items-center gap-2">
-          <div className="flex flex-1 flex-row items-end gap-2">
+      <div className="flex flex-col sm:flex-row gap-4 h-fit items-stretch sm:items-center justify-between pt-6 transition-all duration-300">
+        <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
+          <div className="flex flex-1 flex-row items-end gap-2 w-full">
             {/* search */}
-            <div className="relative w-auto flex-1 rounded-md">
+            <div className="relative w-full sm:w-auto flex-1 rounded-md">
               {/* Search input */}
               <input
                 type="text"
                 placeholder="Search Users"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-[300px] rounded-md border-[1px] border-[#565656]/50 bg-transparent py-2.5 pl-8 pr-8 text-xs outline-none placeholder:text-[#565656]/80 focus:border-[#565656] dark:text-[#eee]"
+                className="w-full sm:w-[300px] rounded-md border-[1px] border-[#565656]/50 bg-transparent py-2.5 pl-8 pr-8 text-xs outline-none placeholder:text-[#565656]/80 focus:border-[#565656] dark:text-[#eee]"
               />
 
               {/* Magnifier icon */}
@@ -202,14 +210,15 @@ function Team() {
           </div>
         </div>
 
-        <div className="flex w-fit flex-row gap-3">
+        <div className="flex w-full sm:w-fit flex-row justify-end gap-3">
           <AddMember />
         </div>
       </div>
       {/* Table */}
-      <div className="border-gray- h-full w-[100%] rounded-[8px] border shadow-sm dark:border-[#565656]/20">
+      <div className="border border-gray-200 dark:border-[#565656]/20 h-full w-full rounded-[8px] shadow-sm overflow-hidden bg-white dark:bg-[#111]">
         {members ? (
-          <div className="h-full w-full rounded-[8px]">
+          <div className="w-full overflow-x-auto">
+            <div className="min-w-[800px] rounded-[8px]">
             {/* Header */}
             <div className="grid h-[50px] w-full grid-cols-[20px_0.8fr_1.2fr_0.4fr_0.5fr_0.5fr_0.4fr_20px] items-center justify-center gap-5 rounded-t-[8px] bg-gray-100 px-4 text-[13px] text-gray-600 dark:bg-[#565656]/20 dark:text-[#787878]">
               <div className="flex items-center justify-center">
@@ -374,6 +383,7 @@ function Team() {
                   Next
                 </button>
               </div>
+            </div>
             </div>
           </div>
         ) : (

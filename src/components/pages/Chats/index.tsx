@@ -315,8 +315,8 @@ function Chats() {
     <div className="flex h-full w-full flex-col overflow-hidden bg-white dark:bg-[#111]">
       {/* Top Unified Header Row */}
       <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] border-b border-[#565656]/10 z-20">
-        <div className="poppins flex w-full items-center justify-between px-6 py-[11px]">
-          <div className="flex flex-row items-center gap-2.5">
+        <div className="poppins flex w-full items-center justify-between px-4 py-[11px]">
+          <div className="flex flex-row items-center gap-1">
             <button
               onClick={() => dispatch(toggleSidebar())}
               className="flex lg:hidden p-1 text-[#707070] hover:text-[#111] dark:hover:text-white transition-all duration-300"

@@ -59,7 +59,7 @@ export const Message: React.FC<MessageProps> = ({
         <div
           className={`rounded-[8px] px-3.5 py-2 text-[13px] leading-relaxed select-text ${
             isMe
-              ? "bg-indigo-50/70 text-indigo-900 border border-indigo-100 dark:bg-indigo-950/40 dark:text-indigo-200 dark:border-indigo-900/30"
+              ? "bg-zinc-900 text-white border border-zinc-950 dark:bg-zinc-850 dark:border-zinc-700/60 dark:text-zinc-100"
               : "bg-gray-100 text-[#111] dark:bg-zinc-800/80 dark:text-zinc-200"
           }`}
         >
