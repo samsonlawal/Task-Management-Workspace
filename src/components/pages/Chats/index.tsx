@@ -14,7 +14,7 @@ import {
   Send, 
   Paperclip, 
   Smile, 
-  Users, 
+  UsersRound, 
   Bot, 
   MessageSquare, 
   Search, 
@@ -141,6 +141,7 @@ function Chats() {
   const [newChannel, setNewChannel] = useState({ name: "", description: "", isPrivate: false });
   
   const [showIntegrationModal, setShowIntegrationModal] = useState(false);
+  const [showRightSidebar, setShowRightSidebar] = useState(false);
 
   // Inputs & Typing
   const [search, setSearch] = useState("");
@@ -340,6 +341,15 @@ function Chats() {
           </div>
           
           <div className="flex items-center gap-4">
+            {/* Toggle right sidebar button (mobile/tablet only) */}
+            <button
+              onClick={() => setShowRightSidebar(!showRightSidebar)}
+              className="flex lg:hidden p-1.5 text-gray-400 hover:text-[#111] dark:hover:text-white transition-colors rounded-md hover:bg-gray-100 dark:hover:bg-zinc-800"
+              title="Show Chat Members & Channels"
+            >
+              <UsersRound className="w-4 h-4" />
+            </button>
+
             {/* Active chat settings icons */}
             <div className="hidden sm:flex items-center gap-3 text-gray-400 border-r border-[#565656]/10 pr-4">
               <button className="hover:text-black dark:hover:text-white transition-colors"><Bell className="w-4 h-4" /></button>
@@ -348,7 +358,7 @@ function Chats() {
             </div>
             
             {/* Global Notification system */}
-            <Notification />
+            {/* <Notification /> */}
           </div>
         </div>
       </div>
@@ -410,8 +420,20 @@ function Chats() {
           />
         </div>
 
+        {/* Backdrop for mobile right-sidebar overlay */}
+        {showRightSidebar && (
+          <div
+            onClick={() => setShowRightSidebar(false)}
+            className="fixed inset-0 z-10 bg-black/25 backdrop-blur-xs lg:hidden"
+          />
+        )}
+
         {/* 2. INNER DEDICATED SIDEBAR (Placed on the right side) */}
-        <div className="flex w-64 flex-col border-l border-[#565656]/10 bg-gray-50/50 dark:bg-[#161616]/40 h-full">
+        <div 
+          className={`absolute lg:relative right-0 top-0 z-20 flex h-full w-64 flex-col border-l border-[#565656]/10 bg-white lg:bg-gray-50/50 dark:bg-[#111] lg:dark:bg-[#161616]/40 transition-transform duration-300 transform lg:translate-x-0 ${
+            showRightSidebar ? "translate-x-0 shadow-2xl" : "translate-x-full lg:translate-x-0"
+          }`}
+        >
           {/* Search */}
           <div className="p-4 border-b border-[#565656]/10">
             <div className="relative flex items-center">

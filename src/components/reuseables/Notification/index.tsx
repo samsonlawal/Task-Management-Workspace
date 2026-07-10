@@ -58,7 +58,7 @@ export default function Notification() {
   );
 
   return (
-    <div className="poppins dark:bg-[#565656]/10 flex h-[50px] w-fit flex-row items-center justify-center gap-6 text-left">
+    <div className="poppins flex h-[50px] w-fit flex-row items-center justify-center gap-6 text-left">
       {/* <FontAwesomeIcon icon={faBell} className="" /> */}
 
       {/* <div className="h-[80%] border-l-[1px]"></div> */}
