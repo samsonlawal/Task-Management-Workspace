@@ -63,7 +63,7 @@ function Workspace() {
     data: workspaces,
     onGetUserWorkspace,
     loading: workspacingLoading,
-  } = useGetUserWorkspace(user?.id);
+  } = useGetUserWorkspace(user?._id);
 
   const {
     data: memberData,
@@ -104,12 +104,17 @@ function Workspace() {
     }
   }, [user]); // Only depend on user
 
+  // Keep filteredWorkspaces in sync with workspaces and workspaceData
+  useEffect(() => {
+    if (workspaces) {
+      setFilteredWorkspaces(
+        workspaces.filter((workspace) => workspace._id !== workspaceData?._id) || []
+      );
+    }
+  }, [workspaces, workspaceData]);
+
   function openWorkspaceDialog() {
     onGetUserWorkspace(user?._id);
-    setFilteredWorkspaces(
-      workspaces?.filter((workspace) => workspace._id !== workspaceData?._id) ||
-        [],
-    );
   }
 
   function switchWorkspace(id: string) {
@@ -134,10 +139,6 @@ function Workspace() {
     });
 
     onGetMembers({ workspaceId: id });
-
-    setFilteredWorkspaces(
-      workspaces?.filter((workspace) => workspace._id !== id) || [],
-    );
   }
 
   // FIXED: Simplified useEffect to prevent clearing

@@ -146,7 +146,7 @@ function Integrations() {
   });
 
   return (
-    <div className="flex h-fit w-full flex-col gap-2 px-8 transition-all duration-300">
+    <div className="flex h-fit w-full flex-col gap-2 px-4 transition-all duration-300">
       <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] z-10">
         <div className="poppins flex w-full items-center justify-between border-b border-[#565656]/10 py-[7px]">
 
@@ -158,7 +158,7 @@ function Integrations() {
             <PanelLeft size={18} strokeWidth={1.6} />
           </button>
           <h2 className="poppins-medium text-md lg:text-xl text-[#111] dark:text-white">
-            Issues
+            Integrations
           </h2>
         </div>
 
@@ -169,7 +169,7 @@ function Integrations() {
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 transition-all duration-300">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 transition-all duration-300 px-4">
         <div className="relative w-auto flex-initial rounded-md">
           {/* Search input */}
           <input
@@ -179,6 +179,7 @@ function Integrations() {
             onChange={(e) => setSearch(e.target.value)}
             className="w-full sm:w-[300px] rounded-md border-[1px] border-[#565656]/50 bg-transparent py-2.5 pl-8 pr-8 text-xs outline-none placeholder:text-[#565656]/80 focus:border-[#565656] dark:text-[#eee]"
           />
+          
 
           {/* Magnifier icon */}
           <div className="pointer-events-none absolute left-[1px] top-1/2 flex h-[90%] -translate-y-1/2 items-center justify-center rounded-md px-2 text-gray-400">
@@ -221,7 +222,7 @@ function Integrations() {
       </div>
 
       {/* Grid List */}
-      <div className="grid grid-cols-1npm run  md:grid-cols-2 lg:grid-cols-3 gap-6 pt-8 pb-24">
+      <div className="grid grid-cols-1npm run  md:grid-cols-2 lg:grid-cols-3 gap-6 pt-8 pb-24 px-4">
         {filteredIntegrations.length > 0 ? (
           filteredIntegrations.map((item) => {
             const isConnected = connected.includes(item.id);

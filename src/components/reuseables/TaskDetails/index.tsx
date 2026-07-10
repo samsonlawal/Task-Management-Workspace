@@ -20,6 +20,8 @@ import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { DateTime } from "luxon";
+import { Message } from "@/components/reuseables/chat/Message";
+import { MessageBox } from "@/components/reuseables/chat/MessageBox";
 import {
   faCalendar,
   faCircleCheck,
@@ -65,6 +67,7 @@ export default function TaskDetails({
   getDetails?: () => void;
 }) {
   const dispatch = useDispatch();
+  const { user } = useSelector((state: RootState) => state.auth) as { user: any };
 
   const { onDeleteTask, loading: deleteLoading } = useDeleteTask();
   const { onPromoteTask, loading: promoteLoading } = usePromoteTask();
@@ -255,20 +258,19 @@ export default function TaskDetails({
 
   const [value, setValue] = useState('')
 
-  // Adding comment
   function addComments(newCommentText: string) {
-    
-let newCommentObject = {
-      id: "c7",
+    if (!newCommentText.trim()) return;
+
+    const newCommentObject = {
+      id: `c-${Date.now()}`,
       taskId: taskData?.id || "1",
       comment: newCommentText,
-      commenter: "User",
-      commenterImage: "https://i.pravatar.cc/150?img=12",
-      commenterEmail: "user@example.com",
-      createdAt: new Date().toISOString(), // 1 hour ago
-      // updatedAt: new Date(Date.now() - 3600000).toISOString(),
+      commenter: user?.fullname || "You",
+      commenterImage: user?.profileImage || "none",
+      commenterEmail: user?.email || "",
+      createdAt: new Date().toISOString(),
       attachedFileName: selectedFiles ? selectedFiles.name : "",
-}
+    };
 
     setComments((prevComments) => {
       return [...prevComments, newCommentObject]
@@ -632,122 +634,44 @@ let newCommentObject = {
                         )}
 
                         {activeTab === "comments" && (
-                          <div className="flex flex-col justify-start items-start py-1 gap-2 overflow-y-auto scrollbar-hide max-h-[250px] h-fit w-full">
+                          <div className="flex flex-col justify-start items-start py-1 gap-4 overflow-y-auto scrollbar-hide max-h-[250px] h-fit w-full pb-16 relative">
+                            {comments && comments.length > 0 ? (
+                              comments.map((comment) => {
+                                const isMe = comment.commenter === "You" || (user && comment.commenter === user.fullname);
+                                const dateFormatted = comment.updatedAt 
+                                  ? DateTime.fromISO(comment.updatedAt).toFormat("MMMM dd, yyyy, hh:mm a")
+                                  : DateTime.fromISO(comment.createdAt).toFormat("MMMM dd, yyyy, hh:mm a");
+                                return (
+                                  <Message
+                                    key={comment.id}
+                                    senderName={comment.commenter}
+                                    senderAvatar={comment.commenterImage}
+                                    content={comment.comment}
+                                    timestamp={dateFormatted}
+                                    isMe={isMe}
+                                    attachedFileName={comment.attachedFileName}
+                                  />
+                                );
+                              })
+                            ) : (
+                              <div className="w-full text-center py-6 text-gray-500 italic text-[12px]">
+                                No comments yet...
+                              </div>
+                            )}
 
-                            {comments && Object.keys(comments).length > 0 ? (
-                              comments.map((comment,key) => {
-                                return(
-                                    <div key={comment.id} className="flex flex-row justify-start items-start py-1 gap-2 ">
-                            <div className="flex flex-row items-center justify-center gap-1">
-                        {comment?.commenterImage &&
-                        comment?.commenterImage !== "none" ? (
-                          <img
-                            src={comment?.commenterImage}
-                            alt="avatar"
-                            className="h-5 w-5 rounded-full"
-                          />
-                        ) : (
-                          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-500">
-                            <span className="text-[8px] text-white">
-                              {comment?.commenter.charAt(0).toUpperCase()}
-                            </span>
+                            <div ref={commentRef} />
+
+                            <MessageBox
+                              value={value}
+                              onChange={(val) => setValue(val)}
+                              onSend={() => addComments(value)}
+                              placeholder="> say something..."
+                              selectedFile={selectedFiles}
+                              onFileSelect={(file) => setSelectedFiles(file)}
+                              isDarkBg={true}
+                              className="absolute bottom-0 left-0 w-[40%] p-1 bg-[#111] z-10"
+                            />
                           </div>
-                        )}
-                      </div>
-                      <span className="flex flex-col gap-2 bg-[#565656]/10 rounded-sm p-2 poppins-light">
-                            <p className="text-[#fff]/70">{comment?.comment}
-                            {/* <span className="text-amber-500"> @{comment?.commenter.split(" ")[0]}</span> */}
-                            </p>
-                             {comment?.attachedFileName && (
-    <div className="flex w-fit gap-2 items-center bg-[#111]/40 px-2 py-1.5 rounded-md mt-1 border border-[#565656]/20">
-      <p className="text-[11px] text-[#fff]/70 truncate">
-        📎 {comment.attachedFileName}
-      </p>
-    </div>
-  )}
-
-                            <p className="text-[#fff]/30 text-[10px]">{comment?.updatedAt ? 
-                            `Edited ${DateTime.fromISO(comment?.updatedAt).toFormat(
-                                "MMMM dd, yyyy",
-                              )}` :
-                            `${DateTime.fromISO(comment?.createdAt).toFormat(
-                                "MMMM dd, yyyy",
-                              )}`  
-                          }
-                            </p>
-                      </span>         
-                      </div>
-                                )
-                               })
-                              ): (
-                                <div>
-                                  <p>No comments yet...</p>
-                                </div>
-                              )}
-
-                    <div ref={commentRef} />
-
-                        {/* Comment box */}
-                      <div className="p-1 rounded-sm h-fit w-[40%] absolute bottom-0 bg-[#111]">
-                        {selectedFiles && (
-                        <div className="flex w-fit gap-2 items-start justify-between bg-gray-700/20 px-2 py-1 rounded-md mb-2">
-                             <p className="text-[11px] text-[#fff]/70 truncate max-w-[80%]">📎 
-                            {selectedFiles?.name}</p>
-                        <button 
-                          onClick={() => setSelectedFiles(null)} 
-                          className="text-[#fff]/50 hover:text-white text-[10px] px-1">
-                          ✕
-                          </button>
-                          </div>
-                          )}
-
-                        <span className="text-[#fff]/50 dark:bg-[#111] border border-[#fff]/20 w-full pl-0.5 pr-2 pt-1 rounded-[6px] focus:outline-none focus:border-amber-500 placeholder-[#fff]/50 flex-col justify-start items-start flex">
-                        
-                        <span className='flex flex-row justify-center items-center w-full'>
-
-                        <textarea placeholder="> say something..." className="text-[#fff]/50 dark:bg-[#111] w-full px-2 py-2 rounded-[6px] focus:outline-none placeholder-[#fff]/50 resize-none scrollbar-hide flex-1" value={value} onChange={(e) => {setValue(() => e.target.value)}}
-                        
-                        onKeyDown={(e) => {
-                          if(e.key === 'Enter' && !e.shiftKey){
-                            e.preventDefault()
-                            addComments(value)
-                          }
-                        }}
-                        />
-                      
-                      <div className='flex flex-row gap-2 items-center justify-center'>
-                      {/* Pin */}
-                      <label className="rounded-full p-1 hover:bg-white/10 cursor-pointer transition-all flex items-center justify-center">
-                        <input type="file" 
-                        className="hidden"
-                        onChange={(e) => {
-                        const file = e.target.files?.[0]
-                        if(file){
-                          setSelectedFiles(file)
-                          console.log("selected file:", file.name);
-                        }
-                        }}
-                        />
-
-                           <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="#fff" viewBox="0 0 256 256" className="rotate-90 cursor-pointer">
-     <path d="M248,128a56.06,56.06,0,0,1-56,56H48a40,40,0,0,1,0-80H192a24,24,0,0,1,0,48H80a8,8,0,0,1,0-16H192a8,8,0,0,0,0-16H48a24,24,0,0,0,0,48H192a40,40,0,0,0,0-80H80a8,8,0,0,1,0-16H192A56.06,56.06,0,0,1,248,128Z"></path>
-   </svg>
-                      </label>
-                        
-                        {/* send button */}
-                        <span className="flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all duration-300 rounded-full p-1.5"
-                        onClick={() => {addComments( value )}}
-                        >
-                            
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" className="fill-[#fff]" viewBox="0 0 256 256"><path d="M240,127.89a16,16,0,0,1-8.18,14L63.9,237.9A16.15,16.15,0,0,1,56,240a16,16,0,0,1-15-21.33l27-79.95A4,4,0,0,1,71.72,136H144a8,8,0,0,0,8-8.53,8.19,8.19,0,0,0-8.26-7.47h-72a4,4,0,0,1-3.79-2.72l-27-79.94A16,16,0,0,1,63.84,18.07l168,95.89A16,16,0,0,1,240,127.89Z"></path></svg>
-                        </span>
-                      </div>
-                        </span>
-
-                         </span>
-                        
-                      </div>
-                    </div>
                         )}
 
                         {activeTab === "attachments" && (
