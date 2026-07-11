@@ -41,6 +41,7 @@ import {
 } from "@/hooks/api/tasks";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
+import { Maximize2, Minimize2 } from "lucide-react";
 
 interface TaskData {
   id: string;
@@ -137,9 +138,11 @@ export default function TaskDetails({
   const [activeTab, setActiveTab] = useState<
     "activity" | "comments" | "attachments"
   >("activity");
+  const [isCommentsExpanded, setIsCommentsExpanded] = useState<boolean>(false);
 
   const handleDialogClose = () => {
     setIsDetailsOpen(false);
+    setIsCommentsExpanded(false);
   };
 
   const [spaceData, setSpaceData] = useState<TWorkspaceData>();
@@ -279,11 +282,12 @@ export default function TaskDetails({
   }
 
   const commentRef = useRef<HTMLDivElement>(null)
+  const commentsFeedRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    commentRef.current?.scrollIntoView({
-      behavior: "smooth"
-    })
+    if (commentsFeedRef.current) {
+      commentsFeedRef.current.scrollTop = commentsFeedRef.current.scrollHeight;
+    }
   }, [comments])
 
   const [selectedFiles, setSelectedFiles] = useState<File | null>(null)
@@ -327,7 +331,7 @@ export default function TaskDetails({
 
             <div className="fixed inset-0 flex w-screen items-center justify-end">
               <DialogPanel
-                className="h-[100%] w-full lg:w-[calc(100vw-256px)] space-y-1 rounded-sm bg-gray-100 px-8 py-6 dark:bg-[#111]"
+                className="h-[100vh] w-full lg:w-[calc(100vw-256px)] flex flex-col rounded-sm bg-gray-100 px-8 py-6 dark:bg-[#111] overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
               >
                 <DialogTitle className="flex flex-col items-start justify-center gap-8 pb-4 font-medium">
@@ -345,7 +349,19 @@ export default function TaskDetails({
 
 
 
-                      <div className="flex flex-row text-[12px] font-normal">
+                      <div className="flex flex-row text-[12px] font-normal items-center">
+                        <button
+                          onClick={handleDialogClose}
+                          className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-zinc-800 text-[#989898] hover:text-black dark:hover:text-white transition-colors"
+                          aria-label="Close details"
+                          title="Close panel"
+                        >
+                          <FontAwesomeIcon
+                            icon={faXmark}
+                            className="h-4 w-4"
+                          />
+                        </button>
+
                         <button
                           className="ml-2 flex h-6 w-6 items-center justify-center rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
                           aria-label="Task options"
@@ -377,7 +393,9 @@ export default function TaskDetails({
 
                 </DialogTitle>
 
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col lg:flex-row gap-8 flex-1 overflow-hidden mt-4 text-[12px] h-[calc(100vh-140px)]">
+                  {/* Left Column: Task Fields (hidden if expanded) */}
+                  <div className={`flex flex-col space-y-5 overflow-y-auto pr-3 border-r border-[#565656]/10 dark:border-zinc-800 ${isCommentsExpanded ? "hidden" : "flex-[3]"}`}>
                   <div className="poppins flex flex-row flex-wrap gap-5 pt-2">
                     {/* Created At */}
                     <div className="flex flex-row items-center gap-8 w-[300px]">
@@ -475,22 +493,22 @@ export default function TaskDetails({
                         </label>
                       </div>
                       <div className="flex flex-row items-center justify-center gap-1">
-                        {taskData.assignee.image &&
-                        taskData.assignee.image !== "none" ? (
+                        {taskData.assignee?.image &&
+                        taskData.assignee?.image !== "none" ? (
                           <img
-                            src={taskData.assignee.image}
+                            src={taskData.assignee?.image}
                             alt="avatar"
                             className="h-5 w-5 rounded-full"
                           />
                         ) : (
                           <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-500">
                             <span className="text-[8px] text-white">
-                              {taskData.assignee.name.charAt(0).toUpperCase()}
+                              {taskData.assignee?.name?.charAt(0).toUpperCase() || "U"}
                             </span>
                           </div>
                         )}
                         <p className="text-[11px] font-normal">
-                          {taskData.assignee.name}
+                          {taskData.assignee?.name || "Unassigned"}
                         </p>
                       </div>
                     </div>
@@ -591,14 +609,15 @@ export default function TaskDetails({
                       </div>
                     </div>
                   </div>
-
+                  </div>
                   </div>
 
-
-                  <div className="flex gap-3 pt-4 text-[12px]">
-                    <div className="mt-6 w-full">
+                  {/* Right Column: Tabs & Comments */}
+                  <div className={`flex flex-col h-full overflow-hidden relative ${isCommentsExpanded ? "flex-[5]" : "flex-[2]"}`}>
+                    <div className="w-full h-full flex flex-col">
                       {/* Tab Headers */}
-                      <div className="flex border-b border-gray-200 dark:border-[#565656]/20">
+                      <div className="flex items-center justify-between border-b border-gray-200 dark:border-[#565656]/20">
+                        <div className="flex">
                         <button
                           onClick={() => setActiveTab("activity")}
                           className={`px-4 py-2 font-medium ${activeTab === "activity" ? "border- border-b-2 font-semibold text-black dark:border-white dark:text-white" : "text-[#565656] hover:text-[#111] dark:hover:text-white"}`}
@@ -619,8 +638,27 @@ export default function TaskDetails({
                         </button>
                       </div>
 
-                      {/* Tab Content */}
-                      <div className="pt-4 h-full">
+                      <button
+                        onClick={() => setIsCommentsExpanded(!isCommentsExpanded)}
+                        className="px-2 py-1.5 text-zinc-500 hover:text-black dark:hover:text-white transition-colors flex items-center gap-1.5 text-[11px] font-medium"
+                        title={isCommentsExpanded ? "Show task fields" : "Expand comments"}
+                      >
+                        {isCommentsExpanded ? (
+                          <>
+                            <Minimize2 className="w-3.5 h-3.5" />
+                            <span>Collapse</span>
+                          </>
+                        ) : (
+                          <>
+                            <Maximize2 className="w-3.5 h-3.5" />
+                            <span>Expand comments</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Tab Content */}
+                    <div className="pt-4 flex-1 min-h-0">
                         {activeTab === "activity" && (
                           <div className="space-y-3">
                             <p>
@@ -634,43 +672,46 @@ export default function TaskDetails({
                         )}
 
                         {activeTab === "comments" && (
-                          <div className="flex flex-col justify-start items-start py-1 gap-4 overflow-y-auto scrollbar-hide max-h-[250px] h-fit w-full pb-16 relative">
-                            {comments && comments.length > 0 ? (
-                              comments.map((comment) => {
-                                const isMe = comment.commenter === "You" || (user && comment.commenter === user.fullname);
-                                const dateFormatted = comment.updatedAt 
-                                  ? DateTime.fromISO(comment.updatedAt).toFormat("MMMM dd, yyyy, hh:mm a")
-                                  : DateTime.fromISO(comment.createdAt).toFormat("MMMM dd, yyyy, hh:mm a");
-                                return (
-                                  <Message
-                                    key={comment.id}
-                                    senderName={comment.commenter}
-                                    senderAvatar={comment.commenterImage}
-                                    content={comment.comment}
-                                    timestamp={dateFormatted}
-                                    isMe={isMe}
-                                    attachedFileName={comment.attachedFileName}
-                                  />
-                                );
-                              })
-                            ) : (
-                              <div className="w-full text-center py-6 text-gray-500 italic text-[12px]">
-                                No comments yet...
-                              </div>
-                            )}
+                          <div className="flex flex-col h-[calc(100vh-220px)] lg:h-[calc(100vh-200px)] w-full relative overflow-hidden pb-4">
+                            <div ref={commentsFeedRef} className="flex-1 overflow-y-auto pb-4 space-y-4 pr-1 scrollbar-hide">
+                              {comments && comments.length > 0 ? (
+                                comments.map((comment) => {
+                                  const isMe = comment.commenter === "You" || (user && comment.commenter === user.fullname);
+                                  const dateFormatted = comment.updatedAt 
+                                    ? DateTime.fromISO(comment.updatedAt).toFormat("MMMM dd, yyyy, hh:mm a")
+                                    : DateTime.fromISO(comment.createdAt).toFormat("MMMM dd, yyyy, hh:mm a");
+                                  return (
+                                    <Message
+                                      key={comment.id}
+                                      senderName={comment.commenter}
+                                      senderAvatar={comment.commenterImage}
+                                      content={comment.comment}
+                                      timestamp={dateFormatted}
+                                      isMe={isMe}
+                                      attachedFileName={comment.attachedFileName}
+                                    />
+                                  );
+                                })
+                              ) : (
+                                <div className="w-full text-center py-6 text-gray-500 italic text-[12px]">
+                                  No comments yet...
+                                </div>
+                              )}
+                              <div ref={commentRef} />
+                            </div>
 
-                            <div ref={commentRef} />
-
-                            <MessageBox
-                              value={value}
-                              onChange={(val) => setValue(val)}
-                              onSend={() => addComments(value)}
-                              placeholder="> say something..."
-                              selectedFile={selectedFiles}
-                              onFileSelect={(file) => setSelectedFiles(file)}
-                              isDarkBg={true}
-                              className="absolute bottom-0 left-0 w-[40%] p-1 bg-[#111] z-10"
-                            />
+                            <div className="pt-2 border-t border-[#565656]/10 w-full bg-transparent">
+                              <MessageBox
+                                value={value}
+                                onChange={(val) => setValue(val)}
+                                onSend={() => addComments(value)}
+                                placeholder="> say something..."
+                                selectedFile={selectedFiles}
+                                onFileSelect={(file) => setSelectedFiles(file)}
+                                isDarkBg={true}
+                                className="w-full"
+                              />
+                            </div>
                           </div>
                         )}
 

@@ -30,16 +30,15 @@ import {
   Blocks,
   Workflow,
   Settings,
+  ChevronRight,
+  Sparkles,
 } from "lucide-react";
 import Brand from "@/components/reuseables/Brand";
 
 export default function Sidebar() {
   const router = useRouter();
   const { user } = useSelector((state: any) => state.auth);
-
-  const [current, setCurrent] = useState<
-    "tasks" | "dashboard" | "team" | "settings" | "notifications" | "chat" | "integrations" | ""
-  >("");
+  const currentUI = useSelector((state: any) => state.ui?.currentUI || "tasks");
 
   const { data: workspace, onGetWorksapce } = useGetWorkspace();
 
@@ -99,6 +98,12 @@ export default function Sidebar() {
                 icon: <MessageCircle strokeWidth={1.5} size={18} />,
                 disabled: false,
               },
+              {
+                label: "AI Hub",
+                value: "ai",
+                icon: <Sparkles strokeWidth={1.5} size={18} className="text-amber-500" />,
+                disabled: false,
+              },
               // {
               //   label: "Notifications",
               //   value: "notification",
@@ -122,12 +127,20 @@ export default function Sidebar() {
               key={link.value}
               onClick={() => {
                 dispatch(setCurrentUI(link.value));
-                setCurrent(link.value);
               }}
-              className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 ${current === link.value ? "border border-[#565656]/10 bg-[#565656]/10" : "border-[white] dark:border-[#111]"} ${link.disabled ? "opacity-70 hover:cursor-not-allowed" : ""}`}
+              className={`flex cursor-pointer flex-row items-center justify-between rounded-[5px] border px-2.5 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 ${
+                currentUI === link.value 
+                  ? "border-[#565656]/10 bg-[#565656]/10 text-zinc-950 dark:text-white font-medium" 
+                  : "border-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
+              } ${link.disabled ? "opacity-70 hover:cursor-not-allowed" : ""}`}
             >
-              {link.icon}
-              {link.label}
+              <div className="flex items-center gap-[11px]">
+                {link.icon}
+                <span>{link.label}</span>
+              </div>
+              {currentUI === link.value && (
+                <ChevronRight className="w-3.5 h-3.5 text-zinc-800 dark:text-zinc-200" />
+              )}
             </span>
           ))}
         </div>

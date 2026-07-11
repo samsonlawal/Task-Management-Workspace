@@ -130,8 +130,8 @@ function Team() {
   // };
 
   return (
-    <div className="flex h-fit w-full flex-col gap-2 px-8">
-      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] z-10">
+    <div className="flex h-fit w-full flex-col gap-2 pb-8">
+      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] z-10 px-4 lg:px-8">
         <div className="poppins flex w-full items-center justify-between border-[#565656]/10 py-[7px]">
           <div className="flex flex-row items-center">
             <button
@@ -172,8 +172,9 @@ function Team() {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 h-fit items-stretch sm:items-center justify-between pt-6 transition-all duration-300">
-        <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
+      <div className="px-4 lg:px-8 flex flex-col gap-2">
+        <div className="flex flex-col sm:flex-row gap-4 h-fit items-stretch sm:items-center justify-between pt-6 transition-all duration-300">
+          <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
           <div className="flex flex-1 flex-row items-end gap-2 w-full">
             {/* search */}
             <div className="relative w-full sm:w-auto flex-1 rounded-md">
@@ -389,6 +390,7 @@ function Team() {
         ) : (
           <Loader loaderSize={50} />
         )}
+      </div>
       </div>
     </div>
   );

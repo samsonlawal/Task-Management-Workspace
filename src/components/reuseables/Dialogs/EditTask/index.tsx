@@ -1,25 +1,18 @@
 "use client";
 
 import {
-  Description,
   Dialog,
   DialogBackdrop,
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
 import { useEffect, useState } from "react";
-import { CustomSelect } from "../../select";
-import Button from "../../Button";
 import {
-  faCirclePlus,
-  faListCheck,
-  faPlus,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MemberSelect from "../../MemberSelect";
 import {
-  useCreateTask,
   useGetSingleTask,
   useUpdateTask,
 } from "@/hooks/api/tasks";
@@ -28,26 +21,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { showSuccessToast, showErrorToast } from "@/utils/toaster";
-import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
-import { useGetSingleWorkspace } from "@/hooks/api/workspace";
-import { setWorkspace } from "@/redux/Slices/workspaceSlice";
 import { useGetTasks } from "@/hooks/api/tasks";
-import { setTasks } from "@/redux/Slices/taskSlice";
 
-export default function AddTask({ taskData }: any) {
+export default function EditTask({ taskData }: any) {
   const dispatch = useDispatch();
 
   let [isEditOpen, setIsEditOpen] = useState<boolean>(false);
-  const [isToggled, setIsToggled] = useState<boolean>(false);
-  const [selectedStatus, setSelectedStatus] = useState<string>("to-do");
-  const [status, setStatus] = useState<string>("todo");
-  const [priority, setPriority] = useState<string>("Low");
-
-  const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const [workspaceId, setWorkspaceId] = useState<string>("");
-
-
-  const MemberData = useSelector((state: RootState) => state.MemberData);
 
   const currentTask = useSelector(
     (state: RootState) => state.TasksData.currentTask,
@@ -59,8 +39,8 @@ export default function AddTask({ taskData }: any) {
     workspace_id: "",
     assignee: "",
     deadline: "",
-    status: "",
-    priority: "",
+    status: "to-do",
+    priority: "Low",
     createdBy: "",
   });
 
@@ -70,28 +50,18 @@ export default function AddTask({ taskData }: any) {
   );
 
   const {
-    data: updateTask,
     onUpdateTask,
     loading: updateTaskLoading,
   } = useUpdateTask();
 
   const {
-    data: singleTask,
     OnGetSingleTask,
     loading: getSingleTaskLoading,
   } = useGetSingleTask();
 
   const {
-    data: AllTasks,
     onGetTasks,
-    loading: getTasksLoading,
   } = useGetTasks();
-
-  const {
-    data: workspaceData,
-    onGetSingleWorkspace,
-    loading: singleWorkspaceLoading,
-  } = useGetSingleWorkspace(currentWorkspace);
 
   useEffect(() => {
     getFromLocalStorage({
@@ -103,7 +73,6 @@ export default function AddTask({ taskData }: any) {
             ...prevTask,
             workspace_id: id,
           }));
-          console.log("THIS:", id);
         }
       },
     });
@@ -112,33 +81,31 @@ export default function AddTask({ taskData }: any) {
       key: "STACKTASK_PERSISTOR",
       cb: (data: any) => {
         if (data) {
-          console.log("mercilessly:", data);
           setTask((prevTask) => ({
             ...prevTask,
             createdBy: data?.user?._id,
           }));
-          // setCreatedBy(data?.user?._id);
-          // console.log("THIS:", data?.user?._id);
         }
       },
     });
   }, [isEditOpen]);
 
   const handleDialogClose = () => {
-    if (!isSelectOpen) {
-      setIsEditOpen(false);
-    }
+    setIsEditOpen(false);
   };
 
   useEffect(() => {
-    setTask((prevTask) => ({
-      ...prevTask,
-      assignee: taskAssignee,
-    }));
+    if (taskAssignee) {
+      setTask((prevTask) => ({
+        ...prevTask,
+        assignee: taskAssignee,
+      }));
+    }
   }, [taskAssignee]);
 
   const handleUpdateTask = () => {
     const {
+      title,
       description,
       workspace_id,
       assignee,
@@ -149,20 +116,21 @@ export default function AddTask({ taskData }: any) {
     } = task;
     let errorMsg = "";
 
-    if (!task.description) {
-      errorMsg = "description is required.";
-    } else if (!task?.assignee) {
-      errorMsg = "assignee is required.";
+    if (!title) {
+      errorMsg = "Task title is required.";
+    } else if (!description) {
+      errorMsg = "Task description is required.";
+    } else if (!assignee) {
+      errorMsg = "Task assignee is required.";
     }
 
     if (errorMsg) {
       showErrorToast({ message: errorMsg });
     } else {
-      // console.log(workspace_id);
-
       onUpdateTask({
         id: currentTask?.id || "",
         payload: {
+          title,
           description,
           workspace_id,
           assignee,
@@ -173,13 +141,9 @@ export default function AddTask({ taskData }: any) {
         },
         successCallback: async () => {
           showSuccessToast({ message: "Task Updated Successfully!" });
-
-          // Fetch new tasks
-
-          onGetTasks({
-            workspaceId: workspace_id,
-          });
-
+          if (onGetTasks) {
+            await onGetTasks({ workspaceId: workspace_id });
+          }
           handleDialogClose();
         },
         errorCallback: ({ message }) => {
@@ -189,22 +153,11 @@ export default function AddTask({ taskData }: any) {
     }
   };
 
-  useEffect(() => {
-    if (AllTasks && AllTasks.length > 0) {
-      console.log("AllTasks updated:", AllTasks);
-    }
-  }, [AllTasks, getTasksLoading]);
-
   function checkWsId() {
-    if (!singleWorkspaceLoading) {
-      setIsEditOpen(true);
-    }
-
     OnGetSingleTask({
       id: currentTask?.id || "",
       successCallback: (fetchedTask) => {
         if (fetchedTask) {
-          // Normalize priority and status to capitalized format
           const normalize = (val: string, allowed: string[]) => {
             const found = allowed.find(
               (a) => a.toLowerCase() === (val || "").toLowerCase(),
@@ -213,7 +166,7 @@ export default function AddTask({ taskData }: any) {
           };
 
           setTask({
-            // title: fetchedTask.title || "",
+            title: fetchedTask.title || "",
             description: fetchedTask.description || "",
             workspace_id: fetchedTask.workspace_id || workspaceId,
             assignee: fetchedTask.assignee?.email || "",
@@ -239,75 +192,79 @@ export default function AddTask({ taskData }: any) {
         setIsEditOpen(false);
       },
     });
-    console.log("from edit:", currentTask);
-
-    // console.log(single)
   }
-
-  const date = new Date(task.deadline);
-  const formattedDate = date
-    .toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    })
-    .replace(/ /g, " "); // Output: "12 Jul 2025"
-  // console.log(formattedDate);
 
   return (
     <>
       <button
         onClick={checkWsId}
-        // className="flex w-fit items-center justify-center gap-2 rounded-[6px] bg-[#242424] px-3 py-2 text-[12px] font-regular text-white transition-all duration-300 hover:bg-black"
+        className="poppins flex h-6 w-full items-center justify-start rounded-sm px-2 text-[12px] font-normal text-[#989898] hover:bg-slate-200 hover:text-black dark:hover:bg-zinc-800"
       >
-        <img
-          src="/icons/edit.svg"
-          alt=""
-          className="h-4 w-4 transition-all duration-300 hover:cursor-pointer hover:text-black"
-        />
+        Edit
       </button>
       <Dialog
         open={isEditOpen}
         onClose={handleDialogClose}
         transition
-        className="poppins fixed inset-0 flex w-screen select-none items-center justify-center bg-black/30 p-4 font-madei transition duration-300 ease-out data-[closed]:opacity-0"
+        className="poppins fixed inset-0 flex w-screen select-none items-center justify-end bg-black/30 font-madei transition duration-300 ease-out data-[closed]:opacity-0 z-50"
       >
-        {/* The backdrop, rendered as a fixed sibling to the panel container */}
         <DialogBackdrop className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
 
-        {/* Full-screen container to center the panel */}
-        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-          {/* The actual dialog panel  */}
+        <div className="fixed inset-0 flex w-screen items-center justify-end">
           <DialogPanel
-            className="h-fit w-[600px] space-y-1 rounded-xl bg-white px-8 py-8"
+            className="h-[100vh] w-full lg:w-[calc(100vw-256px)] flex flex-col justify-between rounded-sm bg-gray-100 px-8 py-6 dark:bg-[#111] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <DialogTitle className="flex flex-row items-center justify-between font-medium">
-              <p className="poppins-bold text-[18px]">Edit Task</p>
-              <div
-                onClick={() => setIsEditOpen(false)}
-                className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-black"
-              >
-                <FontAwesomeIcon icon={faXmark} className="fa-sm text-white" />
-              </div>
-            </DialogTitle>
-            <Description className="w-[95%] pb-6 text-[13px] font-light leading-4 text-black">
-              Add a new task to your workspace and start organizing your work.
-            </Description>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-4">
-                {/* description */}
+            <div className="space-y-6">
+              <DialogTitle className="flex flex-row items-start justify-between font-medium border-b border-[#565656]/10 pb-3">
+                <div className="flex flex-col items-start gap-1">
+                  <p className="poppins-medium text-[18px] dark:text-white">
+                    Edit Task
+                  </p>
+                  <p className="text-[13px] font-regular leading-4 text-zinc-500">
+                    Modify the parameters of your workspace task.
+                  </p>
+                </div>
+                <button
+                  onClick={handleDialogClose}
+                  className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-zinc-800 text-[#989898] hover:text-black dark:hover:text-white transition-colors"
+                >
+                  <FontAwesomeIcon
+                    icon={faXmark}
+                    className="text-[16px]"
+                  />
+                </button>
+              </DialogTitle>
+
+              {/* Form Inputs container */}
+              <div className="flex flex-col gap-6 max-w-4xl pt-2">
+                {/* 1. Title Input */}
                 <div className="flex flex-col gap-1">
-                  <label
-                    htmlFor="spaceName"
-                    className="text-[14px] font-semibold"
-                  >
+                  <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
+                    Title
+                  </label>
+                  <input
+                    name="title"
+                    placeholder="Enter task title"
+                    value={task.title}
+                    onChange={(e) =>
+                      setTask((prev) => ({
+                        ...prev,
+                        title: e.target.value,
+                      }))
+                    }
+                    className="h-[42px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 py-2 text-xs text-black dark:text-white placeholder-gray-400 outline-none focus:border-zinc-500"
+                  />
+                </div>
+
+                {/* 2. Description Input */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
                     Description
-                    {/* <span className="font-light text-[#999]">(optional)</span> */}
                   </label>
                   <textarea
                     name="description"
-                    placeholder="Enter description"
+                    placeholder="Enter task description"
                     value={task.description}
                     onChange={(e) =>
                       setTask((prev) => ({
@@ -315,226 +272,122 @@ export default function AddTask({ taskData }: any) {
                         description: e.target.value,
                       }))
                     }
-                    className="h-[80px] max-h-[100px] w-full rounded-md border-[1px] border-gray-300 px-2 py-2 text-xs text-[black] placeholder-gray-600 outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                    className="h-[120px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 py-2 text-xs text-black dark:text-white placeholder-gray-400 outline-none focus:border-zinc-500"
                   />
                 </div>
 
-                <div className="flex flex-row gap-2">
-                  {/* Priority */}
-                  <div className="flex w-52 flex-col items-start gap-2">
-                    <span className="poppins-semibold text-[14px]">
+                {/* 3. Parameter Split Columns */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Priority Selector */}
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
                       Priority:
-                    </span>
-
-                    <div className="poppins-regular flex flex-row gap-2">
-                      <label
-                        className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1.5 ${task.priority === "Low" ? "bg-gray-200" : "bg-none"}`}
-                      >
-                        <input
-                          type="radio"
-                          name="priority"
-                          value="Low"
-                          checked={task.priority === "Low"}
-                          onChange={() =>
-                            setTask((prev) => ({ ...prev, priority: "Low" }))
-                          }
-                          className={`peer hidden checked:accent-black`}
-                        />
-                        <span className="text-xs text-gray-700">Low</span>
-                      </label>
-
-                      <label
-                        className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1 ${task.priority === "Medium" ? "bg-gray-200" : "bg-none"}`}
-                      >
-                        {" "}
-                        <input
-                          type="radio"
-                          name="priority"
-                          value="Medium"
-                          checked={task.priority === "Medium"}
-                          onChange={() =>
-                            setTask((prev) => ({ ...prev, priority: "Medium" }))
-                          }
-                          className={`peer hidden checked:accent-black`}
-                        />
-                        <span className="text-xs text-gray-700">Medium</span>
-                      </label>
-
-                      <label
-                        className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1 ${task.priority === "High" ? "bg-gray-200" : "bg-none"}`}
-                      >
-                        {" "}
-                        <input
-                          type="radio"
-                          name="priority"
-                          value="High"
-                          checked={task.priority === "High"}
-                          onChange={() =>
-                            setTask((prev) => ({ ...prev, priority: "High" }))
-                          }
-                          className={`peer hidden checked:accent-black`}
-                        />
-                        <span className="text-xs text-gray-700">High</span>
-                      </label>
+                    </label>
+                    <div className="flex gap-2">
+                      {["Low", "Medium", "High"].map((p) => (
+                        <button
+                          key={p}
+                          type="button"
+                          onClick={() => setTask((prev) => ({ ...prev, priority: p }))}
+                          className={`flex-1 py-2 px-3 text-xs border rounded-md transition-all ${
+                            task.priority === p
+                              ? "bg-[#563892] text-white border-transparent font-medium"
+                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-850"
+                          }`}
+                        >
+                          {p}
+                        </button>
+                      ))}
                     </div>
                   </div>
 
-                  {/* Status */}
-                  <div className="flex flex-col items-start gap-2">
-                    <span className="poppins-semibold text-[14px]">
+                  {/* Status Selector */}
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
                       Status:
-                    </span>
-
-                    <div className="poppins-regular flex flex-row gap-2">
-                      <label
-                        className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1.5 ${task.status === "to-do" ? "bg-gray-200" : "bg-none"}`}
-                      >
-                        <input
-                          type="radio"
-                          name="status"
-                          value={task.status}
-                          checked={task.status === "to-do"}
-                          onChange={() =>
-                            setTask((prev) => ({ ...prev, status: "to-do" }))
-                          }
-                          className={`peer hidden checked:accent-black`}
-                        />
-                        <span className="text-xs text-gray-700">To-Do</span>
-                      </label>
-
-                      <label
-                        className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1 ${task.status === "in-progress" ? "bg-gray-200" : "bg-none"}`}
-                      >
-                        {" "}
-                        <input
-                          type="radio"
-                          name="status"
-                          value={task.status}
-                          checked={task.status === "in-progress"}
-                          onChange={() =>
-                            setTask((prev) => ({
-                              ...prev,
-                              status: "in-progress",
-                            }))
-                          }
-                          className={`peer hidden checked:accent-black`}
-                        />
-                        <span className="text-xs text-gray-700">
-                          In-Progress
-                        </span>
-                      </label>
-
-                      {/* <label
-                        className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1 ${task.priority === "High" ? "bg-gray-200" : "bg-none"}`}
-                      >
-                        {" "}
-                        <input
-                          type="radio"
-                          name="priority"
-                          value={task.priority}
-                          checked={task.priority === "High"}
-                          onChange={() =>
-                            setTask((prev) => ({ ...prev, priority: "High" }))
-                          }
-                          className={`peer hidden checked:accent-black`}
-                        />
-                        <span className="text-xs text-gray-700">High</span>
-                      </label> */}
+                    </label>
+                    <div className="flex gap-2">
+                      {[
+                        { key: "to-do", label: "To-Do" },
+                        { key: "in-progress", label: "In-Progress" },
+                      ].map((s) => (
+                        <button
+                          key={s.key}
+                          type="button"
+                          onClick={() => setTask((prev) => ({ ...prev, status: s.key }))}
+                          className={`flex-1 py-2 px-3 text-xs border rounded-md transition-all ${
+                            task.status === s.key
+                              ? "bg-[#563892] text-white border-transparent font-medium"
+                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-850"
+                          }`}
+                        >
+                          {s.label}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Others */}
-                <div className="flex flex-row-reverse gap-2">
-                  <div className="flex flex-1 flex-col gap-1">
-                    <label
-                      htmlFor="deadline"
-                      className="poppins-semibold text-[14px]"
-                    >
+                {/* 4. Assignee & Deadline Split Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Assignee */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
+                      Assignee
+                    </label>
+                    <div className="border border-gray-300 dark:border-zinc-800 rounded-md p-1 bg-transparent">
+                      <MemberSelect setTaskAssignee={setTaskAssignee} />
+                    </div>
+                  </div>
+
+                  {/* Deadline */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
                       Deadline
                     </label>
                     <input
                       name="deadline"
                       type="date"
-                      placeholder="Add deadline"
                       value={task.deadline}
-                      className="h-[40px] w-full select-none rounded-md border-[1px] border-gray-300 px-2 text-xs font-light text-gray-700 placeholder-gray-700 outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
                       onChange={(e) =>
                         setTask((prev) => ({
                           ...prev,
                           deadline: e.target.value,
                         }))
                       }
-                    />
-                  </div>
-
-                  <div className="flex w-fit flex-col gap-1">
-                    <label
-                      htmlFor="spaceName"
-                      className="text-[14px] font-semibold"
-                    >
-                      Assignee:
-                    </label>
-                    {/* <CustomSelect
-                      options={[
-                        { label: "Member", value: "member" },
-                        { label: "Admin", value: "admin" },
-                      ]}
-                      placeholder="Assignee"
-                      onChange={(value: any) => console.log("Selected:", value)}
-                      className="w-[200px] bg-none"
-                      onOpenChange={setIsSelectOpen}
-                    /> */}
-                    <MemberSelect
-                      setTaskAssignee={setTaskAssignee}
-                      value={taskAssignee}
+                      className="h-[40px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 text-xs text-zinc-700 dark:text-white outline-none focus:border-zinc-500"
                     />
                   </div>
                 </div>
+              </div>
+            </div>
 
-                {/* <div className="flex flex-row items-center gap-2">
-                  <span className="text-[14px]">High priority:</span>
-                  <label className="relative inline-flex cursor-pointer items-center">
-                    <input
-                      type="radio"
-                      checked={isToggled}
-                      onChange={() => setIsToggled(!isToggled)}
-                      className="peer sr-only"
+            {/* Bottom Actions Row */}
+            <div className="flex justify-end gap-3 border-t border-[#565656]/10 pt-4 mt-8">
+              <button
+                type="button"
+                onClick={handleDialogClose}
+                className="rounded-md border border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 px-4 py-2 text-xs hover:bg-gray-50 dark:hover:bg-zinc-850 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdateTask}
+                disabled={updateTaskLoading}
+                className="rounded-md bg-[#563892] text-white px-5 py-2 text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                {updateTaskLoading ? (
+                  <span className="flex w-full items-center justify-center">
+                    <img
+                      src="/icons/loaderWhite.svg"
+                      alt=""
+                      className="w-4 animate-spin"
                     />
-                    <div className="peer h-4 w-8 rounded-full bg-gray-300 after:absolute after:left-1 after:top-0.5 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-all peer-checked:bg-blue-500 peer-checked:after:translate-x-3" />
-                  </label>
-                </div> */}
-              </div>
-
-              <div className="flex gap-3 pt-4 text-[14px]">
-                <Button
-                  text="Cancel"
-                  onClick={() => setIsEditOpen(false)}
-                  className="bg-gray-200 text-[13px] text-black hover:bg-gray-300"
-                />
-                {/* <Button
-                  text="Create"
-                  onClick={handleCreateTask}
-                  className="bg-[#222] px-7 text-white hover:bg-[#111]"
-                /> */}
-
-                <button
-                  className="w-[100px] rounded bg-[#222] py-2 text-[13px] font-normal text-white transition-all duration-300 hover:bg-[#111]"
-                  onClick={handleUpdateTask}
-                >
-                  {!updateTaskLoading ? (
-                    "Update"
-                  ) : (
-                    <span className="flex w-full items-center justify-center">
-                      <img
-                        src="/icons/loaderWhite.svg"
-                        alt=""
-                        className="w-4 animate-spin"
-                      />
-                    </span>
-                  )}
-                </button>
-              </div>
+                  </span>
+                ) : (
+                  "Save Changes"
+                )}
+              </button>
             </div>
           </DialogPanel>
         </div>

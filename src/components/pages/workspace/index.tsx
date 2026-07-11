@@ -8,6 +8,7 @@ import Chat from "@/components/pages/Chats";
 import Integrations from "@/components/pages/Integrations";
 import Settings from "@/components/pages/Settings";
 import TasksView from "./views/TasksView";
+import AIView from "@/components/pages/AIView";
 
 function Workspace() {
   const currentUI = useSelector((state: RootState) => state.ui.currentUI);
@@ -26,6 +27,8 @@ function Workspace() {
         <Chat />
       ) : currentUI === "integrations" ? (
         <Integrations />
+      ) : currentUI === "ai" ? (
+        <AIView />
       ) : (
         <div></div>
       )}

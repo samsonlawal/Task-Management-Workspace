@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSidebar } from "@/redux/Slices/uiSlice"
+import { toggleSidebar } from "@/redux/Slices/uiSlice";
 import { PanelLeft } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,9 +11,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Notification from "@/components/reuseables/Notification";
 import { showSuccessToast } from "@/utils/toaster";
-
-
-
 
 const SlackIcon = () => (
   <svg viewBox="0 0 24 24" className="h-6 w-6">
@@ -59,6 +56,107 @@ const NotionIcon = () => (
 const DiscordIcon = () => (
   <svg viewBox="0 0 127.14 96.36" className="h-6 w-6 fill-current text-[#5865F2]">
     <path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a77.7,77.7,0,0,0,6.63-10.85,68.43,68.43,0,0,1-10.5-5c.9-.65,1.76-1.34,2.58-2.06a75.7,75.7,0,0,0,72.77,0c.82.72,1.68,1.41,2.58,2.06a68.43,68.43,0,0,1-10.5,5,77.7,77.7,0,0,0,6.63,10.85,105.73,105.73,0,0,0,31-18.83C129.07,54.65,123.56,31.58,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.9,46,53.9,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.14,46,96.14,53,91,65.69,84.69,65.69Z" />
+  </svg>
+);
+
+const VercelIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current text-black dark:text-white">
+    <path d="M12 2L2 22h20L12 2z" />
+  </svg>
+);
+
+const RenderIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-none stroke-current text-[#46e3b7]" strokeWidth="2">
+    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+    <path d="M12 8V16" strokeLinecap="round" />
+    <path d="M8 12H16" strokeLinecap="round" />
+  </svg>
+);
+
+const SentryIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current text-[#fb4226]">
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+  </svg>
+);
+
+const AwsIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current text-[#ff9900]">
+    <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" />
+  </svg>
+);
+
+const DockerIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current text-[#0db7ed]">
+    <path d="M13.962 8.475h-2.444V6.03h2.444v2.445zM11.233 11.2h2.444V8.756h-2.444V11.2zm2.729-2.725h2.444V6.03h-2.444v2.445zm2.73 0h2.444V6.03H16.7v2.445zM8.5 11.2h2.445V8.756H8.5V11.2zm0-2.725h2.445V6.03H8.5v2.445zM5.772 11.2h2.445V8.756H5.772V11.2zm3.013 2.725h10.941c.231-.767.353-1.579.353-2.42H3C3 15.7 6.012 16.5 8.785 13.925z" />
+  </svg>
+);
+
+const CircleciIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-none stroke-current text-[#343434] dark:text-[#a0a0a0]" strokeWidth="2">
+    <circle cx="12" cy="12" r="10" />
+    <circle cx="12" cy="12" r="5" fill="currentColor" />
+  </svg>
+);
+
+const DatadogIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current text-[#632ca6]">
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v6z" />
+  </svg>
+);
+
+const NetlifyIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current text-[#00c7b7]">
+    <path d="M12 2L2 12h5v10h10V12h5L12 2z" />
+  </svg>
+);
+
+const PagerdutyIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-none stroke-current text-[#00a86b]" strokeWidth="2">
+    <path d="M2 12h4l3-9 4 18 3-9h4" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const GitlabIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current text-[#fc6d26]">
+    <path d="M22.65 14.39L12 22.13 1.35 14.39a.84.84 0 0 1-.3-.94l3-9.15a.83.83 0 0 1 .79-.58h14.32a.83.83 0 0 1 .79.58l3 9.15a.84.84 0 0 1-.3.94z" />
+  </svg>
+);
+
+const DbAlertIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current text-[#f4b400]">
+    <path d="M12 2C6.48 2 2 4.24 2 7v10c0 2.76 4.48 5 10 5s10-2.24 10-5V7c0-2.76-4.48-5-10-5zm0 2c4.42 0 8 1.5 8 3s-3.58 3-8 3-8-1.5-8-3 3.58-3 8-3zm-8 6.5C4 9.08 7.22 8 12 8s8 1.08 8 2.5V12c0 1.5-3.58 3-8 3s-8-1.5-8-3v-1.5zm0 5c0-1.42 3.22-2.5 8-2.5s8 1.08 8 2.5v1.5c0 1.5-3.58 3-8 3s-8-1.5-8-3v-1.5z" />
+  </svg>
+);
+
+const ExcalidrawIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-none stroke-current text-[#6965db]" strokeWidth="2">
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <path d="M9 17l3-3 3 3" />
+    <path d="M9 12l6-4" />
+  </svg>
+);
+
+const SupabaseIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current text-[#3ecf8e]">
+    <path d="M13.2 2L3 13.5h7.8V22L21 10.5h-7.8V2z" />
+  </svg>
+);
+
+const MongodbIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current text-[#13aa52]">
+    <path d="M12 2C7 2 7 6.5 7 9c0 4.5 5 13 5 13s5-8.5 5-13c0-2.5 0-7-5-7zm0 15c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
+  </svg>
+);
+
+const GrafanaIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current text-[#f47c36]">
+    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-2v4h-2v-4H9v-2h2V7h2v4h2v2z" />
+  </svg>
+);
+
+const NewrelicIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6 fill-none stroke-current text-[#1d8272]" strokeWidth="2">
+    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
   </svg>
 );
 
@@ -113,6 +211,118 @@ const INTEGRATIONS_LIST: IntegrationItem[] = [
     description: "Sync team notes, project databases, and resources directly between Notion pages and tasks.",
     icon: <NotionIcon />,
   },
+  {
+    id: "vercel",
+    name: "Vercel",
+    category: "Development",
+    description: "Track serverless builds, preview deployments, and deployment stage successes directly inside your workspace alerts.",
+    icon: <VercelIcon />,
+  },
+  {
+    id: "render",
+    name: "Render",
+    category: "Development",
+    description: "Monitor cloud services, databases, web service health logs, and cron job completion streams.",
+    icon: <RenderIcon />,
+  },
+  {
+    id: "sentry",
+    name: "Sentry",
+    category: "Development",
+    description: "Real-time application error tracking, alert feeds, stack traces, and bug issue creation.",
+    icon: <SentryIcon />,
+  },
+  {
+    id: "aws",
+    name: "AWS CloudWatch",
+    category: "Development",
+    description: "Sync application server logs, AWS instance alerts, container errors, and storage monitoring alerts.",
+    icon: <AwsIcon />,
+  },
+  {
+    id: "docker",
+    name: "Docker Hub",
+    category: "Development",
+    description: "Webhook updates for automated container image builds, registry updates, and Kubernetes alerts.",
+    icon: <DockerIcon />,
+  },
+  {
+    id: "circleci",
+    name: "CircleCI",
+    category: "Development",
+    description: "Trigger automations, track pipeline builds, and push environment deploy updates to team chat logs.",
+    icon: <CircleciIcon />,
+  },
+  {
+    id: "datadog",
+    name: "Datadog",
+    category: "Development",
+    description: "Real-time system metric logs, APM traces, backend speeds, and incident response notifications.",
+    icon: <DatadogIcon />,
+  },
+  {
+    id: "netlify",
+    name: "Netlify",
+    category: "Development",
+    description: "Sync frontend preview distributions, webhooks, form submissions, and CDN deploy metrics.",
+    icon: <NetlifyIcon />,
+  },
+  {
+    id: "pagerduty",
+    name: "PagerDuty",
+    category: "Development",
+    description: "Send high-priority critical incident pages, rotation alerts, and backup schedule triggers.",
+    icon: <PagerdutyIcon />,
+  },
+  {
+    id: "gitlab",
+    name: "GitLab",
+    category: "Development",
+    description: "Sync GitLab issues, pipeline approvals, repository merge notifications, and secure scanner updates.",
+    icon: <GitlabIcon />,
+  },
+  {
+    id: "db-alert",
+    name: "Database Alert Manager",
+    category: "Development",
+    description: "Receive instant updates on query load warnings, backup states, database health, and server triggers.",
+    icon: <DbAlertIcon />,
+  },
+  {
+    id: "excalidraw",
+    name: "Excalidraw",
+    category: "Design",
+    description: "Co-sketch software architectures, wireframes, and design schemas directly in workspace canvas alerts.",
+    icon: <ExcalidrawIcon />,
+  },
+  {
+    id: "supabase",
+    name: "Supabase",
+    category: "Development",
+    description: "Monitor cloud Postgres logs, database migrations, Edge functions logs, and auth state changes.",
+    icon: <SupabaseIcon />,
+  },
+  {
+    id: "mongodb-atlas",
+    name: "MongoDB Atlas",
+    category: "Development",
+    description: "Cloud database performance stats, database load alerts, collection changes, and backup confirmations.",
+    icon: <MongodbIcon />,
+  },
+  {
+    id: "grafana",
+    name: "Grafana",
+    category: "Development",
+    description: "Sync system dashboard widgets, metrics alerts, server temperatures, and memory warnings.",
+    icon: <GrafanaIcon />,
+  },
+  {
+    id: "newrelic",
+    name: "New Relic",
+    category: "Development",
+    description: "Full-stack application performance analytics, response speed checks, and JVM memory alerts.",
+    icon: <NewrelicIcon />,
+  },
 ];
 
 const CATEGORIES = ["All", "Communication", "Development", "Productivity", "Design"] as const;
@@ -122,7 +332,7 @@ function Integrations() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [connected, setConnected] = useState<string[]>(["slack", "google-calendar"]);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handleToggleConnection = (id: string, name: string) => {
     if (connected.includes(id)) {
@@ -147,18 +357,18 @@ function Integrations() {
 
   return (
     <div className="flex h-fit w-full flex-col gap-2 transition-all duration-300">
-      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] z-10 px-4">
+      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] z-10 px-4 lg:px-8">
         <div className="poppins flex w-full items-center justify-between border-b border-[#565656]/10 py-[7px]">
 
           <div className="flex flex-row justify-center items-center">
             <button
-            onClick={() => dispatch(toggleSidebar())}
-            className="flex lg:hidden px-1 lg:p-2 text-[#707070] hover:text-[#111] dark:hover:text-white transition-all duration-300"
+              onClick={() => dispatch(toggleSidebar())}
+              className="flex lg:hidden px-1 lg:p-2 text-[#707070] hover:text-[#111] dark:hover:text-white transition-all duration-300"
             >
-            <PanelLeft size={18} strokeWidth={1.6} />
+              <PanelLeft size={18} strokeWidth={1.6} />
             </button>
             <h2 className="poppins-medium text-md lg:text-xl text-[#111] dark:text-white">
-            Integrations
+              Integrations
             </h2>
           </div>
 
@@ -169,7 +379,7 @@ function Integrations() {
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 transition-all duration-300 px-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 transition-all duration-300 px-4 lg:px-8">
         <div className="relative w-auto flex-initial rounded-md">
           {/* Search input */}
           <input
@@ -179,7 +389,6 @@ function Integrations() {
             onChange={(e) => setSearch(e.target.value)}
             className="w-full sm:w-[300px] rounded-md border-[1px] border-[#565656]/50 bg-transparent py-2.5 pl-8 pr-8 text-xs outline-none placeholder:text-[#565656]/80 focus:border-[#565656] dark:text-[#eee]"
           />
-          
 
           {/* Magnifier icon */}
           <div className="pointer-events-none absolute left-[1px] top-1/2 flex h-[90%] -translate-y-1/2 items-center justify-center rounded-md px-2 text-gray-400">
@@ -222,7 +431,7 @@ function Integrations() {
       </div>
 
       {/* Grid List */}
-      <div className="grid grid-cols-1npm run  md:grid-cols-2 lg:grid-cols-3 gap-6 pt-8 pb-24 px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-8 pb-24 px-4 lg:px-8">
         {filteredIntegrations.length > 0 ? (
           filteredIntegrations.map((item) => {
             const isConnected = connected.includes(item.id);
@@ -234,56 +443,47 @@ function Integrations() {
                 <div>
                   <div className="flex items-center justify-between">
                     <div className="rounded-lg shadow-sm flex items-center justify-center gap-2">
-                    <span className="">
-                      {item.icon} 
-                    </span>
+                      <span className="">
+                        {item.icon} 
+                      </span>
                       <h3 className="text-base font-semibold text-[#111] dark:text-white">
                         {item.name}
                       </h3>
                     </div>
+
                     <button
-                      type="button"
                       onClick={() => handleToggleConnection(item.id, item.name)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full py-1 transition-colors outline-none focus:ring-2 focus:ring-[#563892]/20 ${
-                        isConnected ? "bg-[#563892]" : "bg-gray-300 dark:bg-[#565656]/40"
+                      className={`rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-300 border ${
+                        isConnected
+                          ? "bg-rose-500/5 text-rose-500 hover:bg-rose-500/10 border-rose-500/10"
+                          : "bg-zinc-50 border-zinc-200 hover:bg-zinc-100 text-zinc-800 dark:bg-zinc-800/40 dark:border-zinc-700/60 dark:text-zinc-200 dark:hover:bg-zinc-750"
                       }`}
                     >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          isConnected ? "translate-x-6" : "translate-x-1"
-                        }`}
-                      />
+                      {isConnected ? "Disconnect" : "Connect"}
                     </button>
                   </div>
-
-                 
-                  
-                  <p className="text-xs text-gray-500 dark:text-[#787878] mt-3 line-clamp-2">
+                  <p className="mt-3 text-xs leading-normal text-[#565656] dark:text-gray-400 line-clamp-3">
                     {item.description}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-[#565656]/10 pt-3 mt-3">
-                  <span className="text-[10px] font-semibold tracking-wider text-gray-400 dark:text-gray-500 uppercase">
+                <div className="flex items-center justify-between border-t border-[#565656]/10 pt-3">
+                  <span className="text-[10px] font-semibold tracking-wider text-gray-400 uppercase">
                     {item.category}
                   </span>
-                  <div className="flex items-center gap-1.5">
-                    <div
-                      className={`h-1.5 w-1.5 rounded-full ${
-                        isConnected ? "bg-green-500 animate-pulse" : "bg-gray-300 dark:bg-gray-600"
-                      }`}
-                    />
-                    <span className="text-[11px] font-medium text-gray-500 dark:text-gray-400 capitalize">
-                      {isConnected ? "Connected" : "Disconnected"}
+                  {isConnected && (
+                    <span className="flex items-center gap-1.5 text-[10px] font-medium text-emerald-500">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      Active
                     </span>
-                  </div>
+                  )}
                 </div>
               </div>
             );
           })
         ) : (
-          <div className="col-span-full flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-            <p className="text-sm">No integrations match your search query.</p>
+          <div className="col-span-full flex h-40 w-full items-center justify-center border border-dashed border-[#565656]/20 rounded-xl text-gray-500 text-[13px]">
+            No integrations found matching your search options.
           </div>
         )}
       </div>

@@ -27,7 +27,18 @@ import {
   MoreVertical,
   Settings,
   Bell,
-  PanelLeft
+  PanelLeft,
+  Triangle,
+  Server,
+  ShieldAlert,
+  Layers,
+  Database,
+  Activity,
+  Cloud,
+  Gitlab,
+  PenTool,
+  LineChart,
+  Flame
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { showSuccessToast } from "@/utils/toaster";
@@ -56,11 +67,45 @@ interface Channel {
 interface Integration {
   id: string;
   name: string;
-  type: "github" | "jira" | "slack" | "figma";
+  type: "github" | "jira" | "slack" | "figma" | "vercel" | "render" | "sentry" | "aws" | "docker" | "circleci" | "datadog" | "netlify" | "pagerduty" | "gitlab" | "db-alert" | "excalidraw" | "supabase" | "mongodb-atlas" | "grafana" | "newrelic";
   description: string;
   avatarUrl?: string;
   connected: boolean;
 }
+
+const renderIntegrationIcon = (type: string, sizeClass = "w-4 h-4") => {
+  switch (type) {
+    case "github":
+    case "gitlab":
+    case "netlify":
+      return <Globe className={`${sizeClass} text-black dark:text-white`} />;
+    case "vercel":
+      return <Triangle className={`${sizeClass} text-black dark:text-white fill-black dark:fill-white`} />;
+    case "render":
+    case "newrelic":
+      return <Server className={`${sizeClass} text-indigo-500`} />;
+    case "sentry":
+    case "pagerduty":
+      return <ShieldAlert className={`${sizeClass} text-rose-500`} />;
+    case "aws":
+    case "docker":
+      return <Cloud className={`${sizeClass} text-orange-500`} />;
+    case "supabase":
+    case "mongodb-atlas":
+    case "db-alert":
+      return <Database className={`${sizeClass} text-emerald-500`} />;
+    case "excalidraw":
+      return <PenTool className={`${sizeClass} text-purple-500`} />;
+    case "grafana":
+      return <LineChart className={`${sizeClass} text-[#f47c36]`} />;
+    case "jira":
+      return <Layers className={`${sizeClass} text-blue-500`} />;
+    case "slack":
+      return <MessageSquare className={`${sizeClass} text-indigo-500`} />;
+    default:
+      return <Bot className={`${sizeClass} text-emerald-500`} />;
+  }
+};
 
 function Chats() {
   const dispatch = useDispatch();
@@ -105,6 +150,22 @@ function Chats() {
 
   const [integrations, setIntegrations] = useState<Integration[]>([
     { id: "github", name: "GitHub Bot", type: "github", description: "Repository webhooks and alerts", connected: true },
+    { id: "vercel", name: "Vercel Deployments", type: "vercel", description: "Production deployments and build updates", connected: false },
+    { id: "render", name: "Render Monitor", type: "render", description: "Service status and database monitors", connected: false },
+    { id: "sentry", name: "Sentry Tracker", type: "sentry", description: "Error monitoring and alert feeds", connected: false },
+    { id: "aws", name: "AWS CloudWatch", type: "aws", description: "Sync server logs and cloud metrics alerts", connected: false },
+    { id: "docker", name: "Docker Hub", type: "docker", description: "Webhook updates for container builds", connected: false },
+    { id: "circleci", name: "CircleCI", type: "circleci", description: "Trigger automations and pipeline logs", connected: false },
+    { id: "datadog", name: "Datadog", type: "datadog", description: "System metric logs and APM alerts", connected: false },
+    { id: "netlify", name: "Netlify", type: "netlify", description: "Preview build updates and CDN alerts", connected: false },
+    { id: "pagerduty", name: "PagerDuty", type: "pagerduty", description: "Critical incident alerts responder", connected: false },
+    { id: "gitlab", name: "GitLab", type: "gitlab", description: "Sync issues and pipeline alerts", connected: false },
+    { id: "db-alert", name: "Database Alert Manager", type: "db-alert", description: "Backup status and query logs", connected: false },
+    { id: "excalidraw", name: "Excalidraw", type: "excalidraw", description: "Co-sketch whiteboard session alerts", connected: false },
+    { id: "supabase", name: "Supabase", type: "supabase", description: "Monitor Postgres migrations and auth alerts", connected: false },
+    { id: "mongodb-atlas", name: "MongoDB Atlas", type: "mongodb-atlas", description: "Cloud database performance alerts", connected: false },
+    { id: "grafana", name: "Grafana", type: "grafana", description: "Sync dashboard panels and server alerts", connected: false },
+    { id: "newrelic", name: "New Relic", type: "newrelic", description: "JVM performance monitoring alerts", connected: false },
     { id: "jira", name: "Jira Sync", type: "jira", description: "Sprint updates and issue tracking", connected: false },
     { id: "slack-bridge", name: "Slack Bridge", type: "slack", description: "Mirror messages to external Slack", connected: false },
   ]);
@@ -149,11 +210,13 @@ function Chats() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isTyping, setIsTyping] = useState(false);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom of messages
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+    }
   };
 
   useEffect(() => {
@@ -315,7 +378,7 @@ function Chats() {
     <div className="flex h-full w-full flex-col overflow-hidden bg-white dark:bg-[#111]">
       {/* Top Unified Header Row */}
       <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] border-b border-[#565656]/10 z-20">
-        <div className="poppins flex w-full items-center justify-between px-4 py-[11px]">
+        <div className="poppins flex w-full items-center justify-between px-4 lg:px-8 py-[11px]">
           <div className="flex flex-row items-center gap-1">
             <button
               onClick={() => dispatch(toggleSidebar())}
@@ -331,7 +394,7 @@ function Chats() {
                 {activeChat.type === "channel" ? (
                   <Hash className="w-4 h-4" />
                 ) : activeChat.type === "integration" ? (
-                  <Bot className="w-4 h-4 text-emerald-500" />
+                  renderIntegrationIcon(activeChat.id)
                 ) : (
                   <User className="w-4 h-4 text-indigo-400" />
                 )}
@@ -369,7 +432,7 @@ function Chats() {
         <div className="flex flex-1 flex-col h-full bg-white dark:bg-[#111] relative">
           
           {/* Message Stream */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-6 space-y-4">
             {currentChatMessages.map((message) => {
               const isMe = message.senderId === "current-user";
               return (
@@ -404,8 +467,6 @@ function Chats() {
                 </div>
               </div>
             )}
-
-            <div ref={messagesEndRef} />
           </div>
 
           {/* Reusable Message Input Box */}
@@ -732,13 +793,7 @@ function Chats() {
                 <div key={app.id} className="flex items-center justify-between border border-[#565656]/15 rounded-lg p-3.5 bg-gray-50/30 dark:bg-[#161616]/30">
                   <div className="flex items-start gap-3">
                     <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-sm border border-[#565656]/10 dark:bg-zinc-900">
-                      {app.type === "github" ? (
-                        <Globe className="w-6 h-6 text-black dark:text-white" />
-                      ) : app.type === "slack" ? (
-                        <MessageSquare className="w-5 h-5 text-indigo-500" />
-                      ) : (
-                        <Workflow className="w-5 h-5 text-amber-500" />
-                      )}
+                      {renderIntegrationIcon(app.type, "w-5 h-5")}
                     </span>
                     <div className="flex flex-col leading-tight">
                       <span className="text-sm font-semibold text-[#111] dark:text-white">{app.name}</span>
@@ -748,10 +803,10 @@ function Chats() {
                   
                   <button
                     onClick={() => handleConnectIntegration(app.id)}
-                    className={`rounded-md px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+                    className={`rounded-md px-3.5 py-1.5 text-xs font-medium transition-colors border ${
                       app.connected
-                        ? "bg-red-500/10 hover:bg-red-500/20 text-red-500"
-                        : "bg-[#111] dark:bg-white hover:opacity-90 text-white dark:text-[#111]"
+                        ? "bg-rose-500/5 hover:bg-rose-500/10 text-rose-500 border-rose-500/10"
+                        : "bg-zinc-50 border-zinc-200 hover:bg-zinc-100 text-zinc-800 dark:bg-zinc-800/40 dark:border-zinc-700/60 dark:text-zinc-200 dark:hover:bg-zinc-750"
                     }`}
                   >
                     {app.connected ? "Disconnect" : "Connect"}

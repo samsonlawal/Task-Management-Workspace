@@ -96,7 +96,7 @@ function Settings() {
   const [enabled, setEnabled] = useState(false);
 
   return (
-    <div className="flex h-fit w-full max-w-[814px] flex-col gap-2 overflow-auto px-9 pb-24 pt-10 transition-all duration-300 scrollbar-hide">
+    <div className="flex h-fit w-full max-w-[814px] flex-col gap-2 overflow-auto px-4 lg:px-8 pb-24 pt-10 transition-all duration-300 scrollbar-hide">
       <div className="flex flex-col">
         <h1 className="text-[18px] font-semibold">Workspace Settings</h1>
         <p className="text-[14px] text-[#565656]">

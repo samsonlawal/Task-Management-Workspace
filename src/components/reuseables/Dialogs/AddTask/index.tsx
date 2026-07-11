@@ -1,22 +1,15 @@
 "use client";
 
 import {
-  Description,
   Dialog,
   DialogBackdrop,
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
 import { useEffect, useState } from "react";
-import { CustomSelect } from "../../select";
-import Button from "../../Button";
 import {
-  faCirclePlus,
-  faListCheck,
   faPlus,
   faXmark,
-  faArrowLeft,
-  faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MemberSelect from "../../MemberSelect";
@@ -26,39 +19,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { showSuccessToast, showErrorToast } from "@/utils/toaster";
-import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
 import { useGetSingleWorkspace } from "@/hooks/api/workspace";
-import { setWorkspace } from "@/redux/Slices/workspaceSlice";
+import { useGetTasks } from "@/hooks/api/tasks";
 
 export default function AddTask({ onGetTasks, taskData }: any) {
   const dispatch = useDispatch();
 
   let [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isToggled, setIsToggled] = useState<boolean>(false);
-  const [selectedStatus, setSelectedStatus] = useState<string>("to-do");
-  const [status, setStatus] = useState<string>("todo");
-  const [priority, setPriority] = useState<string>("Low");
-
-  const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const [workspaceId, setWorkspaceId] = useState<string>("");
-  const [step, setStep] = useState<number>(1);
-
-  const TasksData = useSelector((state: RootState) => state.TasksData);
-
-  const MemberData = useSelector((state: RootState) => state.MemberData);
 
   const [task, setTask] = useState<TAddTask>({
     description: "",
     workspace_id: "",
     assignee: "",
     deadline: "",
-    status: "",
-    priority: "",
+    status: "to-do",
+    priority: "Low",
     createdBy: "",
     title: "",
   });
-
-  // const [userId, setCreatedBy] = useState<string>("");
 
   useEffect(() => {
     getFromLocalStorage({
@@ -93,25 +72,19 @@ export default function AddTask({ onGetTasks, taskData }: any) {
   );
 
   const { onCreateTask, loading: creatTaskLoading } = useCreateTask();
-
-  const {
-    data: workspaceData,
-    onGetSingleWorkspace,
-    loading: singleWorkspaceLoading,
-  } = useGetSingleWorkspace(currentWorkspace);
+  const { onGetSingleWorkspace, loading: singleWorkspaceLoading } = useGetSingleWorkspace(currentWorkspace);
 
   const handleDialogClose = () => {
-    if (!isSelectOpen) {
-      setIsOpen(false);
-      setStep(1);
-    }
+    setIsOpen(false);
   };
 
   useEffect(() => {
-    setTask((prevTask) => ({
-      ...prevTask,
-      assignee: taskAssignee,
-    }));
+    if (taskAssignee) {
+      setTask((prevTask) => ({
+        ...prevTask,
+        assignee: taskAssignee,
+      }));
+    }
   }, [taskAssignee]);
 
   const handleCreateTask = () => {
@@ -127,28 +100,17 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     } = task;
     let errorMsg = "";
 
-    console.log("PAYLOAD:", {
-      description,
-      workspace_id,
-      assignee,
-      deadline,
-      status,
-      priority,
-      createdBy,
-      title,
-    });
-
-    if (!task.description) {
-      errorMsg = "description is required.";
-    } else if (!task?.assignee) {
-      errorMsg = "assignee is required.";
+    if (!title) {
+      errorMsg = "Task title is required.";
+    } else if (!description) {
+      errorMsg = "Task description is required.";
+    } else if (!assignee) {
+      errorMsg = "Task assignee is required.";
     }
 
     if (errorMsg) {
       showErrorToast({ message: errorMsg });
     } else {
-      // console.log(workspace_id);
-
       onCreateTask({
         payload: {
           description,
@@ -162,23 +124,17 @@ export default function AddTask({ onGetTasks, taskData }: any) {
         },
         successCallback: async () => {
           showSuccessToast({ message: "Task Created Successfully!" });
-
-          // const updatedWorkspace = await onGetSingleWorkspace(workspace_id);
-          // if (updatedWorkspace) {
-          //   dispatch(setWorkspace(updatedWorkspace));
-          // }
-          // console.log("Task Added to:", workspace_id);
-
-          await onGetTasks({ workspaceId: workspace_id });
-          console.log("New tasks:", taskData);
+          if (onGetTasks) {
+            await onGetTasks({ workspaceId: workspace_id });
+          }
           setTask({
             description: "",
-            workspace_id: "",
+            workspace_id: workspace_id,
             assignee: "",
             deadline: "",
-            status: "",
-            priority: "",
-            createdBy: "",
+            status: "to-do",
+            priority: "Low",
+            createdBy: createdBy,
             title: "",
           });
           handleDialogClose();
@@ -192,7 +148,6 @@ export default function AddTask({ onGetTasks, taskData }: any) {
 
   function checkWsId() {
     setIsOpen(true);
-
     getFromLocalStorage({
       key: "CurrentWorkspaceId",
       cb: (id: string) => {
@@ -202,21 +157,10 @@ export default function AddTask({ onGetTasks, taskData }: any) {
             ...prevTask,
             workspace_id: id,
           }));
-          // console.log(id);
         }
       },
     });
   }
-
-  const date = new Date(task.deadline);
-  const formattedDate = date
-    .toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    })
-    .replace(/ /g, " "); // Output: "12 Jul 2025"
-  // console.log(formattedDate);
 
   return (
     <>
@@ -231,294 +175,188 @@ export default function AddTask({ onGetTasks, taskData }: any) {
         open={isOpen}
         onClose={handleDialogClose}
         transition
-        className="poppins fixed inset-0 flex w-screen select-none items-center justify-center bg-black/30 p-4 font-madei transition duration-300 ease-out data-[closed]:opacity-0"
+        className="poppins fixed inset-0 flex w-screen select-none items-center justify-end bg-black/30 font-madei transition duration-300 ease-out data-[closed]:opacity-0 z-50"
       >
         <DialogBackdrop className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
 
-        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+        <div className="fixed inset-0 flex w-screen items-center justify-end">
           <DialogPanel
-            className="flex h-fit w-[600px] flex-col gap-6 rounded-xl bg-white px-8 py-8 dark:bg-[#111]"
+            className="h-[100vh] w-full lg:w-[calc(100vw-256px)] flex flex-col justify-between rounded-sm bg-gray-100 px-8 py-6 dark:bg-[#111] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <DialogTitle className="flex flex-row items-start justify-between font-medium">
-              <div className="flex flex-col items-start gap-3">
-                {step === 2 && (
-                  <Button
-                    text="Back"
-                    onClick={() => setStep(step - 1)}
-                    className="flex w-fit flex-row items-center justify-center gap-2 rounded bg-[#222] text-[13px] font-normal text-white transition-all duration-300 hover:bg-[#111] dark:bg-transparent dark:text-[#fff]/50 dark:hover:text-[#fff]"
-                    leftIcon
-                    leftIconSrc={<FontAwesomeIcon icon={faArrowLeft} />}
+            <div className="space-y-6">
+              <DialogTitle className="flex flex-row items-start justify-between font-medium border-b border-[#565656]/10 pb-3">
+                <div className="flex flex-col items-start gap-1">
+                  <p className="poppins-medium text-[18px] dark:text-white">
+                    Create Task
+                  </p>
+                  <p className="text-[13px] font-regular leading-4 text-zinc-500">
+                    Add a new task to your workspace and start organizing your work.
+                  </p>
+                </div>
+                <button
+                  onClick={handleDialogClose}
+                  className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-zinc-800 text-[#989898] hover:text-black dark:hover:text-white transition-colors"
+                >
+                  <FontAwesomeIcon
+                    icon={faXmark}
+                    className="text-[16px]"
                   />
-                )}
-                <div>
-                  <p className="poppins-medium text-[16px] dark:text-white">
-                    {step === 1 ? "Create Task" : ""}
-                  </p>
-                  <p className="w-[100%] text-[13px] font-regular leading-4 text-black dark:text-[#fff]/50">
-                    {step === 1
-                      ? "Add a new task to your workspace and start organizing your work."
-                      : ""}
-                  </p>
+                </button>
+              </DialogTitle>
+
+              {/* Form Inputs container */}
+              <div className="flex flex-col gap-6 max-w-4xl pt-2">
+                {/* 1. Title Input */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
+                    Title
+                  </label>
+                  <input
+                    name="title"
+                    placeholder="Enter task title"
+                    value={task.title}
+                    onChange={(e) =>
+                      setTask((prev) => ({
+                        ...prev,
+                        title: e.target.value,
+                      }))
+                    }
+                    className="h-[42px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 py-2 text-xs text-black dark:text-white placeholder-gray-400 outline-none focus:border-zinc-500"
+                  />
                 </div>
-              </div>
-              <div
-                onClick={() => setIsOpen(false)}
-                className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full"
-              >
-                <FontAwesomeIcon
-                  icon={faXmark}
-                  className="text-[18px] text-black dark:text-[#565656]"
-                />
-              </div>
-            </DialogTitle>
-            {/* <Description className="pb-6">
-              <p className="w-[95%] text-[13px] leading-4 text-black dark:text-[#fff]/50">
-                {step === 1
-                  ? "Add a new task to your workspace and start organizing your work."
-                  : "Set priority, status, deadline, and assignee for your task."}
-              </p>
-            </Description> */}
-            <div className="flex flex-col gap-4">
-              {step === 1 && (
-                <div className="flex flex-col gap-4">
-                  {/* title amd description */}
-                  <div className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-1">
-                      <label
-                        htmlFor="spaceName"
-                        className="text-[14px] font-medium dark:text-[#565656]"
-                      >
-                        Title
-                      </label>
-                      <input
-                        name="title"
-                        placeholder="Enter title"
-                        value={task.title}
-                        onChange={(e) =>
-                          setTask((prev) => ({
-                            ...prev,
-                            title: e.target.value,
-                          }))
-                        }
-                        className="h-[42px] max-h-[100px] w-full rounded-md border-[1px] border-gray-300 px-2 py-2 text-xs font-regular text-[black] placeholder-gray-600 outline-none focus:ring-1 focus:ring-white/50 dark:border-[#565656]/30 dark:bg-transparent dark:text-[#fff] dark:placeholder-[#fff]/50"
-                      />
-                    </div>
 
-                    {/* description */}
-                    <div className="flex flex-col gap-1">
-                      <label
-                        htmlFor="spaceName"
-                        className="text-[14px] font-medium dark:text-[#565656]"
-                      >
-                        Description
-                        {/* <span className="font-light text-[#999]">(optional)</span> */}
-                      </label>
-                      <textarea
-                        name="description"
-                        placeholder="Enter description"
-                        value={task.description}
-                        onChange={(e) =>
-                          setTask((prev) => ({
-                            ...prev,
-                            description: e.target.value,
-                          }))
-                        }
-                        className="h-[80px] max-h-[100px] w-full rounded-md border-[1px] border-gray-300 px-2 py-2 text-xs font-regular text-[black] placeholder-gray-600 outline-none focus:ring-1 focus:ring-white/50 dark:border-[#565656]/30 dark:bg-transparent dark:text-[#fff] dark:placeholder-[#fff]/50"
-                      />
-                    </div>
-                  </div>
+                {/* 2. Description Input */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
+                    Description
+                  </label>
+                  <textarea
+                    name="description"
+                    placeholder="Enter task description"
+                    value={task.description}
+                    onChange={(e) =>
+                      setTask((prev) => ({
+                        ...prev,
+                        description: e.target.value,
+                      }))
+                    }
+                    className="h-[120px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 py-2 text-xs text-black dark:text-white placeholder-gray-400 outline-none focus:border-zinc-500"
+                  />
                 </div>
-              )}
 
-              {step === 2 && (
-                <div className="flex flex-col gap-8">
-                  {/* assingments */}
-                  <div className="flex flex-row gap-2">
-                    {/* Priority */}
-                    <div className="flex w-52 flex-col items-start gap-2">
-                      <span className="poppins-medium text-[14px] dark:text-[#565656]">
-                        Priority:
-                      </span>
-
-                      <div className="poppins-regular flex flex-row gap-2">
-                        <label
-                          className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1.5 font-regular ${task.priority === "Low" ? "bg-gray-200 dark:bg-[#565656]/20" : "bg-none"} dark:border-[#565656]/30`}
+                {/* 3. Parameter Split Columns */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Priority Selector */}
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
+                      Priority:
+                    </label>
+                    <div className="flex gap-2">
+                      {["Low", "Medium", "High"].map((p) => (
+                        <button
+                          key={p}
+                          type="button"
+                          onClick={() => setTask((prev) => ({ ...prev, priority: p }))}
+                          className={`flex-1 py-2 px-3 text-xs border rounded-md transition-all ${
+                            task.priority === p
+                              ? "bg-[#563892] text-white border-transparent font-medium"
+                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-850"
+                          }`}
                         >
-                          <input
-                            type="checkbox"
-                            name="priority"
-                            value={task.priority}
-                            checked={task.priority === "Low"}
-                            onChange={() =>
-                              setTask((prev) => ({ ...prev, priority: "Low" }))
-                            }
-                            className={`peer hidden checked:accent-black`}
-                          />
-                          <span className="text-xs text-gray-700 dark:text-[#fff]/50">
-                            Low
-                          </span>
-                        </label>
-
-                        <label
-                          className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1.5 font-regular ${task.priority === "Medium" ? "bg-gray-200 dark:bg-[#565656]/20" : "bg-none"} dark:border-[#565656]/30`}
-                        >
-                          {" "}
-                          <input
-                            type="checkbox"
-                            name="priority"
-                            value={task.priority}
-                            checked={task.priority === "Medium"}
-                            onChange={() =>
-                              setTask((prev) => ({
-                                ...prev,
-                                priority: "Medium",
-                              }))
-                            }
-                            className={`peer hidden checked:accent-black`}
-                          />
-                          <span className="text-xs font-regular text-gray-700 dark:text-[#fff]/50">
-                            Medium
-                          </span>
-                        </label>
-
-                        <label
-                          className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1.5 font-regular ${task.priority === "High" ? "bg-gray-200 dark:bg-[#565656]/20" : "bg-none"} dark:border-[#565656]/30`}
-                        >
-                          {" "}
-                          <input
-                            type="checkbox"
-                            name="priority"
-                            value={task.priority}
-                            checked={task.priority === "High"}
-                            onChange={() =>
-                              setTask((prev) => ({ ...prev, priority: "High" }))
-                            }
-                            className={`peer hidden checked:accent-black`}
-                          />
-                          <span className="text-xs font-regular text-gray-700 dark:text-[#fff]/50">
-                            High
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-
-                    {/* Status */}
-                    <div className="flex flex-col items-start gap-2">
-                      <span className="poppins-medium text-[14px] dark:text-[#565656]">
-                        Status:
-                      </span>
-
-                      <div className="poppins-regular flex flex-row gap-2">
-                        <label
-                          className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1.5 ${task.status === "to-do" ? "bg-gray-200 dark:bg-[#565656]/20" : "bg-none"} dark:border-[#565656]/30`}
-                        >
-                          <input
-                            type="checkbox"
-                            name="status"
-                            value={task.status}
-                            checked={task.status === "to-do"}
-                            onChange={() =>
-                              setTask((prev) => ({ ...prev, status: "to-do" }))
-                            }
-                            className={`peer hidden checked:accent-black`}
-                          />
-                          <span className="text-xs font-regular text-gray-700 dark:text-[#fff]/50">
-                            To-Do
-                          </span>
-                        </label>
-
-                        <label
-                          className={`flex cursor-pointer items-center gap-1 rounded-md border-[1px] border-gray-300 px-2 py-1 ${task.status === "in-progress" ? "bg-gray-200 dark:bg-[#565656]/20" : "bg-none"} dark:border-[#565656]/30`}
-                        >
-                          {" "}
-                          <input
-                            type="checkbox"
-                            name="status"
-                            value={task.status}
-                            checked={task.status === "in-progress"}
-                            onChange={() =>
-                              setTask((prev) => ({
-                                ...prev,
-                                status: "in-progress",
-                              }))
-                            }
-                            className={`peer hidden checked:accent-black`}
-                          />
-                          <span className="text-xs font-regular text-gray-700 dark:text-[#fff]/50">
-                            In-Progress
-                          </span>
-                        </label>
-                      </div>
+                          {p}
+                        </button>
+                      ))}
                     </div>
                   </div>
 
-                  {/* Others */}
-                  <div className="flex flex-row-reverse gap-2">
-                    <div className="flex flex-1 flex-col gap-1">
-                      <label
-                        htmlFor="deadline"
-                        className="text-[14px] dark:text-[#565656]"
-                      >
-                        Deadline
-                      </label>
-                      <input
-                        name="deadline"
-                        type="date"
-                        placeholder="Add deadline"
-                        value={task.deadline}
-                        className="h-[40px] w-full select-none rounded-md border-[1px] border-gray-300 bg-transparent px-2 text-xs font-light text-gray-700 placeholder-gray-700 outline-none focus:ring-1 focus:ring-[#fff]/50 dark:border-[#565656]/30 dark:bg-transparent dark:text-[#fff]/50 dark:placeholder-[#fff]/50"
-                        onChange={(e) =>
-                          setTask((prev) => ({
-                            ...prev,
-                            deadline: e.target.value,
-                          }))
-                        }
-                      />
+                  {/* Status Selector */}
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
+                      Status:
+                    </label>
+                    <div className="flex gap-2">
+                      {[
+                        { key: "to-do", label: "To-Do" },
+                        { key: "in-progress", label: "In-Progress" },
+                      ].map((s) => (
+                        <button
+                          key={s.key}
+                          type="button"
+                          onClick={() => setTask((prev) => ({ ...prev, status: s.key }))}
+                          className={`flex-1 py-2 px-3 text-xs border rounded-md transition-all ${
+                            task.status === s.key
+                              ? "bg-[#563892] text-white border-transparent font-medium"
+                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-850"
+                          }`}
+                        >
+                          {s.label}
+                        </button>
+                      ))}
                     </div>
+                  </div>
+                </div>
 
-                    <div className="flex w-fit flex-col gap-1">
-                      <label
-                        htmlFor="spaceName"
-                        className="text-[14px] dark:text-[#565656]"
-                      >
-                        Assignee:
-                      </label>
-
+                {/* 4. Assignee & Deadline Split Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Assignee */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
+                      Assignee
+                    </label>
+                    <div className="border border-gray-300 dark:border-zinc-800 rounded-md p-1 bg-transparent">
                       <MemberSelect setTaskAssignee={setTaskAssignee} />
                     </div>
                   </div>
-                </div>
-              )}
 
-              <div className="flex justify-end gap-3 pt-4 text-[14px]">
-                {step === 1 ? (
-                  <Button
-                    text="Next"
-                    onClick={() => setStep(2)}
-                    className="flex w-fit flex-row items-center justify-center gap-2 rounded bg-[#222] px-5 py-1 text-[13px] font-normal text-white transition-all duration-300 hover:bg-[#111] dark:bg-transparent dark:text-[#fff]/50 dark:hover:text-[#fff]"
-                    rightIcon
-                    rightIconSrc={<FontAwesomeIcon icon={faArrowRight} />}
-                  />
-                ) : (
-                  <button
-                    className="w-fit rounded bg-[#222] px-4 py-2 text-[13px] font-normal text-white transition-all duration-300 hover:bg-[#111] dark:bg-white dark:text-black dark:hover:bg-gray-200"
-                    onClick={handleCreateTask}
-                  >
-                    {!creatTaskLoading ? (
-                      "Create"
-                    ) : (
-                      <span className="flex w-full items-center justify-center">
-                        <img
-                          src="/icons/loaderWhite.svg"
-                          alt=""
-                          className="w-4 animate-spin"
-                        />
-                      </span>
-                    )}
-                  </button>
-                )}
+                  {/* Deadline */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
+                      Deadline
+                    </label>
+                    <input
+                      name="deadline"
+                      type="date"
+                      value={task.deadline}
+                      onChange={(e) =>
+                        setTask((prev) => ({
+                          ...prev,
+                          deadline: e.target.value,
+                        }))
+                      }
+                      className="h-[40px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 text-xs text-zinc-700 dark:text-white outline-none focus:border-zinc-500"
+                    />
+                  </div>
+                </div>
               </div>
+            </div>
+
+            {/* Bottom Actions Row */}
+            <div className="flex justify-end gap-3 border-t border-[#565656]/10 pt-4 mt-8">
+              <button
+                type="button"
+                onClick={handleDialogClose}
+                className="rounded-md border border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 px-4 py-2 text-xs hover:bg-gray-50 dark:hover:bg-zinc-850 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCreateTask}
+                disabled={creatTaskLoading}
+                className="rounded-md bg-[#563892] text-white px-5 py-2 text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                {creatTaskLoading ? (
+                  <span className="flex w-full items-center justify-center">
+                    <img
+                      src="/icons/loaderWhite.svg"
+                      alt=""
+                      className="w-4 animate-spin"
+                    />
+                  </span>
+                ) : (
+                  "Create Task"
+                )}
+              </button>
             </div>
           </DialogPanel>
         </div>
