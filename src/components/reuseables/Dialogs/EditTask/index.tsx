@@ -212,16 +212,16 @@ export default function EditTask({ taskData }: any) {
 
         <div className="fixed inset-0 flex w-screen items-center justify-end">
           <DialogPanel
-            className="h-[100vh] w-full lg:w-[calc(100vw-256px)] flex flex-col justify-between rounded-sm bg-gray-100 px-8 py-6 dark:bg-[#111] overflow-y-auto"
+            className="h-full w-full lg:w-[calc(100vw-256px)] flex flex-col gap-4 rounded-sm bg-gray-100 px-8 py-6 dark:bg-[#111] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="space-y-6">
-              <DialogTitle className="flex flex-row items-start justify-between font-medium border-b border-[#565656]/10 pb-3">
+              <DialogTitle className="flex flex-row items-start justify-between font-medium pb-3">
                 <div className="flex flex-col items-start gap-1">
                   <p className="poppins-medium text-[18px] dark:text-white">
                     Edit Task
                   </p>
-                  <p className="text-[13px] font-regular leading-4 text-zinc-500">
+                  <p className="text-[13px] font-normal leading-4 text-zinc-500">
                     Modify the parameters of your workspace task.
                   </p>
                 </div>
@@ -253,7 +253,7 @@ export default function EditTask({ taskData }: any) {
                         title: e.target.value,
                       }))
                     }
-                    className="h-[42px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 py-2 text-xs text-black dark:text-white placeholder-gray-400 outline-none focus:border-zinc-500"
+                    className="h-[42px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 py-2 text-xs text-normal dark:text-white placeholder-gray-400 outline-none focus:border-zinc-500"
                   />
                 </div>
 
@@ -272,7 +272,7 @@ export default function EditTask({ taskData }: any) {
                         description: e.target.value,
                       }))
                     }
-                    className="h-[120px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 py-2 text-xs text-black dark:text-white placeholder-gray-400 outline-none focus:border-zinc-500"
+                    className="h-[120px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 py-2 text-xs text-normaldark:text-white placeholder-gray-400 outline-none focus:border-zinc-500"
                   />
                 </div>
 
@@ -292,7 +292,7 @@ export default function EditTask({ taskData }: any) {
                           className={`flex-1 py-2 px-3 text-xs border rounded-md transition-all ${
                             task.priority === p
                               ? "bg-[#563892] text-white border-transparent font-medium"
-                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-850"
+                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-[#563892]/70 dark:hover:text-white"
                           }`}
                         >
                           {p}
@@ -318,7 +318,7 @@ export default function EditTask({ taskData }: any) {
                           className={`flex-1 py-2 px-3 text-xs border rounded-md transition-all ${
                             task.status === s.key
                               ? "bg-[#563892] text-white border-transparent font-medium"
-                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-850"
+                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-[#563892]/70 dark:hover:text-white"
                           }`}
                         >
                           {s.label}
@@ -335,7 +335,7 @@ export default function EditTask({ taskData }: any) {
                     <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
                       Assignee
                     </label>
-                    <div className="border border-gray-300 dark:border-zinc-800 rounded-md p-1 bg-transparent">
+                    <div className="">
                       <MemberSelect setTaskAssignee={setTaskAssignee} />
                     </div>
                   </div>
@@ -363,7 +363,7 @@ export default function EditTask({ taskData }: any) {
             </div>
 
             {/* Bottom Actions Row */}
-            <div className="flex justify-end gap-3 border-t border-[#565656]/10 pt-4 mt-8">
+            <div className="flex justify-end gap-3 pt-4 mt-8">
               <button
                 type="button"
                 onClick={handleDialogClose}

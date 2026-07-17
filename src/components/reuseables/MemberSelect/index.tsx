@@ -71,8 +71,8 @@ export default function MemberSelect({ setTaskAssignee, value }: any) {
         setTaskAssignee(member.userId?._id || member._id || "");
       }}
     >
-      <div className="relative w-52">
-        <ListboxButton className="flex h-[40px] w-full items-center gap-3 rounded-md border border-gray-300 px-3 py-2 text-left shadow-none dark:border-[#565656]/30">
+      <div className="relative w-full overflow-hidden">
+        <ListboxButton className="flex h-[40px] w-full items-center gap-3 rounded-md border border-gray-300 px-3 py-2 text-left shadow-none dark:border-[#565656]/30 overflow-hidden">
           {selectedMember ? (
             <>
               <img

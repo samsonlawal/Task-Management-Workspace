@@ -331,20 +331,20 @@ export default function TaskDetails({
 
             <div className="fixed inset-0 flex w-screen items-center justify-end">
               <DialogPanel
-                className="h-[100vh] w-full lg:w-[calc(100vw-256px)] flex flex-col rounded-sm bg-gray-100 px-8 py-6 dark:bg-[#111] overflow-hidden"
+                className="h-full w-full lg:w-[calc(100vw-256px)] flex flex-col rounded-sm bg-gray-100 px-8 py-6 dark:bg-[#111] overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
               >
-                <DialogTitle className="flex flex-col items-start justify-center gap-8 pb-4 font-medium">
-                  <div className="flex w-full flex-row items-center justify-between border-b-[1px] pb-2 dark:border-[#565656]/20">
-                                      <div className="flex w-full flex-col items-start justify-between">
-                    <p className="poppins-medium line-clamp-1 text-[18px]">
-                      {taskData.title}
-                    </p>
+                <div className="flex flex-col items-start justify-center gap-8 pb-4 font-medium">
+                  <div className="flex w-full flex-row items-center justify-between pb-2">
+                    <div className="flex w-full flex-col items-start justify-between">
+                      <DialogTitle className="poppins-medium line-clamp-1 text-[18px] text-zinc-900 dark:text-white">
+                        {taskData.title || 'No Title'}
+                      </DialogTitle>
 
-                                          <p className="w-full flex-1 poppins-regular text-[#fff]/50 text-[14px] py-3">
+                      <p className="w-full flex-1 poppins-regular text-zinc-600 dark:text-zinc-400 text-[14px] py-3">
                         {taskData.description}
                       </p>
-                  </div>
+                    </div>
                     <div className="flex w-fit cursor-pointer items-center justify-start rounded-full">
 
 
@@ -391,11 +391,11 @@ export default function TaskDetails({
                   </div>
 
 
-                </DialogTitle>
+                </div>
 
-                <div className="flex flex-col lg:flex-row gap-8 flex-1 overflow-hidden mt-4 text-[12px] h-[calc(100vh-140px)]">
+                <div className="flex flex-col gap-8 flex-1 overflow-hidden mt-4 text-[12px] h-[calc(100vh-140px)]">
                   {/* Left Column: Task Fields (hidden if expanded) */}
-                  <div className={`flex flex-col space-y-5 overflow-y-auto pr-3 border-r border-[#565656]/10 dark:border-zinc-800 ${isCommentsExpanded ? "hidden" : "flex-[3]"}`}>
+                  <div className={`flex flex-col space-y-5 overflow-y-auto pr-3 flex-none ${isCommentsExpanded ? "hidden" : ""}`}>
                   <div className="poppins flex flex-row flex-wrap gap-5 pt-2">
                     {/* Created At */}
                     <div className="flex flex-row items-center gap-8 w-[300px]">
@@ -613,7 +613,7 @@ export default function TaskDetails({
                   </div>
 
                   {/* Right Column: Tabs & Comments */}
-                  <div className={`flex flex-col h-full overflow-hidden relative ${isCommentsExpanded ? "flex-[5]" : "flex-[2]"}`}>
+                  <div className={`flex flex-col h-full overflow-hidden relative flex-1 ${isCommentsExpanded ? "flex-[5]" : ""}`}>
                     <div className="w-full h-full flex flex-col">
                       {/* Tab Headers */}
                       <div className="flex items-center justify-between border-b border-gray-200 dark:border-[#565656]/20">
@@ -646,12 +646,12 @@ export default function TaskDetails({
                         {isCommentsExpanded ? (
                           <>
                             <Minimize2 className="w-3.5 h-3.5" />
-                            <span>Collapse</span>
+                            {/* <span>Collapse</span> */}
                           </>
                         ) : (
                           <>
                             <Maximize2 className="w-3.5 h-3.5" />
-                            <span>Expand comments</span>
+                            {/* <span>Expand comments</span> */}
                           </>
                         )}
                       </button>
