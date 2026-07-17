@@ -1,8 +1,7 @@
-import { useEffect } from "react";
-
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { useEffect, useState } from "react";
+import { Menu, MenuButton, MenuItems } from "@headlessui/react";
 import { TNotification } from "@/types";
-import { BellOff } from "lucide-react";
+import { BellOff, X } from "lucide-react";
 import { formatTimeAgo } from "@/utils/formatTimeAgo";
 import { useSelector } from "react-redux";
 import {
@@ -22,6 +21,7 @@ const typeToIcon: Record<number, string> = {
 
 export default function Notification() {
   const { user } = useSelector((state: any) => state.auth);
+  const [activeTab, setActiveTab] = useState<"all" | "unread">("all");
 
   const {
     loading: notificationLoading,
@@ -49,112 +49,139 @@ export default function Notification() {
     onGetUserNotification(user?._id);
   }
 
-  function getNotif() {
-    onGetUserNotification(user?._id);
-  }
-
-  const hasUnread: boolean = notificationData.some(
+  const hasUnread: boolean = Array.isArray(notificationData) && notificationData.some(
     (notification) => !notification.isRead,
   );
 
+  const filteredNotifications = Array.isArray(notificationData)
+    ? notificationData.filter((notif) => {
+        if (activeTab === "unread") return !notif.isRead;
+        return true;
+      })
+    : [];
+
   return (
     <div className="poppins flex h-[50px] w-fit flex-row items-center justify-center gap-6 text-left">
-      {/* <FontAwesomeIcon icon={faBell} className="" /> */}
+      <Menu as="div" className="relative">
+        {({ open, close }) => (
+          <>
+            <MenuButton className="focus:outline-none">
+              <div className="group relative w-fit bg-[#565656]/10 p-2 rounded-sm transition-colors hover:bg-[#565656]/15 dark:bg-[#565656]/20 dark:hover:bg-[#565656]/30">
+                <img
+                  src="/icons/bell-line.svg"
+                  alt="Notifications"
+                  className="h-[18px] w-[18px] cursor-pointer"
+                />
+                {hasUnread && (
+                  <span className="absolute -right-[1px] -top-[1px] h-2.5 w-2.5 rounded-full border-2 border-white bg-red-500 dark:border-[#111] transition-all duration-300"></span>
+                )}
+              </div>
+            </MenuButton>
 
-      {/* <div className="h-[80%] border-l-[1px]"></div> */}
-      <Menu>
-        <MenuButton className="">
-          <div className="group relative w-fit bg-[#565656]/10 p-2 rounded-sm">
-            <img
-              src="/icons/bell-line.svg"
-              alt="Notifications"
-              className="h-[18px] w-[18px] cursor-pointer"
-            />
-            {/* Notification badge */}
-            {hasUnread ? (
-              <span className="absolute -right-[1px] -top-[1px] h-2 w-2 rounded-full border border-white bg-red-500 transition-all duration-300 group-hover:-right-1 group-hover:-top-1"></span>
-            ) : (
-              ""
-            )}
-          </div>
-        </MenuButton>
-
-        <MenuItems
-          transition
-          anchor="bottom end"
-          className="flex w-[458px] origin-top-right flex-col rounded-xl border-[1px] dark:border-[#fff]/10 dark:bg-[#111] bg-white text-sm/6 text-black shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out scrollbar-hide [--anchor-gap:24px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
-        >
-          <div className="flex flex-col dark:bg-[#111]">
-            {/* <div className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] py-1 pl-2"> */}
-            <div className="items poppins flex w-full flex-row items-center justify-between px-6 py-[20px]">
-              <p className="text-[20px] font-semibold dark:text-[#fff]">Notification</p>
-              <button
-                onClick={() => handleReadAll()}
-                className="rounded-[6px] bg-[#F3F3F3] px-[15px] py-[6px] text-[12px] font-normal dark:bg-[#fff]"
-              >
-                Mark all as read
-              </button>
-            </div>
-
-            {/* Tabs */}
-            <div className="poppins flex flex-row gap-4 border-b-[1px] border-[#E4E4E4] dark:border-[#111] px-6">
-              <button className="border-b-2 border-[#4E4E4E] px-[6px] py-[3px] text-[12px] dark:text-[#fff]/80 font-medium">
-                Updates
-              </button>
-
-              <button className="px-[6px] py-[3px] text-[12px] font-medium text-[#4E4E4E] dark:text-[#fff]/80">
-                Unread
-              </button>
-            </div>
-
-            {/* Notifications */}
-            <div className="flex h-[350px] flex-col overflow-auto scrollbar-hide">
-              <div>
-                {Array.isArray(notificationData) &&
-                notificationData.length > 0 ? (
-                  notificationData.map((notif: TNotification) => (
-                    <div
-                      key={notif._id}
-                      className={`poppins flex h-[80px] cursor-pointer flex-row items-center gap-[10px] border-b-[1px] border-[#E4E4E4] dark:border-[#4E4E4E]/30 px-6 ${!notif.isRead ? "bg-[#F3F3F3]/5" : ""}`}
-                      onClick={() => handleRead(notif._id)}
+            <MenuItems
+              transition
+              className="fixed inset-0 z-[999] flex h-screen w-screen origin-top-right flex-col bg-white text-sm/6 text-black shadow-2xl transition duration-100 ease-out focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 dark:bg-[#111] sm:absolute sm:inset-auto sm:right-0 sm:mt-3 sm:h-auto sm:w-[458px] sm:max-h-[550px] sm:rounded-xl sm:border sm:border-zinc-200 sm:dark:border-[#fff]/10 sm:shadow-[0px_4px_25px_rgba(0,0,0,0.08)] overflow-hidden"
+            >
+              <div className="flex flex-col h-full sm:h-auto dark:bg-[#111]">
+                {/* Header */}
+                <div className="flex w-full flex-row items-center justify-between px-6 py-5">
+                  <p className="text-[20px] font-semibold dark:text-[#fff]">Notifications</p>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => handleReadAll()}
+                      className="rounded-[6px] bg-[#F3F3F3] dark:bg-zinc-800 text-[#4E4E4E] dark:text-zinc-300 hover:bg-[#e8e8e8] dark:hover:bg-zinc-700 px-[14px] py-[6px] text-[12px] font-medium transition-colors"
                     >
-                      {/* icon */}
-                      <img src={typeToIcon[notif.type]} alt="" />
+                      Mark all as read
+                    </button>
+                    {/* Mobile Close Button */}
+                    <button
+                      onClick={close}
+                      className="p-1.5 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 sm:hidden focus:outline-none rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
+                </div>
 
-                      {/* message */}
-                      <div className="flex flex-1 flex-row justify-between">
-                        <div className="flex flex-col">
-                          <p className="text-[13px] font-medium text-[#4E4E4E]">
-                            {notif.message}
-                          </p>
-                          <div className="flex flex-row gap-[10px] text-[10px] text-[#8c8c8c]">
-                            <p className="">{formatTimeAgo(notif.createdAt)}</p>
-                          </div>
+                {/* Tabs */}
+                <div className="poppins flex flex-row gap-5 border-b border-zinc-100 dark:border-zinc-800/60 px-6">
+                  <button
+                    onClick={() => setActiveTab("all")}
+                    className={`pb-2.5 text-[12px] font-semibold border-b-2 transition-colors focus:outline-none ${
+                      activeTab === "all"
+                        ? "border-zinc-800 dark:border-[#fff] text-zinc-950 dark:text-[#fff]"
+                        : "border-transparent text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+                    }`}
+                  >
+                    All Updates
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab("unread")}
+                    className={`pb-2.5 text-[12px] font-semibold border-b-2 transition-colors focus:outline-none ${
+                      activeTab === "unread"
+                        ? "border-zinc-800 dark:border-[#fff] text-zinc-950 dark:text-[#fff]"
+                        : "border-transparent text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+                    }`}
+                  >
+                    Unread
+                  </button>
+                </div>
+
+                {/* Notification List Container */}
+                <div className="flex-1 overflow-y-auto scrollbar-hide sm:h-[350px] sm:flex-none">
+                  {filteredNotifications.length > 0 ? (
+                    filteredNotifications.map((notif: TNotification) => (
+                      <div
+                        key={notif._id}
+                        className={`poppins flex min-h-[72px] py-3.5 cursor-pointer flex-row items-start gap-3 border-b border-zinc-100 dark:border-zinc-800/30 px-6 transition-all hover:bg-zinc-50/50 dark:hover:bg-zinc-800/10 ${
+                          !notif.isRead
+                            ? "bg-zinc-50/60 dark:bg-zinc-900/40 border-l-2 border-l-sky-500 pl-[22px]"
+                            : "border-l-2 border-l-transparent pl-[22px]"
+                        }`}
+                        onClick={() => handleRead(notif._id)}
+                      >
+                        {/* Icon Container */}
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#565656]/5 dark:bg-[#fff]/5">
+                          <img src={typeToIcon[notif.type]} alt="" className="h-4.5 w-4.5" />
                         </div>
 
-                        {/* unread status */}
-                        {!notif.isRead && (
-                          <img src="/icons/unread.svg" alt="" />
-                        )}
+                        {/* Message & Time */}
+                        <div className="flex flex-1 flex-row justify-between items-start gap-4">
+                          <div className="flex flex-col">
+                            <p className={`text-[13px] leading-relaxed ${
+                              !notif.isRead
+                                ? "font-medium text-zinc-900 dark:text-zinc-100"
+                                : "font-normal text-zinc-600 dark:text-zinc-400"
+                            }`}>
+                              {notif.message}
+                            </p>
+                            <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-1">
+                              {formatTimeAgo(notif.createdAt)}
+                            </p>
+                          </div>
+
+                          {/* Unread Status Dot */}
+                          {!notif.isRead && (
+                            <span className="h-2 w-2 mt-1.5 shrink-0 rounded-full bg-sky-500"></span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))
-                ) : (
-                  //  No notification fallback
-                  <div className="flex flex-col items-center justify-center py-10">
-                    <div className="flex h-[250px] flex-col items-center justify-center text-gray-500">
-                      <BellOff size={50} strokeWidth={1} />
-                      <p className="mt-4 text-sm font-semibold text-gray-500">
+                    ))
+                  ) : (
+                    /* Fallback when empty */
+                    <div className="flex h-[300px] sm:h-[350px] flex-col items-center justify-center p-6 text-zinc-400 dark:text-zinc-500">
+                      <BellOff size={40} strokeWidth={1.5} className="text-zinc-300 dark:text-zinc-700" />
+                      <p className="mt-3 text-sm font-medium text-zinc-500 dark:text-zinc-400">
                         No notifications yet
                       </p>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          </div>
-          {/* </div> */}
-        </MenuItems>
+            </MenuItems>
+          </>
+        )}
       </Menu>
     </div>
   );
