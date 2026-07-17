@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import Settings from "@/components/pages/Settings";
 
 export default function SettingsPage() {
-  redirect("/workspace/settings/identity-and-branding");
+  return <Settings />;
 }

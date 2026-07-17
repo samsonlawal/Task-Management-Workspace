@@ -1,5 +1,5 @@
-import Workspace from "@/components/pages/workspace";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return <Workspace />;
+  redirect("/workspace/tasks");
 }

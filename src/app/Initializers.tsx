@@ -22,7 +22,7 @@ function Initializers({ children }: { children: ReactNode }) {
       <Provider store={store}>
         <AppThemeProvider>
           {/* <AuthContextWrapper> */}
-          <NextTopLoader color="#000000" height={3} />
+          <NextTopLoader color="#48cae4" height={3} />
           {/* {hideNavbar ? null : <Navbar />} */}
 
           {children}

@@ -3,7 +3,7 @@
 import UpgradePlan from "@/components/reuseables/UpgradePlan";
 import CurrentWorkspace from "@/components/reuseables/currentWorkspace";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetWorkspace } from "@/hooks/api/workspace";
 import { setCurrentUI } from "@/redux/Slices/uiSlice";
@@ -37,6 +37,7 @@ import Brand from "@/components/reuseables/Brand";
 
 export default function Sidebar() {
   const router = useRouter();
+  const pathname = usePathname();
   const { user } = useSelector((state: any) => state.auth);
   const currentUI = useSelector((state: any) => state.ui?.currentUI || "tasks");
 
@@ -92,18 +93,18 @@ export default function Sidebar() {
                 icon: <UsersRound strokeWidth={1.5} size={18} />,
                 disabled: false,
               },
-              {
-                label: "Chat",
-                value: "chat",
-                icon: <MessageCircle strokeWidth={1.5} size={18} />,
-                disabled: false,
-              },
-              {
-                label: "AI Hub",
-                value: "ai",
-                icon: <Sparkles strokeWidth={1.5} size={18} className="text-amber-500" />,
-                disabled: false,
-              },
+              // {
+              //   label: "Chat",
+              //   value: "chat",
+              //   icon: <MessageCircle strokeWidth={1.5} size={18} />,
+              //   disabled: false,
+              // },
+              // {
+              //   label: "AI Hub",
+              //   value: "ai",
+              //   icon: <Sparkles strokeWidth={1.5} size={18} className="text-amber-500" />,
+              //   disabled: false,
+              // },
               // {
               //   label: "Notifications",
               //   value: "notification",
@@ -113,7 +114,7 @@ export default function Sidebar() {
                 label: "Integrations",
                 value: "integrations",
                 icon: <Workflow strokeWidth={1.5} size={18} />,
-                disabled: true,
+                disabled: false,
               },
               
               // {
@@ -122,27 +123,33 @@ export default function Sidebar() {
               //   icon: <Settings strokeWidth={1.5} size={18} />,
               // }
             ] as const
-          ).map((link) => (
-            <span
-              key={link.value}
-              onClick={() => {
-                dispatch(setCurrentUI(link.value));
-              }}
-              className={`flex cursor-pointer flex-row items-center justify-between rounded-[5px] border px-2.5 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 ${
-                currentUI === link.value 
-                  ? "border-[#565656]/10 bg-[#565656]/10 text-zinc-950 dark:text-white font-medium" 
-                  : "border-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
-              } ${link.disabled ? "opacity-70 hover:cursor-not-allowed" : ""}`}
-            >
-              <div className="flex items-center gap-[11px]">
-                {link.icon}
-                <span>{link.label}</span>
-              </div>
-              {currentUI === link.value && (
-                <ChevronRight className="w-3.5 h-3.5 text-zinc-800 dark:text-zinc-200" />
-              )}
-            </span>
-          ))}
+          ).map((link) => {
+            const isActive = pathname === `/workspace/${link.value}`;
+            return (
+              <span
+                key={link.value}
+                onClick={() => {
+                  if (!link.disabled) {
+                    router.push(`/workspace/${link.value}`);
+                    dispatch(setCurrentUI(link.value));
+                  }
+                }}
+                className={`flex cursor-pointer flex-row items-center justify-between rounded-[5px] border px-2.5 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 ${
+                  isActive 
+                    ? "border-[#565656]/10 bg-[#565656]/10 text-zinc-950 dark:text-white font-medium" 
+                    : "border-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
+                } ${link.disabled ? "opacity-70 hover:cursor-not-allowed" : ""}`}
+              >
+                <div className="flex items-center gap-[11px]">
+                  {link.icon}
+                  <span>{link.label}</span>
+                </div>
+                {isActive && (
+                  <ChevronRight className="w-3.5 h-3.5 text-zinc-800 dark:text-zinc-200" />
+                )}
+              </span>
+            );
+          })}
         </div>
       </div>
       <div className="flex h-fit w-full flex-col gap-[20px] px-[14px]">

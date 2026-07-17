@@ -99,7 +99,7 @@ export default function Card({
             {/* Status */}
             {/* <div className="bg-[#C5C5C5 flex h-[18px] w-[20px] items-center justify-center rounded-[2px]">
               <img
-                src={`icons/task/${status === "to-do" ? "to-do" : status === "in-progress" ? "in-progress" : status === "in-review" ? "in-review" : "completed"}.svg`}
+                src={`/icons/task/${status === "to-do" ? "to-do" : status === "in-progress" ? "in-progress" : status === "in-review" ? "in-review" : "completed"}.svg`}
                 alt=""
                 className="h-3.5 w-3.5"
               />
