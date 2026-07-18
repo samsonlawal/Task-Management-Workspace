@@ -32,6 +32,8 @@ export default function Card({
   id,
   status,
   createdAt,
+  assigneeId,
+  createdBy,
 }: {
   title?: string;
   desc: string;
@@ -44,6 +46,8 @@ export default function Card({
   id: string;
   status: string;
   createdAt: string;
+  assigneeId?: string;
+  createdBy?: string;
 }) {
   const priorityStyles = getPriorityStyles(priority);
 
@@ -75,6 +79,7 @@ export default function Card({
       name: name || fullname || "",
       email,
       image,
+      _id: assigneeId,
     },
     priority,
     // Add other task properties as needed
@@ -82,6 +87,7 @@ export default function Card({
     createdAt, // You might want to pass this as a prop
     workspaceName: workspaceData?.name,
     workspaceId: workspaceData?._id,
+    createdBy,
   };
 
   function gettaskdetails() {

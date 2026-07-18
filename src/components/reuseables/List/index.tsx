@@ -23,6 +23,8 @@ export default function ListTask({
   id,
   status,
   createdAt,
+  assigneeId,
+  createdBy,
 }: {
   title: string;
   desc: string;
@@ -35,6 +37,8 @@ export default function ListTask({
   id: string;
   status: string;
   createdAt: string;
+  assigneeId?: string;
+  createdBy?: string;
 }) {
   const priorityStyles = getPriorityStyles(priority);
   const statusStyles = getStatusStyles(status);
@@ -67,12 +71,14 @@ export default function ListTask({
       name: name || fullname || "",
       email,
       image,
+      _id: assigneeId,
     },
     priority,
     status,
     createdAt,
     workspaceName: workspaceData?.name,
     workspaceId: workspaceData?._id,
+    createdBy,
   };
 
   function gettaskdetails() {

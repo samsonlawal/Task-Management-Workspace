@@ -332,6 +332,8 @@ function TasksView() {
                                       id={task._id}
                                       status={task.status}
                                       createdAt={task.createdAt}
+                                      assigneeId={task.assignee?._id}
+                                      createdBy={task.createdBy?._id || task.createdBy}
                                     />
                                   ))
                                 : null}
@@ -359,6 +361,8 @@ function TasksView() {
                           id={task._id}
                           status={task.status}
                           createdAt={task.createdAt}
+                          assigneeId={task.assignee?._id}
+                          createdBy={task.createdBy?._id || task.createdBy}
                         />
                       ) : null,
                     )}
@@ -429,6 +433,8 @@ function TasksView() {
                                   id={task._id}
                                   status={task.status}
                                   createdAt={task.createdAt}
+                                  assigneeId={task.assignee?._id}
+                                  createdBy={task.createdBy?._id || task.createdBy}
                                 />
                               ))
                             : null}
@@ -454,6 +460,8 @@ function TasksView() {
                       id={task._id}
                       status={task.status}
                       createdAt={task.createdAt}
+                      assigneeId={task.assignee?._id}
+                      createdBy={task.createdBy?._id || task.createdBy}
                     />
                   ) : null,
                 )}
