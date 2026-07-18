@@ -6,7 +6,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
@@ -196,17 +196,18 @@ export default function EditTask({ taskData }: any) {
 
   return (
     <>
-      <button
-        onClick={checkWsId}
-        className="poppins flex h-6 w-full items-center justify-start rounded-sm px-2 text-[12px] font-normal text-[#989898] hover:bg-slate-200 hover:text-black dark:hover:bg-zinc-800"
-      >
-        Edit
-      </button>
+        <button
+          onClick={checkWsId}
+          className="poppins flex h-6 w-full items-center justify-start rounded-sm px-2 text-[12px] font-normal text-[#989898] hover:bg-slate-200 hover:text-black dark:hover:bg-zinc-800"
+        >
+          Edit
+        </button>
+      
       <Dialog
         open={isEditOpen}
         onClose={handleDialogClose}
         transition
-        className="poppins fixed inset-0 flex w-screen select-none items-center justify-end bg-black/30 font-madei transition duration-300 ease-out data-[closed]:opacity-0 z-50"
+        className="poppins fixed inset-0 flex w-screen select-none items-center justify-end bg-black/30 font-madei transition duration-300 ease-out data-[closed]:opacity-0 z-[70]"
       >
         <DialogBackdrop className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
 
@@ -367,7 +368,7 @@ export default function EditTask({ taskData }: any) {
               <button
                 type="button"
                 onClick={handleDialogClose}
-                className="rounded-md border border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 px-4 py-2 text-xs hover:bg-gray-50 dark:hover:bg-zinc-850 transition-colors"
+                className="rounded-md bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 px-4 py-2 text-xs transition-colors"
               >
                 Cancel
               </button>

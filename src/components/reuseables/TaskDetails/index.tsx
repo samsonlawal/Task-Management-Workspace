@@ -11,6 +11,7 @@ import { useEffect, useState,useRef } from "react";
 import {
   faAlignLeft,
   faCircleNotch,
+  faPen,
   faSpinner,
   faTrash,
   faXmark,
@@ -323,7 +324,7 @@ export default function TaskDetails({
         open={isDetailsOpen}
         onClose={handleDialogClose}
         transition
-        className="poppins fixed inset-0 flex w-screen select-none items-center justify-end bg-black/30 font-madei transition duration-300 ease-out data-[closed]:opacity-0"
+        className="poppins fixed inset-0 flex w-screen select-none items-center justify-end bg-black/30 font-madei transition duration-300 ease-out data-[closed]:opacity-0 z-[60]"
       >
         {!deleteLoading || !promoteLoading ? (
           <>
@@ -345,43 +346,38 @@ export default function TaskDetails({
                         {taskData.description}
                       </p>
                     </div>
-                    <div className="flex w-fit cursor-pointer items-center justify-start rounded-full">
+                    <div className="flex items-center gap-1.5">
+                      <EditTask
+                        trigger={
+                          <button
+                            className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-300 dark:focus:ring-zinc-700"
+                            aria-label="Edit Task"
+                            title="Edit Task"
+                          >
+                            <FontAwesomeIcon icon={faPen} className="h-3.5 w-3.5" />
+                          </button>
+                        }
+                      />
 
+                      <button
+                        onClick={handleDeleteTask}
+                        className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-500 hover:text-red-600 dark:text-zinc-400 dark:hover:text-red-400 hover:bg-gray-200 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-300 dark:focus:ring-zinc-700"
+                        aria-label="Delete Task"
+                        title="Delete Task"
+                      >
+                        <FontAwesomeIcon icon={faTrash} className="h-3.5 w-3.5" />
+                      </button>
 
+                      <div className="h-4 w-[1px] bg-gray-300 dark:bg-zinc-800 mx-1" />
 
-                      <div className="flex flex-row text-[12px] font-normal items-center">
-                        <button
-                          onClick={handleDialogClose}
-                          className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-zinc-800 text-[#989898] hover:text-black dark:hover:text-white transition-colors"
-                          aria-label="Close details"
-                          title="Close panel"
-                        >
-                          <FontAwesomeIcon
-                            icon={faXmark}
-                            className="h-4 w-4"
-                          />
-                        </button>
-
-                        <button
-                          className="ml-2 flex h-6 w-6 items-center justify-center rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
-                          aria-label="Task options"
-                        >
-                          <EditTask />
-                        </button>
-
-                        <button
-                          onClick={() => {
-                            handleDeleteTask();
-                          }}
-                          className="ml-2 flex h-6 w-6 items-center justify-center rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
-                          aria-label="Task options"
-                        >
-                          <FontAwesomeIcon
-                            icon={faTrash}
-                            className="h-4 w-4 text-[#989898] hover:text-gray-700"
-                          />
-                        </button>
-                      </div>
+                      <button
+                        onClick={handleDialogClose}
+                        className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-300 dark:focus:ring-zinc-700"
+                        aria-label="Close details"
+                        title="Close details"
+                      >
+                        <FontAwesomeIcon icon={faXmark} className="h-4 w-4" />
+                      </button>
                     </div>
 
                     {/* <FontAwesomeIcon

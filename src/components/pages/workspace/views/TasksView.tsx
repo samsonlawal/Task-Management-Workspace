@@ -282,7 +282,7 @@ function TasksView() {
                       >
                         <div className="flex w-fit flex-row items-center gap-1">
                           <img
-                            src={`icons/task/${status === "TO-DO" ? "to-do" : status === "IN-PROGRESS" ? "in-progress" : status === "IN-REVIEW" ? "in-review" : "completed"}.svg`}
+                            src={`/icons/task/${status === "TO-DO" ? "to-do" : status === "IN-PROGRESS" ? "in-progress" : status === "IN-REVIEW" ? "in-review" : "completed"}.svg`}
                             alt=""
                             className="h-3.5 w-3.5"
                           />
@@ -381,7 +381,7 @@ function TasksView() {
                   >
                     <div className="flex w-fit flex-row items-center gap-1">
                       <img
-                        src={`icons/task/${status === "TO-DO" ? "to-do" : status === "IN-PROGRESS" ? "in-progress" : status === "IN-REVIEW" ? "in-review" : "completed"}.svg`}
+                        src={`/icons/task/${status === "TO-DO" ? "to-do" : status === "IN-PROGRESS" ? "in-progress" : status === "IN-REVIEW" ? "in-review" : "completed"}.svg`}
                         alt=""
                         className="h-3.5 w-3.5"
                       />

@@ -12,7 +12,7 @@ export default function Head({ header }: { header: string }) {
         </span>
       </p>
 
-      <img src="icons/expand.svg" alt="" className="cursor-pointer" />
+      <img src="/icons/expand.svg" alt="" className="cursor-pointer" />
     </div>
   );
 }

@@ -336,7 +336,7 @@ export default function AddTask({ onGetTasks, taskData }: any) {
               <button
                 type="button"
                 onClick={handleDialogClose}
-                className="rounded-md border border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 px-4 py-2 text-xs hover:bg-gray-50 dark:hover:bg-zinc-850 transition-colors"
+                className="rounded-md bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 px-4 py-2 text-xs transition-colors"
               >
                 Cancel
               </button>
