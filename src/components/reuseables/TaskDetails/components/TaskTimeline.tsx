@@ -2,16 +2,27 @@ import { useMemo } from "react";
 import { DateTime } from "luxon";
 import { Plus, UserPlus, CheckCircle2, Flag, Info } from "lucide-react";
 import { getStatusStyles } from "@/utils/taskStyles";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 export default function TaskTimeline({ taskData }: { taskData: any }) {
+  const MemberData = useSelector((state: RootState) => state.MemberData);
+  const members = MemberData?.members || [];
+
   const activities = useMemo(() => {
     const list = [];
+    
+    // Find creator details
+    const creatorMember = members.find(
+      (m: any) => (m.userId?._id || m._id) === taskData.createdBy
+    );
+    const creatorName = creatorMember?.userId?.fullname || creatorMember?.fullname || "Workspace Member";
     
     // 1. Create activity
     list.push({
       id: "act-create",
       actor: {
-        name: "Workspace Member",
+        name: creatorName,
         profileImage: undefined,
       },
       type: "create" as const,

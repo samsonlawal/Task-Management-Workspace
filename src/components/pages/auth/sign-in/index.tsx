@@ -4,14 +4,13 @@ import { useEffect, useState } from "react";
 import { showSuccessToast, showErrorToast } from "@/utils/toaster";
 import { useLogin } from "@/hooks/api/auth";
 import Brand from "@/components/reuseables/Brand";
-// import AlertError from "@/components/reusables/Alert";
+import { Loader2, Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  // const [error, setError] = useState<string | null>(null); // For validation errors
   const [formValues, setFormValues] = useState({ email: "", password: "" });
-  const [errorMsg, seterrorMsg] = useState("");
-  const [remember, setremember] = useState(false);
+  const [remember, setRemember] = useState(false);
 
   const { loading, onLogin } = useLogin();
 
@@ -20,24 +19,18 @@ export default function Login() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-    // setError(null);
   };
-
-  useEffect(() => {
-    if (errorMsg?.trim()?.length)
-      window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const { email, password } = formValues;
     let errorMsg = "";
 
-    if (!formValues.email && !formValues.password) {
+    if (!email && !password) {
       errorMsg = "Email and password are required.";
-    } else if (!formValues.email) {
+    } else if (!email) {
       errorMsg = "Email is required.";
-    } else if (!formValues.password) {
+    } else if (!password) {
       errorMsg = "Password is required.";
     }
 
@@ -54,179 +47,109 @@ export default function Login() {
         },
       });
     }
-
-    // console.log(formValues);
-    // font madei
   };
 
   return (
-    <div className="flex h-svh w-full items-center justify-center bg-white p-3 font-madei">
-      <div className="flex h-full w-full flex-row rounded-lg">
-        {/* Left Section */}
-        <div className="hidden w-[50%] items-center justify-center rounded-lg bg-[#111] bg-[url('/icons/ccchaos.svg')] py-8 text-white md:flex">
-          <div className="flex h-full w-full flex-col items-center justify-between gap-3 px-10">
-            {/* Logo at the top */}
-            <Brand />
+    <div className="poppins relative flex min-h-screen w-full flex-col items-center justify-between bg-[#0a0a0a] px-4 py-8 text-white overflow-hidden">
+      {/* Radial Glow Backdrop */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] rounded-full bg-indigo-600/10 blur-[100px] sm:blur-[130px] pointer-events-none" />
 
-            <div className="flex w-[260px] flex-col gap-6">
-              <div>
-                <h2 className="text-center text-lg font-medium text-white">
-                  Log In
-                </h2>
-                <p className="text-center text-sm text-gray-400">
-                  Complete these easy steps to access your account.
-                </p>
-              </div>
+      {/* Header Logo */}
+      <div className="mt-8 relative z-10">
+        <Brand />
+      </div>
 
-              <div className="flex flex-col gap-2">
-                <span className="flex flex-row gap-2 rounded-md bg-[white] p-3 text-xs text-black">
-                  <p className="h-4 w-4 rounded-full bg-gray-400 text-center">
-                    1
-                  </p>
-                  <p>Enter your credentials.</p>
-                </span>
-
-                <span className="flex flex-row gap-2 rounded-md bg-gray-100/50 p-3 text-xs text-black transition-all duration-300 hover:bg-white">
-                  <p className="h-4 w-4 rounded-full bg-gray-300 text-center">
-                    2
-                  </p>
-                  <p>Navigate to your Workspace</p>
-                </span>
-
-                <span className="flex flex-row gap-2 rounded-md bg-gray-100/50 p-3 text-xs text-black transition-all duration-300 hover:bg-white">
-                  <p className="h-4 w-4 rounded-full bg-gray-300 text-center">
-                    3
-                  </p>
-                  <p>Manage your workspace</p>
-                </span>
-              </div>
-            </div>
-
-            {/* <div className="magicpattern flex-1"></div> */}
-
-            {/* Copyright at the bottom */}
-            {/* <p className="text-sm text-gray-600">
-              © Copyright Management 2025.
-            </p> */}
-          </div>
-        </div>
-
-        {/* Right Section - Auth Form */}
-
-        <div className="flex w-[100%] flex-col items-center justify-start gap-8 px-1 py-12 font-madei md:w-[50%] md:justify-center md:p-8">
-          <div className="flex md:hidden">
-            <Brand />
-          </div>
-          <form className="w-full max-w-sm space-y-5" onSubmit={handleSubmit}>
-            <div className="flex flex-col pb-4 text-center">
-              <h2 className="text-xl font-medium text-[#111]">Welcome Back</h2>
-              <p className="text-sm text-gray-500">
-                Enter your credentials to access your account
-              </p>
-            </div>
-
-            {/* Google Sign-In */}
-            {/* <button className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 py-1 text-sm text-gray-700 hover:bg-gray-100">
-              <img src="/icons/google.svg" alt="Google" className="h-5 w-5" />
-              <img src="/icons/google-g.svg" alt="Google" className="h-8 w-8" />
-              Sign in with Google
-            </button>
-
-            <div className="flex items-center gap-2">
-              <div className="h-px flex-1 bg-gray-300" />
-              <span className="text-sm text-gray-500">or</span>
-              <div className="h-px flex-1 bg-gray-300" />
-            </div> */}
-
-            {/* Email Input */}
-            <div className="flex h-fit w-full flex-col gap-1">
-              <label className="text-sm text-[#111]">Email</label>
-              <input
-                name="email"
-                type="email"
-                placeholder="Enter Email"
-                value={formValues.email}
-                className="mt-0 w-full rounded-md border border-gray-300 bg-white px-2 py-2.5 text-sm text-[#111] focus:border-black focus:outline-none md:p-2"
-                onChange={handleInputChange}
-              />
-            </div>
-
-            {/* Password Input */}
-
-            <div className="flex w-full flex-col gap-1">
-              <label className="text-sm text-[#111]">Password</label>
-              <div className="relative">
-                <input
-                  name="password"
-                  value={formValues.password}
-                  onChange={handleInputChange}
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter Password"
-                  className="w-full rounded-md border border-gray-300 bg-white px-2 py-2.5 text-sm text-[#111] focus:border-black focus:outline-none md:py-2"
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-2 text-gray-500"
-                  onClick={togglePasswordVisibility}
-                >
-                  <img
-                    src={`/icons/${showPassword ? "eyeIcon" : "eyeSlash"}.svg`}
-                    className="w-4"
-                    alt=""
-                  />
-                </button>
-              </div>
-            </div>
-            {/* <input
-              placeholder="Password"
-              className="w-full rounded-md border border-gray-300 p-2 focus:border-black focus:outline-none"
-              type={showPassword ? "text" : "password"}
-              onChange={handleInputChange}
-              value={formValues.password}
-            /> */}
-
-            {/* Remember Me & Forgot Password */}
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2 text-[#111]">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 bg-transparent text-white accent-black [color-scheme:light] focus:ring-black"
-                />
-                Remember Me
-              </label>
-              <a href="#" className="text-gray-500 hover:underline">
-                Forgot Password?
-              </a>
-            </div>
-
-            {/* Submit Button */}
-            <button
-              className="flex w-full flex-row items-center justify-center gap-2 rounded-md bg-black py-2 text-white hover:bg-black/85"
-              type="submit"
-            >
-              Sign In
-              {loading ? (
-                <span>
-                  <img
-                    src="/icons/loaderWhite.svg"
-                    alt=""
-                    className="w-4 animate-spin"
-                  />
-                </span>
-              ) : (
-                ""
-              )}
-            </button>
-
-            <p className="text-center text-sm text-gray-500">
-              Don’t have an account?{" "}
-              <a href="/auth/sign-up" className="text-black hover:underline">
-                Sign Up
-              </a>
+      {/* Glassmorphic Sign-in Card */}
+      <div className="my-auto relative z-10 w-full max-w-[420px] p-8 rounded-2xl bg-zinc-900/40 backdrop-blur-md border border-zinc-800/80 shadow-2xl flex flex-col justify-center">
+        <form className="space-y-5" onSubmit={handleSubmit}>
+          <div className="flex flex-col text-center gap-1">
+            <h2 className="text-xl font-semibold tracking-tight text-white">Welcome Back</h2>
+            <p className="text-xs text-zinc-400 max-w-[280px] mx-auto leading-relaxed">
+              Enter your credentials to access your workspaces and tasks
             </p>
-          </form>
-        </div>
+          </div>
+
+          {/* Email Input */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-medium text-zinc-300">Email</label>
+            <input
+              name="email"
+              type="email"
+              placeholder="name@example.com"
+              value={formValues.email}
+              onChange={handleInputChange}
+              className="w-full rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
+            />
+          </div>
+
+          {/* Password Input */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-medium text-zinc-300">Password</label>
+            <div className="relative">
+              <input
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                value={formValues.password}
+                onChange={handleInputChange}
+                className="w-full rounded-lg border border-zinc-800 bg-zinc-900/50 pl-3 pr-10 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-3 flex items-center text-zinc-400 hover:text-white transition-colors"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Remember Me & Forgot Password */}
+          <div className="flex items-center justify-between text-xs">
+            <label className="flex items-center gap-2 cursor-pointer text-zinc-300 hover:text-white transition-colors select-none">
+              <input
+                type="checkbox"
+                checked={remember}
+                onChange={(e) => setRemember(e.target.checked)}
+                className="h-3.5 w-3.5 bg-transparent border-zinc-850 text-indigo-600 rounded focus:ring-indigo-500 focus:ring-offset-zinc-900 focus:outline-none accent-indigo-600"
+              />
+              Remember Me
+            </label>
+            <Link
+              href="/auth/forgot-password"
+              className="text-zinc-450 hover:text-white transition-colors hover:underline"
+            >
+              Forgot Password?
+            </Link>
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-white hover:bg-zinc-200 px-4 py-2.5 text-sm font-semibold text-black transition-all active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span>Sign In</span>
+            {loading && <Loader2 size={16} className="animate-spin text-black" />}
+          </button>
+
+          <p className="text-center text-xs text-zinc-400 mt-2">
+            Don’t have an account?{" "}
+            <Link
+              href="/auth/sign-up"
+              className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors hover:underline"
+            >
+              Sign Up
+            </Link>
+          </p>
+        </form>
+      </div>
+
+      {/* Footer */}
+      <div className="mb-4 relative z-10">
+        <p className="text-[11px] text-zinc-600 tracking-wide select-none">
+          © {new Date().getFullYear()} @Taskstackhq. All Rights Reserved.
+        </p>
       </div>
     </div>
   );

@@ -48,8 +48,11 @@ export default function TaskComments({
   const commentsFeedRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (commentRef.current) {
-      commentRef.current.scrollIntoView({ behavior: "smooth" });
+    if (commentsFeedRef.current) {
+      commentsFeedRef.current.scrollTo({
+        top: commentsFeedRef.current.scrollHeight,
+        behavior: "smooth",
+      });
     }
   }, [comments]);
 
@@ -71,7 +74,7 @@ export default function TaskComments({
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-220px)] lg:h-[calc(100vh-200px)] w-full relative overflow-hidden pb-4">
+    <div className="flex flex-col h-full w-full relative overflow-hidden pb-4">
       <div ref={commentsFeedRef} className="flex-1 overflow-y-auto pb-4 space-y-4 pr-1 scrollbar-hide">
         {comments && comments.length > 0 ? (
           comments.map((comment) => {

@@ -97,7 +97,7 @@ export default function Card({
   }
 
   return (
-    <div className="group relative flex h-[98px] w-[250px] flex-col justify-between gap-[6px] rounded-[4px] border border-[#565656]/10 bg-[#fff] py-[10px] text-[14px] font-[300] dark:bg-[#565656]/10">
+    <div className="group relative flex h-[98px] w-[250px] flex-col justify-between gap-[6px] rounded-[4px] border border-[#565656]/10 bg-[#fff] py-[10px] text-[14px] poppins dark:bg-[#565656]/10">
       <div className="flex flex-col gap-[1px]">
         {/* Head */}
         <div className="flex flex-row justify-between px-[14px] font-medium">
@@ -114,8 +114,8 @@ export default function Card({
             {/* TITLE */}
             {/* <p className="text-[13px] font-medium">{title || "No Title"}</p> */}
 
-          <p className="line-clamp-2 h-fit text-[11px] font-medium leading-tight text-[#565656] dark:text-[#fff]/50">
-            STK-01
+          <p className="line-clamp-1 h-fit text-[10px] font-semibold tracking-wide text-zinc-400 dark:text-zinc-500 uppercase">
+            STK-{id ? id.slice(-4).toUpperCase() : "0000"}
           </p>
           </div>
           <div className="cursor-pointer" onClick={gettaskdetails}>
@@ -129,7 +129,7 @@ export default function Card({
           {/* <p className="line-clamp-2 h-fit text-[11px] font-medium leading-tight text-[#565656] dark:text-[#fff]/50">
             {desc}
           </p> */}
-            <p className="text-[13px] font-normal">{title || "No Title"}</p>
+            <p className="text-[12px] font-medium text-zinc-800 dark:text-zinc-200 line-clamp-1">{title || "No Title"}</p>
         </div>
       </div>
 

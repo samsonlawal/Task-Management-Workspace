@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, MenuButton, MenuItem, MenuItems, DialogTitle } from "@headlessui/react";
-import { EllipsisVertical, Trash, Edit, AlignLeft, CheckCircle2 } from "lucide-react";
+import { EllipsisVertical, Trash, Edit, AlignLeft, CheckCircle2, ArrowLeft } from "lucide-react";
 import { useUpdateTask, useGetTasks } from "@/hooks/api/tasks";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 import { useSelector } from "react-redux";
@@ -98,11 +98,12 @@ export default function TaskDetailsHeader({
         <div className="flex flex-row items-center gap-1.5 text-[11px] text-zinc-500 select-none">
           <button
             onClick={handleDialogClose}
-            className="hover:underline hover:text-black dark:hover:text-white font-medium transition-colors"
+            className="flex flex-row items-center gap-1 text-zinc-500 dark:text-white hover:text-black dark:hover:text-zinc-200 font-medium transition-colors"
           >
-            {taskData.workspaceName || "Workspace"}
+            <ArrowLeft size={11} strokeWidth={2.5} className="text-zinc-500 dark:text-white" />
+            <span>{taskData.workspaceName || "Workspace"}</span>
           </button>
-          <span className="text-zinc-400 dark:text-zinc-600">{" > "}</span>
+          <span className="text-zinc-400 dark:text-white">{" > "}</span>
           <span className="font-semibold text-zinc-700 dark:text-zinc-300">
             STK-{taskData.id.slice(-4).toUpperCase()}
           </span>
@@ -206,7 +207,7 @@ export default function TaskDetailsHeader({
               }
             }}
             autoFocus
-            className="poppins-medium text-[16px] text-zinc-900 dark:text-white bg-transparent border-b border-zinc-300 dark:border-zinc-700 outline-none w-full focus:border-zinc-500 py-0.5"
+            className="poppins-medium text-[16px] text-zinc-900 dark:text-white bg-transparent border-none outline-none w-full p-0 m-0 focus:ring-0 focus:outline-none"
           />
         ) : (
           <DialogTitle
@@ -236,7 +237,7 @@ export default function TaskDetailsHeader({
             }}
             autoFocus
             rows={3}
-            className="w-full poppins-regular text-zinc-600 dark:text-zinc-400 text-[13px] bg-transparent border border-zinc-300 dark:border-zinc-700 rounded p-1.5 outline-none focus:border-zinc-500 mt-1"
+            className="w-full poppins-regular text-zinc-600 dark:text-zinc-400 text-[13px] bg-transparent border-none outline-none w-full p-0 m-0 mt-1 focus:ring-0 focus:outline-none resize-none"
           />
         ) : (
           <p

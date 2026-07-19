@@ -80,7 +80,7 @@ export default function Notification() {
 
             <MenuItems
               transition
-              className="fixed inset-0 z-[999] flex h-screen w-screen origin-top-right flex-col bg-white text-sm/6 text-black shadow-2xl transition duration-100 ease-out focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 dark:bg-[#111] sm:absolute sm:inset-auto sm:right-0 sm:mt-3 sm:h-auto sm:w-[458px] sm:max-h-[550px] sm:rounded-xl sm:border sm:border-zinc-200 sm:dark:border-[#fff]/10 sm:shadow-[0px_4px_25px_rgba(0,0,0,0.08)] overflow-hidden"
+              className="fixed inset-0 z-50 flex h-screen w-screen origin-top-right flex-col bg-white text-sm/6 text-black shadow-2xl transition duration-100 ease-out focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 dark:bg-[#111] sm:absolute sm:inset-auto sm:right-0 sm:mt-3 sm:h-auto sm:w-[458px] sm:max-h-[550px] sm:rounded-xl sm:border sm:border-zinc-200 sm:dark:border-[#fff]/10 sm:shadow-[0px_4px_25px_rgba(0,0,0,0.08)] overflow-hidden"
             >
               <div className="flex flex-col h-full sm:h-auto dark:bg-[#111]">
                 {/* Header */}

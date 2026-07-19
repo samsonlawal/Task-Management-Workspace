@@ -5,26 +5,37 @@ import {
   DialogBackdrop,
   DialogPanel,
   DialogTitle,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  Popover,
+  PopoverButton,
+  PopoverPanel,
 } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import {
   faPlus,
   faXmark,
+  faChevronDown,
+  faSpinner,
+  faCalendar,
+  faUser,
+  faChevronLeft,
+  faPaperclip,
 } from "@fortawesome/free-solid-svg-icons";
+import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import MemberSelect from "../../MemberSelect";
 import { useCreateTask } from "@/hooks/api/tasks";
 import { TAddTask } from "@/types";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { showSuccessToast, showErrorToast } from "@/utils/toaster";
-import { useGetSingleWorkspace } from "@/hooks/api/workspace";
-import { useGetTasks } from "@/hooks/api/tasks";
+import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
+import { DateTime } from "luxon";
 
-export default function AddTask({ onGetTasks, taskData }: any) {
-  const dispatch = useDispatch();
-
+export default function AddTask({ onGetTasks }: any) {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const [workspaceId, setWorkspaceId] = useState<string>("");
 
@@ -38,6 +49,12 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     createdBy: "",
     title: "",
   });
+
+  const MemberData = useSelector((state: RootState) => state.MemberData);
+  const members = MemberData?.members || [];
+  const workspaceData = useSelector(
+    (state: RootState) => state.WorkspaceData?.workspace,
+  );
 
   useEffect(() => {
     getFromLocalStorage({
@@ -66,26 +83,11 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     });
   }, [isOpen]);
 
-  const [taskAssignee, setTaskAssignee] = useState();
-  const { currentWorkspace } = useSelector(
-    (state: any) => state.currentWorkspace,
-  );
-
-  const { onCreateTask, loading: creatTaskLoading } = useCreateTask();
-  const { onGetSingleWorkspace, loading: singleWorkspaceLoading } = useGetSingleWorkspace(currentWorkspace);
+  const { onCreateTask, loading: createTaskLoading } = useCreateTask();
 
   const handleDialogClose = () => {
     setIsOpen(false);
   };
-
-  useEffect(() => {
-    if (taskAssignee) {
-      setTask((prevTask) => ({
-        ...prevTask,
-        assignee: taskAssignee,
-      }));
-    }
-  }, [taskAssignee]);
 
   const handleCreateTask = () => {
     const {
@@ -162,201 +164,293 @@ export default function AddTask({ onGetTasks, taskData }: any) {
     });
   }
 
+  // Find active selected assignee object to render details
+  const selectedMember = members.find((m: any) => {
+    const mId = m.userId?._id || m._id;
+    return mId === task.assignee;
+  });
+  const selectedMemberUser = selectedMember?.userId || selectedMember;
+
+  const statusDisplay = getStatusStyles(task.status);
+  const priorityDisplay = getPriorityStyles(task.priority);
+
   return (
     <>
       <button
         onClick={checkWsId}
-        className="flex h-[34px] w-fit items-center justify-center gap-2 rounded-[6px] bg-[#111] px-3 text-[12px] font-normal text-[#fff] transition-all duration-300 hover:bg-[#242424] dark:bg-[white] dark:text-[#111]"
+        className="flex h-[34px] w-fit items-center justify-center gap-2 rounded-lg bg-[#563892] hover:bg-[#482e7b] active:scale-95 px-3 text-[12px] font-semibold text-white transition-all shadow-sm"
       >
-        <FontAwesomeIcon icon={faPlus} />
-        New Task
+        <FontAwesomeIcon icon={faPlus} className="text-[10px]" />
+        <span>New Task</span>
       </button>
+
       <Dialog
         open={isOpen}
         onClose={handleDialogClose}
         transition
-        className="poppins fixed inset-0 flex w-screen select-none items-center justify-end bg-black/30 font-madei transition duration-300 ease-out data-[closed]:opacity-0 z-50"
+        className="poppins fixed inset-0 flex w-screen select-none items-center justify-center bg-black/30 transition duration-300 ease-out data-[closed]:opacity-0 z-50 p-4"
       >
         <DialogBackdrop className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
 
-        <div className="fixed inset-0 flex w-screen items-center justify-end">
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
           <DialogPanel
-            className="h-[100vh] w-full lg:w-[calc(100vw-256px)] flex flex-col justify-between rounded-sm bg-gray-100 px-8 py-6 dark:bg-[#111] overflow-y-auto"
+            className="w-full max-w-[500px] flex flex-col rounded-xl bg-white dark:bg-[#1a1a1a] px-6 py-5 border border-zinc-200 dark:border-zinc-800 shadow-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="space-y-6">
-              <DialogTitle className="flex flex-row items-start justify-between font-medium border-b border-[#565656]/10 pb-3">
-                <div className="flex flex-col items-start gap-1">
-                  <p className="poppins-medium text-[18px] dark:text-white">
-                    Create Task
-                  </p>
-                  <p className="text-[13px] font-regular leading-4 text-zinc-500">
-                    Add a new task to your workspace and start organizing your work.
-                  </p>
+            <div className="flex flex-col gap-4">
+              {/* Header: Breadcrumbs & Close Action */}
+              <div className="flex w-full flex-row items-center justify-between">
+                {/* Breadcrumbs path */}
+                <div className="flex flex-row items-center gap-1.5 text-[11px] text-zinc-500 select-none">
+                  <button
+                    onClick={handleDialogClose}
+                    className="flex flex-row items-center gap-1 text-zinc-500 dark:text-white hover:text-black dark:hover:text-zinc-200 font-medium transition-colors"
+                  >
+                    <FontAwesomeIcon icon={faChevronLeft} className="text-[8px] mr-0.5" />
+                    <span>{workspaceData?.name || "Workspace"}</span>
+                  </button>
+                  <span className="text-zinc-400 dark:text-white">{" > "}</span>
+                  <span className="font-semibold text-zinc-700 dark:text-zinc-300">
+                    STK-NEW
+                  </span>
                 </div>
                 <button
                   onClick={handleDialogClose}
                   className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-zinc-800 text-[#989898] hover:text-black dark:hover:text-white transition-colors"
                 >
-                  <FontAwesomeIcon
-                    icon={faXmark}
-                    className="text-[16px]"
-                  />
+                  <FontAwesomeIcon icon={faXmark} className="text-[16px]" />
                 </button>
-              </DialogTitle>
+              </div>
 
-              {/* Form Inputs container */}
-              <div className="flex flex-col gap-6 max-w-4xl pt-2">
-                {/* 1. Title Input */}
-                <div className="flex flex-col gap-1">
-                  <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
-                    Title
-                  </label>
-                  <input
-                    name="title"
-                    placeholder="Enter task title"
-                    value={task.title}
-                    onChange={(e) =>
-                      setTask((prev) => ({
-                        ...prev,
-                        title: e.target.value,
-                      }))
-                    }
-                    className="h-[42px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 py-2 text-xs text-black dark:text-white placeholder-gray-400 outline-none focus:border-zinc-500"
-                  />
-                </div>
+              {/* Title & Description Inputs */}
+              <div className="flex w-full flex-col items-start gap-1 pb-3 border-b border-[#565656]/10 dark:border-zinc-800">
+                <input
+                  type="text"
+                  placeholder="Task title"
+                  value={task.title}
+                  onChange={(e) =>
+                    setTask((prev) => ({
+                      ...prev,
+                      title: e.target.value,
+                    }))
+                  }
+                  className="poppins-medium text-[16px] text-zinc-900 dark:text-white bg-transparent border-none outline-none w-full p-0 m-0 focus:ring-0 focus:outline-none"
+                />
+                <textarea
+                  placeholder="Add a description..."
+                  value={task.description}
+                  onChange={(e) =>
+                    setTask((prev) => ({
+                      ...prev,
+                      description: e.target.value,
+                    }))
+                  }
+                  rows={4}
+                  className="w-full poppins-regular text-zinc-650 dark:text-zinc-400 text-[13px] bg-transparent border-none outline-none w-full p-0 m-0 mt-1 focus:ring-0 focus:outline-none resize-none min-h-[90px]"
+                />
+              </div>
 
-                {/* 2. Description Input */}
-                <div className="flex flex-col gap-1">
-                  <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
-                    Description
-                  </label>
-                  <textarea
-                    name="description"
-                    placeholder="Enter task description"
-                    value={task.description}
-                    onChange={(e) =>
-                      setTask((prev) => ({
-                        ...prev,
-                        description: e.target.value,
-                      }))
-                    }
-                    className="h-[120px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 py-2 text-xs text-black dark:text-white placeholder-gray-400 outline-none focus:border-zinc-500"
-                  />
-                </div>
+              {/* Wrapped horizontal pills list for properties */}
+              <div className="poppins w-full pt-1">
+                <div className="flex flex-row flex-wrap gap-2.5 items-center">
+                  {/* Status Pill */}
+                  <Menu as="div" className="relative">
+                    <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1.5 text-[11px] font-medium text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
+                      <FontAwesomeIcon icon={faSpinner} className="h-3 w-3 text-gray-500 animate-pulse" />
+                      <span>Status:</span>
+                      <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] ${statusDisplay.bg} ${statusDisplay.text}`}>
+                        <span className={`h-1.5 w-1.5 rounded-full ${statusDisplay.dot}`} />
+                        {statusDisplay.label}
+                      </span>
+                      <FontAwesomeIcon icon={faChevronDown} className="h-2 w-2 opacity-50" />
+                    </MenuButton>
+                    <MenuItems className="absolute left-0 mt-1 w-40 origin-top-left rounded-md bg-white p-1 shadow-lg border border-zinc-200 dark:border-zinc-800 dark:bg-zinc-900 outline-none z-50">
+                      {["todo", "in-progress", "in-review", "done"].map((s) => {
+                        const styles = getStatusStyles(s);
+                        return (
+                          <MenuItem key={s}>
+                            {({ active }) => (
+                              <button
+                                type="button"
+                                onClick={() => setTask((prev) => ({ ...prev, status: s }))}
+                                className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 dark:text-zinc-300 transition-colors ${
+                                  active ? "bg-zinc-100 dark:bg-zinc-800" : ""
+                                }`}
+                              >
+                                <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} />
+                                {styles.label}
+                              </button>
+                            )}
+                          </MenuItem>
+                        );
+                      })}
+                    </MenuItems>
+                  </Menu>
 
-                {/* 3. Parameter Split Columns */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Priority Selector */}
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
-                      Priority:
-                    </label>
-                    <div className="flex gap-2">
-                      {["Low", "Medium", "High"].map((p) => (
-                        <button
-                          key={p}
-                          type="button"
-                          onClick={() => setTask((prev) => ({ ...prev, priority: p }))}
-                          className={`flex-1 py-2 px-3 text-xs border rounded-md transition-all ${
-                            task.priority === p
-                              ? "bg-[#563892] text-white border-transparent font-medium"
-                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-850"
-                          }`}
-                        >
-                          {p}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                  {/* Priority Pill */}
+                  <Menu as="div" className="relative">
+                    <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1.5 text-[11px] font-medium text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
+                      <FontAwesomeIcon icon={faCircleCheck} className="h-3 w-3 text-gray-500" />
+                      <span>Priority:</span>
+                      <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] ${priorityDisplay.bg} ${priorityDisplay.text}`}>
+                        {task.priority.charAt(0).toUpperCase() + task.priority.slice(1).toLowerCase()}
+                      </span>
+                      <FontAwesomeIcon icon={faChevronDown} className="h-2 w-2 opacity-50" />
+                    </MenuButton>
+                    <MenuItems className="absolute left-0 mt-1 w-32 origin-top-left rounded-md bg-white p-1 shadow-lg border border-zinc-200 dark:border-zinc-800 dark:bg-zinc-900 outline-none z-50">
+                      {["low", "medium", "high"].map((p) => {
+                        const styles = getPriorityStyles(p);
+                        return (
+                          <MenuItem key={p}>
+                            {({ active }) => (
+                              <button
+                                type="button"
+                                onClick={() => setTask((prev) => ({ ...prev, priority: p.charAt(0).toUpperCase() + p.slice(1) }))}
+                                className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 dark:text-zinc-300 transition-colors ${
+                                  active ? "bg-zinc-100 dark:bg-zinc-800" : ""
+                                }`}
+                              >
+                                <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} />
+                                {p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()}
+                              </button>
+                            )}
+                          </MenuItem>
+                        );
+                      })}
+                    </MenuItems>
+                  </Menu>
 
-                  {/* Status Selector */}
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
-                      Status:
-                    </label>
-                    <div className="flex gap-2">
-                      {[
-                        { key: "to-do", label: "To-Do" },
-                        { key: "in-progress", label: "In-Progress" },
-                      ].map((s) => (
-                        <button
-                          key={s.key}
-                          type="button"
-                          onClick={() => setTask((prev) => ({ ...prev, status: s.key }))}
-                          className={`flex-1 py-2 px-3 text-xs border rounded-md transition-all ${
-                            task.status === s.key
-                              ? "bg-[#563892] text-white border-transparent font-medium"
-                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-850"
-                          }`}
-                        >
-                          {s.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                  {/* Assignee Pill */}
+                  <Menu as="div" className="relative">
+                    <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1.5 text-[11px] font-medium text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
+                      <FontAwesomeIcon icon={faUser} className="h-3 w-3 text-gray-500" />
+                      <span>Assignee:</span>
+                      <div className="flex items-center gap-1">
+                        {selectedMemberUser?.profileImage && selectedMemberUser?.profileImage !== "none" ? (
+                          <img
+                            src={selectedMemberUser?.profileImage}
+                            alt=""
+                            className="h-4 w-4 rounded-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-4 w-4 items-center justify-center rounded-full bg-zinc-500">
+                            <span className="text-[7px] text-white">
+                              {selectedMemberUser?.fullname?.charAt(0).toUpperCase() || selectedMemberUser?.name?.charAt(0).toUpperCase() || "U"}
+                            </span>
+                          </div>
+                        )}
+                        <span className="ml-1">{selectedMemberUser?.fullname || selectedMemberUser?.name || "Unassigned"}</span>
+                      </div>
+                      <FontAwesomeIcon icon={faChevronDown} className="h-2 w-2 opacity-50" />
+                    </MenuButton>
+                    <MenuItems className="absolute left-0 mt-1 w-56 max-h-60 overflow-y-auto origin-top-left rounded-md bg-white p-1 shadow-lg border border-zinc-200 dark:border-zinc-800 dark:bg-zinc-900 outline-none z-50">
+                      <MenuItem>
+                        {({ active }) => (
+                          <button
+                            type="button"
+                            onClick={() => setTask((prev) => ({ ...prev, assignee: "" }))}
+                            className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-500 transition-colors ${
+                              active ? "bg-zinc-100 dark:bg-zinc-800" : ""
+                            }`}
+                          >
+                            <div className="flex h-4 w-4 items-center justify-center rounded-full bg-zinc-300 dark:bg-zinc-700">
+                              <span className="text-[7px] text-zinc-650 dark:text-zinc-300">X</span>
+                            </div>
+                            <span className="ml-2">Unassigned</span>
+                          </button>
+                        )}
+                      </MenuItem>
+                      {members.map((member: any) => {
+                        const m = member.userId || member;
+                        const memberId = m._id || member._id;
+                        return (
+                          <MenuItem key={memberId}>
+                            {({ active }) => (
+                              <button
+                                type="button"
+                                onClick={() => setTask((prev) => ({ ...prev, assignee: memberId }))}
+                                className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 dark:text-zinc-300 transition-colors ${
+                                  active ? "bg-zinc-100 dark:bg-zinc-800" : ""
+                                }`}
+                              >
+                                <img
+                                  src={m.profileImage}
+                                  alt=""
+                                  className="h-4 w-4 rounded-full object-cover"
+                                />
+                                <span className="ml-2 truncate">{m.fullname || m.name || m.email}</span>
+                              </button>
+                            )}
+                          </MenuItem>
+                        );
+                      })}
+                    </MenuItems>
+                  </Menu>
 
-                {/* 4. Assignee & Deadline Split Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Assignee */}
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
-                      Assignee
-                    </label>
-                    <div className="border border-gray-300 dark:border-zinc-800 rounded-md p-1 bg-transparent">
-                      <MemberSelect setTaskAssignee={setTaskAssignee} />
-                    </div>
-                  </div>
+                  {/* Due Date Pill */}
+                  <Popover className="relative">
+                    <PopoverButton className="flex items-center gap-1.5 rounded-full border border-gray-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1.5 text-[11px] font-medium text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
+                      <FontAwesomeIcon icon={faCalendar} className="h-3 w-3 text-gray-500" />
+                      <span>Due Date:</span>
+                      <span>
+                        {task.deadline
+                          ? DateTime.fromISO(task.deadline).toFormat("dd LLL, yyyy")
+                          : "No Deadline"}
+                      </span>
+                      <FontAwesomeIcon icon={faChevronDown} className="h-2 w-2 opacity-50" />
+                    </PopoverButton>
+                    <PopoverPanel className="absolute left-0 mt-1 p-3 rounded-md bg-white border border-zinc-200 dark:border-zinc-800 dark:bg-zinc-900 shadow-lg z-50">
+                      {({ close }) => (
+                        <div className="flex flex-col gap-2">
+                          <input
+                            type="date"
+                            value={task.deadline ? DateTime.fromISO(task.deadline).toFormat("yyyy-MM-dd") : ""}
+                            onChange={(e) => {
+                              setTask((prev) => ({
+                                ...prev,
+                                deadline: e.target.value,
+                              }));
+                              close();
+                            }}
+                            className="h-[36px] rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 text-xs text-zinc-700 dark:text-white outline-none focus:border-zinc-500"
+                          />
+                        </div>
+                      )}
+                    </PopoverPanel>
+                  </Popover>
 
-                  {/* Deadline */}
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
-                      Deadline
-                    </label>
-                    <input
-                      name="deadline"
-                      type="date"
-                      value={task.deadline}
-                      onChange={(e) =>
-                        setTask((prev) => ({
-                          ...prev,
-                          deadline: e.target.value,
-                        }))
-                      }
-                      className="h-[40px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 text-xs text-zinc-700 dark:text-white outline-none focus:border-zinc-500"
-                    />
-                  </div>
+                  {/* Attachments Pill */}
+                  <button
+                    type="button"
+                    onClick={() => showSuccessToast({ message: "Attach files feature triggered!" })}
+                    className="flex items-center gap-1.5 rounded-full border border-gray-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1.5 text-[11px] font-medium text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors"
+                  >
+                    <FontAwesomeIcon icon={faPaperclip} className="h-3 w-3 text-gray-550" />
+                    <span>Attachments</span>
+                  </button>
                 </div>
               </div>
-            </div>
 
-            {/* Bottom Actions Row */}
-            <div className="flex justify-end gap-3 border-t border-[#565656]/10 pt-4 mt-8">
-              <button
-                type="button"
-                onClick={handleDialogClose}
-                className="rounded-md bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 px-4 py-2 text-xs transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleCreateTask}
-                disabled={creatTaskLoading}
-                className="rounded-md bg-[#563892] text-white px-5 py-2 text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-              >
-                {creatTaskLoading ? (
-                  <span className="flex w-full items-center justify-center">
-                    <img
-                      src="/icons/loaderWhite.svg"
-                      alt=""
-                      className="w-4 animate-spin"
-                    />
-                  </span>
-                ) : (
-                  "Create Task"
-                )}
-              </button>
+              {/* Bottom Actions Row (border-t removed) */}
+              <div className="flex justify-end gap-3 mt-5">
+                <button
+                  type="button"
+                  onClick={handleDialogClose}
+                  className="rounded-md bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 px-4 py-2 text-xs transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleCreateTask}
+                  disabled={createTaskLoading}
+                  className="rounded-md bg-[#563892] text-white px-5 py-2 text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-1.5 shadow-sm"
+                >
+                  <span>Create Task</span>
+                  {createTaskLoading && (
+                    <FontAwesomeIcon icon={faSpinner} className="w-3 h-3 animate-spin" />
+                  )}
+                </button>
+              </div>
             </div>
           </DialogPanel>
         </div>

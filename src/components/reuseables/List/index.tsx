@@ -88,13 +88,13 @@ export default function ListTask({
   }
 
   return (
-    <div className="flex min-h-fit w-full flex-row justify-between border-t-[1px] border-[#565656]/10 px-3 py-3.5 text-[14px] text-[#111] dark:text-[#eee]/60">
+    <div className="flex min-h-fit w-full flex-row justify-between border-t-[1px] border-[#565656]/10 px-3 py-3.5 text-[14px] text-[#111] dark:text-[#eee]/60 poppins">
       <div className="flex flex-1 md:w-[250px] items-center justify-start gap-2 pr-6">
         <span className="text-[11px] font-semibold text-[#787878] dark:text-zinc-500 mr-1 select-none whitespace-nowrap">
           STK-{id ? id.slice(-4).toUpperCase() : "01"}
         </span>
-        <p className="line-clamp-1 h-fit text-[12px] font-normal leading-4">
-          {desc}
+        <p className="line-clamp-1 h-fit text-[12px] font-medium leading-4 text-zinc-800 dark:text-zinc-200">
+          {title || desc}
         </p>
       </div>
       <div className="flex w-[40px] md:w-[100px] items-center justify-start">

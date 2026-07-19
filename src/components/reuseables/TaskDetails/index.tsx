@@ -194,20 +194,12 @@ export default function TaskDetails({
                 {/* Main Drawer Layout content */}
                 <div className="flex flex-col lg:flex-row gap-8 flex-1 overflow-hidden mt-6 text-[12px] h-[calc(100vh-140px)]">
                   {/* Left Column: Metadata Fields */}
-                  <div className={`flex flex-col space-y-5 overflow-y-auto pr-3 flex-none ${isCommentsExpanded ? "hidden" : ""}`}>
-                    <TaskFields
-                      taskData={taskData}
-                      demoteLoading={demoteLoading}
-                      promoteLoading={promoteLoading}
-                      markAsDoneLoading={markAsDoneLoading}
-                      handleDemoteTask={handleDemoteTask}
-                      handlePromoteTask={handlePromoteTask}
-                      handleMarkAsDone={handleMarkAsDone}
-                    />
+                  <div className={`flex flex-col pr-3 flex-none lg:w-[320px] w-full relative z-20 ${isCommentsExpanded ? "hidden" : ""}`}>
+                    <TaskFields taskData={taskData} />
                   </div>
 
                   {/* Right Column: Tabs, Activity Log, and Comments */}
-                  <div className={`flex flex-col h-full overflow-hidden relative flex-1 ${isCommentsExpanded ? "flex-[5]" : ""}`}>
+                  <div className={`flex flex-col h-full overflow-hidden relative flex-1 min-w-0 z-10 ${isCommentsExpanded ? "flex-[5]" : ""}`}>
                     <div className="w-full h-full flex flex-col">
                       {/* Tab Headers */}
                       <div className="flex items-center justify-between border-b border-gray-200 dark:border-[#565656]/20">
