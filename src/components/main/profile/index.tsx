@@ -19,17 +19,16 @@ type UserUpdate = {
 function Profile() {
   const router = useRouter();
 
-  const [image, setImage] = useState<string | null>(null);
-  const [form, setForm] = useState<UserUpdate>({
-    username: "",
-    email: "",
-    fullname: "",
-    // profileImage: "",
-  });
-
   const user = useSelector(
     (state: RootState) => state.auth.user as TUser | undefined,
   );
+
+  const [image, setImage] = useState<string | null>(user?.profileImage || null);
+  const [form, setForm] = useState<UserUpdate>({
+    username: user?.username || "",
+    email: user?.email || "",
+    fullname: user?.fullname || "",
+  });
 
   const {
     onGetUserProfile,
@@ -41,18 +40,24 @@ function Profile() {
   useEffect(() => {
     if (user) {
       onGetUserProfile(user?._id);
+      setForm({
+        username: user.username || "",
+        email: user.email || "",
+        fullname: user.fullname || "",
+      });
+      setImage(user.profileImage || null);
     }
   }, [user]);
 
   useEffect(() => {
-    setForm({
-      username: data?.username,
-      email: data?.email,
-      fullname: data?.fullname,
-    });
-    setImage(data?.profileImage);
-
-    console.log(data);
+    if (data) {
+      setForm({
+        username: data.username || "",
+        email: data.email || "",
+        fullname: data.fullname || "",
+      });
+      setImage(data.profileImage || null);
+    }
   }, [data]);
 
   function handleRoute() {
@@ -64,24 +69,13 @@ function Profile() {
   };
 
   const isDirty =
-    data &&
-    (form.fullname !== data.fullname ||
-      form.username !== data.username ||
-      form.email !== data.email);
-
-  if (useGetProfileLoading) {
-    return <div>Loading...</div>;
-  }
+    (form.fullname !== (user?.fullname || "")) ||
+    (form.username !== (user?.username || "")) ||
+    (form.email !== (user?.email || ""));
 
   return (
-    <>
-      {useGetProfileLoading ? (
-        <div className="max-screen-wrapper poppins flex h-fit w-full flex-col items-center justify-center gap-6 overflow-auto bg-[#fff] px-9 pb-24 pt-6 transition-all duration-300 scrollbar-hide dark:bg-[#111]">
-          <p>Loading</p>
-        </div>
-      ) : (
-        <div className="max-screen-wrapper poppins flex h-fit w-full flex-col items-center justify-center gap-6 overflow-auto bg-[#fff] px-9 pb-24 pt-6 transition-all duration-300 scrollbar-hide dark:bg-[#111]">
-          <div className="flex h-fit w-full flex-col items-center justify-center gap-2 rounded-[14px] border-[1px] border-[#565656]/20 bg-[#fff] transition-all duration-300 dark:bg-[#111] md:w-[700px]">
+    <div className="max-screen-wrapper poppins flex h-fit w-full flex-col items-center justify-center gap-6 overflow-auto bg-[#fff] px-9 pb-24 pt-6 transition-all duration-300 scrollbar-hide dark:bg-[#111]">
+      <div className="flex h-fit w-full flex-col items-center justify-center gap-2 rounded-[14px] border-[1px] border-[#565656]/20 bg-[#fff] transition-all duration-300 dark:bg-[#111] md:w-[700px]">
             <div className="flex w-full flex-row justify-between border-b-[1px] border-[#565656]/20 px-6 py-6 text-left">
               <div className="flex w-fit flex-col justify-start text-left">
                 <h1 className="text-[16px]">Profile</h1>
@@ -235,9 +229,7 @@ function Profile() {
             </div>
           </div>
         </div>
-      )}
-    </>
-  );
-}
+      );
+    }
 
 export default Profile;

@@ -159,12 +159,11 @@ export default function AddMember() {
     <>
       <button
         onClick={toggleDialog}
-        className="poppins flex h-[36px] w-fit items-center justify-center gap-2 rounded-[6px] bg-[#111] px-3 text-[12px] font-normal text-[#fff] transition-all duration-300 hover:bg-[#242424] dark:bg-[white] dark:text-[#111]"
+        className="poppins flex h-[36px] w-[36px] sm:w-auto items-center justify-center gap-2 rounded-lg bg-[#563892] hover:bg-[#482e7b] active:scale-95 text-[#fff] px-0 sm:px-4 text-[12px] font-semibold transition-all duration-300 shadow-sm shrink-0"
+        title="Invite Member"
       >
-        {/* <FontAwesomeIcon icon={faCirclePlus} /> */}
-        <FontAwesomeIcon icon={faUserPlus} />
-        Invite Member
-        {/* <FontAwesomeIcon icon={faChevronDown} /> */}
+        <FontAwesomeIcon icon={faUserPlus} className="text-[13px]" />
+        <span className="hidden sm:inline">Invite Member</span>
       </button>
       <Dialog
         open={isOpen}

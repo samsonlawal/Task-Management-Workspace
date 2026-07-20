@@ -122,7 +122,7 @@ function TasksView() {
   return (
     <div className="flex h-full w-full flex-col poppins">
       {/* Navbar / Header for Tasks */}
-      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] z-30">
+      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] z-40">
         <div className="poppins flex w-full items-center justify-between border-b-[1px] border-[#565656]/10 px-4 lg:px-8 py-[7px]">
         <div className="flex flex-row justify-center items-center">
           <button

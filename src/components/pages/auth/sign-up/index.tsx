@@ -94,7 +94,7 @@ export default function SignUp() {
               value={formik.values.fullname}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full rounded-lg border border-zinc-850 bg-zinc-900/50 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
+              className="w-full rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
             />
           </div>
 
@@ -108,7 +108,7 @@ export default function SignUp() {
               value={formik.values.username}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full rounded-lg border border-zinc-850 bg-zinc-900/50 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
+              className="w-full rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
             />
           </div>
 
@@ -122,7 +122,7 @@ export default function SignUp() {
               value={formik.values.email}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full rounded-lg border border-zinc-850 bg-zinc-900/50 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
+              className="w-full rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
             />
           </div>
 
@@ -137,7 +137,7 @@ export default function SignUp() {
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full rounded-lg border border-zinc-850 bg-zinc-900/50 pl-3 pr-10 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
+                className="w-full rounded-lg border border-zinc-800 bg-zinc-900/50 pl-3 pr-10 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
               />
               <button
                 type="button"

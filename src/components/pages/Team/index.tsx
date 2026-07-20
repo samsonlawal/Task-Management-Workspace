@@ -131,7 +131,7 @@ function Team() {
 
   return (
     <div className="flex h-fit w-full flex-col gap-2 pb-8">
-      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] z-10 px-4 lg:px-8">
+      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] z-40 px-4 lg:px-8">
         <div className="poppins flex w-full items-center justify-between border-[#565656]/10 py-[7px]">
           <div className="flex flex-row items-center">
             <button
@@ -147,101 +147,61 @@ function Team() {
           </div>
           <div className="flex flex-row items-center justify-center gap-3">
             <Notification />
-
-            <CustomSelect
-              options={[
-                { label: "Role", value: "Role" },
-                { label: "Admin", value: "Admin" },
-                { label: "Member", value: "Member" },
-              ]}
-              placeholder="Role"
-              onChange={handleRoleFilterChange}
-              // className="w-[110px] bg-[#565656]/10 dark:border-[#565656]/20"
-            />
-            <CustomSelect
-              options={[
-                { label: "Status", value: "Status" },
-                { label: "Active", value: "Active" },
-                { label: "Pending", value: "invited" },
-              ]}
-              placeholder="Status"
-              onChange={handleStatusFilterChange}
-              // className="w-[110px] bg-[#565656]/10 dark:border-[#565656]/20"
-            />
           </div>
         </div>
       </div>
 
       <div className="px-4 lg:px-8 flex flex-col gap-2">
-        <div className="flex flex-col sm:flex-row gap-4 h-fit items-stretch sm:items-center justify-between pt-6 transition-all duration-300">
-          <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
-          <div className="flex flex-1 flex-row items-end gap-2 w-full">
-            {/* search */}
-            <div className="relative w-full sm:w-auto flex-1 rounded-md">
-              {/* Search input */}
-              <input
-                type="text"
-                placeholder="Search Users"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full sm:w-[300px] rounded-md border-[1px] border-[#565656]/50 bg-transparent py-2.5 pl-8 pr-8 text-xs outline-none placeholder:text-[#565656]/80 focus:border-[#565656] dark:text-[#eee]"
+        <div className="flex flex-row gap-3 h-fit items-center justify-between pt-6 transition-all duration-300">
+          {/* search */}
+          <div className="relative flex-1 max-w-[300px] rounded-md">
+            {/* Search input */}
+            <input
+              type="text"
+              placeholder="Search Users"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full h-[36px] rounded-lg border border-zinc-300 dark:border-zinc-800 bg-transparent py-2 pl-9 pr-8 text-[12px] outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-[#563892] dark:focus:border-indigo-500 dark:text-[#eee] transition-all"
+            />
+
+            {/* Magnifier icon */}
+            <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center text-zinc-400 dark:text-zinc-500">
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                className="text-[11px]"
               />
-
-              {/* Magnifier icon */}
-              <div className="pointer-events-none absolute left-[1px] top-1/2 flex h-[90%] -translate-y-1/2 items-center justify-center rounded-md px-2 text-gray-400">
-                <FontAwesomeIcon
-                  icon={faMagnifyingGlass}
-                  className="text-[12px] dark:text-[#565656]/80"
-                />
-              </div>
-
-              {/* Clear button */}
-              {search && (
-                <button
-                  onClick={() => setSearch("")}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  <FontAwesomeIcon
-                    icon={faXmark}
-                    className="text-[12px] dark:text-[#565656]/80"
-                  />
-                </button>
-              )}
             </div>
-          </div>
-        </div>
 
-        <div className="flex w-full sm:w-fit flex-row justify-end gap-3">
+            {/* Clear button */}
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded-full text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 dark:text-zinc-500 dark:hover:text-zinc-300 dark:hover:bg-zinc-800 transition-colors focus:outline-none"
+              >
+                <FontAwesomeIcon
+                  icon={faXmark}
+                  className="text-[11px]"
+                />
+              </button>
+            )}
+          </div>
+
           <AddMember />
         </div>
-      </div>
       {/* Table */}
       <div className="border border-gray-200 dark:border-[#565656]/20 h-full w-full rounded-[8px] shadow-sm overflow-hidden bg-white dark:bg-[#111]">
         {members ? (
           <div className="w-full overflow-x-auto">
-            <div className="min-w-[800px] rounded-[8px]">
+            <div className="w-full md:min-w-[800px] rounded-[8px]">
             {/* Header */}
-            <div className="grid h-[50px] w-full grid-cols-[20px_0.8fr_1.2fr_0.4fr_0.5fr_0.5fr_0.4fr_20px] items-center justify-center gap-5 rounded-t-[8px] bg-gray-100 px-4 text-[13px] text-gray-600 dark:bg-[#565656]/20 dark:text-[#787878]">
-              <div className="flex items-center justify-center">
-                <input
-                  type="checkbox"
-                  checked={
-                    currentItems.length > 0 &&
-                    currentItems.every((user: any) =>
-                      selectedUsers.includes(user._id),
-                    )
-                  }
-                  onChange={handleSelectAll}
-                  className="h-4 w-4"
-                />
-              </div>
+            <div className="grid h-[50px] w-full grid-cols-[1.5fr_0.8fr_0.8fr_20px] md:grid-cols-[0.8fr_1.2fr_0.4fr_0.5fr_0.5fr_0.4fr_20px] items-center justify-center gap-2 md:gap-5 rounded-t-[8px] bg-gray-100 px-3 md:px-4 text-[13px] text-gray-600 dark:bg-[#565656]/20 dark:text-[#787878]">
               {/* <div>ID</div> */}
               <div className="">Name</div>
-              <div className="">Email</div>
+              <div className="hidden md:block">Email</div>
               {/* <div>Job Title</div> */}
               <div className="">Role</div>
-              <div className="">Last active</div>
-              <div className="">Date added</div>
+              <div className="hidden md:block">Last active</div>
+              <div className="hidden md:block">Date added</div>
               <div className="">Status</div>
               <div className=""></div>
             </div>
@@ -266,16 +226,8 @@ function Team() {
                 return (
                   <div
                     key={user._id || index}
-                    className="dark:text=[#eee] grid w-full grid-cols-[20px_0.8fr_1.2fr_0.4fr_0.5fr_0.5fr_0.4fr_20px] items-center gap-5 border-b border-gray-300 px-4 py-3 text-[13px] font-[400] text-gray-800 dark:border-[#565656]/20 dark:text-[#eee]"
+                    className="dark:text=[#eee] grid w-full grid-cols-[1.5fr_0.8fr_0.8fr_20px] md:grid-cols-[0.8fr_1.2fr_0.4fr_0.5fr_0.5fr_0.4fr_20px] items-center gap-2 md:gap-5 border-b border-gray-300 px-3 md:px-4 py-3 text-[13px] font-[400] text-gray-800 dark:border-[#565656]/20 dark:text-[#eee]"
                   >
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={selectedUsers.includes(user._id)}
-                        onChange={(e) => handleSelectUser(e, user._id)}
-                        className="h-4 w-4"
-                      />
-                    </div>
                     {/* <div className="">{startIndex + index + 1}</div> */}
                     <div className="flex flex-row items-center gap-2">
                       {imageSrc !== "none" ? (
@@ -302,11 +254,11 @@ function Team() {
                       )}
                       <p className="truncate">{fullname}</p>
                     </div>
-                    <div className="truncate">{email}</div>
+                    <div className="truncate hidden md:block">{email}</div>
                     {/* <div>{jobTitle}</div> */}
                     <div>{role}</div>
-                    <div>Jan 3, 2026</div>
-                    <div>Jan 3, 2026</div>
+                    <div className="hidden md:block">Jan 3, 2026</div>
+                    <div className="hidden md:block">Jan 3, 2026</div>
                     <div>
                       <div
                         className={`flex w-[70px] flex-row items-center justify-center gap-1 rounded-full py-1 ${

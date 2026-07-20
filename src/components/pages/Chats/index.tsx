@@ -377,7 +377,7 @@ function Chats() {
   return (
     <div className="flex h-full w-full flex-col overflow-hidden bg-white dark:bg-[#111]">
       {/* Top Unified Header Row */}
-      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] border-b border-[#565656]/10 z-20">
+      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] border-b border-[#565656]/10 z-40">
         <div className="poppins flex w-full items-center justify-between px-4 lg:px-8 py-[11px]">
           <div className="flex flex-row items-center gap-1">
             <button

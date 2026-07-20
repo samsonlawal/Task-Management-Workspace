@@ -357,7 +357,7 @@ function Integrations() {
 
   return (
     <div className="flex h-fit w-full flex-col gap-2 transition-all duration-300">
-      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] z-10 px-4 lg:px-8">
+      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] z-40 px-4 lg:px-8">
         <div className="poppins flex w-full items-center justify-between border-b border-[#565656]/10 py-[7px]">
 
           <div className="flex flex-row justify-center items-center">
