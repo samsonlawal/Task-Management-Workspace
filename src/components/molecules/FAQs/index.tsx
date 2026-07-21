@@ -49,32 +49,32 @@ export default function FAQs() {
             <h1 className="text-[26px] leading-[1.2] text-[#fff] md:text-[40px]">
               Frequently Asked Questions
             </h1>
-            <p className="text-[15px] font-regular text-[#fff]/30">
+            <p className="text-[14px] font-regular text-[#fff]/50">
               Got Questions? We’ve got answers. Here are some of the most common
               questions people ask about TaskStack.
             </p>
           </div>
 
-          <button className="flex w-fit items-center gap-2 rounded-[4px] border border-[#565656]/20 bg-[#565656]/10 px-[24px] py-[10px] text-[14px] font-regular text-white transition-colors duration-300 hover:bg-[#565656]/20">
+          {/* <button className="flex w-fit items-center gap-2 rounded-[4px] border border-[#565656]/20 bg-[#565656]/10 px-[24px] py-[10px] text-[13px] font-regular text-white transition-colors duration-300 hover:bg-[#565656]/20">
             Ask Any Question
-            {/* <img
+            <img
               src="/icons/caret-right.svg"
               alt=""
               className="h-[16px] w-[16px]"
-            /> */}
-          </button>
+            />
+          </button> */}
         </div>
         {/* RHS- Questions */}
         <div className="flex w-full items-start justify-center md:w-fit">
-          <div className="w-full rounded-[14px] bg-[#1a1a1a] p-[20px] md:p-[30px]">
+          <div className="w-full rounded-[14px] bg-[#111] py-[0px] md:py-[30px] md:px-[20px]">
             <div className="space-y-2">
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className={`w-full cursor-pointer rounded-lg border border-[#565656]/20 bg-[#111] p-4 transition-all duration-300 hover:bg-[#565656]/10 md:w-[500px] ${openIndex === index ? "bg-[#565656]/10" : ""}`}
+                  className={`w-full cursor-pointer rounded-lg bg-[#111] p-4 transition-all duration-300 hover:bg-[#565656]/10 md:w-[500px] ${openIndex === index ? "bg-[#565656]/10" : ""}`}
                   onClick={() => toggle(index)}
                 >
-                  <div className="flex items-start justify-between md:items-center">
+                  <div className="flex items-center justify-between md:items-center ">
                     <h3 className="text-[12px] text-[#fff] md:text-[15px]">
                       {faq.question}
                     </h3>
@@ -97,7 +97,7 @@ export default function FAQs() {
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                         className="mt-2 overflow-hidden"
                       >
-                        <p className="text-[12px] text-[#fff]/30 md:text-sm">
+                        <p className="text-[12px] text-[#fff]/50 md:text-sm">
                           {faq.answer}
                         </p>
                       </motion.div>

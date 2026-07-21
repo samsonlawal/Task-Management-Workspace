@@ -17,7 +17,7 @@ const ListHeader = () => (
       <CircleDot
         size={14}
         strokeWidth={2}
-        className="text-[#787878] dark:text-zinc-500 fill-current"
+        className="text-[#787878] dark:text-zinc-500"
       />
       <p className="hidden md:flex text-[12px] text-[#787878]">Status</p>
     </div>
@@ -25,7 +25,7 @@ const ListHeader = () => (
       <User
         size={14}
         strokeWidth={2}
-        className="text-[#787878] dark:text-zinc-500 fill-current"
+        className="text-[#787878] dark:text-zinc-500"
       />
       <p className="hidden md:flex text-[12px]">Assignee</p>
     </div>
@@ -33,7 +33,7 @@ const ListHeader = () => (
       <Calendar
         size={14}
         strokeWidth={2}
-        className="text-[#787878] dark:text-zinc-500 fill-current"
+        className="text-[#787878] dark:text-zinc-500"
       />
       <p className="hidden md:flex text-center text-[12px]">Deadline</p>
     </div>
@@ -44,7 +44,7 @@ const ListHeader = () => (
         <Flag
           size={14}
           strokeWidth={2}
-          className="text-[#787878] dark:text-zinc-500 fill-current"
+          className="text-[#787878] dark:text-zinc-500"
         />
         <p className="hidden md:flex text-[12px]">Priority</p>
       </div>

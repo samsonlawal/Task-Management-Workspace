@@ -20,6 +20,9 @@ export default function Navbar() {
 
       {/* Desktop Menu */}
       <div className="hidden flex-row items-center gap-6 text-[14px] text-white md:flex">
+        <Link href="/" className="cursor-pointer transition-all duration-300 hover:text-white/60">
+          Home
+        </Link>
         <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
           How it works
         </span>
@@ -29,15 +32,12 @@ export default function Navbar() {
         <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
           Pricing
         </span>
-        {/* <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
-          Products
-        </span>
-        <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
-          Integrations
-        </span> */}
         <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
           FAQs
         </span>
+        <Link href="/contact" className="cursor-pointer transition-all duration-300 hover:text-white/60">
+          Contact
+        </Link>
       </div>
 
       {/* Desktop Auth */}
@@ -83,6 +83,9 @@ export default function Navbar() {
       {isOpen && (
         <div className="absolute left-0 top-[80px] z-50 flex w-full flex-col border-b border-[#333] bg-[#111] p-6 text-white shadow-xl md:hidden">
           <div className="flex flex-col gap-6 text-[14px]">
+            <Link href="/" className="cursor-pointer transition-all duration-300 hover:text-white/60">
+              Home
+            </Link>
             <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
               How it works
             </span>
@@ -92,15 +95,12 @@ export default function Navbar() {
             <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
               Pricing
             </span>
-            {/* <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
-              Products
-            </span>
-            <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
-              Integrations
-            </span> */}
             <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
               FAQs
             </span>
+            <Link href="/contact" className="cursor-pointer transition-all duration-300 hover:text-white/60">
+              Contact
+            </Link>
 
             <div className="h-[1px] w-full bg-[#333]"></div>
 

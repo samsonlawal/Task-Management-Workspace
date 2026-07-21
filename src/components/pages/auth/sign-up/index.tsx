@@ -10,7 +10,7 @@ import Link from "next/link";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
-  const [terms, setTerms] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
 
   const { loading, onRegister } = useRegister();
 
@@ -22,6 +22,7 @@ export default function SignUp() {
       username: "",
       email: "",
       password: "",
+      terms: false,
     },
     validationSchema: signupSchema,
     onSubmit: async (values) => {
@@ -31,7 +32,7 @@ export default function SignUp() {
 
   const handleSignUp = (e: any) => {
     e.preventDefault();
-    const { fullname, username, email, password } = formik.values;
+    const { fullname, username, email, password, terms } = formik.values;
 
     if (!terms) {
       showErrorToast({ message: "You must agree to the Terms & Conditions." });
@@ -151,19 +152,23 @@ export default function SignUp() {
 
           {/* Terms & Conditions */}
           <div className="flex items-center gap-2 text-xs text-zinc-300 pt-1 select-none">
-            <input
-              type="checkbox"
-              name="terms"
-              checked={terms}
-              onChange={(e) => setTerms(e.target.checked)}
-              className="h-3.5 w-3.5 bg-transparent border-zinc-800 text-indigo-600 rounded focus:ring-indigo-500 focus:ring-offset-zinc-900 focus:outline-none accent-indigo-600 cursor-pointer"
-            />
-            <span>
-              I agree to the{" "}
-              <a href="#" className="text-indigo-400 hover:text-indigo-300 transition-colors hover:underline">
-                Terms & Conditions
-              </a>
-            </span>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                name="terms"
+                checked={formik.values.terms}
+                onChange={formik.handleChange}
+                className="h-3.5 w-3.5 bg-transparent border-zinc-800 text-indigo-600 rounded focus:ring-indigo-500 focus:ring-offset-zinc-900 focus:outline-none accent-indigo-600 cursor-pointer"
+              />
+              <span>I agree to the</span>
+            </label>
+            <button
+              type="button"
+              onClick={() => setShowTermsModal(true)}
+              className="text-indigo-400 hover:text-indigo-300 transition-colors hover:underline outline-none"
+            >
+              Terms & Conditions
+            </button>
           </div>
 
           {/* Submit Button */}
@@ -187,6 +192,56 @@ export default function SignUp() {
           </p>
         </form>
       </div>
+
+      {/* Terms & Conditions Modal */}
+      {showTermsModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="w-full max-w-lg rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-zinc-200 shadow-2xl space-y-4 max-h-[80vh] flex flex-col">
+            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+              <h3 className="text-lg font-semibold text-white">Terms & Conditions</h3>
+              <button
+                onClick={() => setShowTermsModal(false)}
+                className="text-zinc-400 hover:text-white transition-colors text-sm font-medium px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-700"
+              >
+                Close
+              </button>
+            </div>
+            <div className="space-y-3 overflow-y-auto text-xs leading-relaxed text-zinc-300 pr-2">
+              <p>
+                Welcome to Taskstack. By registering and using our service, you agree to comply with and be bound by the following terms and conditions of use.
+              </p>
+              <h4 className="font-semibold text-white text-sm">1. Account & Workspace</h4>
+              <p>
+                You are responsible for maintaining the confidentiality of your account credentials and for all activities occurring under your workspace.
+              </p>
+              <h4 className="font-semibold text-white text-sm">2. Data Privacy & Security</h4>
+              <p>
+                Your personal and workspace data is protected using enterprise-grade security standards. We do not sell your personal data to third parties.
+              </p>
+              <h4 className="font-semibold text-white text-sm">3. Acceptable Use</h4>
+              <p>
+                You agree not to use Taskstack for unlawful activity, transmitting malicious content, or violating intellectual property rights.
+              </p>
+              <h4 className="font-semibold text-white text-sm">4. Service Modifications</h4>
+              <p>
+                We reserve the right to modify or discontinue features to continuously improve performance and platform security.
+              </p>
+            </div>
+            <div className="pt-3 border-t border-zinc-800 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  formik.setFieldValue("terms", true);
+                  setShowTermsModal(false);
+                }}
+                className="rounded-lg bg-indigo-600 px-4 py-2 text-xs font-semibold text-white hover:bg-indigo-500 transition-colors"
+              >
+                I Agree & Accept
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <div className="mb-4 relative z-10">
