@@ -68,10 +68,10 @@ export default function SignUp() {
   return (
     <div className="poppins relative flex min-h-screen w-full flex-col items-center justify-between bg-[#0a0a0a] px-4 py-8 text-white overflow-hidden">
       {/* Radial Glow Backdrop */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] rounded-full bg-indigo-600/10 blur-[100px] sm:blur-[130px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] rounded-full pointer-events-none" />
 
       {/* Header Logo */}
-      <div className="mt-8 relative z-10">
+      <div className="mt-6 mb-4 relative z-10">
         <Brand />
       </div>
 
@@ -79,7 +79,7 @@ export default function SignUp() {
       <div className="my-auto relative z-10 w-full max-w-[420px] p-8 rounded-2xl bg-zinc-900/40 backdrop-blur-md border border-zinc-800/80 shadow-2xl flex flex-col justify-center">
         <form className="space-y-4" onSubmit={handleSignUp}>
           <div className="flex flex-col text-center gap-1 pb-2">
-            <h2 className="text-xl font-semibold tracking-tight text-white">Create Account</h2>
+            <h2 className="text-xl font-medium tracking-tight text-white">Create Account</h2>
             <p className="text-xs text-zinc-400 max-w-[280px] mx-auto leading-relaxed">
               Enter your personal data to set up your workspace profile
             </p>
@@ -244,8 +244,8 @@ export default function SignUp() {
       )}
 
       {/* Footer */}
-      <div className="mb-4 relative z-10">
-        <p className="text-[11px] text-zinc-600 tracking-wide select-none">
+      <div className="m-4 relative z-10">
+        <p className="text-[11px] text-white/50 font-normal tracking-wide select-none">
           © {new Date().getFullYear()} @Taskstackhq. All Rights Reserved.
         </p>
       </div>

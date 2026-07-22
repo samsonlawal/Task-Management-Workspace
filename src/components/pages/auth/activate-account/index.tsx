@@ -120,7 +120,7 @@ const ActivateUser = () => {
 
               <button
                 onClick={() => router.replace("/auth/sign-up")}
-                className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 px-4 py-2.5 text-xs font-semibold text-zinc-800 dark:text-zinc-200 transition-all active:scale-98"
+                className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-200 dark:bg-white dark:text-[#1a1a1a] dark:hover:text-[white] hover:bg-zinc-300 dark:hover:bg-zinc-700 px-4 py-2.5 text-xs font-medium text-zinc-800 dark:text-zinc-200 transition-all active:scale-98"
               >
                 <span>Back to Registration</span>
               </button>
@@ -131,7 +131,7 @@ const ActivateUser = () => {
 
       {/* Footer footer information */}
       <div className="mb-4 relative z-10">
-        <p className="text-[11px] text-zinc-455 dark:text-zinc-650 tracking-wide select-none">
+        <p className="text-[11px] text-zinc-455 dark:text-white/50 tracking-wide select-none">
           © {new Date().getFullYear()} @Taskstackhq. All Rights Reserved.
         </p>
       </div>

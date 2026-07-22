@@ -204,26 +204,26 @@ export default function AddTask({ onGetTasks }: any) {
                 <div className="flex flex-row items-center gap-1.5 text-[11px] text-zinc-500 select-none">
                   <button
                     onClick={handleDialogClose}
-                    className="flex flex-row items-center gap-1 text-zinc-500 dark:text-white hover:text-black dark:hover:text-zinc-200 font-medium transition-colors"
+                    className="flex flex-row items-center gap-1 text-zinc-500 dark:text-white hover:text-black dark:hover:text-zinc-200 font-normal transition-colors"
                   >
                     <FontAwesomeIcon icon={faChevronLeft} className="text-[8px] mr-0.5" />
                     <span>{workspaceData?.name || "Workspace"}</span>
                   </button>
                   <span className="text-zinc-400 dark:text-white">{" > "}</span>
-                  <span className="font-semibold text-zinc-700 dark:text-zinc-300">
-                    STK-NEW
+                  <span className="font-normal text-zinc-700 dark:text-zinc-300">
+                    New Task
                   </span>
                 </div>
                 <button
                   onClick={handleDialogClose}
-                  className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-zinc-800 text-[#989898] hover:text-black dark:hover:text-white transition-colors"
+                  className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-zinc-800 text-[#989898] hover:text-black dark:hover:text-white transition-colors "
                 >
                   <FontAwesomeIcon icon={faXmark} className="text-[16px]" />
                 </button>
               </div>
 
               {/* Title & Description Inputs */}
-              <div className="flex w-full flex-col items-start gap-1 pb-3 border-b border-[#565656]/10 dark:border-zinc-800">
+              <div className="flex w-full flex-col items-start gap-1 pb-3">
                 <input
                   type="text"
                   placeholder="Task title"
@@ -234,7 +234,7 @@ export default function AddTask({ onGetTasks }: any) {
                       title: e.target.value,
                     }))
                   }
-                  className="poppins-medium text-[16px] text-zinc-900 dark:text-white bg-transparent border-none outline-none w-full p-0 m-0 focus:ring-0 focus:outline-none"
+                  className="poppins-medium text-[16px] text-zinc-900 dark:text-white bg-transparent border-none outline-none w-full p-0 m-0 focus:ring-0 focus:outline-none font-normal"
                 />
                 <textarea
                   placeholder="Add a description..."

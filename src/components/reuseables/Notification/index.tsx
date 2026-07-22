@@ -107,7 +107,7 @@ export default function Notification() {
                 <div className="poppins flex flex-row gap-5 border-b border-zinc-100 dark:border-zinc-800/60 px-6">
                   <button
                     onClick={() => setActiveTab("all")}
-                    className={`pb-2.5 text-[12px] font-semibold border-b-2 transition-colors focus:outline-none ${
+                    className={`pb-2.5 text-[12px] font-medium border-b-2 transition-colors focus:outline-none ${
                       activeTab === "all"
                         ? "border-zinc-800 dark:border-[#fff] text-zinc-950 dark:text-[#fff]"
                         : "border-transparent text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
@@ -118,7 +118,7 @@ export default function Notification() {
 
                   <button
                     onClick={() => setActiveTab("unread")}
-                    className={`pb-2.5 text-[12px] font-semibold border-b-2 transition-colors focus:outline-none ${
+                    className={`pb-2.5 text-[12px] font-medium border-b-2 transition-colors focus:outline-none ${
                       activeTab === "unread"
                         ? "border-zinc-800 dark:border-[#fff] text-zinc-950 dark:text-[#fff]"
                         : "border-transparent text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
@@ -156,7 +156,7 @@ export default function Notification() {
                             }`}>
                               {notif.message}
                             </p>
-                            <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-1">
+                            <p className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-1">
                               {formatTimeAgo(notif.createdAt)}
                             </p>
                           </div>
