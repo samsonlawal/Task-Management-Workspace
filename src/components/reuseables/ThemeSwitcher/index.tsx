@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { SunIcon } from "@radix-ui/react-icons";
+import { Sun, Moon } from "lucide-react";
 
 function ThemeSwitcher() {
   const [mounted, setMounted] = useState(false);
@@ -18,56 +18,37 @@ function ThemeSwitcher() {
   }, [mounted, resolvedTheme]);
 
   if (!mounted) return null;
+
+  const isDark = resolvedTheme === "dark";
+
   return (
-    <>
-      <button
-        // className="cursor-not-allowed"
-        className="hidden cursor-pointer lg:flex"
-        onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-      >
-        {resolvedTheme === "light" ? (
-          <img src="/icons/MoonIcon.svg" alt="" className="h-[16px] w-[16px]" />
-        ) : null}
-        {resolvedTheme === "dark" ? (
-          <SunIcon className="h-[16px] w-[16px]" />
-        ) : null}
-      </button>
+    <button
+      type="button"
+      aria-label="Toggle theme"
+      className="relative flex h-6 w-12 shrink-0 cursor-pointer items-center rounded-full bg-[#E7E7E7] p-1 outline-none transition-colors duration-300 dark:bg-[#292929]"
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+    >
+      {/* Moving circle */}
+      <span
+        className={`absolute top-1 left-1 h-4 w-4 rounded-full bg-white shadow-xs transition-transform duration-300 z-0 ${
+          isDark ? "translate-x-6" : "translate-x-0"
+        }`}
+      />
 
-      <button
-        className="relative flex h-8 w-16 items-center rounded-full border-none bg-[#E7E7E7] p-1 outline-none transition-all duration-300 dark:bg-[#292929] lg:hidden"
-        onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-      >
-        <div
-          className={`absolute h-4 w-4 transform rounded-full bg-white shadow-md transition-transform duration-300 ${
-            resolvedTheme === "dark" ? "translate-x-8" : "translate-x-0"
-          }`}
-        ></div>
+      {/* Sun Icon */}
+      <Sun
+        className={`absolute left-1.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 z-10 transition-colors duration-300 pointer-events-none ${
+          isDark ? "text-zinc-400" : "text-amber-500"
+        }`}
+      />
 
-        <SunIcon
-          className={`absolute w-4 h-4${resolvedTheme === "dark" ? "text-[#838383]" : "text-[#111111]"}`}
-          style={{
-            left: "8px",
-            top: "50%",
-            transform: "translateY(-50%)",
-          }}
-        />
-
-        <img
-          src={
-            resolvedTheme === "dark"
-              ? "/icons/MoonIcon.svg"
-              : "/icons/inactiveMoon.svg"
-          }
-          alt="Moon"
-          className={`absolute h-4 w-4 ${resolvedTheme === "dark" ? "text-[#FFFFFF]" : "text-[#838383]"}`}
-          style={{
-            right: "8px",
-            top: "50%",
-            transform: "translateY(-50%)",
-          }}
-        />
-      </button>
-    </>
+      {/* Moon Icon */}
+      <Moon
+        className={`absolute right-1.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 z-10 transition-colors duration-300 pointer-events-none ${
+          isDark ? "text-zinc-900" : "text-zinc-400"
+        }`}
+      />
+    </button>
   );
 }
 
