@@ -67,14 +67,12 @@ function Workspaces() {
       )}
 
       {/* Invitation Card */}
-      {showInvitations ? (
+      {!isSkipped && (
         <Invitation
           onInviteAccepted={() => onGetUserWorkspace(user?._id)}
           onSkip={() => setIsSkipped(true)}
           onInvitesCountChange={(count) => setInvitesCount(count)}
         />
-      ) : (
-        ""
       )}
 
       {/* Select Workspace Card - Shown when no invitations exist OR when skipped */}
