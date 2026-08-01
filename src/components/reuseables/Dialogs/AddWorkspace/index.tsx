@@ -16,6 +16,7 @@ import { useCreateWorkspace } from "@/hooks/api/workspace";
 import { TAddWorkspace } from "@/types";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { showErrorToast } from "@/utils/toaster";
+import { Loader2 } from "lucide-react";
 
 export default function AddWorkspace() {
   let [isOpen, setIsOpen] = useState(false);
@@ -183,19 +184,17 @@ export default function AddWorkspace() {
                   className="bg-[#222] px-7 text-white hover:bg-[#111]"
                 /> */}
                 <button
-                  className="w-[100px] rounded bg-[#222] py-2 text-[13px] font-normal text-white transition-all duration-300 hover:bg-[#111]"
+                  className="flex items-center justify-center gap-1.5 rounded bg-[#609328] px-5 py-2 text-[13px] font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
                   onClick={handleCreateTask}
+                  disabled={createWorkspaceLoading}
                 >
-                  {!createWorkspaceLoading ? (
-                    "Create"
+                  {createWorkspaceLoading ? (
+                    <>
+                      <span>Creating</span>
+                      <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
+                    </>
                   ) : (
-                    <span className="flex w-full items-center justify-center">
-                      <img
-                        src="/icons/loaderWhite.svg"
-                        alt=""
-                        className="w-4 animate-spin"
-                      />
-                    </span>
+                    <span>Create</span>
                   )}
                 </button>
               </div>

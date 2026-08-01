@@ -8,32 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useGetWorkspace } from "@/hooks/api/workspace";
 import { setCurrentUI } from "@/redux/Slices/uiSlice";
 import {
-  faBarsProgress,
-  faGear,
-  faHouse,
-  faListCheck,
-  faUsers,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-import {
   LayoutDashboard,
-  GalleryHorizontal,
-  SquareKanban,
-  List,
-  AlignLeft,
-  Library,
   CheckCheck,
   UsersRound,
-  MessageCircle,
-  Bell,
-  Blocks,
-  Workflow,
-  Settings,
   ChevronRight,
-  Sparkles,
 } from "lucide-react";
-import Brand from "@/components/reuseables/Brand";
+
+import IntegrationsNavGroup from "@/components/main/sidebar/IntegrationsNavGroup";
 
 export default function Sidebar() {
   const router = useRouter();
@@ -47,11 +28,9 @@ export default function Sidebar() {
 
   const handleDashboard = () => {
     dispatch(setCurrentUI("dashboard"));
-    // console.log(WorkspaceData?.workspace.members);
   };
 
   useEffect(() => {
-    // console.log("USER_ID:", user?._id);
     if (user) {
       onGetWorksapce();
 
@@ -59,16 +38,9 @@ export default function Sidebar() {
     }
   }, []);
 
-  // function handleWorkspace() {
-  // }
-
   return (
     <div className="flex h-full w-full flex-1 flex-col justify-between bg-white py-[14px] dark:bg-[#111]">
       <div className="flex flex-col gap-[34px]">
-        {/* <div className="flex flex-row items-center px-[14px]">
-          
-          <Brand />
-        </div> */}
         <CurrentWorkspace />
         <div className="poppins-regular flex flex-col justify-between gap-1 px-[12px] text-[13px] font-[300] text-[#707070]">
           {(
@@ -78,14 +50,12 @@ export default function Sidebar() {
                 value: "dashboard",
                 icon: <LayoutDashboard strokeWidth={1.5} size={18} />,
                 disabled: false,
-
               },
               {
                 label: "Tasks",
                 value: "tasks",
                 icon: <CheckCheck strokeWidth={1.5} size={18} />,
                 disabled: false,
-
               },
               {
                 label: "Team",
@@ -94,34 +64,10 @@ export default function Sidebar() {
                 disabled: false,
               },
               // {
-              //   label: "Chat",
-              //   value: "chat",
-              //   icon: <MessageCircle strokeWidth={1.5} size={18} />,
-              //   disabled: false,
-              // },
-              // {
-              //   label: "AI Hub",
-              //   value: "ai",
-              //   icon: <Sparkles strokeWidth={1.5} size={18} className="text-amber-500" />,
-              //   disabled: false,
-              // },
-              // {
               //   label: "Notifications",
               //   value: "notification",
               //   icon: <Bell strokeWidth={1.5} size={18} />,
               // },
-              {
-                label: "Integrations",
-                value: "integrations",
-                icon: <Workflow strokeWidth={1.5} size={18} />,
-                disabled: false,
-              },
-              
-              // {
-              //   label: "Settings",
-              //   value: "settings",
-              //   icon: <Settings strokeWidth={1.5} size={18} />,
-              // }
             ] as const
           ).map((link) => {
             const isActive = pathname === `/workspace/${link.value}`;
@@ -135,8 +81,8 @@ export default function Sidebar() {
                   }
                 }}
                 className={`flex cursor-pointer flex-row items-center justify-between rounded-[5px] border px-2.5 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 ${
-                  isActive 
-                    ? "border-[#565656]/10 bg-[#565656]/10 text-zinc-950 dark:text-white font-medium" 
+                  isActive
+                    ? "border-[#565656]/10 bg-[#565656]/10 font-medium text-zinc-950 dark:text-white"
                     : "border-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
                 } ${link.disabled ? "opacity-70 hover:cursor-not-allowed" : ""}`}
               >
@@ -145,11 +91,13 @@ export default function Sidebar() {
                   <span>{link.label}</span>
                 </div>
                 {isActive && (
-                  <ChevronRight className="w-3.5 h-3.5 text-zinc-800 dark:text-zinc-200" />
+                  <ChevronRight className="h-3.5 w-3.5 text-zinc-800 dark:text-zinc-200" />
                 )}
               </span>
             );
           })}
+
+          <IntegrationsNavGroup />
         </div>
       </div>
       <div className="flex h-fit w-full flex-col gap-[20px] px-[14px]">
@@ -177,7 +125,7 @@ function DropdownMenu() {
   }
 
   return (
-    <div className="flex h-[50px] w-full flex-row items-center justify-center gap-6 md:z-30 text-right">
+    <div className="flex h-[50px] w-full flex-row items-center justify-center gap-6 text-right md:z-30">
       <Menu>
         <MenuButton className="flex w-full items-center justify-center gap-2 rounded-sm border-[1px] border-[#565656]/10 px-2 py-[8px] text-black transition-colors duration-500 hover:bg-[#565656]/20">
           {/* <MenuButton className="flex w-[210px] items-center justify-center gap-2 rounded-md border-[1px] border-[#565656]/10 px-2 py-[8px] text-black shadow-inner shadow-white/10 transition-colors duration-500 hover:bg-gray-200/70 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white"> */}
@@ -213,26 +161,9 @@ function DropdownMenu() {
         <MenuItems
           transition
           anchor="top start"
-          className="flex min-h-fit z-50 w-[220px] origin-top-left flex-col justify-between gap-1 rounded-[8px] border-[1px] border-[#565656]/20 bg-white px-3 py-[14px] text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:10px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 dark:bg-[#111]"
+          className="z-50 flex min-h-fit w-[220px] origin-top-left flex-col justify-between gap-1 rounded-[8px] border-[1px] border-[#565656]/20 bg-white px-3 py-[14px] text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-100 ease-out [--anchor-gap:10px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 dark:bg-[#111]"
         >
-          {/* <div className="border-gray-200/700 flex cursor-pointer flex-row items-center justify-between gap-3 rounded-[8px] border-[1px] border-[#565656]/10 bg-[#565656]/10 px-3 py-[2px] hover:bg-[#565656]/20">
-            <div className="flex flex-row items-center gap-3">
-              <img src="/icons/menu/smiley.svg" alt="" />
-              <p className="poppins text-[13px] font-regular text-[#565656]">
-                Status
-              </p>
-            </div>
-          </div> */}
-
-          {/* <div className="my-1 h-px bg-[#565656]/20" /> */}
-
           <div className="flex flex-col gap-[0px]">
-            {/* </MenuItem> */}
-            {/* <MenuItem> */}
-
-            {/* </MenuItem> */}
-            {/* <div className="my-1 h-px bg-[#eeeeee]" /> */}
-
             <MenuItem>
               <div
                 onClick={() => {

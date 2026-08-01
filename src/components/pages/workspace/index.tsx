@@ -5,7 +5,6 @@ import { RootState } from "@/redux/store";
 import Dashboard from "@/components/pages/Dashboard";
 import Team from "@/components/pages/Team";
 import Chat from "@/components/pages/Chats";
-import Integrations from "@/components/pages/Integrations";
 import Settings from "@/components/pages/Settings";
 import TasksView from "./views/TasksView";
 import AIView from "@/components/pages/AIView";
@@ -25,8 +24,6 @@ function Workspace() {
         <Settings />
       ) : currentUI === "chat" ? (
         <Chat />
-      ) : currentUI === "integrations" ? (
-        <Integrations />
       ) : currentUI === "ai" ? (
         <AIView />
       ) : (

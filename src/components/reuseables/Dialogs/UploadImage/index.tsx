@@ -19,6 +19,7 @@ import { useAddMember, useGetMembers } from "@/hooks/api/workspace";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { setMembers } from "@/redux/Slices/memberSlice";
 import { useUploadAvatar } from "@/hooks/api/account";
+import { Loader2 } from "lucide-react";
 
 export default function AddMember() {
   const dispatch = useDispatch();
@@ -131,10 +132,18 @@ export default function AddMember() {
                   Cancel
                 </button>
                 <button
-                  className={`rounded-md border-[1px] border-[#565656]/60 bg-[white] px-[18px] py-1 text-[11px] font-medium text-[#111] transition-colors duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 hover:text-white/50`}
+                  className="flex items-center gap-1.5 rounded-md bg-[#609328] px-[18px] py-1.5 text-[11px] font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
                   onClick={handleSave}
+                  disabled={loading}
                 >
-                  {loading ? "Saving..." : "Save"}
+                  {loading ? (
+                    <>
+                      <span>Saving</span>
+                      <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
+                    </>
+                  ) : (
+                    <span>Save</span>
+                  )}
                 </button>
               </div>
             </div>

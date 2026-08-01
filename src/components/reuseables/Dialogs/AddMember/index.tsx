@@ -18,6 +18,7 @@ import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 import { useAddMember, useGetMembers } from "@/hooks/api/workspace";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { setMembers } from "@/redux/Slices/memberSlice";
+import { Loader2 } from "lucide-react";
 
 export default function AddMember() {
   const dispatch = useDispatch();
@@ -229,19 +230,17 @@ export default function AddMember() {
                   className="bg-[#222] px-7 text-white hover:bg-[#111]"
                 /> */}
                 <button
-                  className="rounded bg-[#222] px-5 py-2 text-[12px] font-normal text-white transition-all duration-300 hover:bg-[#111] dark:bg-[#fff] dark:text-[#111]"
+                  className="flex items-center gap-1.5 rounded bg-[#609328] px-5 py-2 text-[12px] font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
                   onClick={handleAddMember}
+                  disabled={addMemberLoading}
                 >
-                  {!addMemberLoading ? (
-                    "Send Invite"
+                  {addMemberLoading ? (
+                    <>
+                      <span>Sending</span>
+                      <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
+                    </>
                   ) : (
-                    <span className="flex w-full items-center justify-center">
-                      <img
-                        src="/icons/loaderWhite.svg"
-                        alt=""
-                        className="w-4 animate-spin"
-                      />
-                    </span>
+                    <span>Send Invite</span>
                   )}
                 </button>
               </div>

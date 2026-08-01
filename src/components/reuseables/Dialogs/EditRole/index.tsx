@@ -13,6 +13,7 @@ import Button from "../../Button";
 import { useEditMemberRole } from "@/hooks/api/workspace";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 import { useSelector } from "react-redux";
+import { Loader2 } from "lucide-react";
 
 interface EditRoleProps {
   isOpen: boolean;
@@ -132,21 +133,17 @@ export default function EditRole({
 
             <div className="flex justify-start gap-3 text-[14px]">
               <button
-                className="rounded-sm bg-[#222] px-4 py-2 text-[12px] font-normal text-white transition-all duration-300 hover:bg-[#111] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-[#fff] dark:text-[#111]"
+                className="flex items-center gap-1.5 rounded-md bg-[#609328] px-5 py-2 text-[12px] font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
                 onClick={handleSave}
                 disabled={loading}
               >
-                {!loading ? (
-                  "Save"
+                {loading ? (
+                  <>
+                    <span>Saving</span>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
+                  </>
                 ) : (
-                  <span className="flex w-full items-center justify-center gap-2">
-                    Saving
-                    <img
-                      src="/icons/loaderWhite.svg"
-                      alt=""
-                      className="w-4 animate-spin"
-                    />
-                  </span>
+                  <span>Save</span>
                 )}
               </button>
             </div>

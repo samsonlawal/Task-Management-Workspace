@@ -22,6 +22,7 @@ import { RootState } from "@/redux/store";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { showSuccessToast, showErrorToast } from "@/utils/toaster";
 import { useGetTasks } from "@/hooks/api/tasks";
+import { Loader2 } from "lucide-react";
 
 export default function EditTask({ taskData }: any) {
   const dispatch = useDispatch();
@@ -292,8 +293,8 @@ export default function EditTask({ taskData }: any) {
                           onClick={() => setTask((prev) => ({ ...prev, priority: p }))}
                           className={`flex-1 py-2 px-3 text-xs border rounded-md transition-all ${
                             task.priority === p
-                              ? "bg-[#563892] text-white border-transparent font-medium"
-                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-[#563892]/70 dark:hover:text-white"
+                              ? "bg-[#609328] text-white border-transparent font-medium"
+                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-[#609328]/70 dark:hover:text-white"
                           }`}
                         >
                           {p}
@@ -318,8 +319,8 @@ export default function EditTask({ taskData }: any) {
                           onClick={() => setTask((prev) => ({ ...prev, status: s.key }))}
                           className={`flex-1 py-2 px-3 text-xs border rounded-md transition-all ${
                             task.status === s.key
-                              ? "bg-[#563892] text-white border-transparent font-medium"
-                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-[#563892]/70 dark:hover:text-white"
+                              ? "bg-[#609328] text-white border-transparent font-medium"
+                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-[#609328]/70 dark:hover:text-white"
                           }`}
                         >
                           {s.label}
@@ -375,18 +376,15 @@ export default function EditTask({ taskData }: any) {
               <button
                 onClick={handleUpdateTask}
                 disabled={updateTaskLoading}
-                className="rounded-md bg-[#563892] text-white px-5 py-2 text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-md bg-[#609328] text-white px-5 py-2 text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
               >
                 {updateTaskLoading ? (
-                  <span className="flex w-full items-center justify-center">
-                    <img
-                      src="/icons/loaderWhite.svg"
-                      alt=""
-                      className="w-4 animate-spin"
-                    />
-                  </span>
+                  <>
+                    <span>Saving</span>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
+                  </>
                 ) : (
-                  "Save Changes"
+                  <span>Save Changes</span>
                 )}
               </button>
             </div>

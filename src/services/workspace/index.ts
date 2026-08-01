@@ -14,6 +14,7 @@ class service {
   getPendingInvites(userId: string) {
     return axios.get(env.api.workspaces + "/invites/" + userId, {
       withCredentials: true,
+
     });
   }
 

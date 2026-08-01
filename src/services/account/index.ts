@@ -5,6 +5,7 @@ import { TUpdateDetailsService } from "@/types";
 // import { TUser } from '@/types';
 
 class Service {
+  
   //   changePassword({ payload }: any) {
   //     return axios.put(env.api.auth + '/change-password', payload);
   //   }
@@ -33,9 +34,7 @@ class Service {
 
   getUserProfile({ id, accessToken }: { id: string; accessToken: string }) {
     return axios.get(env.api.profiles + `/${id}`, {
-      headers: {
-        Authorization: "Bearer " + accessToken,
-      },
+      withCredentials: true,
     });
   }
 
