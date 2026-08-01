@@ -23,6 +23,7 @@ import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { showSuccessToast, showErrorToast } from "@/utils/toaster";
 import { useGetTasks } from "@/hooks/api/tasks";
 import { Loader2 } from "lucide-react";
+import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
 
 export default function EditTask({ taskData }: any) {
   const dispatch = useDispatch();
@@ -242,7 +243,7 @@ export default function EditTask({ taskData }: any) {
               <div className="flex flex-col gap-6 max-w-4xl pt-2">
                 {/* 1. Title Input */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
+                  <label className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">
                     Title
                   </label>
                   <input
@@ -261,7 +262,7 @@ export default function EditTask({ taskData }: any) {
 
                 {/* 2. Description Input */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
+                  <label className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">
                     Description
                   </label>
                   <textarea
@@ -282,50 +283,60 @@ export default function EditTask({ taskData }: any) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Priority Selector */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
+                    <label className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">
                       Priority:
                     </label>
                     <div className="flex gap-2">
-                      {["Low", "Medium", "High"].map((p) => (
-                        <button
-                          key={p}
-                          type="button"
-                          onClick={() => setTask((prev) => ({ ...prev, priority: p }))}
-                          className={`flex-1 py-2 px-3 text-xs border rounded-md transition-all ${
-                            task.priority === p
-                              ? "bg-[#609328] text-white border-transparent font-medium"
-                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-[#609328]/70 dark:hover:text-white"
-                          }`}
-                        >
-                          {p}
-                        </button>
-                      ))}
+                      {["Low", "Medium", "High"].map((p) => {
+                        const styles = getPriorityStyles(p);
+                        const isSelected = task.priority?.toLowerCase() === p.toLowerCase();
+                        return (
+                          <button
+                            key={p}
+                            type="button"
+                            onClick={() => setTask((prev) => ({ ...prev, priority: p }))}
+                            className={`flex flex-1 items-center justify-center gap-1.5 py-2 px-3 text-xs border rounded-md transition-all ${
+                              isSelected
+                                ? "border-zinc-400 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50 font-medium text-zinc-900 dark:text-white"
+                                : "border-gray-300 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/30"
+                            }`}
+                          >
+                            <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} />
+                            {p}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 
                   {/* Status Selector */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
+                    <label className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">
                       Status:
                     </label>
                     <div className="flex gap-2">
                       {[
                         { key: "to-do", label: "To-Do" },
                         { key: "in-progress", label: "In-Progress" },
-                      ].map((s) => (
-                        <button
-                          key={s.key}
-                          type="button"
-                          onClick={() => setTask((prev) => ({ ...prev, status: s.key }))}
-                          className={`flex-1 py-2 px-3 text-xs border rounded-md transition-all ${
-                            task.status === s.key
-                              ? "bg-[#609328] text-white border-transparent font-medium"
-                              : "border-gray-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-400 hover:bg-[#609328]/70 dark:hover:text-white"
-                          }`}
-                        >
-                          {s.label}
-                        </button>
-                      ))}
+                      ].map((s) => {
+                        const styles = getStatusStyles(s.key);
+                        const isSelected = task.status === s.key;
+                        return (
+                          <button
+                            key={s.key}
+                            type="button"
+                            onClick={() => setTask((prev) => ({ ...prev, status: s.key }))}
+                            className={`flex flex-1 items-center justify-center gap-1.5 py-2 px-3 text-xs border rounded-md transition-all ${
+                              isSelected
+                                ? "border-zinc-400 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50 font-medium text-zinc-900 dark:text-white"
+                                : "border-gray-300 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/30"
+                            }`}
+                          >
+                            <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} />
+                            {s.label}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
@@ -334,7 +345,7 @@ export default function EditTask({ taskData }: any) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Assignee */}
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
+                    <label className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">
                       Assignee
                     </label>
                     <div className="">
@@ -344,7 +355,7 @@ export default function EditTask({ taskData }: any) {
 
                   {/* Deadline */}
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[13px] font-medium text-zinc-600 dark:text-zinc-400">
+                    <label className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">
                       Deadline
                     </label>
                     <input

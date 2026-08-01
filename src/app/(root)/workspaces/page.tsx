@@ -17,6 +17,8 @@ function Workspaces() {
   const [selectedWorkspace, setSelectedWorkspace] = useState<string | null>(
     null,
   );
+  const [isSkipped, setIsSkipped] = useState(false);
+  const [invitesCount, setInvitesCount] = useState(0);
 
   const { user } = useSelector((state: any) => state.auth);
   const {
@@ -25,8 +27,6 @@ function Workspaces() {
     loading: workspacingLoading,
   } = useGetUserWorkspace(user?._id);
 
-  // console.log(selectedWorkspace);
-
   function handleContinue() {
     if (selectedWorkspace) {
       dispatch(setCurrentWorkspace(selectedWorkspace));
@@ -34,82 +34,121 @@ function Workspaces() {
     }
   }
 
+  const hasInvitations = invitesCount > 0;
+  const showInvitations = hasInvitations && !isSkipped;
+
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-[20px] bg-white dark:bg-[#111]">
       {/* <ThemeSwitcher /> */}
 
       <Brand />
-      <Invitation onInviteAccepted={() => onGetUserWorkspace(user?._id)} />
 
-      <div className="flex flex-col gap-4 rounded-lg border-[1px] border-[#EEEEEE] bg-white p-6 dark:border-[#565656]/20 dark:bg-[#1a1a1a]/50">
-        {/* Header */}
-        <div className="flex flex-col text-left">
-          <h1 className="poppins text-[15px] font-medium text-[#111] dark:text-white">
-            Select Workspace
-          </h1>
-          <p className="poppins text-[12px] font-regular text-[#565656] dark:text-[#fff]/50">
-            Choose where you want to continue your work or create.
-          </p>
-        </div>
-
-        {/* List */}
-        <div className="flex flex-col gap-1 rounded-[6px] border-[1px] border-[#565656]/20 bg-[#EEEEEE]/20 p-4 transition-all duration-300 dark:bg-[#111]/20">
-          {workspacingLoading ? (
-            <div className="flex justify-center p-4 transition-all duration-300">
-              <p className="text-sm text-[#fff]40">Loading workspaces...</p>
-            </div>
-          ) : workspaces && workspaces.length > 0 ? (
-            workspaces.map((ws) => (
-              <div
-                key={ws._id}
-                className={`flex h-[42px] w-[317px] cursor-pointer flex-row items-center justify-between rounded-[4px] p-[6px] transition-all duration-300 hover:bg-[#565656]/10 ${selectedWorkspace === ws._id ? "border-[1px] border-[#565656]/10 bg-[#565656]/20 text-[#111]" : "text-[#565656]"}`}
-                onClick={() => setSelectedWorkspace(ws._id)}
-              >
-                <div className="poppins flex flex-row items-center justify-center gap-2">
-                  <div
-                    className="flex h-[30px] w-[30px] items-center justify-center rounded-[4px] text-[13px] font-medium text-[#111] dark:text-white"
-                    style={{ backgroundColor: stringToColor(ws.name) }}
-                  >
-                    {ws.name.charAt(0).toUpperCase()}
-                  </div>
-                  <p className="text-[13px] font-medium text-[#111] dark:text-white">
-                    {ws.name}
-                  </p>
-                </div>
-
-                {/* Check */}
-                <span
-                  className={`flex h-4 w-4 items-center justify-center rounded-full border border-[#565656]/40 transition-all duration-300 ${selectedWorkspace === ws._id ? "bg-[#111] dark:bg-white" : "bg-transparent"}`}
-                >
-                  {selectedWorkspace === ws._id && (
-                    <svg
-                      className="h-3 w-3 text-white dark:text-[#111]"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={3}
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M5 12l5 5l10-10" />
-                    </svg>
-                  )}
-                </span>
-              </div>
-            ))
-          ) : (
-            <div className="flex justify-center p-4">
-              <p className="text-sm text-[#fff]/60">No workspaces found</p>
-            </div>
-          )}
-        </div>
-
+      {/* Button to view invitations if skipped */}
+      {hasInvitations && isSkipped && (
         <button
-          className="poppins rounded-sm bg-[#111] py-[10px] text-[12px] font-medium text-white transition-all duration-300 hover:bg-[#111]/90 disabled:bg-[#565656]/10 disabled:text-[#565656]/50 dark:bg-[#fff] dark:text-[#111] dark:hover:bg-[#fff]/80"
-          disabled={!selectedWorkspace}
-          onClick={handleContinue}
+          onClick={() => setIsSkipped(false)}
+          className="poppins flex items-center gap-1.5 rounded-sm border border-[#565656]/30 bg-[#1a1a1a]/40 px-3 py-1 text-[12px] font-normal text-white/50 transition-all hover:bg-[#1a1a1a]/80 hover:text-white"
         >
-          Select and Continue
+          <svg
+            className="h-3.5 w-3.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
+          </svg>
+          View Pending Invitations - {invitesCount}
         </button>
-      </div>
+      )}
+
+      {/* Invitation Card */}
+      {showInvitations ? (
+        <Invitation
+          onInviteAccepted={() => onGetUserWorkspace(user?._id)}
+          onSkip={() => setIsSkipped(true)}
+          onInvitesCountChange={(count) => setInvitesCount(count)}
+        />
+      ) : (
+        ""
+      )}
+
+      {/* Select Workspace Card - Shown when no invitations exist OR when skipped */}
+      {!showInvitations && (
+        <div className="flex flex-col gap-4 rounded-lg border-[1px] border-[#EEEEEE] bg-white p-6 dark:border-[#565656]/20 dark:bg-[#1a1a1a]/50">
+          {/* Header */}
+          <div className="flex flex-col text-left">
+            <h1 className="poppins text-[15px] font-medium text-[#111] dark:text-white">
+              Select Workspace
+            </h1>
+            <p className="poppins text-[12px] font-regular text-[#565656] dark:text-[#fff]/50">
+              Choose where you want to continue your work or create.
+            </p>
+          </div>
+
+          {/* List */}
+          <div className="flex flex-col gap-1 rounded-[6px] border-[1px] border-[#565656]/20 bg-[#EEEEEE]/20 p-4 transition-all duration-300 dark:bg-[#111]/20">
+            {workspacingLoading ? (
+              <div className="flex justify-center p-4 transition-all duration-300">
+                <p className="text-[#fff]40 text-sm">Loading workspaces...</p>
+              </div>
+            ) : workspaces && workspaces.length > 0 ? (
+              workspaces.map((ws) => (
+                <div
+                  key={ws._id}
+                  className={`flex h-[42px] w-[317px] cursor-pointer flex-row items-center justify-between rounded-[4px] p-[6px] transition-all duration-300 hover:bg-[#565656]/10 ${selectedWorkspace === ws._id ? "border-[1px] border-[#565656]/10 bg-[#565656]/20 text-[#111]" : "text-[#565656]"}`}
+                  onClick={() => setSelectedWorkspace(ws._id)}
+                >
+                  <div className="poppins flex flex-row items-center justify-center gap-2">
+                    <div
+                      className="flex h-[30px] w-[30px] items-center justify-center rounded-[4px] text-[13px] font-medium text-[#111] dark:text-white"
+                      style={{ backgroundColor: stringToColor(ws.name) }}
+                    >
+                      {ws.name.charAt(0).toUpperCase()}
+                    </div>
+                    <p className="text-[13px] font-medium text-[#111] dark:text-white">
+                      {ws.name}
+                    </p>
+                  </div>
+
+                  {/* Check */}
+                  <span
+                    className={`flex h-4 w-4 items-center justify-center rounded-full border border-[#565656]/40 transition-all duration-300 ${selectedWorkspace === ws._id ? "bg-[#111] dark:bg-white" : "bg-transparent"}`}
+                  >
+                    {selectedWorkspace === ws._id && (
+                      <svg
+                        className="h-3 w-3 text-white dark:text-[#111]"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M5 12l5 5l10-10" />
+                      </svg>
+                    )}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <div className="flex justify-center p-4">
+                <p className="text-sm text-[#fff]/60">No workspaces found</p>
+              </div>
+            )}
+          </div>
+
+          <button
+            className="poppins rounded-sm bg-[#111] py-[10px] text-[12px] font-medium text-white transition-all duration-300 hover:bg-[#111]/90 disabled:bg-[#565656]/10 disabled:text-[#565656]/50 dark:bg-[#fff] dark:text-[#111] dark:hover:bg-[#fff]/80"
+            disabled={!selectedWorkspace}
+            onClick={handleContinue}
+          >
+            Select and Continue
+          </button>
+        </div>
+      )}
     </div>
   );
 }

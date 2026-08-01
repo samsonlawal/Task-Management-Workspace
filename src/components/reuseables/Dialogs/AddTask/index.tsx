@@ -259,15 +259,13 @@ export default function AddTask({ onGetTasks }: any) {
                 <div className="flex flex-row flex-wrap items-center gap-2.5">
                   {/* Status Pill */}
                   <Menu as="div" className="relative">
-                    <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800">
+                    <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800">
                       <FontAwesomeIcon
                         icon={faSpinner}
-                        className="h-3 w-3 animate-pulse text-gray-500"
+                        className="h-3 w-3 animate-pulse text-zinc-500 dark:text-zinc-400"
                       />
-                      <span>Status:</span>
-                      <span
-                        className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] ${statusDisplay.bg} ${statusDisplay.text}`}
-                      >
+                      <span className="font-medium text-zinc-500 dark:text-zinc-400">Status:</span>
+                      <span className="inline-flex items-center gap-1 text-[11px] text-zinc-900 dark:text-white font-medium">
                         <span
                           className={`h-1.5 w-1.5 rounded-full ${statusDisplay.dot}`}
                         />
@@ -275,7 +273,7 @@ export default function AddTask({ onGetTasks }: any) {
                       </span>
                       <FontAwesomeIcon
                         icon={faChevronDown}
-                        className="h-2 w-2 opacity-50"
+                        className="h-2 w-2 opacity-50 text-zinc-500 dark:text-zinc-400"
                       />
                     </MenuButton>
                     <MenuItems className="absolute left-0 z-50 mt-1 w-40 origin-top-left rounded-md border border-zinc-200 bg-white p-1 shadow-lg outline-none dark:border-zinc-800 dark:bg-zinc-900">
@@ -307,21 +305,22 @@ export default function AddTask({ onGetTasks }: any) {
 
                   {/* Priority Pill */}
                   <Menu as="div" className="relative">
-                    <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800">
+                    <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800">
                       <FontAwesomeIcon
                         icon={faCircleCheck}
-                        className="h-3 w-3 text-gray-500"
+                        className="h-3 w-3 text-zinc-500 dark:text-zinc-400"
                       />
-                      <span>Priority:</span>
-                      <span
-                        className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] ${priorityDisplay.bg} ${priorityDisplay.text}`}
-                      >
+                      <span className="font-medium text-zinc-500 dark:text-zinc-400">Priority:</span>
+                      <span className="inline-flex items-center gap-1 text-[11px] text-zinc-900 dark:text-white font-medium">
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full ${priorityDisplay.dot}`}
+                        />
                         {task.priority.charAt(0).toUpperCase() +
                           task.priority.slice(1).toLowerCase()}
                       </span>
                       <FontAwesomeIcon
                         icon={faChevronDown}
-                        className="h-2 w-2 opacity-50"
+                        className="h-2 w-2 opacity-50 text-zinc-500 dark:text-zinc-400"
                       />
                     </MenuButton>
                     <MenuItems className="absolute left-0 z-50 mt-1 w-32 origin-top-left rounded-md border border-zinc-200 bg-white p-1 shadow-lg outline-none dark:border-zinc-800 dark:bg-zinc-900">
@@ -358,13 +357,13 @@ export default function AddTask({ onGetTasks }: any) {
 
                   {/* Assignee Pill */}
                   <Menu as="div" className="relative">
-                    <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800">
+                    <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800">
                       <FontAwesomeIcon
                         icon={faUser}
-                        className="h-3 w-3 text-gray-500"
+                        className="h-3 w-3 text-zinc-500 dark:text-zinc-400"
                       />
-                      <span>Assignee:</span>
-                      <div className="flex items-center gap-1">
+                      <span className="font-medium text-zinc-500 dark:text-zinc-400">Assignee:</span>
+                      <div className="flex items-center gap-1 text-zinc-900 dark:text-white font-medium">
                         {selectedMemberUser?.profileImage &&
                         selectedMemberUser?.profileImage !== "none" ? (
                           <img
@@ -393,7 +392,7 @@ export default function AddTask({ onGetTasks }: any) {
                       </div>
                       <FontAwesomeIcon
                         icon={faChevronDown}
-                        className="h-2 w-2 opacity-50"
+                        className="h-2 w-2 opacity-50 text-zinc-500 dark:text-zinc-400"
                       />
                     </MenuButton>
                     <MenuItems className="absolute left-0 z-50 mt-1 max-h-60 w-56 origin-top-left overflow-y-auto rounded-md border border-zinc-200 bg-white p-1 shadow-lg outline-none dark:border-zinc-800 dark:bg-zinc-900">
@@ -453,13 +452,13 @@ export default function AddTask({ onGetTasks }: any) {
 
                   {/* Due Date Pill */}
                   <Popover className="relative">
-                    <PopoverButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800">
+                    <PopoverButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800">
                       <FontAwesomeIcon
                         icon={faCalendar}
-                        className="h-3 w-3 text-gray-500"
+                        className="h-3 w-3 text-zinc-500 dark:text-zinc-400"
                       />
-                      <span>Due Date:</span>
-                      <span>
+                      <span className="font-medium text-zinc-500 dark:text-zinc-400">Due Date:</span>
+                      <span className="text-zinc-900 dark:text-white font-medium">
                         {task.deadline
                           ? DateTime.fromISO(task.deadline).toFormat(
                               "dd LLL, yyyy",
@@ -468,7 +467,7 @@ export default function AddTask({ onGetTasks }: any) {
                       </span>
                       <FontAwesomeIcon
                         icon={faChevronDown}
-                        className="h-2 w-2 opacity-50"
+                        className="h-2 w-2 opacity-50 text-zinc-500 dark:text-zinc-400"
                       />
                     </PopoverButton>
                     <PopoverPanel className="absolute left-0 z-50 mt-1 rounded-md border border-zinc-200 bg-white p-3 shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
@@ -505,13 +504,13 @@ export default function AddTask({ onGetTasks }: any) {
                         message: "Attach files feature triggered!",
                       })
                     }
-                    className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                    className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800"
                   >
                     <FontAwesomeIcon
                       icon={faPaperclip}
-                      className="text-gray-550 h-3 w-3"
+                      className="h-3 w-3 text-zinc-500 dark:text-zinc-400"
                     />
-                    <span>Attachments</span>
+                    <span className="font-medium text-zinc-500 dark:text-zinc-400">Attachments</span>
                   </button>
                 </div>
               </div>
