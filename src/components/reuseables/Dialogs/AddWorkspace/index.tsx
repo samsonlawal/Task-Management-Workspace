@@ -97,27 +97,32 @@ export default function AddWorkspace() {
         {/* Full-screen container to center the panel */}
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
           {/* The actual dialog panel  */}
-          <DialogPanel className="h-fit max-w-[540px] space-y-2 rounded-xl bg-white px-8 py-8">
-            <DialogTitle className="flex flex-row items-center justify-between font-medium">
-              <p className="text-[18px]">Create New Workspace</p>
-              <div
-                onClick={() => setIsOpen(false)}
-                className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-black"
-              >
-                <FontAwesomeIcon icon={faXmark} className="fa-sm text-white" />
-              </div>
-            </DialogTitle>
-            <Description className="pb-6">
-              <p className="w-[80%] text-[14px] font-light leading-4 text-[#777]">
-                Set up a space to manage your tasks and collaborate with your
-                team.
-              </p>
-            </Description>
+          <DialogPanel className="flex w-full max-w-[500px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white px-6 py-5 shadow-2xl dark:border-zinc-800 dark:bg-[#1a1a1a]">
             <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="spaceName" className="text-[14px]">
-                    Name
+              {/* Header */}
+              <div className="flex w-full flex-row items-center justify-between">
+                <DialogTitle className="poppins-medium text-[16px] font-medium text-zinc-900 dark:text-white">
+                  Create New Workspace
+                </DialogTitle>
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  className="flex h-6 w-6 items-center justify-center rounded-full text-[#989898] transition-colors hover:bg-gray-200 hover:text-black dark:hover:bg-zinc-800 dark:hover:text-white"
+                >
+                  <FontAwesomeIcon icon={faXmark} className="text-[16px]" />
+                </button>
+              </div>
+
+              {/* Description */}
+              <p className="text-[12px] text-zinc-500 dark:text-zinc-400">
+                Set up a space to manage your tasks and collaborate with your team.
+              </p>
+
+              {/* Form Inputs */}
+              <div className="flex flex-col gap-4 pt-1">
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="spaceName" className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">
+                    Workspace Name
                   </label>
                   <input
                     name="spaceName"
@@ -129,18 +134,17 @@ export default function AddWorkspace() {
                         name: e.target.value,
                       }))
                     }
-                    placeholder="Enter space name"
-                    className="h-[36px] w-full rounded-md border-[1px] border-gray-400 px-2 text-[14px] font-light text-[#444] placeholder-[#999] outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                    placeholder="e.g. Acme Corp"
+                    className="h-[38px] w-full rounded-md border border-gray-300 bg-transparent px-3 text-xs text-zinc-900 outline-none focus:border-[#609328] dark:border-zinc-800 dark:text-white placeholder-zinc-400"
                   />
                 </div>
 
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="spaceName" className="text-[14px]">
-                    Description
-                    <span className="font-light text-[#999]">(optional)</span>
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="spaceDesc" className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">
+                    Description <span className="font-normal text-zinc-400">(optional)</span>
                   </label>
                   <input
-                    name="spaceName"
+                    name="spaceDesc"
                     type="text"
                     value={workspace.description}
                     onChange={(e) =>
@@ -149,44 +153,25 @@ export default function AddWorkspace() {
                         description: e.target.value,
                       }))
                     }
-                    placeholder="Enter description"
-                    className="h-[36px] w-full rounded-md border-[1px] border-gray-400 px-2 text-[14px] font-light text-[#444] placeholder-[#999] outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                    placeholder="What is this workspace about?"
+                    className="h-[38px] w-full rounded-md border border-gray-300 bg-transparent px-3 text-xs text-zinc-900 outline-none focus:border-[#609328] dark:border-zinc-800 dark:text-white placeholder-zinc-400"
                   />
                 </div>
-                {/* <CustomSelect
-                  // label="Role"
-                  options={[
-                    { label: "Member", value: "member" },
-                    { label: "Admin", value: "admin" },
-                  ]}
-                  placeholder="Role"
-                  onChange={(value: any) => console.log("Selected:", value)}
-                /> */}
-
-                {/* <CustomSelect
-                  options={[
-                    { value: "admin", label: "Admin" },
-                    { value: "member", label: "Member" },
-                  ]}
-                  placeholder="Select Role"
-                  className="max-w-[110px] rounded-lg bg-gray-200"
-                /> */}
               </div>
-              <div className="flex gap-3 text-[14px]">
-                <Button
-                  text="Cancel"
-                  onClick={() => setIsOpen(false)}
-                  className="bg-gray-200 text-black hover:bg-gray-300"
-                />
-                {/* <Button
-                  text="Create"
-                  onClick={() => setIsOpen(false)}
-                  className="bg-[#222] px-7 text-white hover:bg-[#111]"
-                /> */}
+
+              {/* Action Buttons */}
+              <div className="mt-4 flex justify-end gap-3">
                 <button
-                  className="flex items-center justify-center gap-1.5 rounded bg-[#609328] px-5 py-2 text-[13px] font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-md bg-zinc-200 px-4 py-2 text-xs text-zinc-700 transition-colors hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                >
+                  Cancel
+                </button>
+                <button
                   onClick={handleCreateTask}
                   disabled={createWorkspaceLoading}
+                  className="flex items-center gap-1.5 rounded-md bg-[#609328] px-5 py-2 text-xs font-medium text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-50"
                 >
                   {createWorkspaceLoading ? (
                     <>
@@ -194,7 +179,7 @@ export default function AddWorkspace() {
                       <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
                     </>
                   ) : (
-                    <span>Create</span>
+                    <span>Create Workspace</span>
                   )}
                 </button>
               </div>

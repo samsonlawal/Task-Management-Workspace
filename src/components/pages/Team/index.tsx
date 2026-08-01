@@ -161,7 +161,7 @@ function Team() {
               placeholder="Search Users"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-[36px] rounded-lg border border-zinc-300 dark:border-zinc-800 bg-transparent py-2 pl-9 pr-8 text-[12px] outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-[#563892] dark:focus:border-indigo-500 dark:text-[#eee] transition-all"
+              className="w-full h-[36px] rounded-lg border border-zinc-300 dark:border-zinc-800 bg-transparent py-2 pl-9 pr-8 text-[12px] outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-[#609328] dark:focus:border-[#609328] dark:text-[#eee] transition-all"
             />
 
             {/* Magnifier icon */}
@@ -189,12 +189,12 @@ function Team() {
           <AddMember />
         </div>
       {/* Table */}
-      <div className="border border-gray-200 dark:border-[#565656]/20 h-full w-full rounded-[8px] shadow-sm overflow-hidden bg-white dark:bg-[#111]">
+      <div className="h-full w-full rounded-[8px] overflow-hidden bg-transparent">
         {members ? (
           <div className="w-full overflow-x-auto">
-            <div className="w-full md:min-w-[800px] rounded-[8px]">
+            <div className="w-full md:min-w-[800px]">
             {/* Header */}
-            <div className="grid h-[50px] w-full grid-cols-[1.5fr_0.8fr_0.8fr_20px] md:grid-cols-[0.8fr_1.2fr_0.4fr_0.5fr_0.5fr_0.4fr_20px] items-center justify-center gap-2 md:gap-5 rounded-t-[8px] bg-gray-100 px-3 md:px-4 text-[13px] text-gray-600 dark:bg-[#565656]/20 dark:text-[#787878]">
+            <div className="grid h-[40px] w-full grid-cols-[1.5fr_0.8fr_0.8fr_20px] md:grid-cols-[0.8fr_1.2fr_0.4fr_0.5fr_0.5fr_0.4fr_20px] items-center justify-center gap-2 md:gap-5 px-3 md:px-4 text-[13px] font-medium text-gray-500 dark:text-[#787878]">
               {/* <div>ID</div> */}
               <div className="">Name</div>
               <div className="hidden md:block">Email</div>
@@ -205,7 +205,6 @@ function Team() {
               <div className="">Status</div>
               <div className=""></div>
             </div>
-            <div className="w-full border-b border-gray-300 dark:border-[#565656]/20" />
 
             {/* Body */}
             {currentItems.length > 0 ? (
@@ -226,7 +225,7 @@ function Team() {
                 return (
                   <div
                     key={user._id || index}
-                    className="dark:text=[#eee] grid w-full grid-cols-[1.5fr_0.8fr_0.8fr_20px] md:grid-cols-[0.8fr_1.2fr_0.4fr_0.5fr_0.5fr_0.4fr_20px] items-center gap-2 md:gap-5 border-b border-gray-300 px-3 md:px-4 py-3 text-[13px] font-[400] text-gray-800 dark:border-[#565656]/20 dark:text-[#eee]"
+                    className="grid w-full grid-cols-[1.5fr_0.8fr_0.8fr_20px] md:grid-cols-[0.8fr_1.2fr_0.4fr_0.5fr_0.5fr_0.4fr_20px] items-center gap-2 md:gap-5 px-3 md:px-4 py-3 text-[13px] font-[400] text-gray-800 dark:text-[#eee]"
                   >
                     {/* <div className="">{startIndex + index + 1}</div> */}
                     <div className="flex flex-row items-center gap-2">
