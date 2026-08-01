@@ -50,41 +50,38 @@ export default function Login() {
   };
 
   return (
-    <div className="poppins relative flex min-h-screen w-full flex-col items-center justify-between bg-[#0a0a0a] px-4 py-8 text-white overflow-hidden">
-      {/* Radial Glow Backdrop */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] rounded-full pointer-events-none" />
-
+    <div className="poppins relative flex min-h-screen w-full flex-col items-center justify-between bg-white dark:bg-[#111] px-4 py-8 text-[#111] dark:text-white overflow-hidden">
       {/* Header Logo */}
       <div className="mt-6 mb-4 relative z-10">
         <Brand />
       </div>
 
-      {/* Glassmorphic Sign-in Card */}
-      <div className="my-auto relative z-10 w-full max-w-[420px] p-8 rounded-2xl bg-zinc-900/40 backdrop-blur-md border border-zinc-800/80 shadow-2xl flex flex-col justify-center">
+      {/* Sign-in Card Container */}
+      <div className="my-auto relative z-10 w-full max-w-[420px] p-6 rounded-lg border border-[#EEEEEE] bg-white dark:border-[#565656]/20 dark:bg-[#1a1a1a]/50 shadow-lg flex flex-col justify-center">
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div className="flex flex-col text-center gap-1">
-            <h2 className="text-xl font-medium tracking-tight text-white">Welcome Back</h2>
-            <p className="text-xs text-zinc-400 max-w-[280px] mx-auto leading-relaxed">
+            <h2 className="text-xl font-medium tracking-tight text-[#111] dark:text-white">Welcome Back</h2>
+            <p className="text-xs text-[#565656] dark:text-[#fff]/50 max-w-[280px] mx-auto leading-relaxed">
               Enter your credentials to access your workspaces and tasks
             </p>
           </div>
 
           {/* Email Input */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-zinc-300">Email</label>
+            <label className="text-xs font-medium text-[#111] dark:text-white/80">Email</label>
             <input
               name="email"
               type="email"
               placeholder="name@example.com"
               value={formValues.email}
               onChange={handleInputChange}
-              className="w-full rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
+              className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 dark:border-[#565656]/20 dark:bg-[#111]/30 px-3 py-2.5 text-sm text-[#111] dark:text-white placeholder-zinc-400 focus:border-[#609328] focus:outline-none transition-colors"
             />
           </div>
 
           {/* Password Input */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-zinc-300">Password</label>
+            <label className="text-xs font-medium text-[#111] dark:text-white/80">Password</label>
             <div className="relative">
               <input
                 name="password"
@@ -92,11 +89,11 @@ export default function Login() {
                 placeholder="••••••••"
                 value={formValues.password}
                 onChange={handleInputChange}
-                className="w-full rounded-lg border border-zinc-800 bg-zinc-900/50 pl-3 pr-10 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
+                className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 dark:border-[#565656]/20 dark:bg-[#111]/30 pl-3 pr-10 py-2.5 text-sm text-[#111] dark:text-white placeholder-zinc-400 focus:border-[#609328] focus:outline-none transition-colors"
               />
               <button
                 type="button"
-                className="absolute inset-y-0 right-3 flex items-center text-zinc-400 hover:text-white transition-colors"
+                className="absolute inset-y-0 right-3 flex items-center text-zinc-400 hover:text-[#111] dark:hover:text-white transition-colors"
                 onClick={togglePasswordVisibility}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -106,18 +103,18 @@ export default function Login() {
 
           {/* Remember Me & Forgot Password */}
           <div className="flex items-center justify-between text-xs">
-            <label className="flex items-center gap-2 cursor-pointer text-zinc-300 hover:text-white transition-colors select-none">
+            <label className="flex items-center gap-2 cursor-pointer text-[#565656] dark:text-[#fff]/70 hover:text-[#111] dark:hover:text-white transition-colors select-none">
               <input
                 type="checkbox"
                 checked={remember}
                 onChange={(e) => setRemember(e.target.checked)}
-                className="h-3.5 w-3.5 bg-transparent border-zinc-850 text-indigo-600 rounded focus:ring-indigo-500 focus:ring-offset-zinc-900 focus:outline-none accent-indigo-600"
+                className="h-3.5 w-3.5 bg-transparent border-[#565656]/30 text-[#609328] rounded focus:ring-[#609328] focus:outline-none accent-[#609328]"
               />
               Remember Me
             </label>
             <Link
               href="/auth/forgot-password"
-              className="text-zinc-450 hover:text-white transition-colors hover:underline"
+              className="text-[#609328] hover:text-[#609328]/80 transition-colors hover:underline"
             >
               Forgot Password?
             </Link>
@@ -127,17 +124,17 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-white hover:bg-zinc-200 px-4 py-2.5 text-sm font-semibold text-black transition-all active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-2 flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-[#609328] hover:bg-[#609328]/90 px-4 py-2.5 text-sm font-medium text-white transition-all active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span>Sign In</span>
-            {loading && <Loader2 size={16} className="animate-spin text-black" />}
+            {loading && <Loader2 size={16} className="animate-spin text-white" />}
           </button>
 
           <p className="text-center text-xs text-zinc-400 mt-2">
             Don’t have an account?{" "}
             <Link
               href="/auth/sign-up"
-              className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors hover:underline"
+              className="text-[#609328] hover:text-[#609328]/80 font-medium transition-colors hover:underline"
             >
               Sign Up
             </Link>

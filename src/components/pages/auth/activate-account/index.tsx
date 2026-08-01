@@ -38,14 +38,14 @@ const ActivateUser = () => {
   const activeState = success ? "success" : (errorState ? "error" : "loading");
 
   return (
-    <div className="poppins relative flex min-h-screen w-full flex-col items-center justify-between bg-zinc-50 dark:bg-[#111] px-4 py-8 text-zinc-950 dark:text-white overflow-hidden">
+    <div className="poppins relative flex min-h-screen w-full flex-col items-center justify-between bg-white dark:bg-[#111] px-4 py-8 text-[#111] dark:text-white overflow-hidden">
       {/* Header logo container */}
       <div className="mt-8 relative z-10">
         <Brand />
       </div>
 
-      {/* Main flat activation container */}
-      <div className="my-auto relative z-10 w-full max-w-[420px] p-8 rounded-xl bg-white dark:bg-[#1a1a1a] border border-zinc-200 dark:border-zinc-800/80 shadow-xl flex flex-col items-center justify-center min-h-[300px]">
+      {/* Main activation container */}
+      <div className="my-auto relative z-10 w-full max-w-[420px] p-6 rounded-lg border border-[#EEEEEE] bg-white dark:border-[#565656]/20 dark:bg-[#1a1a1a]/50 shadow-lg flex flex-col items-center justify-center min-h-[300px]">
         <AnimatePresence mode="wait">
           {activeState === "loading" && (
             <motion.div
@@ -57,9 +57,7 @@ const ActivateUser = () => {
               className="flex flex-col items-center gap-5"
             >
               <div className="relative flex items-center justify-center">
-                {/* Glow ring spinner effect */}
-                <div className="absolute inset-0 rounded-full bg-indigo-500/10 blur-[8px] animate-pulse" />
-                <Loader2 className="h-10 w-10 text-[#563892] animate-spin" />
+                <Loader2 className="h-10 w-10 text-[#609328] animate-spin" />
               </div>
               <div className="flex flex-col items-center gap-2">
                 <h1 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-white">Verifying credentials</h1>
@@ -79,7 +77,7 @@ const ActivateUser = () => {
               transition={{ duration: 0.3, type: "spring", stiffness: 100 }}
               className="flex flex-col items-center gap-6 w-full"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 border border-emerald-500/20">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#609328]/10 text-[#609328] border border-[#609328]/20">
                 <CheckCircle2 className="h-6 w-6" />
               </div>
               <div className="flex flex-col items-center gap-2">
@@ -91,10 +89,10 @@ const ActivateUser = () => {
               
               <button
                 onClick={() => router.replace("/auth/sign-in")}
-                className="mt-2 group flex w-full items-center justify-center gap-2 rounded-lg bg-[#563892] hover:bg-[#482e7b] px-4 py-2.5 text-xs font-semibold text-white transition-all duration-300 active:scale-98"
+                className="mt-2 group flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-[#609328] hover:bg-[#609328]/90 px-4 py-2.5 text-sm font-medium text-white transition-all duration-300 active:scale-98"
               >
                 <span>Continue to login</span>
-                <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+                <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5 text-white" />
               </button>
             </motion.div>
           )}

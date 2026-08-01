@@ -66,28 +66,25 @@ export default function SignUp() {
   };
 
   return (
-    <div className="poppins relative flex min-h-screen w-full flex-col items-center justify-between bg-[#0a0a0a] px-4 py-8 text-white overflow-hidden">
-      {/* Radial Glow Backdrop */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] rounded-full pointer-events-none" />
-
+    <div className="poppins relative flex min-h-screen w-full flex-col items-center justify-between bg-white dark:bg-[#111] px-4 py-8 text-[#111] dark:text-white overflow-hidden">
       {/* Header Logo */}
       <div className="mt-6 mb-4 relative z-10">
         <Brand />
       </div>
 
-      {/* Glassmorphic Sign-up Card */}
-      <div className="my-auto relative z-10 w-full max-w-[420px] p-8 rounded-2xl bg-zinc-900/40 backdrop-blur-md border border-zinc-800/80 shadow-2xl flex flex-col justify-center">
+      {/* Sign-up Card Container */}
+      <div className="my-auto relative z-10 w-full max-w-[420px] p-6 rounded-lg border border-[#EEEEEE] bg-white dark:border-[#565656]/20 dark:bg-[#1a1a1a]/50 shadow-lg flex flex-col justify-center">
         <form className="space-y-4" onSubmit={handleSignUp}>
           <div className="flex flex-col text-center gap-1 pb-2">
-            <h2 className="text-xl font-medium tracking-tight text-white">Create Account</h2>
-            <p className="text-xs text-zinc-400 max-w-[280px] mx-auto leading-relaxed">
+            <h2 className="text-xl font-medium tracking-tight text-[#111] dark:text-white">Create Account</h2>
+            <p className="text-xs text-[#565656] dark:text-[#fff]/50 max-w-[280px] mx-auto leading-relaxed">
               Enter your personal data to set up your workspace profile
             </p>
           </div>
 
           {/* Full Name Input */}
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-zinc-300">Full Name</label>
+            <label className="text-xs font-medium text-[#111] dark:text-white/80">Full Name</label>
             <input
               name="fullname"
               type="text"
@@ -95,13 +92,13 @@ export default function SignUp() {
               value={formik.values.fullname}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
+              className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 dark:border-[#565656]/20 dark:bg-[#111]/30 px-3 py-2.5 text-sm text-[#111] dark:text-white placeholder-zinc-400 focus:border-[#609328] focus:outline-none transition-colors"
             />
           </div>
 
           {/* Username Input */}
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-zinc-300">Username</label>
+            <label className="text-xs font-medium text-[#111] dark:text-white/80">Username</label>
             <input
               name="username"
               type="text"
@@ -109,13 +106,13 @@ export default function SignUp() {
               value={formik.values.username}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
+              className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 dark:border-[#565656]/20 dark:bg-[#111]/30 px-3 py-2.5 text-sm text-[#111] dark:text-white placeholder-zinc-400 focus:border-[#609328] focus:outline-none transition-colors"
             />
           </div>
 
           {/* Email Input */}
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-zinc-300">Email</label>
+            <label className="text-xs font-medium text-[#111] dark:text-white/80">Email</label>
             <input
               name="email"
               type="email"
@@ -123,13 +120,13 @@ export default function SignUp() {
               value={formik.values.email}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
+              className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 dark:border-[#565656]/20 dark:bg-[#111]/30 px-3 py-2.5 text-sm text-[#111] dark:text-white placeholder-zinc-400 focus:border-[#609328] focus:outline-none transition-colors"
             />
           </div>
 
           {/* Password Input */}
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-zinc-300">Password</label>
+            <label className="text-xs font-medium text-[#111] dark:text-white/80">Password</label>
             <div className="relative">
               <input
                 name="password"
@@ -138,11 +135,11 @@ export default function SignUp() {
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full rounded-lg border border-zinc-800 bg-zinc-900/50 pl-3 pr-10 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none transition-colors"
+                className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 dark:border-[#565656]/20 dark:bg-[#111]/30 pl-3 pr-10 py-2.5 text-sm text-[#111] dark:text-white placeholder-zinc-400 focus:border-[#609328] focus:outline-none transition-colors"
               />
               <button
                 type="button"
-                className="absolute inset-y-0 right-3 flex items-center text-zinc-400 hover:text-white transition-colors"
+                className="absolute inset-y-0 right-3 flex items-center text-zinc-400 hover:text-[#111] dark:hover:text-white transition-colors"
                 onClick={togglePasswordVisibility}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -151,21 +148,21 @@ export default function SignUp() {
           </div>
 
           {/* Terms & Conditions */}
-          <div className="flex items-center gap-2 text-xs text-zinc-300 pt-1 select-none">
+          <div className="flex items-center gap-2 text-xs text-[#565656] dark:text-[#fff]/70 pt-1 select-none">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
                 name="terms"
                 checked={formik.values.terms}
                 onChange={formik.handleChange}
-                className="h-3.5 w-3.5 bg-transparent border-zinc-800 text-indigo-600 rounded focus:ring-indigo-500 focus:ring-offset-zinc-900 focus:outline-none accent-indigo-600 cursor-pointer"
+                className="h-3.5 w-3.5 bg-transparent border-[#565656]/30 text-[#609328] rounded focus:ring-[#609328] focus:outline-none accent-[#609328] cursor-pointer"
               />
               <span>I agree to the</span>
             </label>
             <button
               type="button"
               onClick={() => setShowTermsModal(true)}
-              className="text-indigo-400 hover:text-indigo-300 transition-colors hover:underline outline-none"
+              className="text-[#609328] hover:text-[#609328]/80 transition-colors hover:underline outline-none"
             >
               Terms & Conditions
             </button>
@@ -175,17 +172,17 @@ export default function SignUp() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-white hover:bg-zinc-200 px-4 py-2.5 text-sm font-semibold text-black transition-all active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-4 flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-[#609328] hover:bg-[#609328]/90 px-4 py-2.5 text-sm font-medium text-white transition-all active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span>Sign Up</span>
-            {loading && <Loader2 size={16} className="animate-spin text-black" />}
+            {loading && <Loader2 size={16} className="animate-spin text-white" />}
           </button>
 
           <p className="text-center text-xs text-zinc-400 mt-2">
             Already have an account?{" "}
             <Link
               href="/auth/sign-in"
-              className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors hover:underline"
+              className="text-[#609328] hover:text-[#609328]/80 font-medium transition-colors hover:underline"
             >
               Sign In
             </Link>
@@ -195,7 +192,7 @@ export default function SignUp() {
 
       {/* Terms & Conditions Modal */}
       {showTermsModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
           <div className="w-full max-w-lg rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-zinc-200 shadow-2xl space-y-4 max-h-[80vh] flex flex-col">
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <h3 className="text-lg font-semibold text-white">Terms & Conditions</h3>
@@ -234,7 +231,7 @@ export default function SignUp() {
                   formik.setFieldValue("terms", true);
                   setShowTermsModal(false);
                 }}
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-xs font-semibold text-white hover:bg-indigo-500 transition-colors"
+                className="rounded-lg bg-[#609328] hover:bg-[#609328]/90 px-4 py-2 text-xs font-medium text-white transition-colors"
               >
                 I Agree & Accept
               </button>
