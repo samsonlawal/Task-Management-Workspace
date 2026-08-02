@@ -8,7 +8,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 //   profileImage: string;
 // };
 
-const INITIAL_STATE = {
+type AuthState = {
+accessToken: string;
+user: any;
+}
+
+const INITIAL_STATE: AuthState = {
   accessToken: "",
   //   refreshToken: "",
   //   expiresIn: undefined,

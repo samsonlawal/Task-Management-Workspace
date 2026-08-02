@@ -33,12 +33,10 @@ export default function CurrentWorkspace() {
   return (
     <div className="flex flex-col gap-[24px]">
       <div className="flex w-full flex-col justify-between gap-[8px]">
-        {/* <div className="flex w-full"><p>Workspace</p></div> */}
         <div className="flex flex-row items-center gap-[8px] px-[12px]">
           <Workspace />
         </div>
       </div>
-      {/* <AddMember /> */}
     </div>
   );
 }
@@ -102,13 +100,15 @@ function Workspace() {
         },
       });
     }
-  }, [user]); // Only depend on user
+  }, [user]);
 
   // Keep filteredWorkspaces in sync with workspaces and workspaceData
   useEffect(() => {
     if (workspaces) {
       setFilteredWorkspaces(
-        workspaces.filter((workspace) => workspace._id !== workspaceData?._id) || []
+        workspaces.filter(
+          (workspace) => workspace._id !== workspaceData?._id,
+        ) || [],
       );
     }
   }, [workspaces, workspaceData]);
@@ -118,24 +118,26 @@ function Workspace() {
   }
 
   function switchWorkspace(id: string) {
-    if (workspaceData) {
-      saveToLocalStorage({
-        key: "WorkspaceData",
-        value: workspaceData,
-      });
-      dispatch(setWorkspace(workspaceData));
-    }
+    // if (workspaceData) {
+    //   saveToLocalStorage({
+    //     key: "WorkspaceData",
+    //     value: workspaceData,
+    //   });
+    //   dispatch(setWorkspace(workspaceData));
+    // }
+
+    saveToLocalStorage({
+      key: "CurrentWorkspaceId",
+      value: id,
+    });
+
+    dispatch(setCurrentWorkspace(id));
 
     onGetUserWorkspace(user?._id);
     onGetSingleWorkspace(id);
     dispatch(setCurrentWorkspace(id));
-
-    // Add success callback for workspace switching
     onGetTasks({
       workspaceId: id,
-      successCallback: (tasks) => {
-        console.log("Tasks loaded after workspace switch:", tasks);
-      },
     });
 
     onGetMembers({ workspaceId: id });
@@ -160,7 +162,7 @@ function Workspace() {
   }, [workspaceData, memberData, taskData, dispatch]);
 
   return (
-    <div className="w-full text-left z-100">
+    <div className="z-100 w-full text-left">
       <Menu>
         <MenuButton className="inline-flex w-full items-center gap-2 rounded-md border-[1px] border-[#565656]/10 bg-[#565656]/10 px-2 py-1.5 text-black transition-all duration-300 hover:bg-[#565656]/20 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
           <div

@@ -8,38 +8,38 @@ type WorkspaceState = {
   name: string;
 };
 
-const initialState: WorkspaceState = {
-  workspace: null,
-  members: null,
-  name: "",
+// const initialState: WorkspaceState = {
+//   workspace: null,
+//   members: null,
+//   name: "",
+// };
+
+const getBootWorkspaceData = () => {
+  if (typeof window === "undefined") return null;
+  try {
+    const item = localStorage.getItem("WorkspaceData");
+    return item ? JSON.parse(item) : null;
+  } catch {
+    return null;
+  }
 };
+
+
 
 const workspaceSlice = createSlice({
   name: "workspace",
-  initialState,
+  initialState: {
+    workspace: getBootWorkspaceData(),
+    // members: null,
+    // name: "",
+  },
   reducers: {
     setWorkspace: (
       state,
       action: PayloadAction<Record<string, any> | null>,
     ) => {
       state.workspace = action.payload;
-      saveToLocalStorage({
-        key: "WorkspaceData",
-        value: action.payload,
-      });
     },
-    // setMembers: (state, action: PayloadAction<Array<any> | null>) => {
-    //   state.members = action.payload; // This was incorrect in your original code
-    //   saveToLocalStorage({
-    //     key: "WorkspaceMembers", // Change key to be more specific
-    //     value: action.payload,
-    //   });
-    // },
-    // clearWorkspace: (state) => {
-    //   state.workspace = null;
-    //   state.members = null;
-    //   // You might want to clear from localStorage too
-    // },
   },
 });
 

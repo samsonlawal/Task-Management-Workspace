@@ -57,31 +57,33 @@ export default function AddTask({ onGetTasks }: any) {
     (state: RootState) => state.WorkspaceData?.workspace,
   );
 
-  useEffect(() => {
-    getFromLocalStorage({
-      key: "CurrentWorkspaceId",
-      cb: (id: string) => {
-        if (id) {
-          setWorkspaceId(id);
-          setTask((prevTask) => ({
-            ...prevTask,
-            workspace_id: id,
-          }));
-        }
-      },
-    });
+  const user = useSelector((state: RootState) => state.auth?.user);
 
-    getFromLocalStorage({
-      key: "STACKTASK_PERSISTOR",
-      cb: (data: any) => {
-        if (data) {
-          setTask((prevTask) => ({
-            ...prevTask,
-            createdBy: data?.user?._id,
-          }));
-        }
-      },
-    });
+  const { currentWorkspaceId } = useSelector(
+    (state: RootState) => state.currentWorkspace,
+  );
+
+  useEffect(() => {
+    if (currentWorkspaceId) {
+      setWorkspaceId(currentWorkspaceId);
+      setTask((prevTask) => ({
+        ...prevTask,
+        workspace_id: currentWorkspaceId,
+        createdBy: user?._id || "",
+      }));
+    }
+
+    // getFromLocalStorage({
+    //   key: "STACKTASK_PERSISTOR",
+    //   cb: (data: any) => {
+    //     if (data) {
+    //       setTask((prevTask) => ({
+    //         ...prevTask,
+    //         createdBy: data?.user?._id,
+    //       }));
+    //     }
+    //   },
+    // });
   }, [isOpen]);
 
   const { onCreateTask, loading: createTaskLoading } = useCreateTask();
@@ -129,7 +131,7 @@ export default function AddTask({ onGetTasks }: any) {
           setTask({
             description: "",
             workspace_id: workspace_id,
-            assignee: undefined,
+            assignee: assignee || undefined,
             deadline: "",
             status: "to-do",
             priority: "Low",
@@ -258,12 +260,12 @@ export default function AddTask({ onGetTasks }: any) {
                     <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800">
                       <FontAwesomeIcon
                         icon={faSpinner}
-                        className="h-3 w-3 animate-pulse text-zinc-500 dark:text-zinc-400"
+                        className="h-3 w-3 animate-pulse text-zinc-900 dark:text-white"
                       />
-                      <span className="font-medium text-zinc-500 dark:text-zinc-400">
+                      <span className="font-semibold text-zinc-900 dark:text-white">
                         Status:
                       </span>
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-zinc-900 dark:text-white">
+                      <span className="inline-flex items-center gap-1 text-[11px] text-zinc-700 dark:text-zinc-300">
                         <span
                           className={`h-1.5 w-1.5 rounded-full ${statusDisplay.dot}`}
                         />
@@ -271,7 +273,7 @@ export default function AddTask({ onGetTasks }: any) {
                       </span>
                       <FontAwesomeIcon
                         icon={faChevronDown}
-                        className="h-2 w-2 text-zinc-500 opacity-50 dark:text-zinc-400"
+                        className="h-2 w-2 opacity-50"
                       />
                     </MenuButton>
                     <MenuItems className="absolute left-0 z-50 mt-1 w-40 origin-top-left rounded-md border border-zinc-200 bg-white p-1 shadow-lg outline-none dark:border-zinc-800 dark:bg-zinc-900">
@@ -306,12 +308,12 @@ export default function AddTask({ onGetTasks }: any) {
                     <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800">
                       <FontAwesomeIcon
                         icon={faCircleCheck}
-                        className="h-3 w-3 text-zinc-500 dark:text-zinc-400"
+                        className="h-3 w-3 text-zinc-900 dark:text-white"
                       />
-                      <span className="font-medium text-zinc-500 dark:text-zinc-400">
+                      <span className="font-semibold text-zinc-900 dark:text-white">
                         Priority:
                       </span>
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-zinc-900 dark:text-white">
+                      <span className="inline-flex items-center gap-1 text-[11px] text-zinc-700 dark:text-zinc-300">
                         <span
                           className={`h-1.5 w-1.5 rounded-full ${priorityDisplay.dot}`}
                         />
@@ -320,7 +322,7 @@ export default function AddTask({ onGetTasks }: any) {
                       </span>
                       <FontAwesomeIcon
                         icon={faChevronDown}
-                        className="h-2 w-2 text-zinc-500 opacity-50 dark:text-zinc-400"
+                        className="h-2 w-2 opacity-50"
                       />
                     </MenuButton>
                     <MenuItems className="absolute left-0 z-50 mt-1 w-32 origin-top-left rounded-md border border-zinc-200 bg-white p-1 shadow-lg outline-none dark:border-zinc-800 dark:bg-zinc-900">
@@ -360,12 +362,12 @@ export default function AddTask({ onGetTasks }: any) {
                     <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800">
                       <FontAwesomeIcon
                         icon={faUser}
-                        className="h-3 w-3 text-zinc-500 dark:text-zinc-400"
+                        className="h-3 w-3 text-zinc-900 dark:text-white"
                       />
-                      <span className="font-medium text-zinc-500 dark:text-zinc-400">
+                      <span className="font-semibold text-zinc-900 dark:text-white">
                         Assignee:
                       </span>
-                      <div className="flex items-center gap-1 font-medium text-zinc-900 dark:text-white">
+                      <div className="flex items-center gap-1">
                         {selectedMemberUser?.profileImage &&
                         selectedMemberUser?.profileImage !== "none" ? (
                           <img
@@ -394,7 +396,7 @@ export default function AddTask({ onGetTasks }: any) {
                       </div>
                       <FontAwesomeIcon
                         icon={faChevronDown}
-                        className="h-2 w-2 text-zinc-500 opacity-50 dark:text-zinc-400"
+                        className="h-2 w-2 opacity-50"
                       />
                     </MenuButton>
                     <MenuItems className="absolute left-0 z-50 mt-1 max-h-60 w-56 origin-top-left overflow-y-auto rounded-md border border-zinc-200 bg-white p-1 shadow-lg outline-none dark:border-zinc-800 dark:bg-zinc-900">
@@ -457,12 +459,12 @@ export default function AddTask({ onGetTasks }: any) {
                     <PopoverButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800">
                       <FontAwesomeIcon
                         icon={faCalendar}
-                        className="h-3 w-3 text-zinc-500 dark:text-zinc-400"
+                        className="h-3 w-3 text-zinc-900 dark:text-white"
                       />
-                      <span className="font-medium text-zinc-500 dark:text-zinc-400">
+                      <span className="font-semibold text-zinc-900 dark:text-white">
                         Due Date:
                       </span>
-                      <span className="font-medium text-zinc-900 dark:text-white">
+                      <span>
                         {task.deadline
                           ? DateTime.fromISO(task.deadline).toFormat(
                               "dd LLL, yyyy",
@@ -471,7 +473,7 @@ export default function AddTask({ onGetTasks }: any) {
                       </span>
                       <FontAwesomeIcon
                         icon={faChevronDown}
-                        className="h-2 w-2 text-zinc-500 opacity-50 dark:text-zinc-400"
+                        className="h-2 w-2 opacity-50"
                       />
                     </PopoverButton>
                     <PopoverPanel className="absolute left-0 z-50 mt-1 rounded-md border border-zinc-200 bg-white p-3 shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
@@ -512,9 +514,9 @@ export default function AddTask({ onGetTasks }: any) {
                   >
                     <FontAwesomeIcon
                       icon={faPaperclip}
-                      className="h-3 w-3 text-zinc-500 dark:text-zinc-400"
+                      className="h-3 w-3 text-zinc-900 dark:text-white"
                     />
-                    <span className="font-medium text-zinc-500 dark:text-zinc-400">
+                    <span className="font-semibold text-zinc-900 dark:text-white">
                       Attachments
                     </span>
                   </button>

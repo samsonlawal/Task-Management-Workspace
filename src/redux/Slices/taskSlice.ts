@@ -34,20 +34,13 @@ const taskSlice = createSlice({
   name: "tasks",
   initialState,
   reducers: {
-    // setTasks: (state, action: PayloadAction<Array<any>>) => {
-    //   // Ensure payload is always an array
-    //   state.task = Array.isArray(action.payload) ? action.payload : [];
-    //   saveToLocalStorage({ key: "WStasks", value: state.task });
-    // },
 
     setTasks: (state, action: PayloadAction<Array<any>>) => {
       state.task = action.payload;
-      saveToLocalStorage({ key: "WStasks", value: action.payload });
     },
 
     setSingleTask: (state, action: PayloadAction<TaskData | null>) => {
       state.currentTask = action.payload;
-      saveToLocalStorage({ key: "currentTask", value: action.payload });
     },
   },
 });
