@@ -90,9 +90,9 @@ export default function Sidebar() {
                   {link.icon}
                   <span>{link.label}</span>
                 </div>
-                {isActive && (
+                {/* {isActive && (
                   <ChevronRight className="h-3.5 w-3.5 text-zinc-800 dark:text-zinc-200" />
-                )}
+                )} */}
               </span>
             );
           })}

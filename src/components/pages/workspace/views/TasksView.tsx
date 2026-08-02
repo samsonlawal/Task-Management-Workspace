@@ -2,10 +2,16 @@
 
 import { useMemo, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSidebar } from "@/redux/Slices/uiSlice"
+import { toggleSidebar } from "@/redux/Slices/uiSlice";
 
 import { useTheme } from "next-themes";
-import { SquareKanban, List, Folder, GalleryHorizontal, PanelLeft } from "lucide-react";
+import {
+  SquareKanban,
+  List,
+  Folder,
+  GalleryHorizontal,
+  PanelLeft,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { RootState } from "@/redux/store";
@@ -17,8 +23,6 @@ import ListHeader from "@/components/reuseables/List/ListHeader";
 import AddTask from "@/components/reuseables/Dialogs/AddTask";
 import Notification from "@/components/reuseables/Notification";
 import { CustomSelect } from "@/components/reuseables/TeamSelect";
-
-
 
 const tabby = [
   {
@@ -36,7 +40,9 @@ const STATUS_SECTIONS = ["TO-DO", "IN-PROGRESS", "IN-REVIEW", "DONE"] as const;
 function TasksView() {
   const dispatch = useDispatch();
   const { resolvedTheme } = useTheme();
-  const { user } = useSelector((state: RootState) => state.auth) as { user: any };
+  const { user } = useSelector((state: RootState) => state.auth) as {
+    user: any;
+  };
 
   // Tasks Logic
   const tasks = useSelector((state: RootState) =>
@@ -99,47 +105,27 @@ function TasksView() {
   const changeToListView = () => setView("list");
   const changeToBoardView = () => setView("board");
 
-  // useEffect(() => {
-  //   Debug logging preserved from original
-  //   if (user) {
-  //     console.log("USER:", user);
-  //     console.log("USER_ID:", user?._id);
-  //   }
-  // }, [user]);
-
-  // useEffect(() => {
-  //   console.log("USER ID:", user?._id);
-  //   console.log(
-  //     "Task Assignees:",
-  //     tasks.map((t: any) => t.assignee?._id),
-  //   );
-  // }, [user, tasks]);
-
-  // useEffect(() => {
-  //   console.log(activeTabs);
-  // }, [activeTab]);
-
   return (
-    <div className="flex h-full w-full flex-col poppins">
+    <div className="poppins flex h-full w-full flex-col">
       {/* Navbar / Header for Tasks */}
-      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] z-40">
-        <div className="poppins flex w-full items-center justify-between border-b-[1px] border-[#565656]/10 px-4 lg:px-8 py-[7px]">
-        <div className="flex flex-row justify-center items-center">
-          <button
-          onClick={() => dispatch(toggleSidebar())}
-          className="flex lg:hidden px-1 lg:p-2 text-[#707070] hover:text-[#111] dark:hover:text-white transition-all duration-300"
-          >
-            <PanelLeft size={18} strokeWidth={1.6} />
-          </button>
-          <h2 className="poppins-medium text-md lg:text-xl text-[#111] dark:text-white">
-            Issues
-          </h2>
-        </div>
+      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111]">
+        <div className="poppins flex w-full items-center justify-between border-b-[1px] border-[#565656]/10 px-4 py-[7px] lg:px-8">
+          <div className="flex flex-row items-center justify-center">
+            <button
+              onClick={() => dispatch(toggleSidebar())}
+              className="flex px-1 text-[#707070] transition-all duration-300 hover:text-[#111] dark:hover:text-white lg:hidden lg:p-2"
+            >
+              <PanelLeft size={18} strokeWidth={1.6} />
+            </button>
+            <h2 className="poppins-medium text-md text-[#111] dark:text-white lg:text-xl">
+              Issues
+            </h2>
+          </div>
           <div className="flex flex-row items-center justify-center gap-2">
-            <Notification />
+            {/* <Notification /> */}
 
             <button
-              className={`lg:flex h-[36px] cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 hidden ${
+              className={`hidden h-[36px] cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 lg:flex ${
                 byStatus ? "dark:bg-[#565656]/20" : ""
               }`}
               onClick={() => setByStatus(!byStatus)}
@@ -157,7 +143,7 @@ function TasksView() {
             </button>
 
             <button
-              className="lg:flex h-[36px] cursor-not-allowed flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 hidden"
+              className="hidden h-[36px] cursor-not-allowed flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 lg:flex"
               disabled={true}
             >
               <img
@@ -171,13 +157,12 @@ function TasksView() {
               />
               <p>Filter</p>
             </button>
-
           </div>
         </div>
       </div>
 
       {/* Tabs Navigation */}
-      <div className="mb-5 flex h-fit items-center justify-between px-4 lg:px-8 pt-6 transition-all duration-300">
+      <div className="mb-5 flex h-fit items-center justify-between px-4 pt-6 transition-all duration-300 lg:px-8">
         <div className="flex h-max flex-row rounded-md bg-[#eee] px-1 py-1 dark:bg-[#1a1a1a]">
           {tabs?.map((tab, index) => (
             <div
@@ -205,7 +190,6 @@ function TasksView() {
         </div>
 
         <div className="flex flex-row items-center justify-center gap-2 pb-1">
-
           {/* <CustomSelect
             options={[
                 { label: "Board",
@@ -224,44 +208,42 @@ function TasksView() {
               }}
             /> */}
 
-        <div className="flex flex-row items-center justify-center rounded-md px-1 py-1 bg-[#565656]/10 gap-1">
+          <div className="flex flex-row items-center justify-center gap-1 rounded-md bg-[#565656]/10 px-1 py-1">
+            <div
+              className={`flex h-[28px] cursor-pointer flex-row items-center gap-1 rounded-[4px] px-2 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 ${
+                view === "board" ? "bg-[#565656]/10 dark:bg-[#565656]/20" : ""
+              }`}
+              onClick={changeToBoardView}
+            >
+              <SquareKanban
+                className="text-center text-[#111] dark:text-[#fff]/50"
+                strokeWidth={1.5}
+                size={14}
+              />
+              {/* <p>Board</p> */}
+            </div>
 
-          <div
-            className={`flex h-[28px] cursor-pointer flex-row items-center gap-1 rounded-[4px]  px-2 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 ${
-              view === "board" ? "bg-[#565656]/10 dark:bg-[#565656]/20" : ""
-            }`}
-            onClick={changeToBoardView}
-          >
-            <SquareKanban
-              className="text-center text-[#111] dark:text-[#fff]/50"
-              strokeWidth={1.5}
-              size={14}
-            />
-            {/* <p>Board</p> */}
+            <div
+              className={`flex h-[28px] cursor-pointer flex-row items-center gap-1 rounded-[4px] px-2 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 ${
+                view === "list" ? "bg-[#565656]/10 dark:bg-[#565656]/20" : ""
+              }`}
+              onClick={changeToListView}
+            >
+              <List
+                className="text-center text-[#111] dark:text-[#fff]/50"
+                strokeWidth={1.5}
+                size={14}
+              />
+              {/* <p>List</p> */}
+            </div>
           </div>
 
-          <div
-            className={`flex h-[28px] cursor-pointer flex-row items-center gap-1 rounded-[4px]  px-2 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 ${
-              view === "list" ? "bg-[#565656]/10 dark:bg-[#565656]/20" : ""
-            }`}
-            onClick={changeToListView}
-          >
-            <List
-              className="text-center text-[#111] dark:text-[#fff]/50"
-              strokeWidth={1.5}
-              size={14}
-            />
-            {/* <p>List</p> */}
-          </div>
-        </div>
-
-            <AddTask onGetTasks={onGetTasks} taskData={taskData} />
-
+          <AddTask onGetTasks={onGetTasks} taskData={taskData} />
         </div>
       </div>
 
       {/* Tasks Content */}
-      <div className="w-full flex-1 overflow-y-auto px-4 lg:px-8 pb-8 scrollbar-hide">
+      <div className="w-full flex-1 overflow-y-auto px-4 pb-8 scrollbar-hide lg:px-8">
         {tasksLoading ? (
           <p className="flex h-full items-center justify-center">
             <Loader loaderSize={40} />
@@ -274,8 +256,9 @@ function TasksView() {
                   STATUS_SECTIONS.map((status) => (
                     <div
                       key={status}
-                      className="flex w-full flex-col gap-1 rounded-md bg-[#eee] p-2 dark:bg-[#565656]/10 dark:hover:bg-[#565656]/4"
+                      className="dark:hover:bg-[#565656]/4 flex w-full flex-col gap-1 rounded-md bg-[#eee] p-2 dark:bg-[#565656]/10"
                     >
+                      // task status, number of task counter and toggle icon
                       <div
                         className="flex min-h-fit w-full cursor-pointer flex-row justify-between rounded-sm px-2 py-2 text-[14px] font-medium text-[#787878] transition-colors hover:bg-gray-200 dark:bg-[#565656]/0 dark:hover:bg-[#565656]/0"
                         onClick={() => toggleGroup(status)}
@@ -297,7 +280,6 @@ function TasksView() {
                           className={`w-2 transition-transform duration-200 ${collapsedGroups[status] ? "-rotate-0" : "rotate-180"}`}
                         />
                       </div>
-
                       <AnimatePresence initial={false}>
                         {!collapsedGroups[status] && (
                           <motion.div
@@ -333,7 +315,9 @@ function TasksView() {
                                       status={task.status}
                                       createdAt={task.createdAt}
                                       assigneeId={task.assignee?._id}
-                                      createdBy={task.createdBy?._id || task.createdBy}
+                                      createdBy={
+                                        task.createdBy?._id || task.createdBy
+                                      }
                                     />
                                   ))
                                 : null}
@@ -350,8 +334,7 @@ function TasksView() {
                       task ? (
                         <ListTask
                           key={task._id}
-                      title={task.title}
-
+                          title={task.title}
                           desc={task.description}
                           deadline={task.deadline}
                           name={task.assignee?.name || task.assignee?.fullname}
@@ -377,7 +360,7 @@ function TasksView() {
               STATUS_SECTIONS.map((status) => (
                 <div
                   key={status}
-                  className="flex w-full flex-col gap-1 rounded-md bg-[#eee] dark:bg-[#565656]/10 p-2 dark:hover:bg-[#565656]/4 "
+                  className="dark:hover:bg-[#565656]/4 flex w-full flex-col gap-1 rounded-md bg-[#eee] p-2 dark:bg-[#565656]/10"
                 >
                   <div
                     className="flex min-h-fit w-full cursor-pointer flex-row justify-between rounded-sm px-2 py-2 text-[14px] font-medium text-[#787878] transition-colors hover:bg-gray-200 dark:bg-[#565656]/0 dark:hover:bg-[#565656]/0"
@@ -434,7 +417,9 @@ function TasksView() {
                                   status={task.status}
                                   createdAt={task.createdAt}
                                   assigneeId={task.assignee?._id}
-                                  createdBy={task.createdBy?._id || task.createdBy}
+                                  createdBy={
+                                    task.createdBy?._id || task.createdBy
+                                  }
                                 />
                               ))
                             : null}

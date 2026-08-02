@@ -88,7 +88,7 @@ export default function IntegrationsNavGroup() {
           {/* Slack Item */}
           <div
             onClick={toggleSlack}
-            className="flex cursor-pointer items-center justify-between rounded-[5px] px-2.5 py-1.5 text-[12px] text-zinc-600 transition-all hover:bg-[#565656]/10 dark:text-zinc-400 dark:hover:text-white"
+            className="flex cursor-pointer items-center justify-between rounded-[5px] px-2.5 py-1.5 text-[11px] text-[#111] transition-all hover:bg-[#565656]/10 dark:text-white/50 dark:hover:text-white"
           >
             <div className="flex items-center gap-2.5">
               <SlackIcon />
@@ -108,7 +108,7 @@ export default function IntegrationsNavGroup() {
           {/* GitHub Item */}
           <div
             onClick={toggleGithub}
-            className="flex cursor-pointer items-center justify-between rounded-[5px] px-2.5 py-1.5 text-[12px] text-zinc-600 transition-all hover:bg-[#565656]/10 dark:text-zinc-400 dark:hover:text-white"
+            className="text-normal flex cursor-pointer items-center justify-between rounded-[5px] px-2.5 py-1.5 text-[11px] text-[#111] transition-all hover:bg-[#565656]/10 dark:text-white/50 dark:hover:text-white"
           >
             <div className="flex items-center gap-2.5">
               <GithubIcon />
