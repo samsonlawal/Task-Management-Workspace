@@ -7,15 +7,10 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import React, { useEffect, useState } from "react";
-import {
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MemberSelect from "../../MemberSelect";
-import {
-  useGetSingleTask,
-  useUpdateTask,
-} from "@/hooks/api/tasks";
+import { useGetSingleTask, useUpdateTask } from "@/hooks/api/tasks";
 import { TAddTask } from "@/types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -51,19 +46,11 @@ export default function EditTask({ taskData }: any) {
     (state: any) => state.currentWorkspace,
   );
 
-  const {
-    onUpdateTask,
-    loading: updateTaskLoading,
-  } = useUpdateTask();
+  const { onUpdateTask, loading: updateTaskLoading } = useUpdateTask();
 
-  const {
-    OnGetSingleTask,
-    loading: getSingleTaskLoading,
-  } = useGetSingleTask();
+  const { OnGetSingleTask, loading: getSingleTaskLoading } = useGetSingleTask();
 
-  const {
-    onGetTasks,
-  } = useGetTasks();
+  const { onGetTasks } = useGetTasks();
 
   useEffect(() => {
     getFromLocalStorage({
@@ -120,11 +107,12 @@ export default function EditTask({ taskData }: any) {
 
     if (!title) {
       errorMsg = "Task title is required.";
-    } else if (!description) {
-      errorMsg = "Task description is required.";
-    } else if (!assignee) {
-      errorMsg = "Task assignee is required.";
     }
+    // else if (!description) {
+    //   errorMsg = "Task description is required.";
+    // } else if (!assignee) {
+    //   errorMsg = "Task assignee is required.";
+    // }
 
     if (errorMsg) {
       showErrorToast({ message: errorMsg });
@@ -198,28 +186,28 @@ export default function EditTask({ taskData }: any) {
 
   return (
     <>
-        <button
-          onClick={checkWsId}
-          className="poppins flex h-6 w-full items-center justify-start rounded-sm px-2 text-[12px] font-normal text-[#989898] hover:bg-slate-200 hover:text-black dark:hover:bg-zinc-800"
-        >
-          Edit
-        </button>
-      
+      <button
+        onClick={checkWsId}
+        className="poppins flex h-6 w-full items-center justify-start rounded-sm px-2 text-[12px] font-normal text-[#989898] hover:bg-slate-200 hover:text-black dark:hover:bg-zinc-800"
+      >
+        Edit
+      </button>
+
       <Dialog
         open={isEditOpen}
         onClose={handleDialogClose}
         transition
-        className="poppins fixed inset-0 flex w-screen select-none items-center justify-end bg-black/30 font-madei transition duration-300 ease-out data-[closed]:opacity-0 z-[70]"
+        className="poppins fixed inset-0 z-[70] flex w-screen select-none items-center justify-end bg-black/30 font-madei transition duration-300 ease-out data-[closed]:opacity-0"
       >
         <DialogBackdrop className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
 
         <div className="fixed inset-0 flex w-screen items-center justify-end">
           <DialogPanel
-            className="h-full w-full lg:w-[calc(100vw-256px)] flex flex-col gap-4 rounded-sm bg-gray-100 px-8 py-6 dark:bg-[#111] overflow-y-auto"
+            className="flex h-full w-full flex-col gap-4 overflow-y-auto rounded-sm bg-gray-100 px-8 py-6 dark:bg-[#111] lg:w-[calc(100vw-256px)]"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="space-y-6">
-              <DialogTitle className="flex flex-row items-start justify-between font-medium pb-3">
+              <DialogTitle className="flex flex-row items-start justify-between pb-3 font-medium">
                 <div className="flex flex-col items-start gap-1">
                   <p className="poppins-medium text-[18px] dark:text-white">
                     Edit Task
@@ -230,17 +218,14 @@ export default function EditTask({ taskData }: any) {
                 </div>
                 <button
                   onClick={handleDialogClose}
-                  className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-zinc-800 text-[#989898] hover:text-black dark:hover:text-white transition-colors"
+                  className="flex h-6 w-6 items-center justify-center rounded-full text-[#989898] transition-colors hover:bg-gray-200 hover:text-black dark:hover:bg-zinc-800 dark:hover:text-white"
                 >
-                  <FontAwesomeIcon
-                    icon={faXmark}
-                    className="text-[16px]"
-                  />
+                  <FontAwesomeIcon icon={faXmark} className="text-[16px]" />
                 </button>
               </DialogTitle>
 
               {/* Form Inputs container */}
-              <div className="flex flex-col gap-6 max-w-4xl pt-2">
+              <div className="flex max-w-4xl flex-col gap-6 pt-2">
                 {/* 1. Title Input */}
                 <div className="flex flex-col gap-1">
                   <label className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">
@@ -256,7 +241,7 @@ export default function EditTask({ taskData }: any) {
                         title: e.target.value,
                       }))
                     }
-                    className="h-[42px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 py-2 text-xs text-normal dark:text-white placeholder-gray-400 outline-none focus:border-zinc-500"
+                    className="text-normal h-[42px] w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-xs placeholder-gray-400 outline-none focus:border-zinc-500 dark:border-zinc-800 dark:text-white"
                   />
                 </div>
 
@@ -275,12 +260,12 @@ export default function EditTask({ taskData }: any) {
                         description: e.target.value,
                       }))
                     }
-                    className="h-[120px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 py-2 text-xs text-normaldark:text-white placeholder-gray-400 outline-none focus:border-zinc-500"
+                    className="text-normaldark:text-white h-[120px] w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-xs placeholder-gray-400 outline-none focus:border-zinc-500 dark:border-zinc-800"
                   />
                 </div>
 
                 {/* 3. Parameter Split Columns */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   {/* Priority Selector */}
                   <div className="flex flex-col gap-2">
                     <label className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">
@@ -289,19 +274,24 @@ export default function EditTask({ taskData }: any) {
                     <div className="flex gap-2">
                       {["Low", "Medium", "High"].map((p) => {
                         const styles = getPriorityStyles(p);
-                        const isSelected = task.priority?.toLowerCase() === p.toLowerCase();
+                        const isSelected =
+                          task.priority?.toLowerCase() === p.toLowerCase();
                         return (
                           <button
                             key={p}
                             type="button"
-                            onClick={() => setTask((prev) => ({ ...prev, priority: p }))}
-                            className={`flex flex-1 items-center justify-center gap-1.5 py-2 px-3 text-xs border rounded-md transition-all ${
+                            onClick={() =>
+                              setTask((prev) => ({ ...prev, priority: p }))
+                            }
+                            className={`flex flex-1 items-center justify-center gap-1.5 rounded-md border px-3 py-2 text-xs transition-all ${
                               isSelected
-                                ? "border-zinc-400 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50 font-medium text-zinc-900 dark:text-white"
-                                : "border-gray-300 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/30"
+                                ? "border-zinc-400 bg-zinc-50 font-medium text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800/50 dark:text-white"
+                                : "border-gray-300 text-zinc-600 hover:bg-gray-50 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800/30"
                             }`}
                           >
-                            <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} />
+                            <span
+                              className={`h-1.5 w-1.5 rounded-full ${styles.dot}`}
+                            />
                             {p}
                           </button>
                         );
@@ -325,14 +315,18 @@ export default function EditTask({ taskData }: any) {
                           <button
                             key={s.key}
                             type="button"
-                            onClick={() => setTask((prev) => ({ ...prev, status: s.key }))}
-                            className={`flex flex-1 items-center justify-center gap-1.5 py-2 px-3 text-xs border rounded-md transition-all ${
+                            onClick={() =>
+                              setTask((prev) => ({ ...prev, status: s.key }))
+                            }
+                            className={`flex flex-1 items-center justify-center gap-1.5 rounded-md border px-3 py-2 text-xs transition-all ${
                               isSelected
-                                ? "border-zinc-400 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50 font-medium text-zinc-900 dark:text-white"
-                                : "border-gray-300 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/30"
+                                ? "border-zinc-400 bg-zinc-50 font-medium text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800/50 dark:text-white"
+                                : "border-gray-300 text-zinc-600 hover:bg-gray-50 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800/30"
                             }`}
                           >
-                            <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} />
+                            <span
+                              className={`h-1.5 w-1.5 rounded-full ${styles.dot}`}
+                            />
                             {s.label}
                           </button>
                         );
@@ -342,7 +336,7 @@ export default function EditTask({ taskData }: any) {
                 </div>
 
                 {/* 4. Assignee & Deadline Split Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   {/* Assignee */}
                   <div className="flex flex-col gap-1.5">
                     <label className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">
@@ -368,7 +362,7 @@ export default function EditTask({ taskData }: any) {
                           deadline: e.target.value,
                         }))
                       }
-                      className="h-[40px] w-full rounded-md border border-gray-300 dark:border-zinc-800 bg-transparent px-3 text-xs text-zinc-700 dark:text-white outline-none focus:border-zinc-500"
+                      className="h-[40px] w-full rounded-md border border-gray-300 bg-transparent px-3 text-xs text-zinc-700 outline-none focus:border-zinc-500 dark:border-zinc-800 dark:text-white"
                     />
                   </div>
                 </div>
@@ -376,18 +370,18 @@ export default function EditTask({ taskData }: any) {
             </div>
 
             {/* Bottom Actions Row */}
-            <div className="flex justify-end gap-3 pt-4 mt-8">
+            <div className="mt-8 flex justify-end gap-3 pt-4">
               <button
                 type="button"
                 onClick={handleDialogClose}
-                className="rounded-md bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 px-4 py-2 text-xs transition-colors"
+                className="rounded-md bg-zinc-200 px-4 py-2 text-xs text-zinc-700 transition-colors hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
               >
                 Cancel
               </button>
               <button
                 onClick={handleUpdateTask}
                 disabled={updateTaskLoading}
-                className="flex items-center gap-1.5 rounded-md bg-[#609328] text-white px-5 py-2 text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-md bg-[#609328] px-5 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
               >
                 {updateTaskLoading ? (
                   <>

@@ -20,13 +20,9 @@ class service {
     return axios.post(
       env.api.tasks,
       payload,
-      !token
-        ? undefined
-        : {
-            headers: {
-              Authorization: "Bearer " + token,
-            },
-          },
+      {
+        withCredentials: true,
+      },
     );
   }
 

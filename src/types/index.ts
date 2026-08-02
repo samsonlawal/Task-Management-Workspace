@@ -11,17 +11,18 @@ export type TAddAssignee = {
 };
 
 export type TTask = {
-  description: string;
+  description?: string;
   status?: string;
-  priority: string;
-  assignee: TAssignee;
+  priority?: string;
+  assignee?: TAssignee;
   workspace_id: string;
   createdAt: string;
+  title: String;
 };
 
 export type TSingleTask = {
-  title?: string;
-  description: string;
+  title: string;
+  description?: string;
   status?: string;
   priority: string;
   assignee: TAssignee;
@@ -34,8 +35,8 @@ export type TSingleTask = {
 };
 
 export type TAddTask = {
-  title?: string;
-  description: string;
+  title: string;
+  description?: string;
   status: string;
   priority: string;
   assignee?: string;
