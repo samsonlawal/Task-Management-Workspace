@@ -35,8 +35,9 @@ import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { showSuccessToast, showErrorToast } from "@/utils/toaster";
 import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
 import { DateTime } from "luxon";
+import { useCreateTaskMutation } from "@/redux/api/taskApiSlice";
 
-export default function AddTask({ onGetTasks }: any) {
+export default function AddTask({ taskData }: any) {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const [workspaceId, setWorkspaceId] = useState<string>("");
 
@@ -58,7 +59,6 @@ export default function AddTask({ onGetTasks }: any) {
   );
 
   const user = useSelector((state: RootState) => state.auth?.user);
-
   const { currentWorkspaceId } = useSelector(
     (state: RootState) => state.currentWorkspace,
   );
@@ -72,27 +72,18 @@ export default function AddTask({ onGetTasks }: any) {
         createdBy: user?._id || "",
       }));
     }
-
-    // getFromLocalStorage({
-    //   key: "STACKTASK_PERSISTOR",
-    //   cb: (data: any) => {
-    //     if (data) {
-    //       setTask((prevTask) => ({
-    //         ...prevTask,
-    //         createdBy: data?.user?._id,
-    //       }));
-    //     }
-    //   },
-    // });
   }, [isOpen]);
 
-  const { onCreateTask, loading: createTaskLoading } = useCreateTask();
+  const [createTask, { isLoading: createTaskLoading }] =
+    useCreateTaskMutation();
+
+  // const { onCreateTask, loading: createTaskLoading } = useCreateTask();
 
   const handleDialogClose = () => {
     setIsOpen(false);
   };
 
-  const handleCreateTask = () => {
+  const handleCreateTask = async () => {
     const {
       description,
       workspace_id,
@@ -103,17 +94,20 @@ export default function AddTask({ onGetTasks }: any) {
       createdBy,
       title,
     } = task;
-    let errorMsg = "";
 
+    let errorMsg = "";
     if (!title) {
       errorMsg = "Task title is required.";
     }
 
     if (errorMsg) {
       showErrorToast({ message: errorMsg });
-    } else {
-      onCreateTask({
-        payload: {
+      return;
+    }
+
+    try {
+      await createTask({
+        task: {
           description,
           workspace_id,
           assignee: assignee || undefined,
@@ -123,27 +117,25 @@ export default function AddTask({ onGetTasks }: any) {
           createdBy,
           title,
         },
-        successCallback: async () => {
-          showSuccessToast({ message: "Task Created Successfully!" });
-          if (onGetTasks) {
-            await onGetTasks({ workspaceId: workspace_id });
-          }
-          setTask({
-            description: "",
-            workspace_id: workspace_id,
-            assignee: assignee || undefined,
-            deadline: "",
-            status: "to-do",
-            priority: "Low",
-            createdBy: createdBy,
-            title: "",
-          });
-          handleDialogClose();
-        },
-        errorCallback: ({ message }) => {
-          showErrorToast({ message });
-        },
+      }).unwrap();
+
+      showSuccessToast({ message: "Task Created Successfully!" });
+
+      setTask({
+        description: "",
+        workspace_id: workspace_id,
+        assignee: assignee || undefined,
+        deadline: "",
+        status: "to-do",
+        priority: "Low",
+        createdBy: createdBy,
+        title: "",
       });
+
+      handleDialogClose();
+    } catch (error) {
+      showErrorToast({ message: errorMsg });
+      console.log("Error creating task:", error);
     }
   };
 

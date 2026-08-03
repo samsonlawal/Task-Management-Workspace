@@ -23,10 +23,13 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useUpdateTask, useGetTasks } from "@/hooks/api/tasks";
 import { showSuccessToast, showErrorToast } from "@/utils/toaster";
+import { useUpdateTaskMutation } from "@/redux/api/taskApiSlice";
 
 export default function TaskFields({ taskData }: { taskData: any }) {
   const { onUpdateTask } = useUpdateTask();
   const { onGetTasks } = useGetTasks();
+  const [updateTask] = useUpdateTaskMutation();
+
   const { user } = useSelector((state: RootState) => state.auth) as {
     user: any;
   };
@@ -36,28 +39,18 @@ export default function TaskFields({ taskData }: { taskData: any }) {
   const statusDisplay = getStatusStyles(taskData.status);
   const priorityDisplay = getPriorityStyles(taskData.priority);
 
-  const handleUpdateField = (updatedFields: Partial<any>) => {
-    onUpdateTask({
-      id: taskData.id,
-      payload: {
-        title: taskData.title || "",
-        description: taskData.description || "",
-        workspace_id: taskData.workspaceId || "",
-        assignee: taskData.assignee?._id || taskData.assignee || "",
-        deadline: taskData.deadline || "",
-        status: taskData.status,
-        priority: taskData.priority,
-        createdBy: taskData.createdBy || user?._id || "",
-        ...updatedFields,
-      },
-      successCallback: () => {
-        onGetTasks({ workspaceId: taskData.workspaceId || "" });
-        showSuccessToast({ message: "Task updated successfully!" });
-      },
-      errorCallback: ({ message }) => {
-        showErrorToast({ message });
-      },
-    });
+  const handleUpdateField = async (updatedFields: Partial<any>) => {
+    try {
+      await updateTask({
+        taskId: taskData.id,
+        task: updatedFields,
+      }).unwrap();
+      showSuccessToast({ message: "Task updated successfully!" });
+    } catch (err: any) {
+      showErrorToast({
+        message: err?.data?.message || "Failed to update task field",
+      });
+    }
   };
 
   return (

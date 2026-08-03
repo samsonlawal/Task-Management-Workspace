@@ -1,10 +1,24 @@
 import { useState, useEffect } from "react";
-import { Menu, MenuButton, MenuItem, MenuItems, DialogTitle } from "@headlessui/react";
-import { EllipsisVertical, Trash, Edit, AlignLeft, CheckCircle2, ArrowLeft } from "lucide-react";
-import { useUpdateTask, useGetTasks } from "@/hooks/api/tasks";
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  DialogTitle,
+} from "@headlessui/react";
+import {
+  EllipsisVertical,
+  Trash,
+  Edit,
+  AlignLeft,
+  CheckCircle2,
+  ArrowLeft,
+} from "lucide-react";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+
+import { useUpdateTaskMutation } from "@/redux/api/taskApiSlice";
 
 export default function TaskDetailsHeader({
   taskData,
@@ -19,9 +33,11 @@ export default function TaskDetailsHeader({
   handleDialogClose: () => void;
   markAsDoneLoading: boolean;
 }) {
-  const { user } = useSelector((state: RootState) => state.auth) as { user: any };
-  const { onUpdateTask } = useUpdateTask();
-  const { onGetTasks } = useGetTasks();
+  const { user } = useSelector((state: RootState) => state.auth) as {
+    user: any;
+  };
+
+  const [updateTask, { isLoading: isUpdatingTitle }] = useUpdateTaskMutation();
 
   const [title, setTitle] = useState(taskData?.title || "");
   const [description, setDescription] = useState(taskData?.description || "");
@@ -37,9 +53,9 @@ export default function TaskDetailsHeader({
     setDescription(taskData?.description || "");
     setTempTitle(taskData?.title || "");
     setTempDesc(taskData?.description || "");
-  }, [taskData]);
+  }, [taskData?.id]);
 
-  const handleSaveTitle = (newTitle: string) => {
+  const handleSaveTitle = async (newTitle: string) => {
     if (!newTitle.trim()) {
       showErrorToast({ message: "Task title cannot be empty." });
       setTempTitle(title);
@@ -47,60 +63,64 @@ export default function TaskDetailsHeader({
     }
     if (newTitle === title) return;
 
-    onUpdateTask({
-      id: taskData.id,
-      payload: {
-        title: newTitle,
-        description: description,
-        workspace_id: taskData.workspaceId || "",
-        assignee: (taskData.assignee as any)?._id || "",
-        deadline: taskData.deadline || "",
-        status: taskData.status,
-        priority: taskData.priority,
-        createdBy: (taskData as any).createdBy || user?._id || "",
-      },
-      successCallback: () => {
-        setTitle(newTitle);
-        showSuccessToast({ message: "Task title updated!" });
-        onGetTasks({ workspaceId: taskData.workspaceId || "" });
-      },
-    });
+    const previousTitle = title;
+    setTitle(newTitle);
+
+    try {
+      await updateTask({
+        taskId: taskData.id,
+        task: {
+          title: newTitle,
+        },
+      }).unwrap();
+      setTitle(newTitle);
+      showSuccessToast({ message: "Task title updated!" });
+    } catch (err: any) {
+      setTitle(previousTitle);
+      setTempTitle(previousTitle);
+      showErrorToast({
+        message: err?.data?.message || "Failed to update title",
+      });
+    }
   };
 
-  const handleSaveDesc = (newDesc: string) => {
+  const handleSaveDesc = async (newDesc: string) => {
     if (newDesc === description) return;
-
-    onUpdateTask({
-      id: taskData.id,
-      payload: {
-        title: title,
-        description: newDesc,
-        workspace_id: taskData.workspaceId || "",
-        assignee: (taskData.assignee as any)?._id || "",
-        deadline: taskData.deadline || "",
-        status: taskData.status,
-        priority: taskData.priority,
-        createdBy: (taskData as any).createdBy || user?._id || "",
-      },
-      successCallback: () => {
-        setDescription(newDesc);
-        showSuccessToast({ message: "Task description updated!" });
-        onGetTasks({ workspaceId: taskData.workspaceId || "" });
-      },
-    });
+    const previousDesc = description;
+    setDescription(newDesc);
+    try {
+      await updateTask({
+        taskId: taskData.id,
+        task: {
+          description: newDesc,
+        },
+      }).unwrap();
+      setDescription(newDesc);
+      showSuccessToast({ message: "Task description updated!" });
+    } catch (err: any) {
+      setDescription(previousDesc);
+      setTempDesc(previousDesc);
+      showErrorToast({
+        message: err?.data?.message || "Failed to update description",
+      });
+    }
   };
 
   return (
-    <div className="flex flex-col w-full pb-4 border-b border-[#565656]/10 gap-4">
+    <div className="flex w-full flex-col gap-4 border-b border-[#565656]/10 pb-4">
       {/* Top Row: Breadcrumbs and Dropdown Menu */}
       <div className="flex w-full flex-row items-center justify-between">
         {/* Breadcrumbs path */}
-        <div className="flex flex-row items-center gap-1.5 text-[11px] text-zinc-500 select-none">
+        <div className="flex select-none flex-row items-center gap-1.5 text-[11px] text-zinc-500">
           <button
             onClick={handleDialogClose}
-            className="flex flex-row items-center gap-1 text-zinc-500 dark:text-white hover:text-black dark:hover:text-zinc-200 font-medium transition-colors"
+            className="flex flex-row items-center gap-1 font-medium text-zinc-500 transition-colors hover:text-black dark:text-white dark:hover:text-zinc-200"
           >
-            <ArrowLeft size={11} strokeWidth={2.5} className="text-zinc-500 dark:text-white" />
+            <ArrowLeft
+              size={11}
+              strokeWidth={2.5}
+              className="text-zinc-500 dark:text-white"
+            />
             <span>{taskData.workspaceName || "Workspace"}</span>
           </button>
           <span className="text-zinc-400 dark:text-white">{" > "}</span>
@@ -111,11 +131,11 @@ export default function TaskDetailsHeader({
 
         {/* Options Ellipsis menu */}
         <Menu as="div" className="relative inline-block text-left">
-          <MenuButton className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-zinc-800 text-zinc-500 hover:text-black dark:hover:text-white transition-colors outline-none">
+          <MenuButton className="flex h-7 w-7 items-center justify-center rounded-full text-zinc-500 outline-none transition-colors hover:bg-gray-200 hover:text-black dark:hover:bg-zinc-800 dark:hover:text-white">
             <EllipsisVertical size={14} />
           </MenuButton>
 
-          <MenuItems className="absolute right-0 mt-1 w-48 origin-top-right rounded-md bg-white p-1 shadow-lg border border-zinc-200 dark:border-zinc-800 dark:bg-zinc-900 outline-none z-50">
+          <MenuItems className="absolute right-0 z-50 mt-1 w-48 origin-top-right rounded-md border border-zinc-200 bg-white p-1 shadow-lg outline-none dark:border-zinc-800 dark:bg-zinc-900">
             <div className="py-0.5">
               <MenuItem>
                 {({ active }) => (
@@ -124,7 +144,7 @@ export default function TaskDetailsHeader({
                       setTempTitle(title);
                       setIsEditingTitle(true);
                     }}
-                    className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 dark:text-zinc-300 transition-colors ${
+                    className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 transition-colors dark:text-zinc-300 ${
                       active ? "bg-zinc-100 dark:bg-zinc-800" : ""
                     }`}
                   >
@@ -133,7 +153,7 @@ export default function TaskDetailsHeader({
                   </button>
                 )}
               </MenuItem>
-              
+
               <MenuItem>
                 {({ active }) => (
                   <button
@@ -141,7 +161,7 @@ export default function TaskDetailsHeader({
                       setTempDesc(description);
                       setIsEditingDesc(true);
                     }}
-                    className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 dark:text-zinc-300 transition-colors ${
+                    className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 transition-colors dark:text-zinc-300 ${
                       active ? "bg-zinc-100 dark:bg-zinc-800" : ""
                     }`}
                   >
@@ -156,7 +176,7 @@ export default function TaskDetailsHeader({
                   <button
                     onClick={handleMarkAsDone}
                     disabled={markAsDoneLoading}
-                    className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 dark:text-zinc-300 transition-colors ${
+                    className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 transition-colors dark:text-zinc-300 ${
                       active ? "bg-zinc-100 dark:bg-zinc-800" : ""
                     }`}
                   >
@@ -166,7 +186,7 @@ export default function TaskDetailsHeader({
                 )}
               </MenuItem>
 
-              <div className="my-1 border-t border-zinc-150 dark:border-zinc-800" />
+              <div className="border-zinc-150 my-1 border-t dark:border-zinc-800" />
 
               <MenuItem>
                 {({ active }) => (
@@ -207,7 +227,7 @@ export default function TaskDetailsHeader({
               }
             }}
             autoFocus
-            className="poppins-medium text-[16px] text-zinc-900 dark:text-white bg-transparent border-none outline-none w-full p-0 m-0 focus:ring-0 focus:outline-none"
+            className="poppins-medium m-0 w-full border-none bg-transparent p-0 text-[16px] text-zinc-900 outline-none focus:outline-none focus:ring-0 dark:text-white"
           />
         ) : (
           <DialogTitle
@@ -215,7 +235,7 @@ export default function TaskDetailsHeader({
               setTempTitle(title);
               setIsEditingTitle(true);
             }}
-            className="poppins-medium line-clamp-1 text-[16px] text-zinc-900 dark:text-white hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 px-1 -mx-1 rounded cursor-pointer transition-colors w-full"
+            className="poppins-medium -mx-1 line-clamp-1 w-full cursor-pointer rounded px-1 text-[16px] text-zinc-900 transition-colors hover:bg-zinc-200/50 dark:text-white dark:hover:bg-zinc-800/50"
           >
             {title || "No Title"}
           </DialogTitle>
@@ -237,7 +257,7 @@ export default function TaskDetailsHeader({
             }}
             autoFocus
             rows={3}
-            className="w-full poppins-regular text-zinc-600 dark:text-zinc-400 text-[13px] bg-transparent border-none outline-none w-full p-0 m-0 mt-1 focus:ring-0 focus:outline-none resize-none"
+            className="poppins-regular m-0 mt-1 w-full resize-none border-none bg-transparent p-0 text-[13px] text-zinc-600 outline-none focus:outline-none focus:ring-0 dark:text-zinc-400"
           />
         ) : (
           <p
@@ -245,7 +265,7 @@ export default function TaskDetailsHeader({
               setTempDesc(description);
               setIsEditingDesc(true);
             }}
-            className="w-full flex-1 poppins-regular text-zinc-600 dark:text-zinc-400 text-[13px] py-1.5 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 px-1 -mx-1 rounded cursor-pointer transition-colors"
+            className="poppins-regular -mx-1 w-full flex-1 cursor-pointer rounded px-1 py-1.5 text-[13px] text-zinc-600 transition-colors hover:bg-zinc-200/50 dark:text-zinc-400 dark:hover:bg-zinc-800/50"
           >
             {description || "Add a description..."}
           </p>

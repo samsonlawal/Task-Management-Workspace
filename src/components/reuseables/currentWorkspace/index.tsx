@@ -29,6 +29,11 @@ import { setCurrentUI } from "@/redux/Slices/uiSlice";
 import { Settings } from "lucide-react";
 import stringToColor from "@/utils/stringToColor";
 
+import {
+  useGetUserWorkspaceQuery,
+  useGetSingleWorkspaceQuery,
+} from "@/redux/api/workspaceApiSlice";
+
 export default function CurrentWorkspace() {
   return (
     <div className="flex flex-col gap-[24px]">
@@ -46,120 +51,124 @@ function Workspace() {
   const [filteredWorkspaces, setFilteredWorkspaces] = useState<any>([]);
 
   const { user } = useSelector((state: any) => state.auth);
-  const { currentWorkspace } = useSelector(
+  const { currentWorkspaceId } = useSelector(
     (state: any) => state.currentWorkspace,
   );
 
-  const [current, setCurrent] = useState<
-    "tasks" | "dashboard" | "team" | "settings"
-  >("tasks");
+  // const [current, setCurrent] = useState<
+  //   "tasks" | "dashboard" | "team" | "settings"
+  // >("tasks");
+
+  const { data: workspacesData, isLoading: workspacingLoading } =
+    useGetUserWorkspaceQuery({ userId: user?._id }, { skip: !user?._id });
+
+  const workspaces = workspacesData?.workspaces || workspacesData || [];
+
+  const { data: workspaceData, isLoading: singleWorkspaceLoading } =
+    useGetSingleWorkspaceQuery(
+      { workspaceId: currentWorkspaceId },
+      { skip: !currentWorkspaceId },
+    );
+
+  // 3. Populate initial active workspace on boot if not set yet
+  useEffect(() => {
+    if (!currentWorkspaceId && workspaces.length > 0) {
+      const firstId = workspaces[0]?._id;
+      if (firstId) {
+        dispatch(setCurrentWorkspace(firstId));
+      }
+    }
+  }, [workspaces, currentWorkspaceId, dispatch]);
 
   // Use the unified hook
-  const { data: taskData, onGetTasks, loading: tasksLoading } = useGetTasks();
+  // const { data: taskData, onGetTasks, loading: tasksLoading } = useGetTasks();
 
-  const {
-    data: workspaces,
-    onGetUserWorkspace,
-    loading: workspacingLoading,
-  } = useGetUserWorkspace(user?._id);
+  // const {
+  //   data: workspaces,
+  //   onGetUserWorkspace,
+  //   loading: workspacingLoading,
+  // } = useGetUserWorkspace(user?._id);
 
-  const {
-    data: memberData,
-    onGetMembers,
-    loading: membersLoading,
-  } = useGetMembers();
+  // const {
+  //   data: memberData,
+  //   onGetMembers,
+  //   loading: membersLoading,
+  // } = useGetMembers();
 
-  const {
-    data: workspaceData,
-    onGetSingleWorkspace,
-    loading: singleWorkspaceLoading,
-  } = useGetSingleWorkspace(currentWorkspace);
+  // const {
+  //   data: workspaceData,
+  //   onGetSingleWorkspace,
+  //   loading: singleWorkspaceLoading,
+  // } = useGetSingleWorkspace(currentWorkspace);
 
   // only fetch data when user changes
-  useEffect(() => {
-    if (user) {
-      onGetUserWorkspace(user?._id);
+  // useEffect(() => {
+  //   if (user) {
+  //     onGetUserWorkspace(user?._id);
 
-      getFromLocalStorage({
-        key: "CurrentWorkspaceId",
-        cb: (id: string) => {
-          if (id) {
-            dispatch(setCurrentWorkspace(id));
-            onGetSingleWorkspace(id);
+  //     getFromLocalStorage({
+  //       key: "CurrentWorkspaceId",
+  //       cb: (id: string) => {
+  //         if (id) {
+  //           dispatch(setCurrentWorkspace(id));
+  //           onGetSingleWorkspace(id);
 
-            // Add success callback to ensure proper handling
-            onGetTasks({
-              workspaceId: id,
-              successCallback: (tasks) => {
-                console.log("Initial tasks loaded:", tasks);
-              },
-            });
+  //           // Add success callback to ensure proper handling
+  //           onGetTasks({
+  //             workspaceId: id,
+  //             successCallback: (tasks) => {
+  //               console.log("Initial tasks loaded:", tasks);
+  //             },
+  //           });
 
-            onGetMembers({ workspaceId: id });
-          }
-        },
-      });
-    }
-  }, [user]);
+  //           onGetMembers({ workspaceId: id });
+  //         }
+  //       },
+  //     });
+  //   }
+  // }, [user]);
 
   // Keep filteredWorkspaces in sync with workspaces and workspaceData
   useEffect(() => {
     if (workspaces) {
       setFilteredWorkspaces(
         workspaces.filter(
-          (workspace) => workspace._id !== workspaceData?._id,
+          (workspace: any) => workspace._id !== workspaceData?._id,
         ) || [],
       );
     }
   }, [workspaces, workspaceData]);
 
-  function openWorkspaceDialog() {
-    onGetUserWorkspace(user?._id);
-  }
+  // function openWorkspaceDialog() {
+  //   onGetUserWorkspace(user?._id);
+  // }
 
   function switchWorkspace(id: string) {
-    // if (workspaceData) {
-    //   saveToLocalStorage({
-    //     key: "WorkspaceData",
-    //     value: workspaceData,
-    //   });
-    //   dispatch(setWorkspace(workspaceData));
-    // }
-
     saveToLocalStorage({
       key: "CurrentWorkspaceId",
       value: id,
     });
 
     dispatch(setCurrentWorkspace(id));
-
-    onGetUserWorkspace(user?._id);
-    onGetSingleWorkspace(id);
-    dispatch(setCurrentWorkspace(id));
-    onGetTasks({
-      workspaceId: id,
-    });
-
-    onGetMembers({ workspaceId: id });
   }
 
   // FIXED: Simplified useEffect to prevent clearing
-  useEffect(() => {
-    if (workspaceData && workspaceData._id) {
-      dispatch(setCurrentWorkspace(workspaceData?._id));
-      dispatch(setWorkspace(workspaceData));
-    }
+  // useEffect(() => {
+  //   if (workspaceData && workspaceData._id) {
+  //     dispatch(setCurrentWorkspace(workspaceData?._id));
+  //     dispatch(setWorkspace(workspaceData));
+  //   }
 
-    if (memberData) {
-      dispatch(setMembers(memberData));
-    }
+  //   if (memberData) {
+  //     dispatch(setMembers(memberData));
+  //   }
 
-    // Only dispatch tasks if we have tasks data
-    if (taskData && taskData.length > 0) {
-      console.log("Dispatching tasks to Redux:", taskData);
-      dispatch(setTasks(taskData));
-    }
-  }, [workspaceData, memberData, taskData, dispatch]);
+  //   // Only dispatch tasks if we have tasks data
+  //   if (taskData && taskData.length > 0) {
+  //     console.log("Dispatching tasks to Redux:", taskData);
+  //     dispatch(setTasks(taskData));
+  //   }
+  // }, [workspaceData, memberData, taskData, dispatch]);
 
   return (
     <div className="z-100 w-full text-left">
@@ -167,7 +176,7 @@ function Workspace() {
         <MenuButton className="inline-flex w-full items-center gap-2 rounded-md border-[1px] border-[#565656]/10 bg-[#565656]/10 px-2 py-1.5 text-black transition-all duration-300 hover:bg-[#565656]/20 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
           <div
             className="poppins flex w-full flex-row items-center gap-[8px] text-white"
-            onClick={() => openWorkspaceDialog()}
+            // onClick={() => openWorkspaceDialog()}
           >
             {workspaceData?.name ? (
               <>
@@ -223,7 +232,7 @@ function Workspace() {
           )} */}
           <div className="flex flex-col gap-[4px]">
             {/* <MenuItem> */}
-            {workspaceData._id ? (
+            {workspaceData?._id ? (
               <p className="px-2 text-[13px] text-[#707070]">
                 Switch Workspace
               </p>

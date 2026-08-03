@@ -10,6 +10,7 @@ import {
 import { useSuspendMember } from "@/hooks/api/workspace";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 import { useSelector } from "react-redux";
+import { useSuspendMemberMutation } from "@/redux/api/memberApiSlice";
 
 interface SuspendMemberProps {
   isOpen: boolean;
@@ -30,20 +31,24 @@ export default function SuspendMember({
     (state: any) => state.currentWorkspace,
   );
 
+  const [suspendMember, { isLoading: suspendLoading }] =
+    useSuspendMemberMutation();
   const { onSuspendMember, loading } = useSuspendMember();
 
-  const handleConfirm = () => {
-    onSuspendMember({
-      workspaceId: currentWorkspaceId,
-      memberId: userId,
-      successCallback: () => {
-        onSuccess?.();
-        onClose();
-      },
-      errorCallback: ({ message }) => {
-        showErrorToast({ message });
-      },
-    });
+  const handleConfirm = async () => {
+    try {
+      await suspendMember({
+        workspaceId: currentWorkspaceId,
+        memberId: userId,
+      }).unwrap();
+      showSuccessToast({ message: "Member status updated successfully!" });
+      onSuccess?.();
+      onClose();
+    } catch (error: any) {
+      showErrorToast({
+        message: error?.data?.message || "Failed to suspend member",
+      });
+    }
   };
 
   return (
@@ -72,13 +77,13 @@ export default function SuspendMember({
             <button
               className="rounded-sm bg-orange-600 px-4 py-2 text-[12px] font-normal text-white transition-all duration-300 hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
               onClick={handleConfirm}
-              disabled={loading}
+              disabled={suspendLoading}
             >
-              {!loading ? (
+              {!suspendLoading ? (
                 "Suspend Member"
               ) : (
                 <span className="flex w-full items-center justify-center gap-2">
-                  Suspending
+                  Suspending...
                   <img
                     src="/icons/loaderWhite.svg"
                     alt=""

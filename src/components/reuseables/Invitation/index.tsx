@@ -3,6 +3,12 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAcceptInvite, useGetPendingInvites } from "@/hooks/api/workspace";
 
+import {
+  useGetPendingInvitesQuery,
+  useAcceptInviteMutation,
+} from "@/redux/api/workspaceApiSlice";
+import { showErrorToast, showSuccessToast } from "@/utils/toaster";
+
 interface Invite {
   workspaceName: string;
   workspaceId: string;
@@ -32,11 +38,22 @@ function Invitation({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const { user } = useSelector((state: any) => state.auth);
-  const {
-    data: invite,
-    onGetPendingInvites,
-    loading: invitesLoading,
-  } = useGetPendingInvites(user?._id);
+
+  // Fetch pending invites
+  const { data: invite, isLoading: invitesLoading } = useGetPendingInvitesQuery(
+    { userId: user?._id },
+    { skip: !user?._id },
+  );
+
+  // Accept invite mutation
+  const [acceptInvite, { isLoading: acceptInviteLoading }] =
+    useAcceptInviteMutation();
+
+  // const {
+  //   data: invite,
+  //   onGetPendingInvites,
+  //   loading: invitesLoading,
+  // } = useGetPendingInvites(user?._id);
 
   useEffect(() => {
     if (invite) {
@@ -51,25 +68,25 @@ function Invitation({
     }
   }, [invite]);
 
-  const { onAcceptInvite, loading: acceptInviteLoading } = useAcceptInvite();
-
   const totalInvites = invites?.data?.length || 0;
 
-  function handleAcceptInvite() {
+  async function handleAcceptInvite() {
     const currentInvite = invites?.data?.[currentIndex];
-
     if (!currentInvite) return;
-
     const { membershipId, email } = currentInvite;
 
-    onAcceptInvite({
-      membershipId,
-      email,
-      successCallback: () => {
-        onGetPendingInvites(user?._id);
-        onInviteAccepted?.();
-      },
-    });
+    try {
+      await acceptInvite({
+        membershipId,
+        email,
+      }).unwrap();
+      showSuccessToast({ message: "Invitation accepted!" });
+      onInviteAccepted?.();
+    } catch (err: any) {
+      showErrorToast({
+        message: err?.data?.message || "Failed to accept invite",
+      });
+    }
   }
 
   function handleNext() {

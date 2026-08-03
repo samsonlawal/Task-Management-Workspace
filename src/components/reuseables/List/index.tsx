@@ -170,8 +170,8 @@ export default function ListTask({
           </div>
         </div>
       </div>
-      {deadline && (
-        <div className="flex w-[55px] items-center justify-start md:w-[120px]">
+      <div className="flex w-[55px] items-center justify-start md:w-[120px]">
+        {deadline && (
           <p className="text-center text-[12px] font-normal">
             <span className="md:hidden">
               {DateTime.fromISO(deadline).toFormat("MMM dd")}
@@ -180,8 +180,8 @@ export default function ListTask({
               {DateTime.fromISO(deadline).toFormat("MMMM dd, yyyy")}
             </span>
           </p>
-        </div>
-      )}
+        )}
+      </div>
       <div className="flex w-[40px] items-center justify-start md:w-[70px]">
         <div
           className={`flex h-fit w-fit flex-row items-center justify-center gap-1 rounded-[6px] px-1.5 py-[4px]`}

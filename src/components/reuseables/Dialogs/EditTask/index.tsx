@@ -20,15 +20,30 @@ import { useGetTasks } from "@/hooks/api/tasks";
 import { Loader2 } from "lucide-react";
 import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
 
+import {
+  useUpdateTaskMutation,
+  useGetSingleTaskQuery,
+} from "@/redux/api/taskApiSlice";
+
 export default function EditTask({ taskData }: any) {
   const dispatch = useDispatch();
 
   let [isEditOpen, setIsEditOpen] = useState<boolean>(false);
-  const [workspaceId, setWorkspaceId] = useState<string>("");
 
   const currentTask = useSelector(
     (state: RootState) => state.TasksData.currentTask,
   );
+  const { currentWorkspace, currentWorkspaceId } = useSelector(
+    (state: any) => state.currentWorkspace,
+  );
+  const currentUser = useSelector((state: any) => state.AuthData?.user);
+  const taskId = currentTask?.id || taskData?._id || "";
+
+  const { data: fetchedTaskData, isLoading: isFetchingTask } =
+    useGetSingleTaskQuery({ taskId }, { skip: !isEditOpen || !taskId });
+
+  const [updateTask, { isLoading: updateTaskLoading }] =
+    useUpdateTaskMutation();
 
   const [task, setTask] = useState<TAddTask>({
     title: "",
@@ -42,45 +57,13 @@ export default function EditTask({ taskData }: any) {
   });
 
   const [taskAssignee, setTaskAssignee] = useState<any>();
-  const { currentWorkspace } = useSelector(
-    (state: any) => state.currentWorkspace,
-  );
-
-  const { onUpdateTask, loading: updateTaskLoading } = useUpdateTask();
-
-  const { OnGetSingleTask, loading: getSingleTaskLoading } = useGetSingleTask();
-
-  const { onGetTasks } = useGetTasks();
-
-  useEffect(() => {
-    getFromLocalStorage({
-      key: "CurrentWorkspaceId",
-      cb: (id: string) => {
-        if (id) {
-          setWorkspaceId(id);
-          setTask((prevTask) => ({
-            ...prevTask,
-            workspace_id: id,
-          }));
-        }
-      },
-    });
-
-    getFromLocalStorage({
-      key: "STACKTASK_PERSISTOR",
-      cb: (data: any) => {
-        if (data) {
-          setTask((prevTask) => ({
-            ...prevTask,
-            createdBy: data?.user?._id,
-          }));
-        }
-      },
-    });
-  }, [isEditOpen]);
 
   const handleDialogClose = () => {
     setIsEditOpen(false);
+  };
+
+  const handleOpenDialog = () => {
+    setIsEditOpen(true);
   };
 
   useEffect(() => {
@@ -92,7 +75,7 @@ export default function EditTask({ taskData }: any) {
     }
   }, [taskAssignee]);
 
-  const handleUpdateTask = () => {
+  const handleUpdateTask = async () => {
     const {
       title,
       description,
@@ -108,18 +91,15 @@ export default function EditTask({ taskData }: any) {
     if (!title) {
       errorMsg = "Task title is required.";
     }
-    // else if (!description) {
-    //   errorMsg = "Task description is required.";
-    // } else if (!assignee) {
-    //   errorMsg = "Task assignee is required.";
-    // }
 
     if (errorMsg) {
       showErrorToast({ message: errorMsg });
-    } else {
-      onUpdateTask({
-        id: currentTask?.id || "",
-        payload: {
+    }
+
+    try {
+      await updateTask({
+        taskId,
+        task: {
           title,
           description,
           workspace_id,
@@ -129,65 +109,45 @@ export default function EditTask({ taskData }: any) {
           priority,
           createdBy,
         },
-        successCallback: async () => {
-          showSuccessToast({ message: "Task Updated Successfully!" });
-          if (onGetTasks) {
-            await onGetTasks({ workspaceId: workspace_id });
-          }
-          handleDialogClose();
-        },
-        errorCallback: ({ message }) => {
-          showErrorToast({ message });
-        },
+      }).unwrap();
+
+      showSuccessToast({ message: "Task Updated Successfully!" });
+      handleDialogClose();
+    } catch (err: any) {
+      showErrorToast({
+        message: err?.data?.message || "Failed to update task",
       });
     }
   };
 
-  function checkWsId() {
-    OnGetSingleTask({
-      id: currentTask?.id || "",
-      successCallback: (fetchedTask) => {
-        if (fetchedTask) {
-          const normalize = (val: string, allowed: string[]) => {
-            const found = allowed.find(
-              (a) => a.toLowerCase() === (val || "").toLowerCase(),
-            );
-            return found || allowed[0];
-          };
+  useEffect(() => {
+    const fetchedTask = fetchedTaskData?.task || fetchedTaskData;
+    if (fetchedTask && isEditOpen) {
+      const normalize = (val: string, allowed: string[]) => {
+        const found = allowed.find(
+          (a) => a.toLowerCase() === (val || "").toLowerCase(),
+        );
+        return found || allowed[0];
+      };
 
-          setTask({
-            title: fetchedTask.title || "",
-            description: fetchedTask.description || "",
-            workspace_id: fetchedTask.workspace_id || workspaceId,
-            assignee: fetchedTask.assignee?.email || "",
-            deadline: fetchedTask.deadline
-              ? fetchedTask.deadline.slice(0, 10)
-              : "",
-            status: normalize(fetchedTask.status || "", [
-              "to-do",
-              "in-progress",
-            ]),
-            priority: normalize(fetchedTask.priority, [
-              "Low",
-              "Medium",
-              "High",
-            ]),
-            createdBy: fetchedTask?.createdBy || "",
-          });
-          setTaskAssignee((fetchedTask.assignee as any)?._id || "");
-        }
-        setIsEditOpen(true);
-      },
-      errorCallback: () => {
-        setIsEditOpen(false);
-      },
-    });
-  }
+      setTask({
+        title: fetchedTask.title || "",
+        description: fetchedTask.description || "",
+        workspace_id: fetchedTask.workspace_id || currentWorkspaceId,
+        assignee: fetchedTask.assignee?.email || "",
+        deadline: fetchedTask.deadline ? fetchedTask.deadline.slice(0, 10) : "",
+        status: normalize(fetchedTask.status || "", ["to-do", "in-progress"]),
+        priority: normalize(fetchedTask.priority, ["Low", "Medium", "High"]),
+        createdBy: fetchedTask?.createdBy || "",
+      });
+      setTaskAssignee((fetchedTask.assignee as any)?._id || "");
+    }
+  }, [fetchedTaskData, isEditOpen, currentWorkspace, currentUser]);
 
   return (
     <>
       <button
-        onClick={checkWsId}
+        onClick={handleOpenDialog}
         className="poppins flex h-6 w-full items-center justify-start rounded-sm px-2 text-[12px] font-normal text-[#989898] hover:bg-slate-200 hover:text-black dark:hover:bg-zinc-800"
       >
         Edit

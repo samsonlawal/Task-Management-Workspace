@@ -17,8 +17,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 import { useAddMember, useGetMembers } from "@/hooks/api/workspace";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
-import { setMembers } from "@/redux/Slices/memberSlice";
+// import { setMembers } from "@/redux/Slices/memberSlice";
 import { Loader2 } from "lucide-react";
+import { useAddMemberMutation } from "@/redux/api/memberApiSlice";
 
 export default function AddMember() {
   const dispatch = useDispatch();
@@ -28,22 +29,17 @@ export default function AddMember() {
   const [workspace_id, setWorkspaceId] = useState<string>("");
   // const [workspace_name, setWorkspaceName] = useState<string>("");
 
+  const [addMember, { isLoading: addMemberLoading }] = useAddMemberMutation();
+
   const [member, setMember] = useState<TAddMember>({
     email: "",
     role: "",
     workspaceName: "",
   });
 
-  const { currentWorkspace } = useSelector(
+  const { currentWorkspaceId } = useSelector(
     (state: any) => state.currentWorkspace,
   );
-
-  const { onAddMember, loading: addMemberLoading } = useAddMember();
-  const {
-    data: memberData,
-    onGetMembers,
-    loading: getMembersLoading,
-  } = useGetMembers();
 
   // Handle email input change
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +57,7 @@ export default function AddMember() {
     });
   };
 
-  const handleAddMember = () => {
+  const handleAddMember = async () => {
     const { email, role, workspaceName } = member; // Make sure jobTitle is included
     let errorMsg = "";
 
@@ -78,27 +74,18 @@ export default function AddMember() {
 
     console.log(email, role, workspaceName);
 
-    onAddMember({
-      workspaceId: workspace_id,
-      payload: {
-        email,
-        role,
-        workspaceName,
-        // jobTitle, // Include jobTitle in the payload
-      },
-      successCallback: async () => {
-        showSuccessToast({ message: "Member Added Successfully!" });
-
-        // Add the new member to the existing list
-        await onGetMembers({ workspaceId: workspace_id });
-        console.log("New tasks:", memberData);
-
-        handleDialogClose();
-      },
-      errorCallback: ({ message }) => {
-        showErrorToast({ message });
-      },
-    });
+    try {
+      await addMember({
+        member,
+        workspaceId: currentWorkspaceId,
+      });
+      showSuccessToast({ message: "Member Added Successfully!" });
+      handleDialogClose();
+    } catch (error: any) {
+      showErrorToast({
+        message: error?.data?.message || "Failed to add member",
+      });
+    }
   };
 
   // Toggle the main dialog
@@ -110,11 +97,6 @@ export default function AddMember() {
       cb: (id: string) => {
         if (id) {
           setWorkspaceId(id);
-          // setTask((prevTask) => ({
-          //   ...prevTask,
-          //   workspace_id: id,
-          // }));
-          // console.log(id);
         }
       },
     });
@@ -131,13 +113,6 @@ export default function AddMember() {
       },
     });
   };
-
-  // Only close the dialog if the select isn't open
-  // const handleDialogClose = () => {
-  //   if (!isSelectOpen) {
-  //     setIsOpen(false);
-  //   }
-  // };
 
   const handleDialogClose = () => {
     if (!isSelectOpen) {
@@ -160,7 +135,7 @@ export default function AddMember() {
     <>
       <button
         onClick={toggleDialog}
-        className="poppins flex h-[36px] w-[36px] sm:w-auto items-center justify-center gap-2 rounded-lg bg-[#609328] hover:bg-[#609328]/90 active:scale-95 text-[#fff] px-0 sm:px-4 text-[12px] font-medium transition-all duration-300 shadow-sm shrink-0"
+        className="poppins flex h-[36px] w-[36px] shrink-0 items-center justify-center gap-2 rounded-lg bg-[#609328] px-0 text-[12px] font-medium text-[#fff] shadow-sm transition-all duration-300 hover:bg-[#609328]/90 active:scale-95 sm:w-auto sm:px-4"
         title="Invite Member"
       >
         <FontAwesomeIcon icon={faUserPlus} className="text-[13px]" />

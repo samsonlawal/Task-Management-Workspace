@@ -2,17 +2,10 @@
 
 import UpgradePlan from "@/components/reuseables/UpgradePlan";
 import CurrentWorkspace from "@/components/reuseables/currentWorkspace";
-import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetWorkspace } from "@/hooks/api/workspace";
 import { setCurrentUI } from "@/redux/Slices/uiSlice";
-import {
-  LayoutDashboard,
-  CheckCheck,
-  UsersRound,
-  ChevronRight,
-} from "lucide-react";
+import { LayoutDashboard, CheckCheck, UsersRound } from "lucide-react";
 
 import IntegrationsNavGroup from "@/components/main/sidebar/IntegrationsNavGroup";
 
@@ -22,21 +15,11 @@ export default function Sidebar() {
   const { user } = useSelector((state: any) => state.auth);
   const currentUI = useSelector((state: any) => state.ui?.currentUI || "tasks");
 
-  const { data: workspace, onGetWorksapce } = useGetWorkspace();
-
   const dispatch = useDispatch();
 
-  const handleDashboard = () => {
-    dispatch(setCurrentUI("dashboard"));
-  };
-
-  useEffect(() => {
-    if (user) {
-      onGetWorksapce();
-
-      console.log(workspace);
-    }
-  }, []);
+  // const handleDashboard = () => {
+  //   dispatch(setCurrentUI("dashboard"));
+  // };
 
   return (
     <div className="flex h-full w-full flex-1 flex-col justify-between bg-white py-[14px] dark:bg-[#111]">

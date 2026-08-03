@@ -10,6 +10,7 @@ import {
 import { useRemoveMember } from "@/hooks/api/workspace";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 import { useSelector } from "react-redux";
+import { useRemoveMemberMutation } from "@/redux/api/memberApiSlice";
 
 interface RemoveMemberProps {
   isOpen: boolean;
@@ -30,20 +31,22 @@ export default function RemoveMember({
     (state: any) => state.currentWorkspace,
   );
 
-  const { onRemoveMember, loading } = useRemoveMember();
+  const [removeMember, { isLoading: removeMemberLoading }] =
+    useRemoveMemberMutation();
 
-  const handleConfirm = () => {
-    onRemoveMember({
-      workspaceId: currentWorkspaceId,
-      memberId: userId,
-      successCallback: () => {
-        onSuccess?.();
-        onClose();
-      },
-      errorCallback: ({ message }) => {
-        showErrorToast({ message });
-      },
-    });
+  const handleConfirm = async () => {
+    try {
+      await removeMember({
+        workspaceId: currentWorkspaceId,
+        memberId: userId,
+      }).unwrap();
+      showSuccessToast({ message: "Member removed from workspace" });
+      onClose();
+    } catch (error: any) {
+      showErrorToast({
+        message: error?.data?.message || "Failed to remove member",
+      });
+    }
   };
 
   return (
@@ -72,9 +75,9 @@ export default function RemoveMember({
             <button
               className="rounded-sm bg-red-600 px-4 py-2 text-[12px] font-normal text-white transition-all duration-300 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
               onClick={handleConfirm}
-              disabled={loading}
+              disabled={removeMemberLoading}
             >
-              {!loading ? (
+              {!removeMemberLoading ? (
                 "Remove Member"
               ) : (
                 <span className="flex w-full items-center justify-center gap-2">

@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Dialog,
-  DialogBackdrop,
-  DialogPanel,
-} from "@headlessui/react";
+import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -26,6 +22,13 @@ import TaskDetailsHeader from "./components/TaskDetailsHeader";
 import TaskFields from "./components/TaskFields";
 import TaskTimeline from "./components/TaskTimeline";
 import TaskComments from "./components/TaskComments";
+
+import {
+  useDeleteTaskMutation,
+  useMarkAsDoneMutation,
+  usePromoteTaskMutation,
+  useDemoteTaskMutation,
+} from "@/redux/api/taskApiSlice";
 
 interface TaskData {
   id: string;
@@ -54,16 +57,26 @@ export default function TaskDetails({
   getDetails?: () => void;
 }) {
   const dispatch = useDispatch();
-  const { user } = useSelector((state: RootState) => state.auth) as { user: any };
+  const { user } = useSelector((state: RootState) => state.auth) as {
+    user: any;
+  };
 
-  const { onDeleteTask, loading: deleteLoading } = useDeleteTask();
-  const { onPromoteTask, loading: promoteLoading } = usePromoteTask();
-  const { onDemoteTask, loading: demoteLoading } = useDemoteTask();
-  const { onMarkAsDone, loading: markAsDoneLoading } = useMarkAsDone();
-  const { onGetTasks } = useGetTasks();
+  // const { onDeleteTask, loading: deleteLoading } = useDeleteTask();
+  // const { onPromoteTask, loading: promoteLoading } = usePromoteTask();
+  // const { onDemoteTask, loading: demoteLoading } = useDemoteTask();
+  // const { onMarkAsDone, loading: markAsDoneLoading } = useMarkAsDone();
+  // const { onGetTasks } = useGetTasks();
+
+  const [deleteTask, { isLoading: deleteLoading }] = useDeleteTaskMutation();
+  const [markAsDone, { isLoading: markAsDoneLoading }] =
+    useMarkAsDoneMutation();
+  const [promoteTask, { isLoading: promoteLoading }] = usePromoteTaskMutation();
+  // const [demoteTask, { isLoading: demoteLoading }] = useDemoteTaskMutation();
 
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<"activity" | "comments" | "attachments">("activity");
+  const [activeTab, setActiveTab] = useState<
+    "activity" | "comments" | "attachments"
+  >("activity");
   const [isCommentsExpanded, setIsCommentsExpanded] = useState<boolean>(false);
   const [spaceData, setSpaceData] = useState<TWorkspaceData>();
 
@@ -84,69 +97,61 @@ export default function TaskDetails({
     setIsCommentsExpanded(false);
   };
 
-  const handleDeleteTask = () => {
-    const { id, workspaceId = "" } = taskData;
-    if (id) {
+  const handleDeleteTask = async () => {
+    try {
+      await deleteTask({ taskId: taskData.id }).unwrap();
       setIsDetailsOpen(false);
-      onDeleteTask({
-        id: id,
-        successCallback: async () => {
-          setIsDetailsOpen(false);
-          onGetTasks({ workspaceId });
-          showSuccessToast({ message: "Task Deleted Successfully!" });
-        },
-        errorCallback: ({ message }) => {
-          showErrorToast({ message });
-        },
+      showSuccessToast({ message: "Task Deleted Successfully!" });
+    } catch (error: any) {
+      showErrorToast({
+        message: error?.data?.message || "Failed to delete task",
       });
     }
   };
 
-  const handlePromoteTask = () => {
-    const { id, workspaceId = "" } = taskData;
-    if (id) {
-      onPromoteTask({
-        id: id,
-        successCallback: async () => {
-          onGetTasks({ workspaceId });
-          showSuccessToast({ message: "Task Promoted Successfully!" });
-        },
-        errorCallback: ({ message }) => {
-          showErrorToast({ message });
-        },
-      });
-    }
-  };
+  // const handlePromoteTask = () => {
+  //   const { id, workspaceId = "" } = taskData;
+  //   if (id) {
+  //     onPromoteTask({
+  //       id: id,
+  //       successCallback: async () => {
+  //         onGetTasks({ workspaceId });
+  //         showSuccessToast({ message: "Task Promoted Successfully!" });
+  //       },
+  //       errorCallback: ({ message }) => {
+  //         showErrorToast({ message });
+  //       },
+  //     });
+  //   }
+  // };
 
-  const handleDemoteTask = () => {
-    const { id, workspaceId = "" } = taskData;
-    if (id) {
-      onDemoteTask({
-        id: id,
-        successCallback: async () => {
-          onGetTasks({ workspaceId });
-          showSuccessToast({ message: "Task Demoted Successfully!" });
-        },
-        errorCallback: ({ message }) => {
-          showErrorToast({ message });
-        },
-      });
-    }
-  };
+  // const handleDemoteTask = () => {
+  //   const { id, workspaceId = "" } = taskData;
+  //   if (id) {
+  //     onDemoteTask({
+  //       id: id,
+  //       successCallback: async () => {
+  //         onGetTasks({ workspaceId });
+  //         showSuccessToast({ message: "Task Demoted Successfully!" });
+  //       },
+  //       errorCallback: ({ message }) => {
+  //         showErrorToast({ message });
+  //       },
+  //     });
+  //   }
+  // };
 
-  const handleMarkAsDone = () => {
-    const { id, workspaceId = "" } = taskData;
+  const handleMarkAsDone = async () => {
+    const { id } = taskData;
     if (id) {
-      onMarkAsDone({
-        id: id,
-        successCallback: async () => {
-          onGetTasks({ workspaceId });
-          showSuccessToast({ message: "Task Completed Successfully!" });
-        },
-        errorCallback: ({ message }) => {
-          showErrorToast({ message });
-        },
-      });
+      try {
+        await markAsDone({ taskId: id }).unwrap();
+        showSuccessToast({ message: "Task Completed Successfully!" });
+      } catch (err: any) {
+        showErrorToast({
+          message: err?.data?.message || "Failed to complete task",
+        });
+      }
     }
   };
 
@@ -158,20 +163,20 @@ export default function TaskDetails({
           getDetails?.();
           dispatch(setSingleTask(taskData));
         }}
-        className="flex items-center text-[10px] text-zinc-500 hover:text-black dark:hover:text-white transition-colors"
+        className="flex items-center text-[10px] text-zinc-500 transition-colors hover:text-black dark:hover:text-white"
       >
         <img
           src="/icons/expand.svg"
           alt="expand"
-          className="h-3 w-3 mr-1 select-none"
+          className="mr-1 h-3 w-3 select-none"
         />
       </button>
-      
+
       <Dialog
         open={isDetailsOpen}
         onClose={handleDialogClose}
         transition
-        className="poppins fixed inset-0 flex w-screen select-none items-center justify-end bg-black/30 font-madei transition duration-300 ease-out data-[closed]:opacity-0 z-[60]"
+        className="poppins fixed inset-0 z-[60] flex w-screen select-none items-center justify-end bg-black/30 font-madei transition duration-300 ease-out data-[closed]:opacity-0"
       >
         {!deleteLoading || !promoteLoading ? (
           <>
@@ -179,7 +184,7 @@ export default function TaskDetails({
 
             <div className="fixed inset-0 flex w-screen items-center justify-end">
               <DialogPanel
-                className="h-full w-full lg:w-[calc(100vw-256px)] flex flex-col rounded-sm bg-gray-100 px-8 py-6 dark:bg-[#111] overflow-hidden"
+                className="flex h-full w-full flex-col overflow-hidden rounded-sm bg-gray-100 px-8 py-6 dark:bg-[#111] lg:w-[calc(100vw-256px)]"
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Header Sub-Component */}
@@ -192,15 +197,19 @@ export default function TaskDetails({
                 />
 
                 {/* Main Drawer Layout content */}
-                <div className="flex flex-col lg:flex-row gap-8 flex-1 overflow-hidden mt-6 text-[12px] h-[calc(100vh-140px)]">
+                <div className="mt-6 flex h-[calc(100vh-140px)] flex-1 flex-col gap-8 overflow-hidden text-[12px] lg:flex-row">
                   {/* Left Column: Metadata Fields */}
-                  <div className={`flex flex-col pr-3 flex-none lg:w-[320px] w-full relative z-20 ${isCommentsExpanded ? "hidden" : ""}`}>
+                  <div
+                    className={`relative z-20 flex w-full flex-none flex-col pr-3 lg:w-[320px] ${isCommentsExpanded ? "hidden" : ""}`}
+                  >
                     <TaskFields taskData={taskData} />
                   </div>
 
                   {/* Right Column: Tabs, Activity Log, and Comments */}
-                  <div className={`flex flex-col h-full overflow-hidden relative flex-1 min-w-0 z-10 ${isCommentsExpanded ? "flex-[5]" : ""}`}>
-                    <div className="w-full h-full flex flex-col">
+                  <div
+                    className={`relative z-10 flex h-full min-w-0 flex-1 flex-col overflow-hidden ${isCommentsExpanded ? "flex-[5]" : ""}`}
+                  >
+                    <div className="flex h-full w-full flex-col">
                       {/* Tab Headers */}
                       <div className="flex items-center justify-between border-b border-gray-200 dark:border-[#565656]/20">
                         <div className="flex">
@@ -226,20 +235,26 @@ export default function TaskDetails({
 
                         {/* Comments Toggle Expand/Collapse */}
                         <button
-                          onClick={() => setIsCommentsExpanded(!isCommentsExpanded)}
-                          className="px-2 py-1.5 text-zinc-500 hover:text-black dark:hover:text-white transition-colors flex items-center gap-1.5 text-[11px] font-medium"
-                          title={isCommentsExpanded ? "Show task fields" : "Expand comments"}
+                          onClick={() =>
+                            setIsCommentsExpanded(!isCommentsExpanded)
+                          }
+                          className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-medium text-zinc-500 transition-colors hover:text-black dark:hover:text-white"
+                          title={
+                            isCommentsExpanded
+                              ? "Show task fields"
+                              : "Expand comments"
+                          }
                         >
                           {isCommentsExpanded ? (
-                            <Minimize2 className="w-3.5 h-3.5" />
+                            <Minimize2 className="h-3.5 w-3.5" />
                           ) : (
-                            <Maximize2 className="w-3.5 h-3.5" />
+                            <Maximize2 className="h-3.5 w-3.5" />
                           )}
                         </button>
                       </div>
 
                       {/* Tab Content Panels */}
-                      <div className="pt-4 flex-1 min-h-0">
+                      <div className="min-h-0 flex-1 pt-4">
                         {activeTab === "activity" && (
                           <TaskTimeline taskData={taskData} />
                         )}
@@ -249,7 +264,9 @@ export default function TaskDetails({
                         )}
 
                         {activeTab === "attachments" && (
-                          <div className="text-zinc-500 italic py-4">No attachments yet</div>
+                          <div className="py-4 italic text-zinc-500">
+                            No attachments yet
+                          </div>
                         )}
                       </div>
                     </div>

@@ -14,6 +14,7 @@ import { useEditMemberRole } from "@/hooks/api/workspace";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 import { useSelector } from "react-redux";
 import { Loader2 } from "lucide-react";
+// import { useUpdateMemberRoleMutation } from "@/redux/api/memberApiSlice";
 
 interface EditRoleProps {
   isOpen: boolean;
@@ -34,6 +35,8 @@ export default function EditRole({
   workspaceId,
   onSuccess,
 }: EditRoleProps) {
+  // const [updateMemberRole, { isLoading: updateRoleLoading }] = useUpdateMemberRoleMutation()
+
   const [role, setRole] = useState(currentRole);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
@@ -62,6 +65,20 @@ export default function EditRole({
       onClose();
       return;
     }
+
+    //     const handleSaveRole = async (newRole: string) => {
+    //   try {
+    //     await updateMemberRole({
+    //       workspaceId: currentWorkspaceId,
+    //       memberId: userId,
+    //       role: newRole,
+    //     }).unwrap();
+    //     showSuccessToast({ message: "Member role updated!" });
+    //     onClose();
+    //   } catch (err: any) {
+    //     showErrorToast({ message: err?.data?.message || "Failed to update role" });
+    //   }
+    // };
 
     onEditMemberRole({
       workspaceId: currentWorkspaceId,
