@@ -142,7 +142,7 @@ function Team() {
 
   return (
     <div className="flex h-fit w-full flex-col gap-2 pb-8">
-      <div className="sticky top-0 z-40 w-full bg-[white] px-4 dark:bg-[#111] lg:px-8">
+      <div className="sticky top-0 w-full bg-[white] px-4 dark:bg-[#111] lg:px-8">
         <div className="poppins flex w-full items-center justify-between border-[#565656]/10 py-[7px]">
           <div className="flex flex-row items-center">
             <button
@@ -305,9 +305,7 @@ function Team() {
                     );
                   })
                 ) : (
-                  <div className="flex h-40 w-full items-center justify-center border-b border-gray-300 px-4 py-3 text-[13px] text-gray-500">
-                    No member matches your search criteria.
-                  </div>
+                  <div className="flex h-40 w-full items-center justify-center px-4 py-3 text-[13px] text-gray-500"></div>
                 )}
 
                 {/* Footer */}

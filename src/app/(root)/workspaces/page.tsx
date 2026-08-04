@@ -14,9 +14,7 @@ import ThemeSwitcher from "@/components/reuseables/ThemeSwitcher";
 function Workspaces() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [selectedWorkspace, setSelectedWorkspace] = useState<string | null>(
-    null,
-  );
+  const [selectedWorkspace, setSelectedWorkspace] = useState<any>(null);
   const [isSkipped, setIsSkipped] = useState(false);
   const [invitesCount, setInvitesCount] = useState(0);
 
@@ -29,8 +27,10 @@ function Workspaces() {
 
   function handleContinue() {
     if (selectedWorkspace) {
-      dispatch(setCurrentWorkspace(selectedWorkspace));
-      router.push("/workspace");
+      const id = selectedWorkspace?._id;
+      const slug = selectedWorkspace?.slug || selectedWorkspace._id;
+      dispatch(setCurrentWorkspace(id));
+      router.push(`/${slug}/tasks`);
     }
   }
 
@@ -98,8 +98,8 @@ function Workspaces() {
               workspaces.map((ws) => (
                 <div
                   key={ws._id}
-                  className={`flex h-[42px] w-[317px] cursor-pointer flex-row items-center justify-between rounded-[4px] p-[6px] transition-all duration-300 hover:bg-[#565656]/10 ${selectedWorkspace === ws._id ? "border-[1px] border-[#565656]/10 bg-[#565656]/20 text-[#111]" : "text-[#565656]"}`}
-                  onClick={() => setSelectedWorkspace(ws._id)}
+                  className={`flex h-[42px] w-[317px] cursor-pointer flex-row items-center justify-between rounded-[4px] p-[6px] transition-all duration-300 hover:bg-[#565656]/10 ${selectedWorkspace?._id === ws._id ? "border-[1px] border-[#565656]/10 bg-[#565656]/20 text-[#111]" : "text-[#565656]"}`}
+                  onClick={() => setSelectedWorkspace(ws)}
                 >
                   <div className="poppins flex flex-row items-center justify-center gap-2">
                     <div
@@ -115,9 +115,9 @@ function Workspaces() {
 
                   {/* Check */}
                   <span
-                    className={`flex h-4 w-4 items-center justify-center rounded-full border border-[#565656]/40 transition-all duration-300 ${selectedWorkspace === ws._id ? "bg-[#111] dark:bg-white" : "bg-transparent"}`}
+                    className={`flex h-4 w-4 items-center justify-center rounded-full border border-[#565656]/40 transition-all duration-300 ${selectedWorkspace?._id === ws._id ? "bg-[#111] dark:bg-white" : "bg-transparent"}`}
                   >
-                    {selectedWorkspace === ws._id && (
+                    {selectedWorkspace?._id === ws._id && (
                       <svg
                         className="h-3 w-3 text-white dark:text-[#111]"
                         fill="none"

@@ -39,6 +39,11 @@ export const workspaceApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["Workspace"],
         }),
+
+        getWorkspaceBySlug: builder.query({
+      query: (slug: string) => `/workspaces/slug/${slug}`,
+      providesTags: ["Workspace"],
+    }),
     }),
 });
 
@@ -49,4 +54,5 @@ export const {
     useCreateWorkspaceMutation,
     useGetPendingInvitesQuery,
     useAcceptInviteMutation,
+     useGetWorkspaceBySlugQuery,
 } = workspaceApiSlice;

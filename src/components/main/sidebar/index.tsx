@@ -2,7 +2,7 @@
 
 import UpgradePlan from "@/components/reuseables/UpgradePlan";
 import CurrentWorkspace from "@/components/reuseables/currentWorkspace";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUI } from "@/redux/Slices/uiSlice";
 import { LayoutDashboard, CheckCheck, UsersRound } from "lucide-react";
@@ -12,14 +12,16 @@ import IntegrationsNavGroup from "@/components/main/sidebar/IntegrationsNavGroup
 export default function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
-  const { user } = useSelector((state: any) => state.auth);
-  const currentUI = useSelector((state: any) => state.ui?.currentUI || "tasks");
+  const params = useParams();
+
+  const workspaceSlug = params?.workspaceSlug;
+
+  const workspace = useSelector((state: any) => state.workspace);
 
   const dispatch = useDispatch();
 
-  // const handleDashboard = () => {
-  //   dispatch(setCurrentUI("dashboard"));
-  // };
+  const workspaceIdentifier =
+    workspaceSlug || workspace?.slug || workspace?._id;
 
   return (
     <div className="flex h-full w-full flex-1 flex-col justify-between bg-white py-[14px] dark:bg-[#111]">
@@ -53,13 +55,14 @@ export default function Sidebar() {
               // },
             ] as const
           ).map((link) => {
-            const isActive = pathname === `/workspace/${link.value}`;
+            const isActive =
+              pathname === `/${workspaceIdentifier}/${link.value}`;
             return (
               <span
                 key={link.value}
                 onClick={() => {
-                  if (!link.disabled) {
-                    router.push(`/workspace/${link.value}`);
+                  if (!link.disabled && workspaceIdentifier) {
+                    router.push(`/${workspaceIdentifier}/${link.value}`);
                     dispatch(setCurrentUI(link.value));
                   }
                 }}

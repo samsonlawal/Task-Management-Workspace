@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Switch from "../switchWorkSpace";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import AddWorkspace from "../Dialogs/AddWorkspace";
@@ -47,6 +48,7 @@ export default function CurrentWorkspace() {
 }
 
 function Workspace() {
+  const router = useRouter();
   const dispatch = useDispatch();
   const [filteredWorkspaces, setFilteredWorkspaces] = useState<any>([]);
 
@@ -143,32 +145,18 @@ function Workspace() {
   //   onGetUserWorkspace(user?._id);
   // }
 
-  function switchWorkspace(id: string) {
+  function switchWorkspace(workspace: any) {
+    const id = workspace._id;
+    const slug = workspace.slug || workspace._id;
+
     saveToLocalStorage({
       key: "CurrentWorkspaceId",
       value: id,
     });
 
     dispatch(setCurrentWorkspace(id));
+    router.push(`/${slug}/tasks`);
   }
-
-  // FIXED: Simplified useEffect to prevent clearing
-  // useEffect(() => {
-  //   if (workspaceData && workspaceData._id) {
-  //     dispatch(setCurrentWorkspace(workspaceData?._id));
-  //     dispatch(setWorkspace(workspaceData));
-  //   }
-
-  //   if (memberData) {
-  //     dispatch(setMembers(memberData));
-  //   }
-
-  //   // Only dispatch tasks if we have tasks data
-  //   if (taskData && taskData.length > 0) {
-  //     console.log("Dispatching tasks to Redux:", taskData);
-  //     dispatch(setTasks(taskData));
-  //   }
-  // }, [workspaceData, memberData, taskData, dispatch]);
 
   return (
     <div className="z-100 w-full text-left">
@@ -258,7 +246,7 @@ function Workspace() {
                       <MenuItem key={index}>
                         <div
                           className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] border border-[#1a1a1a] pl-2 hover:border-[#565656]/10 hover:bg-[#565656]/10"
-                          onClick={() => switchWorkspace(workspace?._id)}
+                          onClick={() => switchWorkspace(workspace)}
                         >
                           <div
                             className="flex h-[32px] w-[32px] items-center justify-center rounded-[5px] text-[13px] text-white"
