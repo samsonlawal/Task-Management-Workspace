@@ -37,7 +37,7 @@ import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
 import { DateTime } from "luxon";
 import { useCreateTaskMutation } from "@/redux/api/taskApiSlice";
 
-export default function AddTask({ taskData }: any) {
+export default function AddTask() {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const [workspaceId, setWorkspaceId] = useState<string>("");
 

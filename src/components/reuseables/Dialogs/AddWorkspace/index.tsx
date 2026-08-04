@@ -1,192 +1,163 @@
 "use client";
 
-import {
-  Description,
-  Dialog,
-  DialogBackdrop,
-  DialogPanel,
-  DialogTitle,
-} from "@headlessui/react";
-import { useEffect, useState } from "react";
-import { CustomSelect } from "../../select";
-import Button from "../../Button";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCreateWorkspace } from "@/hooks/api/workspace";
-import { TAddWorkspace } from "@/types";
-import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
-import { showErrorToast } from "@/utils/toaster";
-import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useCreateWorkspaceMutation } from "@/redux/api/workspaceApiSlice";
+import { showErrorToast, showSuccessToast } from "@/utils/toaster";
+import { Loader2, ArrowLeft } from "lucide-react";
+import slugify from "slugify";
+import { useRouter } from "next/navigation";
 
 export default function AddWorkspace() {
-  let [isOpen, setIsOpen] = useState(false);
-  const [workspace, setWorkspace] = useState<TAddWorkspace>({
-    name: "",
-    description: "",
+  const [isOpen, setIsOpen] = useState(false);
+  const [workspaceName, setWorkspaceName] = useState("");
+  const router = useRouter();
+
+  const { user } = useSelector((state: any) => state.auth);
+
+  // RTK Query Mutation Hook
+  const [createWorkspace, { isLoading: createWorkspaceLoading }] =
+    useCreateWorkspaceMutation();
+
+  // Auto-generate URL slug preview from workspace name
+  const generatedSlug = slugify(workspaceName || "", {
+    lower: true,
+    strict: true,
+    trim: true,
   });
 
-  const [userId, setUserId] = useState<string>("");
+  async function handleCreateWorkspace(e: React.FormEvent) {
+    e.preventDefault();
 
-  useEffect(() => {
-    getFromLocalStorage({
-      key: "STACKTASK_PERSISTOR",
-      cb: (data: any) => {
-        if (data) {
-          setUserId(data?.user?._id);
-        }
-      },
-    });
-  }, []);
-
-  const {
-    data: workspaceData,
-    loading: createWorkspaceLoading,
-    OnCreateWorkspace,
-  } = useCreateWorkspace();
-
-  function handleCreateTask() {
-    const { name, description } = workspace;
-    let errorMsg = "";
-
-    if (!workspace.name) {
-      errorMsg = "name is required.";
+    if (!workspaceName.trim()) {
+      showErrorToast({ message: "Workspace name is required." });
+      return;
     }
 
-    if (errorMsg) {
-      showErrorToast({ message: errorMsg });
-    } else {
-      OnCreateWorkspace({
-        userId,
-        payload: {
-          name,
-          description,
-        },
-        successCallback: (data) => {
-          setWorkspace({ name: "", description: "" });
-          setIsOpen(false);
-          console.log("Workspace created successfully:", data);
-        },
-        errorCallback: (error) => {
-          console.error("Error creating workspace:", error);
-        },
+    try {
+      const res: any = await createWorkspace({
+        userId: user?._id,
+        workspace: { name: workspaceName.trim() },
+      }).unwrap();
+
+      showSuccessToast({ message: "🚀 Workspace created!" });
+      setWorkspaceName("");
+      setIsOpen(false);
+
+      // Automatically navigate to the new workspace slug!
+      const newSlug = res?.slug || generatedSlug;
+      router.push(`/${newSlug}/tasks`);
+    } catch (error: any) {
+      showErrorToast({
+        message:
+          error?.data?.message ||
+          error?.message ||
+          "Failed to create workspace.",
       });
     }
-
-    console.log(workspace.name);
   }
 
   return (
     <>
+      {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(true)}
         className="flex w-full cursor-pointer flex-row items-center rounded-[4px] border border-[#565656]/10 bg-[#565656]/10 py-1.5 pl-2 transition-all duration-300 ease-in-out hover:bg-[#565656]/20"
       >
         <img src="/icons/plus.svg" alt="" className="w-4 cursor-pointer" />
-
         <p className="px-2 text-[13px] text-[#707070]">Create Workspace</p>
       </button>
-      <Dialog
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        transition
-        className="fixed inset-0 flex w-screen items-center justify-center bg-black/30 p-4 font-madei transition duration-300 ease-out data-[closed]:opacity-0"
-      >
-        {/* The backdrop, rendered as a fixed sibling to the panel container */}
-        <DialogBackdrop className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
 
-        {/* Full-screen container to center the panel */}
-        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-          {/* The actual dialog panel  */}
-          <DialogPanel className="flex w-full max-w-[500px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white px-6 py-5 shadow-2xl dark:border-zinc-800 dark:bg-[#1a1a1a]">
-            <div className="flex flex-col gap-4">
-              {/* Header */}
-              <div className="flex w-full flex-row items-center justify-between">
-                <DialogTitle className="poppins-medium text-[16px] font-medium text-zinc-900 dark:text-white">
-                  Create New Workspace
-                </DialogTitle>
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  className="flex h-6 w-6 items-center justify-center rounded-full text-[#989898] transition-colors hover:bg-gray-200 hover:text-black dark:hover:bg-zinc-800 dark:hover:text-white"
-                >
-                  <FontAwesomeIcon icon={faXmark} className="text-[16px]" />
-                </button>
-              </div>
+      {/* Full Page View */}
+      {isOpen && (
+        <div className="poppins fixed inset-0 z-50 flex h-screen w-screen flex-col justify-between overflow-y-auto bg-white p-6 dark:bg-[#111] lg:p-10">
+          {/* Top Navigation Header */}
+          <div className="flex w-full items-center justify-between pb-6 text-xs dark:border-zinc-800">
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2 rounded-lg px-3.5 py-2 font-normal transition-colors duration-300 dark:text-[#fff]/70 dark:hover:text-white"
+            >
+              <ArrowLeft size={14} />
+              <span>Back to Workspace</span>
+            </button>
 
-              {/* Description */}
-              <p className="text-[12px] text-zinc-500 dark:text-zinc-400">
-                Set up a space to manage your tasks and collaborate with your team.
+            <span className="text-gray-400 dark:text-zinc-500">
+              Logged in as <br />
+              <strong className="font-normal text-zinc-900 dark:text-zinc-200">
+                {user?.email || "user@example.com"}
+              </strong>
+            </span>
+          </div>
+
+          {/* Centered Form */}
+          <div className="mx-auto my-auto flex w-full max-w-[460px] flex-col gap-6">
+            <div className="flex flex-col text-center">
+              <h1 className="text-lg font-normal text-zinc-900 dark:text-white">
+                Create a workspace
+              </h1>
+              <p className="text-[14px] font-normal text-zinc-500 dark:text-[#F6F6F6]/60">
+                Manage work and teams in one place
               </p>
-
-              {/* Form Inputs */}
-              <div className="flex flex-col gap-4 pt-1">
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="spaceName" className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">
-                    Workspace Name
-                  </label>
-                  <input
-                    name="spaceName"
-                    type="text"
-                    value={workspace.name}
-                    onChange={(e) =>
-                      setWorkspace((prev) => ({
-                        ...prev,
-                        name: e.target.value,
-                      }))
-                    }
-                    placeholder="e.g. Acme Corp"
-                    className="h-[38px] w-full rounded-md border border-gray-300 bg-transparent px-3 text-xs text-zinc-900 outline-none focus:border-[#609328] dark:border-zinc-800 dark:text-white placeholder-zinc-400"
-                  />
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="spaceDesc" className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">
-                    Description <span className="font-normal text-zinc-400">(optional)</span>
-                  </label>
-                  <input
-                    name="spaceDesc"
-                    type="text"
-                    value={workspace.description}
-                    onChange={(e) =>
-                      setWorkspace((prev) => ({
-                        ...prev,
-                        description: e.target.value,
-                      }))
-                    }
-                    placeholder="What is this workspace about?"
-                    className="h-[38px] w-full rounded-md border border-gray-300 bg-transparent px-3 text-xs text-zinc-900 outline-none focus:border-[#609328] dark:border-zinc-800 dark:text-white placeholder-zinc-400"
-                  />
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="mt-4 flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  className="rounded-md bg-zinc-200 px-4 py-2 text-xs text-zinc-700 transition-colors hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleCreateTask}
-                  disabled={createWorkspaceLoading}
-                  className="flex items-center gap-1.5 rounded-md bg-[#609328] px-5 py-2 text-xs font-medium text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-50"
-                >
-                  {createWorkspaceLoading ? (
-                    <>
-                      <span>Creating</span>
-                      <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
-                    </>
-                  ) : (
-                    <span>Create Workspace</span>
-                  )}
-                </button>
-              </div>
             </div>
-          </DialogPanel>
+
+            <form
+              onSubmit={handleCreateWorkspace}
+              className="flex flex-col gap-5"
+            >
+              {/* Workspace Name */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-normal text-zinc-700 dark:text-[#fff]/60">
+                  Workspace Name
+                </label>
+                <input
+                  type="text"
+                  value={workspaceName}
+                  onChange={(e) => setWorkspaceName(e.target.value)}
+                  placeholder="e.g. Acme Corp"
+                  className="h-[44px] w-full rounded-lg border border-gray-200 bg-gray-50/50 px-3.5 text-sm font-normal text-zinc-900 placeholder-zinc-400 outline-none transition-colors focus:border-[#609328] focus:bg-transparent dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-white dark:focus:border-[#609328]"
+                  autoFocus
+                />
+              </div>
+
+              {/* URL Preview Field */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-normal text-zinc-700 dark:text-[#fff]/60">
+                  URL
+                </label>
+                <div className="flex h-[44px] w-full items-center rounded-lg border border-gray-200 bg-gray-50/50 px-3.5 text-sm dark:border-zinc-800 dark:bg-zinc-900/50">
+                  <span className="select-none font-normal text-zinc-400 dark:text-zinc-500">
+                    taskstack.app/
+                  </span>
+                  <input
+                    type="text"
+                    readOnly
+                    value={generatedSlug}
+                    className="w-full bg-transparent pl-0.5 font-normal text-zinc-800 outline-none dark:text-zinc-200"
+                  />
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={createWorkspaceLoading || !workspaceName.trim()}
+                className="active:scale-98 mt-2 flex h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-[#609328] font-normal text-white shadow-sm transition-all hover:bg-[#609328]/90 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <span>Create Workspace</span>
+                {createWorkspaceLoading && (
+                  <Loader2 size={16} className="animate-spin text-white" />
+                )}
+              </button>
+            </form>
+          </div>
+
+          {/* Footer */}
+          <div className="text-center text-[11px] text-gray-400 dark:text-zinc-600">
+            © {new Date().getFullYear()} Taskstack Inc.
+          </div>
         </div>
-      </Dialog>
+      )}
     </>
   );
 }

@@ -9,6 +9,9 @@ import { setWorkspace } from "@/redux/Slices/workspaceSlice";
 import Sidebar from "@/components/main/sidebar";
 import { setSidebar } from "@/redux/Slices/uiSlice";
 import type { RootState } from "@/redux/store";
+import Brand from "@/components/reuseables/Brand";
+
+const RESERVED_SLUGS = ["user", "profile", "auth", "contact", "workspaces"];
 
 export default function WorkspaceLayout({
   children,
@@ -24,12 +27,15 @@ export default function WorkspaceLayout({
   const params = useParams();
   const workspaceSlug = params?.workspaceSlug as string;
 
-  // 1. Fetch workspace data matching the URL slug
-  const { data: workspace } = useGetWorkspaceBySlugQuery(workspaceSlug, {
-    skip: !workspaceSlug,
-  });
+  const isReservedRoute = RESERVED_SLUGS.includes(workspaceSlug);
 
-  // 2. Whenever URL slug data changes, update Redux!
+  const { data: workspace, isLoading } = useGetWorkspaceBySlugQuery(
+    workspaceSlug,
+    {
+      skip: !workspaceSlug || isReservedRoute,
+    },
+  );
+
   useEffect(() => {
     if (workspace && workspace._id) {
       dispatch(setCurrentWorkspace(workspace._id));
@@ -37,9 +43,19 @@ export default function WorkspaceLayout({
     }
   }, [workspace, dispatch]);
 
+  if (isLoading && !isReservedRoute) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-white dark:bg-[#111]">
+        <div className="animate-pulse">
+          <Brand />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen w-full overflow-hidden bg-white dark:bg-[#111]">
-      {/* 1. MOBILE OVERLAY: Only shows when sidebar is open on mobile */}
+      {/* MOBILE OVERLAY: Only shows when sidebar is open on mobile */}
       {sidebarState && (
         <div
           className="fixed inset-0 z-40 bg-black/50 lg:hidden"
@@ -48,7 +64,7 @@ export default function WorkspaceLayout({
         />
       )}
 
-      {/* 2. SIDEBAR: 
+      {/*  SIDEBAR: 
           - Mobile: Fixed position, slides in/out based on 'isOpen'
           - Desktop (lg:): Static position, always visible (translate-x-0)
       */}

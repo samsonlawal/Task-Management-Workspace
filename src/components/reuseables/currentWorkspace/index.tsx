@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Switch from "../switchWorkSpace";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
@@ -50,7 +50,7 @@ export default function CurrentWorkspace() {
 function Workspace() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [filteredWorkspaces, setFilteredWorkspaces] = useState<any>([]);
+  // const [filteredWorkspaces, setFilteredWorkspaces] = useState<any>([]);
 
   const { user } = useSelector((state: any) => state.auth);
   const { currentWorkspaceId } = useSelector(
@@ -131,14 +131,10 @@ function Workspace() {
   // }, [user]);
 
   // Keep filteredWorkspaces in sync with workspaces and workspaceData
-  useEffect(() => {
-    if (workspaces) {
-      setFilteredWorkspaces(
-        workspaces.filter(
-          (workspace: any) => workspace._id !== workspaceData?._id,
-        ) || [],
-      );
-    }
+  const filteredWorkspaces = useMemo(() => {
+    if (!workspaces || !Array.isArray(workspaces)) return [];
+    const currentId = workspaceData?.workspace?._id || workspaceData?._id;
+    return workspaces.filter((ws: any) => ws._id !== currentId);
   }, [workspaces, workspaceData]);
 
   // function openWorkspaceDialog() {

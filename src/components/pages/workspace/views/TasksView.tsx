@@ -3,6 +3,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar } from "@/redux/Slices/uiSlice";
+import { useParams } from "next/navigation";
 
 import { useTheme } from "next-themes";
 import {
@@ -24,6 +25,7 @@ import AddTask from "@/components/reuseables/Dialogs/AddTask";
 import Notification from "@/components/reuseables/Notification";
 import { CustomSelect } from "@/components/reuseables/TeamSelect";
 import { useGetTasksQuery } from "@/redux/api/taskApiSlice";
+import { useGetWorkspaceBySlugQuery } from "@/redux/api/workspaceApiSlice";
 
 const tabby = [
   {
@@ -40,6 +42,8 @@ const STATUS_SECTIONS = ["TO-DO", "IN-PROGRESS", "IN-REVIEW", "DONE"] as const;
 
 function TasksView() {
   const dispatch = useDispatch();
+  const params = useParams();
+  const workspaceSlug = params?.workspaceSlug as string;
   const { resolvedTheme } = useTheme();
   const { user } = useSelector((state: RootState) => state.auth) as {
     user: any;
@@ -50,27 +54,39 @@ function TasksView() {
   const { currentWorkspaceId } = useSelector(
     (state: any) => state.currentWorkspace,
   );
+  // const {
+  //   data: tasksData,
+  //   isError: isTasksError,
+  //   isLoading: tasksLoading,
+  //   error: tasksError,
+  // } = useGetTasksQuery(
+  //   {
+  //     workspaceId: workspaceSlug,
+  //   },
+  //   { skip: !workspaceSlug },
+  // );
+
   const {
-    data: tasksData,
-    isError: isTasksError,
+    data: workspaceData,
     isLoading: tasksLoading,
+    isError: isTasksError,
     error: tasksError,
-  } = useGetTasksQuery(
-    {
-      workspaceId: currentWorkspaceId,
-    },
-    { skip: !currentWorkspaceId },
-  );
+  } = useGetWorkspaceBySlugQuery(workspaceSlug, {
+    skip: !workspaceSlug,
+  });
 
   // Log RTK Query error if any occurs:
   if (isTasksError) {
     console.log("RTK Query getTasks Error:", tasksError);
   }
 
-  const tasks =
-    tasksData?.tasks ||
-    tasksData?.data ||
-    (Array.isArray(tasksData) ? tasksData : []);
+  const tasks = workspaceData?.tasks || [];
+  const workspace = workspaceData?.workspace;
+
+  // const tasks =
+  //   tasksData?.tasks ||
+  //   tasksData?.data ||
+  //   (Array.isArray(tasksData) ? tasksData : []);
 
   // const { data: taskData, onGetTasks, loading: tasksLoading } = useGetTasks();
 
@@ -261,7 +277,7 @@ function TasksView() {
             </div>
           </div>
 
-          <AddTask taskData={tasksData} />
+          <AddTask />
         </div>
       </div>
 
