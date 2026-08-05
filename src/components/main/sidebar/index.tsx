@@ -5,20 +5,23 @@ import CurrentWorkspace from "@/components/reuseables/currentWorkspace";
 import { useRouter, usePathname, useParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUI } from "@/redux/Slices/uiSlice";
-import { LayoutDashboard, CheckCheck, UsersRound } from "lucide-react";
+import {
+  LayoutDashboard,
+  CheckCheck,
+  UsersRound,
+  Settings,
+} from "lucide-react";
 
 import IntegrationsNavGroup from "@/components/main/sidebar/IntegrationsNavGroup";
 
 export default function Sidebar() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const pathname = usePathname();
   const params = useParams();
 
   const workspaceSlug = params?.workspaceSlug;
-
   const workspace = useSelector((state: any) => state.workspace);
-
-  const dispatch = useDispatch();
 
   const workspaceIdentifier =
     workspaceSlug || workspace?.slug || workspace?._id;
@@ -33,26 +36,32 @@ export default function Sidebar() {
               {
                 label: "Dashboard",
                 value: "dashboard",
-                icon: <LayoutDashboard strokeWidth={1.5} size={18} />,
+                icon: <LayoutDashboard strokeWidth={1.5} size={16} />,
                 disabled: false,
               },
               {
                 label: "Tasks",
                 value: "tasks",
-                icon: <CheckCheck strokeWidth={1.5} size={18} />,
+                icon: <CheckCheck strokeWidth={1.5} size={16} />,
                 disabled: false,
               },
               {
                 label: "Team",
                 value: "team",
-                icon: <UsersRound strokeWidth={1.5} size={18} />,
+                icon: <UsersRound strokeWidth={1.5} size={16} />,
                 disabled: false,
               },
               // {
               //   label: "Notifications",
               //   value: "notification",
               //   icon: <Bell strokeWidth={1.5} size={18} />,
-              // },
+
+              {
+                label: "Settings",
+                value: "settings",
+                icon: <Settings strokeWidth={1.5} size={16} />,
+                disabled: false,
+              },
             ] as const
           ).map((link) => {
             const isActive =
@@ -66,19 +75,16 @@ export default function Sidebar() {
                     dispatch(setCurrentUI(link.value));
                   }
                 }}
-                className={`flex cursor-pointer flex-row items-center justify-between rounded-[5px] border px-2.5 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 ${
+                className={`flex cursor-pointer flex-row items-center justify-between rounded-[5px] border px-2.5 py-1.5 transition-all duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 ${
                   isActive
                     ? "border-[#565656]/10 bg-[#565656]/10 font-medium text-zinc-950 dark:text-white"
                     : "border-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
                 } ${link.disabled ? "opacity-70 hover:cursor-not-allowed" : ""}`}
               >
-                <div className="flex items-center gap-[11px]">
-                  {link.icon}
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px]">{link.icon}</span>
                   <span>{link.label}</span>
                 </div>
-                {/* {isActive && (
-                  <ChevronRight className="h-3.5 w-3.5 text-zinc-800 dark:text-zinc-200" />
-                )} */}
               </span>
             );
           })}

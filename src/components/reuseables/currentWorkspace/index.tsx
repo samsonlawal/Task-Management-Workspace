@@ -57,10 +57,6 @@ function Workspace() {
     (state: any) => state.currentWorkspace,
   );
 
-  // const [current, setCurrent] = useState<
-  //   "tasks" | "dashboard" | "team" | "settings"
-  // >("tasks");
-
   const { data: workspacesData, isLoading: workspacingLoading } =
     useGetUserWorkspaceQuery({ userId: user?._id }, { skip: !user?._id });
 
@@ -72,7 +68,7 @@ function Workspace() {
       { skip: !currentWorkspaceId },
     );
 
-  // 3. Populate initial active workspace on boot if not set yet
+  // Populate initial active workspace on boot if not set yet
   useEffect(() => {
     if (!currentWorkspaceId && workspaces.length > 0) {
       const firstId = workspaces[0]?._id;
@@ -165,7 +161,7 @@ function Workspace() {
             {workspaceData?.name ? (
               <>
                 <span
-                  className="poppins-medium flex h-[29px] w-[29px] items-center justify-center rounded-[5px] text-white"
+                  className="poppins-medium flex h-[24px] w-[24px] items-center justify-center rounded-[5px] text-[12px] font-normal text-white"
                   style={{
                     backgroundColor: stringToColor(workspaceData?.name),
                   }}
@@ -173,13 +169,13 @@ function Workspace() {
                   {workspaceData?.name.charAt(0).toUpperCase()}
                 </span>
                 <div className="flex flex-col items-start -space-y-1">
-                  <p className="poppins-medium text-[13px] text-[#111] dark:text-white">
+                  <p className="text-[13px] text-[#111] dark:text-white">
                     {workspaceData?.name}
                   </p>
-                  <p className="poppins text-[10px] font-normal text-[#707070]">
+                  {/* <p className="poppins text-[10px] font-normal text-[#707070]">
                     {workspaceData?.memberCount} Member
                     {workspaceData?.memberCount === 1 ? "" : "s"}
-                  </p>
+                  </p> */}
                 </div>
               </>
             ) : (
@@ -245,7 +241,7 @@ function Workspace() {
                           onClick={() => switchWorkspace(workspace)}
                         >
                           <div
-                            className="flex h-[32px] w-[32px] items-center justify-center rounded-[5px] text-[13px] text-white"
+                            className="flex h-[24px] w-[24px] items-center justify-center rounded-[5px] text-[12px] font-normal text-white"
                             style={{
                               backgroundColor: stringToColor(workspace?.name),
                             }}
@@ -253,12 +249,14 @@ function Workspace() {
                             {workspace?.name.charAt(0).toUpperCase()}
                           </div>
                           <div className="flex flex-col -space-y-[8px]">
-                            <p className="text-[13px]">{workspace?.name}</p>
-                            {/* Add number of users to the returend dara */}
-                            <p className="text-[10px] font-normal text-[#707070]">
+                            <p className="text-[13px] font-normal">
+                              {workspace?.name}
+                            </p>
+
+                            {/* <p className="text-[10px] font-normal text-[#707070]">
                               {workspace?.memberCount} Member
                               {workspace?.memberCount > 1 ? "s" : ""}
-                            </p>
+                            </p> */}
                           </div>
                         </div>
                       </MenuItem>
