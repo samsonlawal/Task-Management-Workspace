@@ -10,7 +10,7 @@ import Sidebar from "@/components/main/sidebar";
 import { setSidebar } from "@/redux/Slices/uiSlice";
 import type { RootState } from "@/redux/store";
 import Brand from "@/components/reuseables/Brand";
-import CommandPalette from "@/components/reuseables/CommandPalette";
+// import CommandPalette from "@/components/reuseables/CommandPalette";
 
 const RESERVED_SLUGS = ["user", "profile", "auth", "contact", "workspaces"];
 
@@ -25,7 +25,7 @@ export default function WorkspaceLayout({
     (state: RootState) => state.ui.isSidebarOpen,
   );
 
-  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  // const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
 
   const params = useParams();
   const workspaceSlug = params?.workspaceSlug as string;
@@ -42,17 +42,17 @@ export default function WorkspaceLayout({
   const isSettingsPage = pathname?.includes("/settings");
 
   // Global Ctrl+K / Cmd+K listener that prevents Chrome default search bar
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault(); // Prevents Chrome search bar from opening!
-        setIsCommandPaletteOpen((prev) => !prev);
-      }
-    };
+  // useEffect(() => {
+  //   const handleKeyDown = (e: KeyboardEvent) => {
+  //     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+  //       e.preventDefault(); // Prevents Chrome search bar from opening!
+  //       setIsCommandPaletteOpen((prev) => !prev);
+  //     }
+  //   };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  //   window.addEventListener("keydown", handleKeyDown);
+  //   return () => window.removeEventListener("keydown", handleKeyDown);
+  // }, []);
 
   useEffect(() => {
     if (workspace && (workspace as any)._id) {
@@ -74,10 +74,10 @@ export default function WorkspaceLayout({
   return (
     <div className="flex h-screen w-full overflow-hidden bg-white dark:bg-[#111]">
       {/* Global Command Palette Component */}
-      <CommandPalette
+      {/* <CommandPalette
         isOpen={isCommandPaletteOpen}
         onClose={() => setIsCommandPaletteOpen(false)}
-      />
+      /> */}
 
       {/* MOBILE OVERLAY: Only shows when sidebar is open on mobile */}
       {sidebarState && !isSettingsPage && (
