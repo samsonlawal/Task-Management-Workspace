@@ -1,17 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useCreateWorkspaceMutation } from "@/redux/api/workspaceApiSlice";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 import { Loader2, ArrowLeft } from "lucide-react";
 import slugify from "slugify";
 import { useRouter } from "next/navigation";
+import { saveToLocalStorage } from "@/utils/localStorage/AsyncStorage";
+import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
+import { setWorkspace } from "@/redux/Slices/workspaceSlice";
 
 export default function AddWorkspace() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+
   const [isOpen, setIsOpen] = useState(false);
   const [workspaceName, setWorkspaceName] = useState("");
-  const router = useRouter();
 
   const { user } = useSelector((state: any) => state.auth);
 
@@ -46,6 +51,17 @@ export default function AddWorkspace() {
 
       // Automatically navigate to the new workspace slug!
       const newSlug = res?.slug || generatedSlug;
+      const newWorkspace = res?.workspace || res;
+      const newId = newWorkspace?._id;
+
+      if (newId) {
+        saveToLocalStorage({ key: "CurrentWorkspaceId", value: newId });
+        dispatch(setCurrentWorkspace(newId));
+        if (newWorkspace) {
+          dispatch(setWorkspace(newWorkspace));
+        }
+      }
+
       router.push(`/${newSlug}/tasks`);
     } catch (error: any) {
       showErrorToast({
