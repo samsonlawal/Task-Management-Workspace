@@ -87,7 +87,7 @@ function Profile() {
     form.email !== (user?.email || "");
 
   return (
-    <div className="max-screen-wrapper poppins flex h-fit w-full flex-col items-center justify-center gap-6 overflow-auto bg-[#fff] px-9 pb-24 pt-6 transition-all duration-300 scrollbar-hide dark:bg-[#111]">
+    <div className="poppins flex h-fit w-full flex-col items-center justify-center gap-6 overflow-auto bg-[#fff] pb-24 pt-6 transition-all duration-300 scrollbar-hide dark:bg-[#111]">
       <div className="flex h-fit w-full flex-col items-center justify-center gap-2 rounded-[14px] border-[1px] border-[#565656]/20 bg-[#fff] transition-all duration-300 dark:bg-[#111] md:w-[700px]">
         <div className="flex w-full flex-row justify-between border-b-[1px] border-[#565656]/20 px-6 py-6 text-left">
           <div className="flex w-fit flex-col justify-start text-left">
@@ -118,7 +118,7 @@ function Profile() {
                   />
                 ) : (
                   <span
-                    className="flex h-[60px] w-[60px] items-center justify-center rounded-full border-[1px] border-[#565656]/10 text-[20px]"
+                    className="flex h-[60px] w-[60px] items-center justify-center rounded-full border-[1px] border-[#565656]/20 text-[20px]"
                     style={{
                       backgroundColor: stringToColor(form.fullname),
                     }}
@@ -130,7 +130,7 @@ function Profile() {
                   <p className="text-[13px]">Profile Picture</p>
                   <div className="flex flex-row gap-2">
                     <UploadImage />
-                    <button className="rounded-md border-[1px] border-[#565656]/60 px-[12px] py-1 text-[11px] font-medium text-[#fff]/50 transition-colors duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 hover:text-white/50">
+                    <button className="rounded-md border-[1px] border-[#565656]/60 px-[12px] py-1 text-[11px] font-medium text-[#fff]/50 transition-colors duration-300 hover:border-[#565656]/20 hover:bg-[#565656]/20 hover:text-white/50">
                       Remove
                     </button>
                   </div>
@@ -152,7 +152,7 @@ function Profile() {
                           username: e.target.value,
                         }))
                       }
-                      className={`h-[40px] w-full rounded-[6px] border-[1px] border-[#565656]/70 bg-transparent px-[12px] text-[12px] placeholder:text-[#565656] focus:border-[#fff]/100 focus:outline-none dark:text-[#fff]/80`}
+                      className={`h-[40px] w-full rounded-[6px] border-[1px] border-[#565656]/20 bg-transparent px-[12px] text-[12px] placeholder:text-[#565656] focus:border-[#565656] focus:outline-none dark:text-[#fff]/80`}
                     />
                   </div>
                   {/* {errors.username && (
@@ -174,7 +174,7 @@ function Profile() {
                         fullname: e.target.value,
                       }))
                     }
-                    className="h-[40px] rounded-[6px] border-[1px] border-[#565656]/70 bg-transparent px-[12px] text-[12px] placeholder:text-[#565656] focus:border-[#fff]/100 focus:outline-none dark:text-[#fff]/80"
+                    className="h-[40px] rounded-[6px] border-[1px] border-[#565656]/20 bg-transparent px-[12px] text-[12px] placeholder:text-[#565656] focus:border-[#565656] focus:outline-none dark:text-[#fff]/80"
                   />
                 </div>
 
@@ -191,7 +191,7 @@ function Profile() {
                           email: e.target.value,
                         }))
                       }
-                      className={`h-[40px] w-full rounded-[6px] border-[1px] border-[#565656]/70 bg-transparent px-[12px] text-[12px] placeholder:text-[#565656] focus:border-[#fff]/100 focus:outline-none dark:text-[#fff]/80`}
+                      className={`h-[40px] w-full rounded-[6px] border-[1px] border-[#565656]/20 bg-transparent px-[12px] text-[12px] placeholder:text-[#565656] focus:border-[#565656] focus:outline-none dark:text-[#fff]/80`}
                     />
                   </div>
                 </div>
@@ -200,7 +200,7 @@ function Profile() {
                   <h1 className="text-[13px]">About</h1>
                   <textarea
                     placeholder="About"
-                    className="h-[100px] rounded-[6px] border-[1px] border-[#565656]/70 bg-transparent px-[12px] py-3 text-[12px] placeholder:text-[#565656] focus:border-[#fff]/100 focus:outline-none"
+                    className="h-[100px] rounded-[6px] border-[1px] border-[#565656]/20 bg-transparent px-[12px] py-3 text-[12px] placeholder:text-[#565656] focus:border-[#565656] focus:outline-none"
                   />
                 </div>
               </div>

@@ -27,6 +27,17 @@
   @apply mx-auto w-full max-w-[1336px];
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 .waiting-for-the-sunrise-regular {
   font-family: "Waiting for the Sunrise", cursive;
   font-weight: 400;
