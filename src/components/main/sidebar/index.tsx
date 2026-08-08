@@ -52,12 +52,12 @@ export default function Sidebar() {
                 icon: <UsersRound strokeWidth={1.5} size={16} />,
                 disabled: false,
               },
-              {
-                label: "Agent",
-                value: "agent",
-                icon: <Bot strokeWidth={1.5} size={16} />,
-                disabled: false,
-              },
+              // {
+              //   label: "Agent",
+              //   value: "agent",
+              //   icon: <Bot strokeWidth={1.5} size={16} />,
+              //   disabled: false,
+              // },
               // {
               //   label: "Notifications",
               //   value: "notification",

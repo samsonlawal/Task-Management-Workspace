@@ -169,10 +169,10 @@ export default function AddTask() {
     <>
       <button
         onClick={checkWsId}
-        className="flex h-[34px] w-fit items-center justify-center gap-2 rounded-lg bg-[#fff] px-3 text-[12px] font-semibold text-white shadow-sm transition-all hover:bg-[#fff]/90 active:scale-95"
+        className="flex h-[34px] w-fit items-center justify-center gap-2 rounded-md bg-[#fff] px-3 text-[12px] font-medium text-white shadow-sm transition-all hover:bg-[#fff]/90 active:scale-95"
       >
-        <FontAwesomeIcon icon={faPlus} className="text-[10px]" />
-        <span>New Task</span>
+        {/* <FontAwesomeIcon icon={faPlus} className="text-[10px]" /> */}
+        <span className="text-[#111]">New Task</span>
       </button>
 
       <Dialog

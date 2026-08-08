@@ -21,7 +21,16 @@ import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { Loader2 } from "lucide-react";
 import { useAddMemberMutation } from "@/redux/api/memberApiSlice";
 
-export default function AddMember() {
+interface AddWorkspaceProps {
+  // trigger?: React.ReactNode;
+  variant?: "sidebar" | "button";
+  className?: string;
+}
+
+export default function AddMember(
+{  variant = "sidebar",
+  className = "",}
+) {
   const dispatch = useDispatch();
 
   let [isOpen, setIsOpen] = useState(false);
@@ -58,7 +67,7 @@ export default function AddMember() {
   };
 
   const handleAddMember = async () => {
-    const { email, role, workspaceName } = member; // Make sure jobTitle is included
+    const { email, role, workspaceName } = member; 
     let errorMsg = "";
 
     if (!email) {
@@ -133,14 +142,30 @@ export default function AddMember() {
 
   return (
     <>
+      { variant === "button" ? (
+
       <button
         onClick={toggleDialog}
-        className="poppins flex h-[36px] w-[36px] shrink-0 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-0 text-[12px] font-medium text-zinc-900 shadow-sm transition-all duration-300 hover:bg-zinc-100 active:scale-95 sm:w-auto sm:px-4"
+        className="flex w-full cursor-pointer flex-row items-center rounded-[4px] py-1 pl-2 transition-all duration-300 hover:text-[#fff] text-[#fff]/50 ease-in-out hover:bg-[#565656]/10"
+
+        
         title="Invite Member"
       >
-        <FontAwesomeIcon icon={faUserPlus} className="text-[13px]" />
-        <span className="hidden sm:inline">Invite Member</span>
-      </button>
+        <span className="px-2 text-[12px] font-regular ">Invite Member</span>
+      </button>) 
+
+      :
+
+      (
+
+      <button
+        onClick={toggleDialog}
+        className="poppins flex h-[36px] w-fit shrink-0 items-center justify-center gap-2 rounded-md border border-gray-200 bg-white px-0 text-[12px] font-medium shadow-sm transition-all duration-300 hover:bg-zinc-100 active:scale-95 sm:w-auto sm:px-4"
+        title="Invite Member"
+      >
+        <span className="px-2 text-[12px] text-[#111]">Invite Member</span>
+      </button>) 
+}
       <Dialog
         open={isOpen}
         onClose={handleDialogClose}

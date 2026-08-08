@@ -8,6 +8,7 @@ import { Loader2, Plus, Home } from "lucide-react";
 
 import { useGetUserWorkspace } from "@/hooks/api/workspace";
 import { setWorkspace } from "@/redux/Slices/workspaceSlice";
+import { useGetUserWorkspaceQuery } from "@/redux/api/workspaceApiSlice";
 import { useCreateWorkspaceMutation } from "@/redux/api/workspaceApiSlice";
 import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
 import Brand from "@/components/reuseables/Brand";
@@ -31,34 +32,33 @@ function Workspaces() {
 
   const { user } = useSelector((state: any) => state.auth);
 
-  const {
-    data: workspaces,
-    onGetUserWorkspace,
-    loading: workspacingLoading,
-  } = useGetUserWorkspace(user?._id);
-
-  const [createWorkspace, { isLoading: createWorkspaceLoading }] =
-    useCreateWorkspaceMutation();
-
-  const generatedSlug = slugify(newWorkspaceName || "", {
-    lower: true,
-    strict: true,
-    trim: true,
-  });
+    const {
+    data: workspacesData,
+    isLoading: workspacingLoading,
+    isFetching,
+    isSuccess
+  } = useGetUserWorkspaceQuery(
+    { userId: user?._id },
+    { skip: !user?._id }
+  );
 
   function handleContinue() {
     if (selectedWorkspace) {
       const id = selectedWorkspace?._id;
       const slug = selectedWorkspace?.slug || selectedWorkspace._id;
+      saveToLocalStorage({ key: "CurrentWorkspaceId", value: id });
       dispatch(setCurrentWorkspace(id));
       router.push(`/${slug}/tasks`);
     }
   }
 
+   const workspaces = workspacesData?.workspaces || workspacesData || [];
+
   const hasInvitations = invitesCount > 0;
   const showInvitations = hasInvitations && !isSkipped;
+  const isLoadingWorkspaces = workspacingLoading || isFetching;
   const hasNoWorkspaces =
-    !workspacingLoading && (!workspaces || workspaces.length === 0);
+    !isLoadingWorkspaces  && workspaces.length === 0;
 
   const showCreateWorkspaceScreen =
     !showInvitations && (hasNoWorkspaces || isCreatingMode);
@@ -89,7 +89,23 @@ function Workspaces() {
 
       <Brand />
 
-      {/* View invitations if skipped */}
+             {/* Loading state spinner to prevent premature screen flash */}
+      { !isSuccess ? 
+      
+      // ({isLoadingWorkspaces && 
+        (
+        <div className="flex flex-col items-center gap-3 p-8">
+          {/* <Loader2 className="h-6 w-6 animate-spin text-[#111] dark:text-white" /> */}
+          <p className="text-xs text-[#707070]">Loading your workspaces...</p>
+        </div>
+      )
+    // } ) 
+  :
+
+
+
+ ( <>
+     {/* View invitations if skipped */}
       {hasInvitations && isSkipped && (
         <button
           onClick={() => setIsSkipped(false)}
@@ -115,13 +131,13 @@ function Workspaces() {
       {/* Invitation Card */}
       {!isSkipped && (
         <Invitation
-          onInviteAccepted={() => onGetUserWorkspace(user?._id)}
+          onInviteAccepted={() => {}}
           onSkip={() => setIsSkipped(true)}
           onInvitesCountChange={(count) => setInvitesCount(count)}
         />
       )}
 
-      {showCreateWorkspaceScreen && (
+      {!isLoadingWorkspaces && showCreateWorkspaceScreen && (
         <div className="flex w-[360px] flex-col gap-4 rounded-lg  p-6 py-10 shadow-lg 0">
           <div className="flex flex-col text-left">
             <h1 className="poppins text-[16px] font-medium text-[#111] dark:text-white">
@@ -149,7 +165,7 @@ function Workspaces() {
       )}
 
       {/* Select Workspace Screen (When user has existing workspaces) */}
-      {!showInvitations && !showCreateWorkspaceScreen && (
+      {!isLoadingWorkspaces && !showInvitations && !showCreateWorkspaceScreen && (
         <div className="flex flex-col gap-4 rounded-lg border-[1px] border-[#EEEEEE] bg-white p-6 dark:border-[#565656]/20 dark:bg-[#1a1a1a]/50">
           {/* Header */}
           <div className="flex flex-col text-left">
@@ -168,7 +184,7 @@ function Workspaces() {
                 <p className="text-[#fff]40 text-sm">Loading workspaces...</p>
               </div>
             ) : workspaces && workspaces.length > 0 ? (
-              workspaces.map((ws) => (
+              workspaces.map((ws: any) => (
                 <div
                   key={ws._id}
                   className={`flex h-[42px] w-[317px] cursor-pointer flex-row items-center justify-between rounded-[4px] p-[6px] transition-all duration-300 hover:bg-[#565656]/10 ${selectedWorkspace?._id === ws._id ? "border-[1px] border-[#565656]/10 bg-[#565656]/20 text-[#111]" : "text-[#565656]"}`}
@@ -223,6 +239,10 @@ function Workspaces() {
           </div>
         </div>
       )}
+ 
+ 
+ </>)
+      }
     </div>
   );
 }

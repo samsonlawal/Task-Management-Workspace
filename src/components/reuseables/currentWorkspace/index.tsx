@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import AddWorkspace from "../Dialogs/AddWorkspace";
+import AddMember from "../Dialogs/AddMember";
+
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
 import {
@@ -21,6 +23,8 @@ import {
   useGetUserWorkspaceQuery,
   useGetSingleWorkspaceQuery,
 } from "@/redux/api/workspaceApiSlice";
+import Link from "next/link";
+
 
 export default function CurrentWorkspace() {
   return (
@@ -37,6 +41,8 @@ export default function CurrentWorkspace() {
 function Workspace() {
   const router = useRouter();
   const dispatch = useDispatch();
+    const params = useParams();
+    const workspaceSlug = (params?.workspaceSlug as string) || "";
   // const [filteredWorkspaces, setFilteredWorkspaces] = useState<any>([]);
 
   const { user } = useSelector((state: any) => state.auth);
@@ -64,6 +70,8 @@ function Workspace() {
       }
     }
   }, [workspaces, currentWorkspaceId, dispatch]);
+
+  
 
   // Use the unified hook
   // const { data: taskData, onGetTasks, loading: tasksLoading } = useGetTasks();
@@ -180,39 +188,22 @@ function Workspace() {
         <MenuItems
           transition
           anchor="bottom start"
-          className="poppins-medium z-50 flex min-h-fit w-[260px] origin-top-right flex-col justify-between gap-2 rounded-md border-[1px] border-[#565656]/10 bg-[#1a1a1a] px-3 py-2 text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-300 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          className="poppins-medium z-50 flex min-h-fit w-[260px] origin-top-right flex-col justify-between gap-2 rounded-md border-[1px] border-[#565656]/10 bg-[#1a1a1a] px-3 py-1 text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-300 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
-          {/* {" "}
-          {workspaceData._id && (
-            <MenuItem>
-              <div
-                className={`border-red flex cursor-pointer flex-row items-center justify-start gap-[11px] rounded-[5px] border px-2 py-2 transition-all duration-300 hover:border-[#565656]/10 hover:bg-gray-300/50 ${current === "settings" ? "border border-[#565656]/10 bg-[#565656]/10" : "border-none"}`}
-                onClick={() => {
-                  dispatch(setCurrentUI("settings"));
-                  setCurrent("settings");
-                }}
-              >
-                <Settings strokeWidth={1.5} size={18} />
-                Settings
-              </div>
-            </MenuItem>
-          )} */}
+   
           <div className="flex flex-col gap-[4px]">
-            {/* <MenuItem> */}
-            {workspaceData?._id ? (
-              <p className="px-2 text-[13px] text-[#707070]">
-                Switch Workspace
-              </p>
-            ) : (
-              <p className="px-2 text-[13px] text-[#707070]">
-                Select Workspace
-              </p>
-            )}
-            {/* </MenuItem> */}
+          
 
             <div className="flex h-fit flex-col gap-[10px] overflow-y-auto rounded-sm">
+
+              
+              
               {workspacingLoading && !filteredWorkspaces ? (
                 <div className="flex w-full items-center justify-center px-2 py-10">
+
+                  <p className="px-2 text-[13px] text-[#707070]">
+                Select Workspace
+              </p>
                   {/* <Loader loaderSize={50} /> */}
                   <p className="text-[12px] font-regular text-[#fff]">
                     Getting workspaces...
@@ -260,7 +251,17 @@ function Workspace() {
             </div>
           </div>
           <MenuItem>
+          <div>
             <AddWorkspace />
+            {/* <AddMember variant='button'/> */}
+            <Link
+                     href={`/${workspaceSlug}/settings`}
+                      className={`flex w-full cursor-pointer flex-row items-center rounded-[4px] py-1 pl-2 transition-all duration-300 ease-in-out hover:text-white text-[#fff]/50 hover:bg-[#565656]/10`}
+                    >
+                     
+                      <p className="px-2 text-[12px] font-regular ">Settings</p>
+                    </Link>
+</div>
           </MenuItem>
           <div></div>
         </MenuItems>
