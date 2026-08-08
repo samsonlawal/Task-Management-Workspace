@@ -4,14 +4,24 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useCreateWorkspaceMutation } from "@/redux/api/workspaceApiSlice";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowLeft, Plus } from "lucide-react";
 import slugify from "slugify";
 import { useRouter } from "next/navigation";
 import { saveToLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
 import { setWorkspace } from "@/redux/Slices/workspaceSlice";
 
-export default function AddWorkspace() {
+interface AddWorkspaceProps {
+  trigger?: React.ReactNode;
+  variant?: "sidebar" | "button";
+  className?: string;
+}
+
+export default function AddWorkspace({
+  trigger,
+  variant = "sidebar",
+  className = "",
+}: AddWorkspaceProps) {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -76,13 +86,23 @@ export default function AddWorkspace() {
   return (
     <>
       {/* Trigger Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="flex w-full cursor-pointer flex-row items-center rounded-[4px] border border-[#565656]/10 bg-[#565656]/10 py-1.5 pl-2 transition-all duration-300 ease-in-out hover:bg-[#565656]/20"
-      >
-        <img src="/icons/plus.svg" alt="" className="w-4 cursor-pointer" />
-        <p className="px-2 text-[13px] text-[#707070]">Create Workspace</p>
-      </button>
+      { variant === "button" ? (
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className={`poppins flex w-full items-center justify-center gap-2 rounded-md border border-gray-300 bg-white py-[8px] text-[12px] font-medium text-zinc-900 transition-all duration-300 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-white dark:text-[#111] dark:hover:bg-white/80 ${className}`}
+        >
+          <span>Create Workspace</span>
+        </button>
+      ) : (
+        <button
+          onClick={() => setIsOpen(true)}
+          className={`flex w-full cursor-pointer flex-row items-center rounded-[4px] border border-[#565656]/10 bg-[#565656]/10 py-1.5 pl-2 transition-all duration-300 ease-in-out hover:bg-[#565656]/20 ${className}`}
+        >
+          <img src="/icons/plus.svg" alt="" className="w-4 cursor-pointer" />
+          <p className="px-2 text-[13px] text-[#707070]">Create Workspace</p>
+        </button>
+      )}
 
       {/* Full Page View */}
       {isOpen && (
@@ -123,7 +143,7 @@ export default function AddWorkspace() {
             >
               {/* Workspace Name */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-normal text-zinc-700 dark:text-[#fff]/60">
+                <label className="text-xs font-normal text-zinc-700 dark:text-zinc-400">
                   Workspace Name
                 </label>
                 <input
@@ -131,14 +151,14 @@ export default function AddWorkspace() {
                   value={workspaceName}
                   onChange={(e) => setWorkspaceName(e.target.value)}
                   placeholder="e.g. Acme Corp"
-                  className="h-[44px] w-full rounded-lg border border-gray-200 bg-gray-50/50 px-3.5 text-sm font-normal text-zinc-900 placeholder-zinc-400 outline-none transition-colors focus:border-[#609328] focus:bg-transparent dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-white dark:focus:border-[#609328]"
+                  className="h-[44px] w-full rounded-lg border border-gray-200 bg-gray-50/50 px-3.5 text-sm font-normal text-zinc-900 placeholder-zinc-400 outline-none transition-colors focus:border-zinc-500 focus:bg-transparent dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-white dark:focus:border-zinc-400"
                   autoFocus
                 />
               </div>
 
               {/* URL Preview Field */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-normal text-zinc-700 dark:text-[#fff]/60">
+                <label className="text-xs font-normal text-zinc-700 dark:text-zinc-400">
                   URL
                 </label>
                 <div className="flex h-[44px] w-full items-center rounded-lg border border-gray-200 bg-gray-50/50 px-3.5 text-sm dark:border-zinc-800 dark:bg-zinc-900/50">
@@ -158,11 +178,11 @@ export default function AddWorkspace() {
               <button
                 type="submit"
                 disabled={createWorkspaceLoading || !workspaceName.trim()}
-                className="active:scale-98 mt-2 flex h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-[#609328] font-normal text-white shadow-sm transition-all hover:bg-[#609328]/90 disabled:cursor-not-allowed disabled:opacity-50"
+                className="active:scale-98 mt-2 flex h-[44px] w-full items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white font-normal text-[#111] shadow-sm transition-all hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none text-sm"
               >
                 <span>Create Workspace</span>
                 {createWorkspaceLoading && (
-                  <Loader2 size={16} className="animate-spin text-white" />
+                  <Loader2 size={16} className="animate-spin text-zinc-900" />
                 )}
               </button>
             </form>

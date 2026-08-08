@@ -2,28 +2,49 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
+import slugify from "slugify";
+import { Loader2, Plus, Home } from "lucide-react";
+
 import { useGetUserWorkspace } from "@/hooks/api/workspace";
+import { setWorkspace } from "@/redux/Slices/workspaceSlice";
+import { useCreateWorkspaceMutation } from "@/redux/api/workspaceApiSlice";
 import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
 import Brand from "@/components/reuseables/Brand";
 import Invitation from "@/components/reuseables/Invitation";
 import stringToColor from "@/utils/stringToColor";
 import ThemeSwitcher from "@/components/reuseables/ThemeSwitcher";
+import { showErrorToast, showSuccessToast } from "@/utils/toaster";
+import { saveToLocalStorage } from "@/utils/localStorage/AsyncStorage";
+import AddWorkspace from "@/components/reuseables/Dialogs/AddWorkspace";
+
 
 function Workspaces() {
   const dispatch = useDispatch();
   const router = useRouter();
+
   const [selectedWorkspace, setSelectedWorkspace] = useState<any>(null);
   const [isSkipped, setIsSkipped] = useState(false);
   const [invitesCount, setInvitesCount] = useState(0);
+  const [isCreatingMode, setIsCreatingMode] = useState(false);
+  const [newWorkspaceName, setNewWorkspaceName] = useState("");
 
   const { user } = useSelector((state: any) => state.auth);
+
   const {
     data: workspaces,
     onGetUserWorkspace,
     loading: workspacingLoading,
   } = useGetUserWorkspace(user?._id);
+
+  const [createWorkspace, { isLoading: createWorkspaceLoading }] =
+    useCreateWorkspaceMutation();
+
+  const generatedSlug = slugify(newWorkspaceName || "", {
+    lower: true,
+    strict: true,
+    trim: true,
+  });
 
   function handleContinue() {
     if (selectedWorkspace) {
@@ -36,14 +57,39 @@ function Workspaces() {
 
   const hasInvitations = invitesCount > 0;
   const showInvitations = hasInvitations && !isSkipped;
+  const hasNoWorkspaces =
+    !workspacingLoading && (!workspaces || workspaces.length === 0);
+
+  const showCreateWorkspaceScreen =
+    !showInvitations && (hasNoWorkspaces || isCreatingMode);
+
+
+
+      async function handleCreateWorkspace(e: React.FormEvent) {
+        e.preventDefault
+      }
+
+
+
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center gap-[20px] bg-white dark:bg-[#111]">
+    <div className="relative flex h-screen flex-col items-center justify-center gap-[20px] bg-white dark:bg-[#111]">
+      {/* Home Navigation Button */}
+      <div className="absolute top-6 left-6 z-20">
+        <Link
+          href="/"
+          className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-xs font-medium text-zinc-900 shadow-sm transition-all hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800"
+        >
+          <Home size={15} />
+          <span>Home</span>
+        </Link>
+      </div>
+
       {/* <ThemeSwitcher /> */}
 
       <Brand />
 
-      {/* Button to view invitations if skipped */}
+      {/* View invitations if skipped */}
       {hasInvitations && isSkipped && (
         <button
           onClick={() => setIsSkipped(false)}
@@ -75,8 +121,35 @@ function Workspaces() {
         />
       )}
 
-      {/* Select Workspace Card - Shown when no invitations exist OR when skipped */}
-      {!showInvitations && (
+      {showCreateWorkspaceScreen && (
+        <div className="flex w-[360px] flex-col gap-4 rounded-lg  p-6 py-10 shadow-lg 0">
+          <div className="flex flex-col text-left">
+            <h1 className="poppins text-[16px] font-medium text-[#111] dark:text-white">
+              Create a Workspace
+            </h1>
+            <p className="poppins mt-0.5 text-[12px] text-[#565656] dark:text-[#fff]/50">
+              {hasNoWorkspaces
+                ? "You don't have any workspaces yet. Create one to get started."
+                : "Enter a name to set up your workspace."}
+            </p>
+          </div>
+          <div className="flex flex-col gap-4">
+            <AddWorkspace variant="button" />
+            {workspaces && workspaces.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setIsCreatingMode(false)}
+                className="text-[12px] text-[#565656] hover:text-[#111] dark:text-white/50 dark:hover:text-white"
+              >
+                Back to Select Workspace
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Select Workspace Screen (When user has existing workspaces) */}
+      {!showInvitations && !showCreateWorkspaceScreen && (
         <div className="flex flex-col gap-4 rounded-lg border-[1px] border-[#EEEEEE] bg-white p-6 dark:border-[#565656]/20 dark:bg-[#1a1a1a]/50">
           {/* Header */}
           <div className="flex flex-col text-left">
@@ -138,13 +211,16 @@ function Workspaces() {
             )}
           </div>
 
-          <button
-            className="poppins rounded-sm bg-[#111] py-[10px] text-[12px] font-medium text-white transition-all duration-300 hover:bg-[#111]/90 disabled:bg-[#565656]/10 disabled:text-[#565656]/50 dark:bg-[#fff] dark:text-[#111] dark:hover:bg-[#fff]/80"
-            disabled={!selectedWorkspace}
-            onClick={handleContinue}
-          >
-            Select and Continue
-          </button>
+          <div className="flex flex-col gap-2">
+            <button
+              className="poppins w-full rounded-sm bg-[#111] py-[10px] text-[12px] font-medium text-white transition-all duration-300 hover:bg-[#111]/90 disabled:bg-[#565656]/10 disabled:text-[#565656]/50 dark:bg-[#fff] dark:text-[#111] dark:hover:bg-[#fff]/80"
+              disabled={!selectedWorkspace}
+              onClick={handleContinue}
+            >
+              Select and Continue
+            </button>
+            <AddWorkspace variant="button" />
+          </div>
         </div>
       )}
     </div>

@@ -75,7 +75,7 @@ export default function Login() {
               placeholder="name@example.com"
               value={formValues.email}
               onChange={handleInputChange}
-              className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 dark:border-[#565656]/20 dark:bg-[#111]/30 px-3 py-2.5 text-sm text-[#111] dark:text-white placeholder-zinc-400 focus:border-[#609328] focus:outline-none transition-colors"
+              className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 dark:border-[#565656]/20 dark:bg-[#111]/30 px-3 py-2.5 text-sm text-[#111] dark:text-white placeholder-zinc-400 focus:border-zinc-500 focus:outline-none dark:focus:border-zinc-400 transition-colors"
             />
           </div>
 
@@ -89,7 +89,7 @@ export default function Login() {
                 placeholder="••••••••"
                 value={formValues.password}
                 onChange={handleInputChange}
-                className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 dark:border-[#565656]/20 dark:bg-[#111]/30 pl-3 pr-10 py-2.5 text-sm text-[#111] dark:text-white placeholder-zinc-400 focus:border-[#609328] focus:outline-none transition-colors"
+                className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 dark:border-[#565656]/20 dark:bg-[#111]/30 pl-3 pr-10 py-2.5 text-sm text-[#111] dark:text-white placeholder-zinc-400 focus:border-zinc-500 focus:outline-none dark:focus:border-zinc-400 transition-colors"
               />
               <button
                 type="button"
@@ -108,13 +108,13 @@ export default function Login() {
                 type="checkbox"
                 checked={remember}
                 onChange={(e) => setRemember(e.target.checked)}
-                className="h-3.5 w-3.5 bg-transparent border-[#565656]/30 text-[#609328] rounded focus:ring-[#609328] focus:outline-none accent-[#609328]"
+                className="h-3.5 w-3.5 bg-transparent border-[#565656]/30 rounded accent-zinc-900 dark:accent-white cursor-pointer"
               />
               Remember Me
             </label>
             <Link
               href="/auth/forgot-password"
-              className="text-[#609328] hover:text-[#609328]/80 transition-colors hover:underline"
+              className="text-zinc-900 dark:text-white font-medium hover:underline transition-colors"
             >
               Forgot Password?
             </Link>
@@ -124,17 +124,17 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-[#609328] hover:bg-[#609328]/90 px-4 py-2.5 text-sm font-medium text-white transition-all active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-2 flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-white hover:bg-zinc-100 border border-gray-200 shadow-sm px-4 py-2.5 text-sm font-medium text-zinc-900 transition-all active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
           >
             <span>Sign In</span>
-            {loading && <Loader2 size={16} className="animate-spin text-white" />}
+            {loading && <Loader2 size={16} className="animate-spin text-zinc-900" />}
           </button>
 
           <p className="text-center text-xs text-zinc-400 mt-2">
             Don’t have an account?{" "}
             <Link
               href="/auth/sign-up"
-              className="text-[#609328] hover:text-[#609328]/80 font-medium transition-colors hover:underline"
+              className="text-zinc-900 dark:text-white font-medium hover:underline transition-colors"
             >
               Sign Up
             </Link>

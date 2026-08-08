@@ -2,23 +2,10 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import Switch from "../switchWorkSpace";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import AddWorkspace from "../Dialogs/AddWorkspace";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  useGetUserWorkspace,
-  useGetSingleWorkspace,
-  useGetMembers,
-} from "@/hooks/api/workspace";
 import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
-import { setWorkspace } from "@/redux/Slices/workspaceSlice";
-import { setMembers } from "@/redux/Slices/memberSlice";
-
-import { setTasks } from "@/redux/Slices/taskSlice";
-
 import {
   getFromLocalStorage,
   saveToLocalStorage,

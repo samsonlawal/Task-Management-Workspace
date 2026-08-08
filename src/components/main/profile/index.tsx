@@ -215,7 +215,7 @@ function Profile() {
             className={`rounded-md border-[1px] border-[#565656]/60 px-[12px] py-1 text-[11px] font-medium transition-colors duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 hover:text-white/50 ${
               isDirty
                 ? "bg-[white] text-[#111]"
-                : "cursor-not-allowed bg-[#565656]/10 text-[#fff] opacity-50"
+                : "cursor-not-allowed bg-[#565656]/10 text-zinc-400 dark:text-zinc-500 opacity-50"
             }`}
           >
             {updateLoading ? "Saving..." : "Save Changes"}

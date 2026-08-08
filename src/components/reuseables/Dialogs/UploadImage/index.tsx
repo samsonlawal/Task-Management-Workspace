@@ -132,14 +132,14 @@ export default function AddMember() {
                   Cancel
                 </button>
                 <button
-                  className="flex items-center gap-1.5 rounded-md bg-[#609328] px-[18px] py-1.5 text-[11px] font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                  className="flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-[18px] py-1.5 text-[11px] font-semibold text-zinc-900 shadow-sm transition-all hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none"
                   onClick={handleSave}
                   disabled={loading}
                 >
                   {loading ? (
                     <>
                       <span>Saving</span>
-                      <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
+                      <Loader2 className="h-3.5 w-3.5 animate-spin text-zinc-900" />
                     </>
                   ) : (
                     <span>Save</span>

@@ -29,7 +29,7 @@ export default function AcceptInvite() {
       {/* Flat Workspace-Consistent Invitation Card */}
       <div className="relative z-10 my-auto flex w-full max-w-[440px] flex-col items-center gap-6 rounded-lg border border-[#EEEEEE] bg-white dark:border-[#565656]/20 dark:bg-[#1a1a1a]/50 p-6 text-center shadow-lg">
         {/* Envelope Icon */}
-        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#609328]/20 bg-[#609328]/10 text-[#609328]">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#fff]/20 bg-[#fff]/10 text-[#fff]">
           <Mail className="h-6 w-6" />
         </div>
 
@@ -55,7 +55,7 @@ export default function AcceptInvite() {
           <p className="text-[#565656] dark:text-[#fff]/60">
             Please log in or sign up using the invited email:
           </p>
-          <p className="select-all break-all pt-0.5 text-xs font-medium text-[#609328]">
+          <p className="select-all break-all pt-0.5 text-xs font-medium text-[#fff]">
             {email || "your invited email"}
           </p>
         </div>
@@ -63,12 +63,12 @@ export default function AcceptInvite() {
         {/* Action Button */}
         <Link
           href={`/auth/sign-in?email=${encodeURIComponent(email)}`}
-          className="active:scale-98 group flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-[#609328] hover:bg-[#609328]/90 px-4 py-2.5 text-sm font-medium text-white transition-all"
+          className="active:scale-98 group flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-white hover:bg-zinc-100 border border-gray-200 shadow-sm px-4 py-2.5 text-sm font-medium text-zinc-900 transition-all"
         >
           <span>Login to Accept Invite</span>
           <ArrowRight
             size={14}
-            className="transition-transform group-hover:translate-x-0.5 text-white"
+            className="transition-transform group-hover:translate-x-0.5 text-zinc-900"
           />
         </Link>
 
@@ -77,7 +77,7 @@ export default function AcceptInvite() {
           Don't have an account?{" "}
           <Link
             href={`/auth/sign-up?email=${encodeURIComponent(email)}`}
-            className="font-medium text-[#609328] transition-colors hover:text-[#609328]/80 hover:underline"
+            className="font-medium text-zinc-900 dark:text-white transition-colors hover:underline"
           >
             Sign Up
           </Link>

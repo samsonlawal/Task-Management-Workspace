@@ -88,7 +88,7 @@ export default function ResetPassword() {
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 py-2 pl-3 pr-10 text-sm text-[#111] placeholder-zinc-400 focus:border-[#609328] focus:outline-none dark:border-[#565656]/20 dark:bg-[#111]/30 dark:text-white"
+                className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 py-2 pl-3 pr-10 text-sm text-[#111] placeholder-zinc-400 focus:border-[#fff] focus:outline-none dark:border-[#565656]/20 dark:bg-[#111]/30 dark:text-white"
               />
               <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400">
                 <Mail size={16} />
@@ -117,7 +117,7 @@ export default function ResetPassword() {
                       }
                       setCode(e.target.value);
                     }}
-                    className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 py-2 pl-3 pr-10 text-sm tracking-widest text-[#111] placeholder-zinc-400 focus:border-[#609328] focus:outline-none dark:border-[#565656]/20 dark:bg-[#111]/30 dark:text-white"
+                    className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 py-2 pl-3 pr-10 text-sm tracking-widest text-[#111] placeholder-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-[#565656]/20 dark:bg-[#111]/30 dark:text-white dark:focus:border-zinc-400"
                   />
                   <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400">
                     <KeyRound size={16} />
@@ -128,11 +128,11 @@ export default function ResetPassword() {
                 // type="submit"
                 onClick={handleNext}
                 disabled={isLoading}
-                className="active:scale-98 mt-2 flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-[#609328] px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-[#609328]/90 disabled:cursor-not-allowed disabled:opacity-50"
+                className="active:scale-98 mt-2 flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-white hover:bg-zinc-100 border border-gray-200 shadow-sm px-4 py-2.5 text-sm font-medium text-zinc-900 transition-all disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none"
               >
                 <span>Verify Code</span>
                 {isLoading && (
-                  <Loader2 size={16} className="animate-spin text-white" />
+                  <Loader2 size={16} className="animate-spin text-zinc-900" />
                 )}
               </button>
             </div>
@@ -149,7 +149,7 @@ export default function ResetPassword() {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 py-2 pl-3 pr-10 text-sm text-[#111] placeholder-zinc-400 focus:border-[#609328] focus:outline-none dark:border-[#565656]/20 dark:bg-[#111]/30 dark:text-white"
+                    className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 py-2 pl-3 pr-10 text-sm text-[#111] placeholder-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-[#565656]/20 dark:bg-[#111]/30 dark:text-white dark:focus:border-zinc-400"
                   />
                   <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400">
                     <Lock size={16} />
@@ -168,7 +168,7 @@ export default function ResetPassword() {
                     placeholder="••••••••"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 py-2 pl-3 pr-10 text-sm text-[#111] placeholder-zinc-400 focus:border-[#609328] focus:outline-none dark:border-[#565656]/20 dark:bg-[#111]/30 dark:text-white"
+                    className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 py-2 pl-3 pr-10 text-sm text-[#111] placeholder-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-[#565656]/20 dark:bg-[#111]/30 dark:text-white dark:focus:border-zinc-400"
                   />
                   <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400">
                     <Lock size={16} />
@@ -179,18 +179,18 @@ export default function ResetPassword() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="active:scale-98 mt-2 flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-[#609328] px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-[#609328]/90 disabled:cursor-not-allowed disabled:opacity-50"
+                className="active:scale-98 mt-2 flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-white hover:bg-zinc-100 border border-gray-200 shadow-sm px-4 py-2.5 text-sm font-medium text-zinc-900 transition-all disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none"
               >
                 <span>Reset Password</span>
                 {isLoading && (
-                  <Loader2 size={16} className="animate-spin text-white" />
+                  <Loader2 size={16} className="animate-spin text-zinc-900" />
                 )}
               </button>
 
               <button
                 type="button"
                 onClick={() => setVerifyCode(false)}
-                className="active:scale-98 mt-2 flex h-[42px] w-full items-center justify-center gap-2 rounded-lg border border-[#609328] bg-[#609328]/10 px-4 py-2.5 text-sm font-medium text-[#609328] transition-all hover:bg-[#609328]/20 hover:text-[#609328] hover:underline"
+                className="active:scale-98 mt-2 flex h-[42px] w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-900 transition-all hover:bg-zinc-100"
               >
                 <span>Back to Verify Code</span>
               </button>
@@ -200,7 +200,7 @@ export default function ResetPassword() {
           <p className="mt-2 text-center text-xs text-zinc-400">
             <Link
               href="/auth/sign-in"
-              className="inline-flex items-center gap-1.5 font-medium text-[#609328] transition-colors hover:text-[#609328]/80 hover:underline"
+              className="inline-flex items-center gap-1.5 font-medium text-zinc-900 dark:text-white transition-colors hover:underline"
             >
               <ArrowLeft size={14} />
               <span>Back to Sign In</span>

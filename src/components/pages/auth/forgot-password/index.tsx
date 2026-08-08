@@ -56,7 +56,7 @@ export default function ForgotPassword() {
       <div className="relative z-10 my-auto flex min-h-[320px] w-full max-w-[420px] flex-col justify-center rounded-lg border border-[#EEEEEE] bg-white p-6 shadow-lg dark:border-[#565656]/20 dark:bg-[#1a1a1a]/50">
         {success ? (
           <div className="flex flex-col items-center space-y-6 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#609328]/20 bg-[#609328]/10 text-[#609328]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#fff]/20 bg-[#fff]/10 text-[#fff]">
               <CheckCircle2 className="h-6 w-6" />
             </div>
             <div className="space-y-2">
@@ -73,7 +73,7 @@ export default function ForgotPassword() {
             </div>
             <Link
               href={`/auth/reset-password?email=${encodeURIComponent(email)}`}
-              className="active:scale-98 mt-2 flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-[#609328] px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-[#609328]/90"
+              className="active:scale-98 mt-2 flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-[#fff] px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-[#fff]/90"
             >
               <ArrowLeft size={14} />
               <span></span>
@@ -103,7 +103,7 @@ export default function ForgotPassword() {
                   placeholder="name@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 py-2.5 pl-3 pr-10 text-sm text-[#111] placeholder-zinc-400 transition-colors focus:border-[#609328] focus:outline-none dark:border-[#565656]/20 dark:bg-[#111]/30 dark:text-white"
+                  className="w-full rounded-md border border-[#EEEEEE] bg-[#EEEEEE]/30 py-2.5 pl-3 pr-10 text-sm text-[#111] placeholder-zinc-400 transition-colors focus:border-zinc-500 focus:outline-none dark:border-[#565656]/20 dark:bg-[#111]/30 dark:text-white dark:focus:border-zinc-400"
                 />
                 <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400">
                   <Mail size={16} />
@@ -116,11 +116,11 @@ export default function ForgotPassword() {
             <button
               type="submit"
               disabled={isLoading}
-              className="active:scale-98 mt-4 flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-[#609328] px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-[#609328]/90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="active:scale-98 mt-4 flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-white hover:bg-zinc-100 border border-gray-200 shadow-sm px-4 py-2.5 text-sm font-medium text-zinc-900 transition-all disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none"
             >
               <span>Send Reset Link</span>
               {isLoading && (
-                <Loader2 size={16} className="animate-spin text-white" />
+                <Loader2 size={16} className="animate-spin text-zinc-900" />
               )}
             </button>
 
@@ -128,7 +128,7 @@ export default function ForgotPassword() {
               Remember your password?{" "}
               <Link
                 href="/auth/sign-in"
-                className="font-medium text-[#609328] transition-colors hover:text-[#609328]/80 hover:underline"
+                className="font-medium text-zinc-900 dark:text-white transition-colors hover:underline"
               >
                 Sign In
               </Link>

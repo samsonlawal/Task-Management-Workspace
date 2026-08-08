@@ -135,7 +135,7 @@ export default function AddMember() {
     <>
       <button
         onClick={toggleDialog}
-        className="poppins flex h-[36px] w-[36px] shrink-0 items-center justify-center gap-2 rounded-lg bg-[#609328] px-0 text-[12px] font-medium text-[#fff] shadow-sm transition-all duration-300 hover:bg-[#609328]/90 active:scale-95 sm:w-auto sm:px-4"
+        className="poppins flex h-[36px] w-[36px] shrink-0 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-0 text-[12px] font-medium text-zinc-900 shadow-sm transition-all duration-300 hover:bg-zinc-100 active:scale-95 sm:w-auto sm:px-4"
         title="Invite Member"
       >
         <FontAwesomeIcon icon={faUserPlus} className="text-[13px]" />
@@ -177,7 +177,7 @@ export default function AddMember() {
                   type="email"
                   value={member.email}
                   placeholder="Enter email address"
-                  className="h-[36px] flex-1 rounded-md border-[1px] border-gray-400 px-2 text-[12px] font-light text-[#444] placeholder-[#777] placeholder-[12px] outline-none focus:ring-2 focus:ring-[#565656]/30 focus:ring-offset-1 dark:border-[#565656]/30 dark:bg-[#565656]/10 dark:text-[#fff]/50"
+                  className="h-[36px] flex-1 rounded-md border-[1px] border-gray-400 px-2 text-[12px] font-light text-[#444] placeholder-[#777] placeholder-[12px] outline-none focus:ring-2 focus:ring-[#565656]/30 focus:ring-offset-1 dark:border-[#565656]/30 dark:bg-[#565656]/10 dark:text-zinc-200"
                   onChange={handleEmailChange}
                   required
                 />
@@ -205,14 +205,14 @@ export default function AddMember() {
                   className="bg-[#222] px-7 text-white hover:bg-[#111]"
                 /> */}
                 <button
-                  className="flex items-center gap-1.5 rounded bg-[#609328] px-5 py-2 text-[12px] font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                  className="flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-5 py-2 text-[12px] font-semibold text-zinc-900 shadow-sm transition-all hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none"
                   onClick={handleAddMember}
                   disabled={addMemberLoading}
                 >
                   {addMemberLoading ? (
                     <>
                       <span>Sending</span>
-                      <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
+                      <Loader2 className="h-3.5 w-3.5 animate-spin text-zinc-900" />
                     </>
                   ) : (
                     <span>Send Invite</span>

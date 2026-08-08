@@ -169,7 +169,7 @@ export default function AddTask() {
     <>
       <button
         onClick={checkWsId}
-        className="flex h-[34px] w-fit items-center justify-center gap-2 rounded-lg bg-[#609328] px-3 text-[12px] font-semibold text-white shadow-sm transition-all hover:bg-[#609328]/90 active:scale-95"
+        className="flex h-[34px] w-fit items-center justify-center gap-2 rounded-lg bg-[#fff] px-3 text-[12px] font-semibold text-white shadow-sm transition-all hover:bg-[#fff]/90 active:scale-95"
       >
         <FontAwesomeIcon icon={faPlus} className="text-[10px]" />
         <span>New Task</span>
@@ -527,12 +527,12 @@ export default function AddTask() {
                 <button
                   onClick={handleCreateTask}
                   disabled={createTaskLoading}
-                  className="flex items-center gap-1.5 rounded-md bg-[#609328] px-5 py-2 text-xs font-semibold text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-50"
+                  className="flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-5 py-2 text-xs font-semibold text-zinc-900 shadow-sm transition-all hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none"
                 >
                   {createTaskLoading ? (
                     <>
                       <span>Creating</span>
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      <Loader2 className="h-3.5 w-3.5 animate-spin text-zinc-900" />
                     </>
                   ) : (
                     <span>Create Task</span>

@@ -170,7 +170,7 @@ function Team() {
               placeholder="Search Users"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="h-[36px] w-full rounded-lg border border-zinc-300 bg-transparent py-2 pl-9 pr-8 text-[12px] outline-none transition-all placeholder:text-zinc-400 focus:border-[#609328] dark:border-zinc-800 dark:text-[#eee] dark:placeholder:text-zinc-500 dark:focus:border-[#609328]"
+              className="h-[36px] w-full rounded-lg border border-zinc-300 bg-transparent py-2 pl-9 pr-8 text-[12px] outline-none transition-all placeholder:text-zinc-400 focus:border-[#fff] dark:border-zinc-800 dark:text-[#eee] dark:placeholder:text-zinc-500 dark:focus:border-[#fff]"
             />
 
             {/* Magnifier icon */}

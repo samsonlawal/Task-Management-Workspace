@@ -57,7 +57,7 @@ const ActivateUser = () => {
               className="flex flex-col items-center gap-5"
             >
               <div className="relative flex items-center justify-center">
-                <Loader2 className="h-10 w-10 text-[#609328] animate-spin" />
+                <Loader2 className="h-10 w-10 text-[#fff] animate-spin" />
               </div>
               <div className="flex flex-col items-center gap-2">
                 <h1 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-white">Verifying credentials</h1>
@@ -77,7 +77,7 @@ const ActivateUser = () => {
               transition={{ duration: 0.3, type: "spring", stiffness: 100 }}
               className="flex flex-col items-center gap-6 w-full"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#609328]/10 text-[#609328] border border-[#609328]/20">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#fff]/10 text-[#fff] border border-[#fff]/20">
                 <CheckCircle2 className="h-6 w-6" />
               </div>
               <div className="flex flex-col items-center gap-2">
@@ -89,10 +89,10 @@ const ActivateUser = () => {
               
               <button
                 onClick={() => router.replace("/auth/sign-in")}
-                className="mt-2 group flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-[#609328] hover:bg-[#609328]/90 px-4 py-2.5 text-sm font-medium text-white transition-all duration-300 active:scale-98"
+                className="mt-2 group flex h-[42px] w-full items-center justify-center gap-2 rounded-lg bg-white hover:bg-zinc-100 border border-gray-200 shadow-sm px-4 py-2.5 text-sm font-medium text-zinc-900 transition-all duration-300 active:scale-98"
               >
                 <span>Continue to login</span>
-                <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5 text-white" />
+                <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5 text-zinc-900" />
               </button>
             </motion.div>
           )}

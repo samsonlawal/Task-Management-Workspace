@@ -116,7 +116,7 @@ function Invitation({
       <div className="flex items-center justify-between">
         <span className="poppins px-2 py-1 text-[12px] font-normal text-white/50">
           Invitations{" - "}
-          {totalInvites > 1 ? `${currentIndex + 1} of ${totalInvites}` : ""}
+          {totalInvites > 0 ? `${currentIndex + 1} of ${totalInvites}` : ""}
         </span>
 
         {totalInvites > 1 && (

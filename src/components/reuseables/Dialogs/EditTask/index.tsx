@@ -341,12 +341,12 @@ export default function EditTask({ taskData }: any) {
               <button
                 onClick={handleUpdateTask}
                 disabled={updateTaskLoading}
-                className="flex items-center gap-1.5 rounded-md bg-[#609328] px-5 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-5 py-2 text-xs font-semibold text-zinc-900 shadow-sm transition-all hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none"
               >
                 {updateTaskLoading ? (
                   <>
                     <span>Saving</span>
-                    <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-zinc-900" />
                   </>
                 ) : (
                   <span>Save Changes</span>
