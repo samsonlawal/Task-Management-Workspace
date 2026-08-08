@@ -16,7 +16,7 @@ const uiSlice = createSlice({
   reducers: {
     setCurrentUI: (
       state,
-      action: PayloadAction<    "tasks" | "dashboard" | "team" | "settings" | "notifications" | "chat" | "integrations" | "ai" | "">,
+      action: PayloadAction<any>,
     ) => {
       state.currentUI = action.payload;
     },

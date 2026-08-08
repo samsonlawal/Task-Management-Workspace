@@ -219,7 +219,7 @@ function Workspaces() {
             >
               Select and Continue
             </button>
-            <AddWorkspace variant="button" />
+            {/* <AddWorkspace variant="button" /> */}
           </div>
         </div>
       )}

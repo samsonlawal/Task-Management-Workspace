@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   CheckCheck,
   UsersRound,
+  Bot,
   Settings,
 } from "lucide-react";
 
@@ -49,6 +50,12 @@ export default function Sidebar() {
                 label: "Team",
                 value: "team",
                 icon: <UsersRound strokeWidth={1.5} size={16} />,
+                disabled: false,
+              },
+              {
+                label: "Agent",
+                value: "agent",
+                icon: <Bot strokeWidth={1.5} size={16} />,
                 disabled: false,
               },
               // {
