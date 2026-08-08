@@ -160,10 +160,10 @@ export default function AddMember(
 
       <button
         onClick={toggleDialog}
-        className="poppins flex h-[36px] w-fit shrink-0 items-center justify-center gap-2 rounded-md border border-gray-200 bg-white px-0 text-[12px] font-medium shadow-sm transition-all duration-300 hover:bg-zinc-100 active:scale-95 sm:w-auto sm:px-4"
+        className="poppins flex h-[36px] w-fit shrink-0 items-center justify-center gap-2 rounded-md border border-gray-200 bg-white px-0 text-[12px] font-medium shadow-sm transition-all duration-300 hover:bg-zinc-100 active:scale-95 sm:w-auto sm:px-3"
         title="Invite Member"
       >
-        <span className="px-2 text-[12px] text-[#111]">Invite Member</span>
+        <span className="text-[12px] text-[#111]">Invite Member</span>
       </button>) 
 }
       <Dialog

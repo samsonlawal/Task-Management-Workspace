@@ -62,11 +62,7 @@ export default function SettingsLayout({
           href: `/${workspaceSlug}/settings/profile`,
           icon: <User size={16} />,
         },
-        {
-          label: "Preferences",
-          href: `/${workspaceSlug}/settings/preferences`,
-          icon: <Sliders size={16} />,
-        },
+
         {
           label: "Security & Access",
           href: `/${workspaceSlug}/settings/security`,
@@ -80,7 +76,7 @@ export default function SettingsLayout({
       ],
     },
     {
-      title: "Issues / Tasks",
+      title: "Tasks",
       items: [
         {
           label: "Labels",
@@ -117,21 +113,21 @@ export default function SettingsLayout({
           href: `/${workspaceSlug}/settings/billing`,
           icon: <CreditCard size={16} />,
         },
-        {
-          label: "Security",
-          href: `/${workspaceSlug}/settings/admin-security`,
-          icon: <Lock size={16} />,
-        },
+        // {
+        //   label: "Security",
+        //   href: `/${workspaceSlug}/settings/admin-security`,
+        //   icon: <Lock size={16} />,
+        // },
         {
           label: "Members",
           href: `/${workspaceSlug}/settings/members`,
           icon: <Users size={16} />,
         },
-        {
-          label: "Teams",
-          href: `/${workspaceSlug}/settings/teams`,
-          icon: <UsersRound size={16} />,
-        },
+        // {
+        //   label: "Teams",
+        //   href: `/${workspaceSlug}/settings/teams`,
+        //   icon: <UsersRound size={16} />,
+        // },
       ],
     },
   ];
@@ -210,7 +206,7 @@ export default function SettingsLayout({
               <span>Settings</span>
             </Link>
           </div>
-          <div className="mx-auto max-w-4xl">{children}</div>
+          <div className="w-full">{children}</div>
         </main>
       </div>
     </div>

@@ -21,7 +21,7 @@ import TeamMenu from "./TeamMenu";
 import { useGetMembers } from "@/hooks/api/workspace";
 import { useGetMembersQuery } from "@/redux/api/memberApiSlice";
 
-function Team() {
+function Team({ hideHeader = false }: { hideHeader?: boolean } = {}) {
   const dispatch = useDispatch();
   // const members = useSelector(
   //   (state: RootState) => state.MemberData?.members || [],
@@ -142,25 +142,27 @@ function Team() {
 
   return (
     <div className="flex h-fit w-full flex-col gap-2 pb-8">
-      <div className="sticky top-0 w-full bg-[white] px-4 dark:bg-[#111] lg:px-8">
-        <div className="poppins flex w-full items-center justify-between border-[#565656]/10 py-[7px]">
-          <div className="flex flex-row items-center">
-            <button
-              onClick={() => dispatch(toggleSidebar())}
-              className="mr-2 flex px-1 text-[#707070] transition-all duration-300 hover:text-[#111] dark:hover:text-white lg:hidden lg:p-2"
-              title="Toggle Navigation Sidebar"
-            >
-              <PanelLeft size={18} strokeWidth={1.6} />
-            </button>
-            <h2 className="text-xl text-[#111] dark:text-white">Team</h2>
-          </div>
-          <div className="flex flex-row items-center justify-center gap-3">
-            <Notification />
+      {!hideHeader && (
+        <div className="sticky top-0 w-full bg-[white] px-4 dark:bg-[#111] lg:px-8">
+          <div className="poppins flex w-full items-center justify-between border-[#565656]/10 py-[7px]">
+            <div className="flex flex-row items-center">
+              <button
+                onClick={() => dispatch(toggleSidebar())}
+                className="mr-2 flex px-1 text-[#707070] transition-all duration-300 hover:text-[#111] dark:hover:text-white lg:hidden lg:p-2"
+                title="Toggle Navigation Sidebar"
+              >
+                <PanelLeft size={18} strokeWidth={1.6} />
+              </button>
+              <h2 className="text-xl text-[#111] dark:text-white">Team</h2>
+            </div>
+            <div className="flex flex-row items-center justify-center gap-3">
+              <Notification />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      <div className="flex flex-col gap-2 px-4 lg:px-8">
+      <div className={`${hideHeader ? '' : 'px-4 lg:px-8'} flex flex-col gap-2  poppins`}>
         <div className="flex h-fit flex-row items-center justify-between gap-3 pt-6 transition-all duration-300">
           {/* search */}
           <div className="relative max-w-[300px] flex-1 rounded-md">
@@ -200,13 +202,13 @@ function Team() {
             <div className="w-full overflow-x-auto">
               <div className="w-full md:min-w-[800px]">
                 {/* Header */}
-                <div className="grid h-[40px] w-full grid-cols-[1.5fr_0.8fr_0.8fr_20px] items-center justify-center gap-2 px-3 text-[13px] font-medium text-gray-500 dark:text-[#787878] md:grid-cols-[0.8fr_1.2fr_0.4fr_0.5fr_0.5fr_0.4fr_20px] md:gap-5 md:px-4">
+                <div className="grid h-[40px] w-full grid-cols-[1fr_80px_100px_30px] items-center justify-between gap-2 px-3 text-[13px] font-medium text-gray-500 dark:text-[#787878] md:grid-cols-[1fr_100px_120px_100px_30px] md:gap-5 md:px-4">
                   {/* <div>ID</div> */}
                   <div className="">Name</div>
-                  <div className="hidden md:block">Email</div>
+                  {/* <div className="hidden md:block">Email</div> */}
                   {/* <div>Job Title</div> */}
                   <div className="">Role</div>
-                  <div className="hidden md:block">Last active</div>
+                  {/* <div className="hidden md:block">Last active</div> */}
                   <div className="hidden md:block">Date added</div>
                   <div className="">Status</div>
                   <div className=""></div>
@@ -231,7 +233,7 @@ function Team() {
                     return (
                       <div
                         key={user._id || index}
-                        className="grid w-full grid-cols-[1.5fr_0.8fr_0.8fr_20px] items-center gap-2 px-3 py-3 text-[13px] font-[400] text-gray-800 dark:text-[#eee] md:grid-cols-[0.8fr_1.2fr_0.4fr_0.5fr_0.5fr_0.4fr_20px] md:gap-5 md:px-4"
+                        className="grid w-full grid-cols-[1fr_80px_100px_30px] items-center justify-between gap-2 px-3 py-3 text-[13px] font-[400] text-gray-800 dark:text-[#eee] md:grid-cols-[1fr_100px_120px_100px_30px] md:gap-5 md:px-4"
                       >
                         {/* <div className="">{startIndex + index + 1}</div> */}
                         <div className="flex flex-row items-center gap-2">
@@ -261,13 +263,22 @@ function Team() {
                               {/* {fullname.charAt(0).toUpperCase()} */}
                             </div>
                           )}
-                          <p className="truncate">{fullname}</p>
+                          <div className="flex flex-col poppins -space-y-0.5">
+
+
+                          <p className="truncate">{email}</p>
+{fullname && 
+
+                          <p className="truncate dark:text-[#fff]/50 font-regular text-[11px]">{fullname}</p>
+
+}
                         </div>
-                        <div className="hidden truncate md:block">{email}</div>
+                        </div>
+                        
                         {/* <div>{jobTitle}</div> */}
                         <div>{role}</div>
-                        <div className="hidden md:block">Jan 3, 2026</div>
-                        <div className="hidden md:block">Jan 3, 2026</div>
+                        <div className="hidden md:block dark:text-[#fff]/50 font-regular">Jan 3, 2026</div>
+                        {/* <div className="hidden md:block">Jan 3, 2026</div> */}
                         <div>
                           <div
                             className={`flex w-[70px] flex-row items-center justify-center gap-1 rounded-full py-1 ${
