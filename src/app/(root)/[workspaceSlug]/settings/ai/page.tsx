@@ -24,7 +24,7 @@ export default function AiAgentsPage() {
             </p>
           </div>
           <textarea
-            className="min-h-[100px] w-full resize-y rounded-md border border-[#565656] bg-white p-3 text-xs text-zinc-900 placeholder:text-zinc-500 focus:border-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-300 dark:border-[#565656]/30 dark:bg-[#565656]/5 dark:text-white dark:placeholder:text-[#fff]/40 dark:focus:border-zinc-700 dark:focus:ring-zinc-700 transition-all"
+            className="min-h-[100px] w-full resize-y rounded-md border border-zinc-200 bg-white p-3 text-xs text-zinc-900 placeholder:text-zinc-500 focus:border-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-300 dark:border-[#565656]/30 dark:bg-[#565656]/5 dark:text-white dark:placeholder:text-[#fff]/40 dark:focus:border-zinc-700 dark:focus:ring-zinc-700 transition-all"
             placeholder="E.g., Always be concise and prefer TypeScript..."
           ></textarea>
         </div>
@@ -43,7 +43,7 @@ export default function AiAgentsPage() {
             <input
               type="text"
               placeholder="Add a new skill..."
-              className="w-full rounded-md border border-[#565656] bg-white py-2 pl-3 pr-10 text-xs text-zinc-900 placeholder:text-zinc-500 focus:border-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-300 dark:border-[#565656]/30 dark:bg-[#565656]/5 dark:text-white dark:placeholder:text-[#fff]/40 dark:focus:border-zinc-700 dark:focus:ring-zinc-700 transition-all"
+              className="w-full rounded-md border border-zinc-200 bg-white py-2 pl-3 pr-10 text-xs text-zinc-900 placeholder:text-zinc-500 focus:border-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-300 dark:border-[#565656]/30 dark:bg-[#565656]/5 dark:text-white dark:placeholder:text-[#fff]/40 dark:focus:border-zinc-700 dark:focus:ring-zinc-700 transition-all"
             />
             <button className="absolute right-1.5 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md bg-zinc-100 text-zinc-600 transition-colors hover:bg-zinc-200 dark:bg-[#565656]/20 dark:text-[#fff]/60 dark:hover:bg-[#565656]/40 dark:hover:text-white">
               <Plus size={14} />
@@ -62,7 +62,7 @@ export default function AiAgentsPage() {
             </p>
           </div>
           
-          <div className="flex items-center justify-between rounded-md border border-[#565656] bg-white p-3.5 dark:border-[#565656]/20 dark:bg-[#565656]/5">
+          <div className="flex items-center justify-between rounded-md border border-zinc-200 bg-white p-3.5 dark:border-[#565656]/20 dark:bg-[#565656]/5">
             <div className="flex items-center gap-3">
               {/* <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-100 text-zinc-500 dark:bg-[#565656]/10 dark:text-[#565656]">
                 <Bot size={16} />

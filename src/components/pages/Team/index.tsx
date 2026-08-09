@@ -153,7 +153,7 @@ function Team({ hideHeader = false }: { hideHeader?: boolean } = {}) {
               >
                 <PanelLeft size={18} strokeWidth={1.6} />
               </button>
-              <h2 className="text-xl text-[#111] dark:text-white">Team</h2>
+              <h2 className="text-lg text-[#111] dark:text-white">Team</h2>
             </div>
             <div className="flex flex-row items-center justify-center gap-3">
               <Notification />
@@ -172,7 +172,7 @@ function Team({ hideHeader = false }: { hideHeader?: boolean } = {}) {
               placeholder="Search Users"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="h-[36px] w-full rounded-lg border border-zinc-300 bg-transparent py-2 pl-9 pr-8 text-[12px] outline-none transition-all placeholder:text-zinc-400 focus:border-[#fff] dark:border-zinc-800 dark:text-[#eee] dark:placeholder:text-zinc-500 dark:focus:border-[#fff]"
+              className="h-[36px] w-full rounded-lg border border-zinc-300 bg-transparent py-2 pl-9 pr-8 text-[12px] outline-none transition-all placeholder:text-zinc-400 dark:border-zinc-800 dark:text-[#eee] dark:placeholder:text-zinc-500 dark:focus:border-[#fff]"
             />
 
             {/* Magnifier icon */}
@@ -202,15 +202,11 @@ function Team({ hideHeader = false }: { hideHeader?: boolean } = {}) {
             <div className="w-full overflow-x-auto">
               <div className="w-full md:min-w-[800px]">
                 {/* Header */}
-                <div className="grid h-[40px] w-full grid-cols-[1fr_80px_100px_30px] items-center justify-between gap-2 px-3 text-[13px] font-medium text-gray-500 dark:text-[#787878] md:grid-cols-[1fr_100px_120px_100px_30px] md:gap-5 md:px-4">
-                  {/* <div>ID</div> */}
+                <div className="grid h-[40px] w-full grid-cols-[1fr_80px_70px_30px] items-center justify-between gap-1 px-3 text-[13px] font-medium text-gray-500 dark:text-[#787878] md:grid-cols-[1fr_100px_120px_100px_30px] md:gap-5 md:px-4">
                   <div className="">Name</div>
-                  {/* <div className="hidden md:block">Email</div> */}
-                  {/* <div>Job Title</div> */}
-                  <div className="">Role</div>
-                  {/* <div className="hidden md:block">Last active</div> */}
+                  <div className="hidden md:block">Role</div>
                   <div className="hidden md:block">Date added</div>
-                  <div className="">Status</div>
+                  <div className="hidden md:block">Status</div>
                   <div className=""></div>
                 </div>
 
@@ -233,7 +229,7 @@ function Team({ hideHeader = false }: { hideHeader?: boolean } = {}) {
                     return (
                       <div
                         key={user._id || index}
-                        className="grid w-full grid-cols-[1fr_80px_100px_30px] items-center justify-between gap-2 px-3 py-3 text-[13px] font-[400] text-gray-800 dark:text-[#eee] md:grid-cols-[1fr_100px_120px_100px_30px] md:gap-5 md:px-4"
+                        className="grid w-full grid-cols-[1fr_80px_70px_30px] items-center justify-between gap-1 px-3 py-3 text-[13px] font-[400] text-gray-800 dark:text-[#eee] md:grid-cols-[1fr_100px_120px_100px_30px] md:gap-5 md:px-4"
                       >
                         {/* <div className="">{startIndex + index + 1}</div> */}
                         <div className="flex flex-row items-center gap-2">
@@ -281,19 +277,13 @@ function Team({ hideHeader = false }: { hideHeader?: boolean } = {}) {
                         {/* <div className="hidden md:block">Jan 3, 2026</div> */}
                         <div>
                           <div
-                            className={`flex w-[70px] flex-row items-center justify-center gap-1 rounded-full py-1 ${
+                            className={`flex w-fit px-2 flex-row items-center justify-center gap-1 rounded-full py-1 ${
                               status.toLowerCase() === "active"
                                 ? "bg-[#66FF00]/20 text-[green] dark:bg-[#66FF00]/10"
                                 : "bg-[#565656]/20 text-[#565656] dark:bg-[#565656]/20 dark:text-[#fff]/50"
                             }`}
                           >
-                            <div
-                              className={`h-1.5 w-1.5 rounded-full ${
-                                status.toLowerCase() === "active"
-                                  ? "animate-pulse bg-[green]"
-                                  : "bg-[#565656]/10 dark:bg-[#787878]"
-                              }`}
-                            ></div>
+                            
                             <p className="text-[11px] capitalize">{status}</p>
                           </div>
                         </div>

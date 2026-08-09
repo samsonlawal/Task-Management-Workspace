@@ -44,11 +44,7 @@ export default function SecurityAndAccessPage() {
           {sessions.map((session, index) => (
             <div
               key={session.id}
-              className={`flex items-center justify-between p-3.5 rounded-md border border-[#565656] bg-white dark:border-[#565656]/20 dark:bg-[#565656]/10 ${
-                index !== sessions.length - 1
-                  ? "border-zinc-200 dark:border-zinc-800/80"
-                  : ""
-              }`}
+              className={`flex items-center justify-between p-3.5 rounded-md border border-zinc-200 bg-white dark:border-[#565656]/20 dark:bg-[#565656]/10`}
             >
               <div className="flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-100 dark:bg-[#565656]/10">

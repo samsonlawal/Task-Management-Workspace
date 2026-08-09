@@ -40,7 +40,7 @@ export default function LabelsPage() {
             <input
               type="text"
               placeholder="Search labels..."
-              className="w-full rounded-md border border-[#565656] bg-white py-1.5 pl-8 pr-3 text-xs text-zinc-900 placeholder:text-zinc-500 focus:border-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-300 dark:border-[#565656]/30 dark:bg-[#565656]/10 dark:text-white dark:placeholder:text-[#fff]/40 dark:focus:border-zinc-700 dark:focus:ring-zinc-700 transition-all"
+              className="w-full rounded-md border border-zinc-200 bg-white py-1.5 pl-8 pr-3 text-xs text-zinc-900 placeholder:text-zinc-500 focus:border-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-300 dark:border-[#565656]/30 dark:bg-[#565656]/10 dark:text-white dark:placeholder:text-[#fff]/40 dark:focus:border-zinc-700 dark:focus:ring-zinc-700 transition-all"
             />
           </div>
           <button className="flex items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-[#fff] dark:text-zinc-900 dark:hover:bg-zinc-200">
@@ -56,11 +56,7 @@ export default function LabelsPage() {
           {labels.map((label, index) => (
             <div
               key={label.id}
-              className={`flex items-center justify-between p-3.5 rounded-md border border-[#565656] bg-white dark:border-[#565656]/20 dark:bg-[#565656]/10 ${
-                index !== labels.length - 1
-                  ? "border-zinc-200 dark:border-zinc-800/80"
-                  : ""
-              }`}
+              className={`flex items-center justify-between p-3.5 rounded-md border border-zinc-200 bg-white dark:border-[#565656]/20 dark:bg-[#565656]/10`}
             >
               <div className="flex items-center gap-3">
                 <div className={`h-1.5 w-1.5 rounded-full ${label.color}`}></div>

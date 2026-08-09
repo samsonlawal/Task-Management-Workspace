@@ -33,11 +33,7 @@ export default function ConnectedAccountsPage() {
           {accounts.map((account, index) => (
             <div
               key={account.id}
-              className={`flex items-center justify-between rounded-md border border-[#565656] bg-white p-3.5 dark:border-[#565656]/20 dark:bg-[#565656]/10 ${
-                index !== accounts.length - 1
-                  ? "border-zinc-200 dark:border-zinc-800/80"
-                  : ""
-              }`}
+              className={`flex items-center justify-between rounded-md border border-zinc-200 bg-white p-3.5 dark:border-[#565656]/20 dark:bg-[#565656]/10`}
             >
               <div className="flex items-center gap-3">
                 <div

@@ -99,7 +99,7 @@ function Profile() {
 
           <button
             onClick={() => handleRoute()}
-            className="h-fit w-fit rounded-md border-[1px] border-[#565656]/60 px-[12px] py-1 text-[11px] font-medium text-[#fff]/50 transition-colors duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 hover:text-white/50"
+            className="h-fit w-fit rounded-md border-[1px] border-[#565656]/60 px-[12px] py-1 text-[11px] font-medium text-[#565656] dark:text-[#fff]/50 transition-colors duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 dark:hover:text-white/50"
           >
             Workspaces
           </button>
@@ -127,10 +127,10 @@ function Profile() {
                   </span>
                 )}
                 <div className="flex flex-col gap-2">
-                  <p className="text-[13px]">Profile Picture</p>
+                  <p className="text-[13px] text-[#565656]">Profile Picture</p>
                   <div className="flex flex-row gap-2">
                     <UploadImage />
-                    <button className="rounded-md border-[1px] border-[#565656]/60 px-[12px] py-1 text-[11px] font-medium text-[#fff]/50 transition-colors duration-300 hover:border-[#565656]/20 hover:bg-[#565656]/20 hover:text-white/50">
+                    <button className="rounded-md border-[1px] border-[#565656]/60 px-[12px] py-1 text-[11px] font-medium text-[#111] dark:text-[#fff]/50 transition-colors duration-300 hover:border-[#565656]/20 hover:bg-[#565656]/20 dark:hover:text-white/50">
                       Remove
                     </button>
                   </div>
@@ -140,7 +140,7 @@ function Profile() {
               {/* text */}
               <div className="flex w-full flex-col gap-6">
                 <div className="flex flex-col gap-1">
-                  <h1 className="text-[13px]">Username</h1>
+                  <h1 className="text-[13px] text-[#565656]">Username</h1>
                   <div className="relative">
                     <input
                       type="text"
@@ -163,7 +163,7 @@ function Profile() {
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <h1 className="text-[13px]">Full name</h1>
+                  <h1 className="text-[13px] text-[#565656]">Full name</h1>
                   <input
                     type="text"
                     placeholder="Full name"
@@ -179,7 +179,7 @@ function Profile() {
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <h1 className="text-[13px]">Email</h1>
+                  <h1 className="text-[13px] text-[#565656]">Email</h1>
                   <div className="relative">
                     <input
                       type="text"
@@ -197,7 +197,7 @@ function Profile() {
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <h1 className="text-[13px]">About</h1>
+                  <h1 className="text-[13px] text-[#565656]">About</h1>
                   <textarea
                     placeholder="About"
                     className="h-[100px] rounded-[6px] border-[1px] border-[#565656]/20 bg-transparent px-[12px] py-3 text-[12px] placeholder:text-[#565656] focus:border-[#565656] focus:outline-none"
@@ -212,7 +212,7 @@ function Profile() {
           <button
             onClick={handleSave}
             disabled={!isDirty || updateLoading}
-            className={`rounded-md border-[1px] border-[#565656]/60 px-[12px] py-1 text-[11px] font-medium transition-colors duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 hover:text-white/50 ${
+            className={`rounded-md border-[1px] border-[#565656]/50 px-[12px] py-1 text-[11px] font-medium text-[#111] dark:text[#fff]/50 transition-colors duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 dark:hover:text-white/50 ${
               isDirty
                 ? "bg-[white] text-[#111]"
                 : "cursor-not-allowed bg-[#565656]/10 text-zinc-400 dark:text-zinc-500 opacity-50"
@@ -234,7 +234,7 @@ function Profile() {
           </p>
         </div>
         <div className="flex w-full items-center justify-end">
-          <button className="rounded-md border-[1px] border-[#565656]/60 px-[12px] py-1 text-[11px] font-medium text-[#fff]/50 transition-colors duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 hover:text-white/50">
+          <button className="rounded-md border-[1px] border-[#565656]/60 px-[12px] py-1 text-[11px] font-medium text-[#111] dark:text-[#fff]/50 transition-colors duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 dark:hover:text-white/50">
             Delete Account
           </button>
         </div>

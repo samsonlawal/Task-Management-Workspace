@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import { Workflow, ChevronDown, ChevronRight } from "lucide-react";
-import { showSuccessToast } from "@/utils/toaster";
+import { useDispatch } from "react-redux";
+import { openIntegrationModal } from "@/redux/Slices/modalSlice";
+import { INTEGRATIONS_LIST } from "@/constants/integrations";
 
 const SlackIcon = () => (
   <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0">
@@ -42,25 +44,19 @@ const GithubIcon = () => (
 
 export default function IntegrationsNavGroup() {
   const [isOpen, setIsOpen] = useState(true);
-  const [slackConnected, setSlackConnected] = useState(true);
-  const [githubConnected, setGithubConnected] = useState(false);
+  const dispatch = useDispatch();
 
-  const toggleSlack = (e: React.MouseEvent) => {
+  const slackIntegration = INTEGRATIONS_LIST.find((app) => app.id === "slack");
+  const githubIntegration = INTEGRATIONS_LIST.find((app) => app.id === "github");
+
+  const openSlackModal = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const nextState = !slackConnected;
-    setSlackConnected(nextState);
-    showSuccessToast({
-      message: nextState ? "Connected to Slack!" : "Disconnected from Slack.",
-    });
+    if (slackIntegration) dispatch(openIntegrationModal(slackIntegration));
   };
 
-  const toggleGithub = (e: React.MouseEvent) => {
+  const openGithubModal = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const nextState = !githubConnected;
-    setGithubConnected(nextState);
-    showSuccessToast({
-      message: nextState ? "Connected to GitHub!" : "Disconnected from GitHub.",
-    });
+    if (githubIntegration) dispatch(openIntegrationModal(githubIntegration));
   };
 
   return (
@@ -87,7 +83,7 @@ export default function IntegrationsNavGroup() {
         <div className="flex flex-col gap-1 pl-4 pt-1 transition-all duration-200">
           {/* Slack Item */}
           <div
-            onClick={toggleSlack}
+            onClick={openSlackModal}
             className="flex cursor-pointer items-center justify-between rounded-[5px] px-2.5 py-1.5 text-[11px] text-[#111] transition-all hover:bg-[#565656]/10 dark:text-white/50 dark:hover:text-white"
           >
             <div className="flex items-center gap-2.5">
@@ -105,9 +101,8 @@ export default function IntegrationsNavGroup() {
             </span> */}
           </div>
 
-          {/* GitHub Item */}
           <div
-            onClick={toggleGithub}
+            onClick={openGithubModal}
             className="text-normal flex cursor-pointer items-center justify-between rounded-[5px] px-2.5 py-1.5 text-[11px] text-[#111] transition-all hover:bg-[#565656]/10 dark:text-white/50 dark:hover:text-white"
           >
             <div className="flex items-center gap-2.5">

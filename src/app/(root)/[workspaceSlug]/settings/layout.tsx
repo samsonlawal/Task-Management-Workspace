@@ -142,9 +142,9 @@ export default function SettingsLayout({
 
       {/* DEDICATED SETTINGS SIDEBAR */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-gray-200/80 bg-gray-50/50 p-6 transition-all duration-300 dark:border-zinc-800/80 dark:bg-[#111] lg:static lg:block lg:translate-x-0 ${isSettingsSidebar ? "translate-x-0" : "-translate-x-full"} `}
+        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-gray-200/80 bg-white dark:bg-gray-50/50 p-6 transition-all duration-300 dark:border-zinc-800/80 dark:bg-[#111] lg:static lg:block lg:translate-x-0 ${isSettingsSidebar ? "translate-x-0" : "-translate-x-full"} `}
       >
-        <div className="mb-6 px-2">
+        <div className="mb-12 px-2">
           <h2 className="text-sm font-medium text-[#111] dark:text-white">
             Settings
           </h2>
@@ -153,7 +153,7 @@ export default function SettingsLayout({
         <nav className="flex-1 space-y-5 overflow-y-auto pr-1">
           {navSections.map((section) => (
             <div key={section.title} className="flex flex-col gap-1">
-              <span className="px-2 text-[12px] text-gray-400 dark:text-[#fff]/70">
+              <span className="px-2 text-[12px] text-[#111] dark:text-[#fff]/70">
                 {section.title}
               </span>
               {section.items.map((item) => {
@@ -169,11 +169,11 @@ export default function SettingsLayout({
                     }`}
                   >
                     <span
-                      className={
-                        isActive
-                          ? "text-[#111] dark:text-[#fff]/60"
-                          : "text-gray-400 dark:text-zinc-500"
-                      }
+                      // className={
+                      //   isActive
+                      //     ? "text-[#111] dark:text-[#fff]/60"
+                      //     : "text-gray-400 dark:text-zinc-500"
+                      // }
                     >
                       {item.icon}
                     </span>

@@ -97,9 +97,9 @@ export default function AddWorkspace({
       ) : (
         <button
           onClick={() => setIsOpen(true)}
-          className={`flex w-full cursor-pointer flex-row items-center rounded-[4px] py-1 pl-2 transition-all duration-300 ease-in-out hover:bg-[#565656]/10 text-[#fff]/50 hover:text-[#fff] ${className}`}
+          className={`flex w-full cursor-pointer flex-row items-center rounded-[4px] py-1 pl-2 transition-all duration-300 ease-in-out dark:hover:text-white dark:text-[#fff]/50 dark:hover:bg-[#565656]/10 text-[#111] hover:bg-[#565656]/30 ${className}`}
         >
-          {/* <img src="/icons/plus.svg" alt="" className="w-4 cursor-pointer" /> */}
+          <Plus size={16} />
           <p className="px-2 text-[12px] font-regular">Create Workspace</p>
         </button>
       )}

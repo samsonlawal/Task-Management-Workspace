@@ -57,7 +57,7 @@ export default function AddMember() {
     <>
       <button
         onClick={toggleDialog}
-        className="rounded-md border-[1px] border-[#565656]/60 px-[12px] py-1 text-[11px] font-medium text-[#fff]/50 transition-colors duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 hover:text-white/50"
+        className="rounded-md border-[1px] border-[#565656]/60 px-[12px] py-1 text-[11px] font-medium text-[#111] dark:text-[#fff]/50 transition-colors duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 dark:hover:text-white/50"
       >
         Upload Avatar
       </button>

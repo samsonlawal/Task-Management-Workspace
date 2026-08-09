@@ -188,7 +188,7 @@ function Workspace() {
         <MenuItems
           transition
           anchor="bottom start"
-          className="poppins-medium z-50 flex min-h-fit w-[260px] origin-top-right flex-col justify-between gap-2 rounded-md border-[1px] border-[#565656]/10 bg-[#1a1a1a] px-3 py-1 text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-300 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          className="poppins-medium z-50 flex min-h-fit w-[260px] origin-top-right flex-col justify-between gap-2 rounded-md border-[1px] border-[#565656]/10 bg-white dark:bg-[#1a1a1a] px-3 py-1 text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-300 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
    
           <div className="flex flex-col gap-[4px]">
@@ -215,7 +215,7 @@ function Workspace() {
                     filteredWorkspaces.map((workspace: any, index: any) => (
                       <MenuItem key={index}>
                         <div
-                          className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] border border-[#1a1a1a] pl-2 hover:border-[#565656]/10 hover:bg-[#565656]/10"
+                          className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] border border-[#1a1a1a] pl-2 hover:border-[#565656]/10 hover:bg-[#565656]/10 text-[#111] dark:text-[#fff]"
                           onClick={() => switchWorkspace(workspace)}
                         >
                           <div
@@ -255,10 +255,10 @@ function Workspace() {
             <AddWorkspace />
             {/* <AddMember variant='button'/> */}
             <Link
-                     href={`/${workspaceSlug}/settings`}
-                      className={`flex w-full cursor-pointer flex-row items-center rounded-[4px] py-1 pl-2 transition-all duration-300 ease-in-out hover:text-white text-[#fff]/50 hover:bg-[#565656]/10`}
+                      href={`/${workspaceSlug}/settings`}
+                      className={`flex w-full cursor-pointer flex-row items-center rounded-[4px] py-1 pl-2 transition-all duration-300 ease-in-out dark:hover:text-white dark:text-[#fff]/50 dark:hover:bg-[#565656]/10 text-[#111] hover:bg-[#565656]/30`}
                     >
-                     
+                      <Settings size={16} />
                       <p className="px-2 text-[12px] font-regular ">Settings</p>
                     </Link>
 </div>
