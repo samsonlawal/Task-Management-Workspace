@@ -5,6 +5,7 @@ import currentWorkspaceReducer from "@/redux/Slices/currentWorkspaceSlice";
 import WorkspaceDataReducer from "@/redux/Slices/workspaceSlice";
 import TasksReducer from "@/redux/Slices/taskSlice";
 import MembersReducer from "@/redux/Slices/memberSlice";
+import modalsReducer from "@/redux/Slices/modalSlice";
 import { apiSlice } from "./api/apiSlice";
 
 export const store = configureStore({
@@ -15,6 +16,7 @@ export const store = configureStore({
     WorkspaceData: WorkspaceDataReducer,
     TasksData: TasksReducer,
     MemberData: MembersReducer,
+    modals: modalsReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

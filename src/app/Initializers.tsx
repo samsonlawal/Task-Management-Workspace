@@ -10,6 +10,7 @@ import { AppThemeProvider } from "@/providers/theme-provider";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import AuthPersistenceWrapper from "@/lib/authPersistenceWrapper";
+import GlobalModals from "@/components/reuseables/Dialogs/GlobalModals";
 
 function Initializers({ children }: { children: ReactNode }) {
   const isAuthPage = (usePathname() || "")?.startsWith("/auth/");
@@ -28,6 +29,7 @@ function Initializers({ children }: { children: ReactNode }) {
           {children}
           {/* {hideFooter ? null : <Footer />} */}
           <Toaster richColors />
+          <GlobalModals />
           {/* </AuthContextWrapper> */}
         </AppThemeProvider>
         <AuthPersistenceWrapper />
