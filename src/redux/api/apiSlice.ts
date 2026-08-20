@@ -23,6 +23,6 @@ export const apiSlice = createApi({
             return headers;
         },
     }),
-    tagTypes: ["Workspace", "Members", "Tasks", "Users", "Auth", "Notifications"],
+    tagTypes: ["Workspace", "Members", "Tasks", "Users", "Auth", "Sessions", "Notifications"],
     endpoints: (builder: any) => ({}),
 })

@@ -1,25 +1,32 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Monitor, Smartphone, MoreVertical } from "lucide-react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useGetSessionsQuery, useDeleteSessionMutation } from "@/redux/api/sessionApiSlice";
+import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 
 export default function SecurityAndAccessPage() {
-  const sessions = [
-    {
-      id: 1,
-      device: "MacBook Pro - Chrome",
-      location: "San Francisco, CA",
-      isCurrent: true,
-      icon: <Monitor className="text-zinc-600 dark:text-[#565656]" size={16} />,
-    },
-    {
-      id: 2,
-      device: "Chrome on Android",
-      location: "San Francisco, CA",
-      isCurrent: false,
-      icon: <Smartphone className="text-zinc-600 dark:text-[#565656]" size={16} />,
-    },
-  ];
+  const user = useSelector((state: RootState) => state.auth.user);
+  const { data: sessionsData, isLoading, refetch } = useGetSessionsQuery({ userId: user?.id }, { skip: !user?.id });
+  const [deleteSession] = useDeleteSessionMutation();
+
+  const sessions = sessionsData?.data || sessionsData || [];
+
+  useEffect(() => {
+    console.log(sessions);
+  }, [sessions])
+
+  const handleRevoke = async (sessionId: string) => {
+    try {
+      await deleteSession({ sessionId }).unwrap();
+      showSuccessToast({ message: "Session revoked successfully" });
+    } catch (error: any) {
+      const message = error?.data?.message || "Failed to revoke session";
+      showErrorToast({ message });
+    }
+  };
 
   return (
     <div className="flex w-full flex-col gap-6 pt-6 pb-20">
@@ -27,7 +34,6 @@ export default function SecurityAndAccessPage() {
         <h1 className="text-lg font-medium text-zinc-900 dark:text-white">
           Security & Access
         </h1>
-      
       </div>
 
       <div className="flex flex-col gap-2">
@@ -40,50 +46,71 @@ export default function SecurityAndAccessPage() {
         </p>
         </div>
 
-        <div className="flex flex-col gap-2">
-          {sessions.map((session, index) => (
-            <div
-              key={session.id}
-              className={`flex items-center justify-between p-3.5 rounded-md border border-zinc-200 bg-white dark:border-[#565656]/20 dark:bg-[#565656]/10`}
-            >
-              <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-100 dark:bg-[#565656]/10">
-                  {session.icon}
-                </div>
-                <div className="flex flex-col">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[13px] font-normal text-zinc-900 dark:text-white">
-                      {session.device}
-                    </span>
-                    
-                  </div>
-                  <span className="text-[11px] flex flex-row items-center gap-2  text-zinc-500 dark:text-[#fff]/60">
-                    
-                    {session.isCurrent && (
-                     <>
-                       <div
-                        className="h-1 w-1 rounded-full bg-emerald-500"
-                        title="Current Session"
-                      />
-                      <p className="text-emerald-500">current session</p>
-                     </>
+        {isLoading ? (
+          <div className="text-sm text-zinc-500">Loading sessions...</div>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {sessions.length === 0 ? (
+              <div className="text-sm text-zinc-500 py-4 text-center">No active sessions found.</div>
+            ) : (
+              sessions.map((session: any, index: number) => {
+                const sessionId = session._id || session.id || index;
+                // Determine icon based on device string if available
+                const isMobile = session.device?.toLowerCase().includes("android") || session.device?.toLowerCase().includes("iphone");
+                const IconComponent = isMobile ? Smartphone : Monitor;
+
+                return (
+                  <div
+                    key={sessionId}
+                    className={`flex items-center justify-between p-3.5 rounded-md border border-zinc-200 bg-white dark:border-[#565656]/10 dark:bg-[#565656]/10`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-100 dark:bg-[#565656]/10">
+                        <IconComponent className="text-zinc-600 dark:text-[#565656]" size={16} />
+                      </div>
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[12px] font-normal text-zinc-900 dark:text-white">
+                            {session.device || "Unknown Device"}
+                          </span>
+                        </div>
+                        <span className="text-[11px] flex flex-row items-center gap-2 text-zinc-500 dark:text-[#fff]/60">
+                          {session.isCurrent && (
+                          <span className="flex flex-row items-center justify-center gap-1">
+                            <div
+                              className="h-1 w-1 rounded-full bg-emerald-500"
+                              title="Current Session"
+                            />
+                            <p className="text-emerald-500">current session</p>
+                          </span>
+                          )}
+                          {session.location || "Unknown Location"}
+                        </span>
+                      </div>
+                    </div>
+                    {!session.isCurrent && (
+                      <button
+                        onClick={() => handleRevoke(sessionId)}
+                        className="rounded-md px-3 py-1.5 text-xs font-medium transition-colors text-red-700 hover:bg-red-50 dark:text-red-500 dark:hover:bg-red-950/30"
+                      >
+                        Revoke access
+                      </button>
                     )}
-                    {session.location}
-                  </span>
-                </div>
-              </div>
-              <button
-                className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-                  session.isCurrent
-                    ? "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
-                    : "text-red-700 hover:bg-red-50 dark:text-red-500 dark:hover:bg-red-950/30"
-                }`}
-              >
-                {session.isCurrent ? "Log out" : "Revoke access"}
-              </button>
-            </div>
-          ))}
-        </div>
+                    {session.isCurrent && (
+                       <button
+                        disabled
+                        className="rounded-md px-3 py-1.5 text-xs font-medium transition-colors text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white opacity-50 cursor-not-allowed"
+                       >
+                         Log out
+                       </button>
+                    )}
+                  </div>
+                )
+              })
+            )}
+          </div>
+        )}
       </div>
     </div>
-  )}
+  )
+}

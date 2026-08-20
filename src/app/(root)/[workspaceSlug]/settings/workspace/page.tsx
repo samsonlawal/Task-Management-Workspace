@@ -140,10 +140,10 @@ export default function WorkspaceSettingsPage() {
               <h1 className="text-[13px]">Workspace Name</h1>
               <input
                 type="text"
-                disabled={!isOwner}
+                disabled={true}
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className={`h-[40px] w-full rounded-[6px] border-[1px] border-[#565656]/20 bg-transparent px-[12px] text-[12px] placeholder:text-[#565656] focus:outline-none dark:text-[#fff]/80 ${isOwner ? "focus:border-[#565656]" : "cursor-not-allowed"}`}
+                className={`h-[40px] w-full rounded-[6px] border-[1px] border-[#565656]/20 bg-transparent px-[12px] text-[12px] placeholder:text-[#565656] focus:outline-none dark:text-[#fff]/80 ${isOwner ? "focus:border-[#565656] cursor-not-allowed" : "cursor-not-allowed"}`}
               />
             </div>
 
@@ -154,10 +154,10 @@ export default function WorkspaceSettingsPage() {
                 <span className="text-[12px] text-[#fff]/40">app.stacktask.com/</span>
                 <input
                   type="text"
-                  disabled={!isOwner}
+                  disabled={true}
                   value={formData.slug}
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  className={`w-full bg-transparent text-[12px] placeholder:text-[#565656] focus:outline-none dark:text-[#fff]/80 ${!isOwner ? "cursor-not-allowed" : ""}`}
+                  className={`w-full bg-transparent text-[12px] placeholder:text-[#565656] focus:outline-none dark:text-[#fff]/80 cursor-not-allowed ${!isOwner ? "cursor-not-allowed" : ""}`}
                 />
               </div>
             </div>
