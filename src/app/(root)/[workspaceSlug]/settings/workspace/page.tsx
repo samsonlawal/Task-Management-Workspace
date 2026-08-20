@@ -11,9 +11,7 @@ import stringToColor from "@/utils/stringToColor";
 import { useDeleteWorkspaceMutation } from "@/redux/api/workspaceApiSlice";
 import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
 import { setWorkspace } from "@/redux/Slices/workspaceSlice";
-
-import { toast } from "sonner";
-
+import { showSuccessToast, showErrorToast } from "@/utils/toaster";
 
 export default function WorkspaceSettingsPage() {
   const router = useRouter();
@@ -46,8 +44,8 @@ export default function WorkspaceSettingsPage() {
   const { user } = useSelector(
     (state: RootState) => state.auth as { user: any }
   );
-  // const isOwner = workspaceData?.owner === user._id;
-  const isOwner = false
+  const isOwner = workspaceData?.owner === user._id;
+  // const isOwner = false
 
 
   const [formData, setFormData] = useState({
@@ -70,9 +68,11 @@ export default function WorkspaceSettingsPage() {
   }, [workspaceData, membersData, currentWS]);
 
   const handleDelete = async () => {
-    const confirmed = true
 
-    if(!isOwner || deleteInput !== workspaceData?.name) return;
+    if(!isOwner || deleteInput !== workspaceData?.name) {
+      showErrorToast({ message: `Failed to delete workspace` });
+      return
+    };
 
     try {
       await deleteWorkspace({
@@ -81,9 +81,10 @@ export default function WorkspaceSettingsPage() {
 
       dispatch(setCurrentWorkspace(null))
       dispatch(setWorkspace(null))
+      showSuccessToast({ message: `workspace deleted successfully!` });
       router.push('/workspaces')
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to delete workspace");
+      showErrorToast({ message: `Failed to delete workspace` });
       console.error("Failed to delete workspace:", error);    }
   }
 
@@ -170,8 +171,8 @@ export default function WorkspaceSettingsPage() {
                 </p>
               </div>
               <select 
-                disabled={!isOwner}
-                className={`mt-1 h-[40px] w-full rounded-[6px] border-[1px] border-[#565656]/20 font-normal bg-transparent px-[12px] text-[12px] focus:outline-none dark:text-[#fff]/80 ${isOwner ? "focus:border-[#565656]" : "opacity-50 cursor-not-allowed"}`}
+                disabled={true}
+                className={`mt-1 h-[40px] w-full rounded-[6px] border-[1px] border-[#565656]/20 font-normal bg-transparent px-[12px] text-[12px] focus:outline-none dark:text-[#fff]/80 ${isOwner ? "focus:border-[#565656] cursor-not-allowed" : "opacity-50 cursor-not-allowed"}`}
               >
                 <option className="dark:bg-[#111]">Admins only</option>
                 <option className="dark:bg-[#111]">Members and Admins</option>

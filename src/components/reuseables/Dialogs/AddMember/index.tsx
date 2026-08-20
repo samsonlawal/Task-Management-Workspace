@@ -165,10 +165,10 @@ export default function AddMember(
         open={isOpen}
         onClose={handleDialogClose}
         transition
-        className="fixed z-[99999] inset-0 flex w-screen items-center justify-center bg-black/30 p-4 transition duration-300 ease-out data-[closed]:opacity-0"
+        className="fixed z-50 inset-0 flex w-screen items-center justify-center bg-black/30 p-4 transition duration-300 ease-out data-[closed]:opacity-0"
       >
-        <DialogBackdrop className="fixed inset-0 z-[99999] bg-black/30 backdrop-blur-sm" />
-        <div className="fixed inset-0 z-[99999] flex w-screen items-center justify-center">
+        <DialogBackdrop className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm" />
+        <div className="fixed inset-0 z-50 flex w-screen items-center justify-center">
           <DialogPanel className="poppins flex flex-col justify-between items-center w-full h-screen rounded-xl bg-white px-6 py-8 dark:bg-[#111]">
 
   <div className="flex w-full items-center justify-between pb-6 text-xs dark:border-zinc-800">
@@ -213,7 +213,7 @@ export default function AddMember(
               className="flex flex-col gap-4"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex flex-row gap-2 z-[99999]">
+              <div className="flex flex-row gap-2 relative z-50">
                 <input
                   name="email"
                   type="email"
