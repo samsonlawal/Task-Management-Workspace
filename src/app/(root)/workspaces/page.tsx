@@ -3,19 +3,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import slugify from "slugify";
-import { Loader2, Plus, Home } from "lucide-react";
-
-import { useGetUserWorkspace } from "@/hooks/api/workspace";
-import { setWorkspace } from "@/redux/Slices/workspaceSlice";
+import { Home } from "lucide-react";
 import { useGetUserWorkspaceQuery } from "@/redux/api/workspaceApiSlice";
-import { useCreateWorkspaceMutation } from "@/redux/api/workspaceApiSlice";
 import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
 import Brand from "@/components/reuseables/Brand";
 import Invitation from "@/components/reuseables/Invitation";
 import stringToColor from "@/utils/stringToColor";
-import ThemeSwitcher from "@/components/reuseables/ThemeSwitcher";
-import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 import { saveToLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import AddWorkspace from "@/components/reuseables/Dialogs/AddWorkspace";
 
@@ -85,11 +78,10 @@ function Workspaces() {
         </Link>
       </div>
 
-      {/* <ThemeSwitcher /> */}
 
       <Brand />
 
-             {/* Loading state spinner to prevent premature screen flash */}
+      {/* Loading state spinner to prevent premature screen flash */}
       { !isSuccess ? 
       
       // ({isLoadingWorkspaces && 
@@ -109,7 +101,7 @@ function Workspaces() {
       {hasInvitations && isSkipped && (
         <button
           onClick={() => setIsSkipped(false)}
-          className="poppins flex items-center gap-1.5 rounded-sm border border-[#565656]/30 bg-[#1a1a1a]/40 px-3 py-1 text-[12px] font-normal text-white/50 transition-all hover:bg-[#1a1a1a]/80 hover:text-white"
+          className="poppins flex items-center gap-1.5 rounded-sm border border-[#565656]/20 bg-[#565656]/10 dark:bg-[#1a1a1a]/40 px-3 py-1 text-[12px] font-normal text-[#565656] dark:text-white/50 transition-all hover:bg-[#565656]/20 dark:hover:bg-[#1a1a1a]/80 dark:hover:text-white"
         >
           <svg
             className="h-3.5 w-3.5"
@@ -166,13 +158,13 @@ function Workspaces() {
 
       {/* Select Workspace Screen (When user has existing workspaces) */}
       {!isLoadingWorkspaces && !showInvitations && !showCreateWorkspaceScreen && (
-        <div className="flex flex-col gap-4 rounded-lg border-[1px] border-[#EEEEEE] bg-white p-6 dark:border-[#565656]/20 dark:bg-[#1a1a1a]/50">
+        <div className="flex flex-col gap-4 rounded-lg border-[1px] border-[#EEEEEE] bg-[#565656]/5 p-6 dark:border-[#565656]/20 dark:bg-[#1a1a1a]/50">
           {/* Header */}
           <div className="flex flex-col text-left">
             <h1 className="poppins text-[15px] font-medium text-[#111] dark:text-white">
               Select Workspace
             </h1>
-            <p className="poppins text-[12px] font-regular text-[#565656] dark:text-[#fff]/50">
+            <p className="poppins text-[12px] text-[#111]/80 dark:text-[#fff]/50">
               Choose where you want to continue your work or create.
             </p>
           </div>
@@ -187,7 +179,7 @@ function Workspaces() {
               workspaces.map((ws: any) => (
                 <div
                   key={ws._id}
-                  className={`flex h-[42px] w-[317px] cursor-pointer flex-row items-center justify-between rounded-[4px] p-[6px] transition-all duration-300 hover:bg-[#565656]/10 ${selectedWorkspace?._id === ws._id ? "border-[1px] border-[#565656]/10 bg-[#565656]/20 text-[#111]" : "text-[#565656]"}`}
+                  className={`flex h-[42px] w-[317px] cursor-pointer flex-row items-center justify-between rounded-[4px] p-[6px] transition-all duration-300 hover:bg-[#565656]/10 ${selectedWorkspace?._id === ws._id ? "border-[1px] border-[#565656]/10 bg-[#565656]/10 text-[#111]" : "text-[#565656]"}`}
                   onClick={() => setSelectedWorkspace(ws)}
                 >
                   <div className="poppins flex flex-row items-center justify-center gap-2">
@@ -229,7 +221,7 @@ function Workspaces() {
 
           <div className="flex flex-col gap-2">
             <button
-              className="poppins w-full rounded-sm bg-[#111] py-[10px] text-[12px] font-medium text-white transition-all duration-300 hover:bg-[#111]/90 disabled:bg-[#565656]/10 disabled:text-[#565656]/50 dark:bg-[#fff] dark:text-[#111] dark:hover:bg-[#fff]/80"
+              className="poppins w-full rounded-sm bg-[#111] py-[10px] text-[12px] text-white transition-all duration-300 hover:bg-[#111]/90 disabled:bg-[#565656]/10 disabled:text-[#565656]/50 dark:bg-[#fff] dark:text-[#111] dark:hover:bg-[#fff]/80"
               disabled={!selectedWorkspace}
               onClick={handleContinue}
             >

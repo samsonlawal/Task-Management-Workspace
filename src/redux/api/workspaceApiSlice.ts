@@ -41,9 +41,17 @@ export const workspaceApiSlice = apiSlice.injectEndpoints({
         }),
 
         getWorkspaceBySlug: builder.query({
-      query: (slug: string) => `/workspaces/slug/${slug}`,
-      providesTags: ["Workspace"],
-    }),
+            query: (slug: string) => `/workspaces/slug/${slug}`,
+            providesTags: ["Workspace"],
+            }),
+
+        deleteWorkspace: builder.mutation({
+            query: ({ workspaceId }: { workspaceId: string }) => ({
+                url: `/workspaces/${workspaceId}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Workspace"],
+        }),
     }),
 });
 
@@ -54,5 +62,6 @@ export const {
     useCreateWorkspaceMutation,
     useGetPendingInvitesQuery,
     useAcceptInviteMutation,
-     useGetWorkspaceBySlugQuery,
+    useGetWorkspaceBySlugQuery,
+    useDeleteWorkspaceMutation,
 } = workspaceApiSlice;

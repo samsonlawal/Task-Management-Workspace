@@ -15,26 +15,32 @@ interface AddWorkspaceProps {
   trigger?: React.ReactNode;
   variant?: "sidebar" | "button";
   className?: string;
+
+    isOpen?: boolean;
+  setIsOpen?: (open: boolean) => void;
+
 }
 
 export default function AddWorkspace({
   trigger,
   variant = "sidebar",
   className = "",
+  isOpen: externalIsOpen,
+  setIsOpen: externalSetIsOpen,
 }: AddWorkspaceProps) {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [workspaceName, setWorkspaceName] = useState("");
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+  const setIsOpen = externalSetIsOpen || setInternalIsOpen;  const [workspaceName, setWorkspaceName] = useState("");
 
   const { user } = useSelector((state: any) => state.auth);
 
-  // RTK Query Mutation Hook
   const [createWorkspace, { isLoading: createWorkspaceLoading }] =
     useCreateWorkspaceMutation();
 
-  // Auto-generate URL slug preview from workspace name
   const generatedSlug = slugify(workspaceName || "", {
     lower: true,
     strict: true,
@@ -97,10 +103,10 @@ export default function AddWorkspace({
       ) : (
         <button
           onClick={() => setIsOpen(true)}
-          className={`flex w-full cursor-pointer flex-row items-center rounded-[4px] py-1 pl-2 transition-all duration-300 ease-in-out dark:hover:text-white dark:text-[#fff]/50 dark:hover:bg-[#565656]/10 text-[#111] hover:bg-[#565656]/30 ${className}`}
+          className={`flex w-full cursor-pointer flex-row items-center rounded-[4px] py-1 pl-2 transition-all duration-300 ease-in-out dark:hover:text-white dark:text-[#fff]/50 dark:hover:bg-[#565656]/10 text-[#111] hover:bg-[#565656]/10 ${className}`}
         >
           <Plus size={16} />
-          <p className="px-2 text-[12px] font-regular">Create Workspace</p>
+          <p className="px-2 text-[12px] font-normal">Create Workspace</p>
         </button>
       )}
 

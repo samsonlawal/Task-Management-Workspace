@@ -114,8 +114,8 @@ export default function Card({
             {/* TITLE */}
             {/* <p className="text-[13px] font-medium">{title || "No Title"}</p> */}
 
-            <p className="line-clamp-1 h-fit text-[10px] font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
-              STK-{id ? id.slice(-4).toUpperCase() : "0000"}
+            <p className="line-clamp-1 h-fit text-[10px] font-normal uppercase tracking-wide text-[#565656] dark:text-zinc-500">
+              TSK-{id ? id.slice(-4).toUpperCase() : "0000"}
             </p>
           </div>
           <div className="cursor-pointer" onClick={gettaskdetails}>
@@ -129,7 +129,7 @@ export default function Card({
           {/* <p className="line-clamp-2 h-fit text-[11px] font-medium leading-tight text-[#565656] dark:text-[#fff]/50">
             {desc}
           </p> */}
-          <p className="line-clamp-1 text-[12px] font-medium text-zinc-800 dark:text-zinc-200">
+          <p className="line-clamp-1 text-[12px] font-normal text-zinc-800 dark:text-zinc-200">
             {title || "No Title"}
           </p>
         </div>

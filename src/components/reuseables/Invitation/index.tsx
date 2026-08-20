@@ -49,12 +49,6 @@ function Invitation({
   const [acceptInvite, { isLoading: acceptInviteLoading }] =
     useAcceptInviteMutation();
 
-  // const {
-  //   data: invite,
-  //   onGetPendingInvites,
-  //   loading: invitesLoading,
-  // } = useGetPendingInvites(user?._id);
-
   useEffect(() => {
     if (invite) {
       console.log("invitations", invite);
@@ -94,11 +88,6 @@ function Invitation({
     setCurrentIndex((prev) => (prev + 1) % totalInvites);
   }
 
-  function handlePrev() {
-    if (totalInvites <= 1) return;
-    setCurrentIndex((prev) => (prev - 1 + totalInvites) % totalInvites);
-  }
-
   if (!totalInvites) return null;
 
   const currentInvite = invites?.data?.[currentIndex];
@@ -112,9 +101,8 @@ function Invitation({
   return (
     <div className="flex flex-col gap-1">
       {/* Top Bar: Title & Counter / Navigation */}
-
       <div className="flex items-center justify-between">
-        <span className="poppins px-2 py-1 text-[12px] font-normal text-white/50">
+        <span className="poppins px-2 py-[2px] text-[12px] font-normal text-[#565656] dark:text-white/50">
           Invitations{" - "}
           {totalInvites > 0 ? `${currentIndex + 1} of ${totalInvites}` : ""}
         </span>
@@ -124,7 +112,7 @@ function Invitation({
             <button
               onClick={handleNext}
               type="button"
-              className="poppins flex w-fit items-center justify-center rounded-sm px-2 py-1 text-white/50 transition-all hover:text-white"
+              className="poppins flex w-fit items-center justify-center rounded-sm px-2 py-1 text-[#111]/80 dark:text-white/50 transition-all hover:text-[#111]/80 dark:hover:text-white"
               title="Next Invitation"
             >
               <p className="text-[12px]">Next</p>
@@ -133,22 +121,22 @@ function Invitation({
         )}
       </div>
 
-      <div className="flex w-[400px] flex-col gap-3 rounded-lg border-[1px] border-[#565656]/20 bg-[#1a1a1a]/50 p-5 shadow-lg">
+      <div className="flex w-[400px] flex-col gap-3 rounded-lg border-[1px] border-[#565656]/10 dark:bg-[#1a1a1a]/50  p-5">
         {/* Main Invitation Details */}
         <div className="flex flex-col text-left">
-          <h1 className="poppins text-[15px] font-medium text-white">
+          <h1 className="poppins text-[15px] font-medium text-[#111] dark:text-white">
             Invitation to join{" "}
-            <span className="rounded-sm text-white">
+            <span className="rounded-sm text-[#111] dark:text-white">
               {currentInvite?.workspaceName}
             </span>
           </h1>
-          <p className="poppins pt-1 text-[12px] text-[#fff]/60">
+          <p className="poppins text-[12px] text-[#111]/80 dark:text-[#fff]/60">
             You've been invited to join as an{" "}
-            <span className="font-normal text-white">
+            <span className="font-normal text-[#111] dark:text-white">
               {currentInvite?.role}
             </span>
             . Invite expires in{" "}
-            <span className="font-normal text-white">{expiresDays}</span>{" "}
+            <span className="font-normal text-[#111] dark:text-white">{expiresDays}</span>{" "}
             {expiresDays > 1 ? "days." : "day."}
           </p>
         </div>
@@ -156,7 +144,7 @@ function Invitation({
         {/* Action Buttons */}
         <div className="flex items-center gap-2 pt-1">
           <button
-            className="poppins flex-1 rounded-sm bg-white px-4 py-[7px] text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-white/90 disabled:opacity-50"
+            className="poppins flex-1 rounded-sm bg-[#111] dark:bg-white px-4 py-[7px] text-[12px] text-[#fff] dark:text-[#111] transition-all duration-300 hover:bg-[#111]/90 dark:hover:bg-white/90 disabled:opacity-50"
             disabled={acceptInviteLoading}
             onClick={handleAcceptInvite}
           >
@@ -166,7 +154,7 @@ function Invitation({
       </div>
       {onSkip && (
         <button
-          className="poppins transition-a;; group flex w-full items-center justify-center gap-1 px-3 py-[7px] text-[12px] font-normal text-white/80 duration-300 hover:gap-2"
+          className="poppins transition-a;; group flex w-full items-center justify-center gap-1 px-3 py-[8px] text-[12px] font-normal text-[#111] dark:text-white/80 duration-300 hover:gap-2"
           onClick={onSkip}
           type="button"
         >

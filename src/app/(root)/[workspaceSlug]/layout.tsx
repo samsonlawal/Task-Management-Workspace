@@ -55,9 +55,11 @@ export default function WorkspaceLayout({
   // }, []);
 
   useEffect(() => {
-    if (workspace && (workspace as any)._id) {
-      dispatch(setCurrentWorkspace((workspace as any)._id));
-      dispatch(setWorkspace(workspace));
+    const actualWorkspace = (workspace as any)?.workspace || workspace;
+
+    if (actualWorkspace && actualWorkspace._id) {
+      dispatch(setCurrentWorkspace(actualWorkspace._id));
+      dispatch(setWorkspace(actualWorkspace));
     }
   }, [workspace, dispatch]);
 

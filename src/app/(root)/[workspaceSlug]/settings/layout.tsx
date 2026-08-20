@@ -142,7 +142,7 @@ export default function SettingsLayout({
 
       {/* DEDICATED SETTINGS SIDEBAR */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-gray-200/80 bg-white dark:bg-gray-50/50 p-6 transition-all duration-300 dark:border-zinc-800/80 dark:bg-[#111] lg:static lg:block lg:translate-x-0 ${isSettingsSidebar ? "translate-x-0" : "-translate-x-full"} `}
+        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-gray-200/80 bg-white p-6 transition-all duration-300 dark:border-zinc-800/80 dark:bg-[#111] lg:static lg:block lg:translate-x-0 ${isSettingsSidebar ? "translate-x-0" : "-translate-x-full"} `}
       >
         <div className="mb-12 px-2">
           <h2 className="text-sm font-medium text-[#111] dark:text-white">

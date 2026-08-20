@@ -26,8 +26,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Loader2 } from "lucide-react";
-import { useCreateTask } from "@/hooks/api/tasks";
+import { Loader2, ArrowLeft } from "lucide-react";
 import { TAddTask } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -169,7 +168,7 @@ export default function AddTask() {
     <>
       <button
         onClick={checkWsId}
-        className="poppins flex h-[36px] w-fit shrink-0 items-center justify-center gap-2 rounded-md bg-[#111] dark:bg-white px-4 text-[12px] font-medium shadow-sm transition-all duration-300 dark:hover:bg-zinc-100 hover:bg-[#111]/90 active:scale-95 sm:w-auto"
+        className="poppins flex h-[32px] w-fit shrink-0 items-center justify-center gap-2 rounded-md bg-[#111] dark:bg-white px-2.5 text-[12px] font-medium shadow-sm transition-all duration-300 dark:hover:bg-zinc-100 hover:bg-[#111]/90 active:scale-95 sm:w-auto"
       >
         {/* <FontAwesomeIcon icon={faPlus} className="text-[10px]" /> */}
         <span className="text-[#fff] dark:text-[#111]">New Task</span>
@@ -195,16 +194,21 @@ export default function AddTask() {
                 <div className="flex select-none flex-row items-center gap-1.5 text-[11px] text-zinc-500">
                   <button
                     onClick={handleDialogClose}
-                    className="flex flex-row items-center gap-1 font-normal text-zinc-500 transition-colors hover:text-black dark:text-white dark:hover:text-zinc-200"
+                    className="flex flex-row items-center gap-1 font-normal text-zinc-500 transition-colors hover:text-black dark:text-[#fff]/60 dark:hover:text-[#fff]/80"
                   >
-                    <FontAwesomeIcon
+                    {/* <FontAwesomeIcon
                       icon={faChevronLeft}
                       className="mr-0.5 text-[8px]"
-                    />
-                    <span>{workspaceData?.name || "Workspace"}</span>
+                    /> */}
+                     <ArrowLeft
+                                  size={11}
+                                  strokeWidth={2.5}
+                                  className="text-zinc-500 hover:text-black dark:text-[#fff]/60 dark:hover:text-[#fff]/80"
+                                />
+                    <span>{workspaceData?.name || "workspace"}</span>
                   </button>
-                  <span className="text-zinc-400 dark:text-white">{" > "}</span>
-                  <span className="font-normal text-zinc-700 dark:text-zinc-300">
+                  <span className="text-zinc-400 dark:text-[#fff/60">{" > "}</span>
+                  <span className="font-normal text-zinc-700 dark:text-[#fff]/60">
                     New Task
                   </span>
                 </div>
@@ -228,7 +232,7 @@ export default function AddTask() {
                       title: e.target.value,
                     }))
                   }
-                  className="poppins-medium m-0 w-full border-none bg-transparent p-0 text-[16px] font-normal text-zinc-900 outline-none focus:outline-none focus:ring-0 dark:text-white"
+                  className="poppins-normal m-0 w-full border-none bg-transparent p-0 text-[16px] font-normal text-zinc-900 outline-none focus:outline-none focus:ring-0 dark:text-white hover:text-black dark:text-[#fff]/60 dark:hover:text-[#fff]/80 placeholder-white/30"
                 />
                 <textarea
                   placeholder="Add a description..."
@@ -240,7 +244,7 @@ export default function AddTask() {
                     }))
                   }
                   rows={4}
-                  className="poppins-regular text-zinc-650 m-0 mt-1 min-h-[90px] w-full resize-none border-none bg-transparent p-0 text-[13px] outline-none focus:outline-none focus:ring-0 dark:text-zinc-400"
+                  className="poppins-normal text-zinc-650 m-0 mt-1 min-h-[90px] w-full resize-none border-none bg-transparent p-0 text-[13px] outline-none focus:outline-none focus:ring-0 dark:text-white/80 placeholder-white/30"
                 />
               </div>
 
@@ -252,9 +256,9 @@ export default function AddTask() {
                     <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800">
                       <FontAwesomeIcon
                         icon={faSpinner}
-                        className="h-3 w-3 animate-pulse text-zinc-900 dark:text-white"
+                        className="h-3 w-3 text-zinc-900 dark:text-white"
                       />
-                      <span className="font-semibold text-zinc-900 dark:text-white">
+                      <span className="font-semibold text-zinc-900 dark:text-zinc-400">
                         Status:
                       </span>
                       <span className="inline-flex items-center gap-1 text-[11px] text-zinc-700 dark:text-zinc-300">

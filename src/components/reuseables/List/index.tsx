@@ -90,10 +90,10 @@ export default function ListTask({
   return (
     <div className="poppins flex min-h-fit w-full flex-row justify-between border-t-[1px] border-[#565656]/10 px-3 py-3.5 text-[14px] text-[#111] dark:text-[#eee]/60">
       <div className="flex flex-1 items-center justify-start gap-2 pr-6 md:w-[250px]">
-        <span className="mr-1 select-none whitespace-nowrap text-[11px] font-semibold text-[#787878] dark:text-zinc-500">
+        <span className="mr-1 select-none whitespace-nowrap text-[10px] font-normal text-[#565656] dark:text-zinc-500">
           STK-{id ? id.slice(-4).toUpperCase() : "01"}
         </span>
-        <p className="line-clamp-1 h-fit text-[12px] font-medium leading-4 text-zinc-800 dark:text-zinc-200">
+        <p className="line-clamp-1 h-fit text-[12px] font-normal leading-4 text-zinc-800 dark:text-zinc-200">
           {title || desc}
         </p>
       </div>
@@ -210,10 +210,6 @@ export default function ListTask({
           <TaskDetails taskData={taskData} getDetails={gettaskdetails} />
         </div>
       </div>
-
-      {/* <button className="hover:cursor-pointer">hover</button>
-
-      <button className="cursor-pointer">hover</button> */}
     </div>
   );
 }

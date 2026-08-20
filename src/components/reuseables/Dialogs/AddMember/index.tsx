@@ -9,16 +9,12 @@ import {
 } from "@headlessui/react";
 import { useState } from "react";
 import { CustomSelect } from "../../select";
-import Button from "../../Button";
-import { faUserPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { TAddMember } from "@/types";
 import { useDispatch, useSelector } from "react-redux";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
-import { useAddMember, useGetMembers } from "@/hooks/api/workspace";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
-// import { setMembers } from "@/redux/Slices/memberSlice";
-import { Loader2 } from "lucide-react";
+import { Loader2, UserRoundPlus, ArrowLeft } from "lucide-react";
 import { useAddMemberMutation } from "@/redux/api/memberApiSlice";
 
 interface AddWorkspaceProps {
@@ -48,6 +44,10 @@ export default function AddMember(
 
   const { currentWorkspaceId } = useSelector(
     (state: any) => state.currentWorkspace,
+  );
+
+   const { user } = useSelector(
+    (state: any) => state.auth,
   );
 
   // Handle email input change
@@ -146,37 +146,53 @@ export default function AddMember(
 
       <button
         onClick={toggleDialog}
-        className="flex w-full cursor-pointer flex-row items-center rounded-[4px] py-1 pl-2 transition-all duration-300 hover:text-[#fff] text-[#fff]/50 ease-in-out hover:bg-[#565656]/10"
-
-        
+        className="flex w-full cursor-pointer flex-row items-center rounded-[4px] py-1 pl-2 transition-all duration-300 text-[#111] dark:hover:text-[#fff] dark:text-[#fff]/50 ease-in-out hover:bg-[#565656]/10"
         title="Invite Member"
       >
-        <span className="px-2 text-[12px] font-regular ">Invite Member</span>
+        <UserRoundPlus size={16} />
+        <span className="px-2 text-[12px] font-normal ">Invite Member</span>
       </button>) 
-
-      :
-
-      (
-
+      : (
       <button
         onClick={toggleDialog}
-        className="poppins flex h-[36px] w-fit shrink-0 items-center justify-center gap-2 rounded-md bg-[#111] dark:bg-white px-4 text-[12px] font-medium shadow-sm transition-all duration-300 dark:hover:bg-zinc-100 hover:bg-[#111]/90 active:scale-95 sm:w-auto"
+        className="poppins flex h-[32px] w-fit shrink-0 items-center justify-center gap-2 rounded-md bg-[#111] dark:bg-white px-2.5 text-[12px] font-medium shadow-sm transition-all duration-300 dark:hover:bg-zinc-100 hover:bg-[#111]/90 active:scale-95 sm:w-auto"
         title="Invite Member"
       >
         <span className="text-[12px] text-[#fff] dark:text-[#111]">Invite Member</span>
       </button>) 
-}
+      }
       <Dialog
         open={isOpen}
         onClose={handleDialogClose}
         transition
-        className="fixed inset-0 flex w-screen items-center justify-center bg-black/30 p-4 transition duration-300 ease-out data-[closed]:opacity-0"
+        className="fixed z-[99999] inset-0 flex w-screen items-center justify-center bg-black/30 p-4 transition duration-300 ease-out data-[closed]:opacity-0"
       >
-        <DialogBackdrop className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
-        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-          <DialogPanel className="poppins h-fit rounded-xl bg-white px-8 py-8 dark:bg-[#111] md:w-[540px]">
-            <DialogTitle className="flex flex-row items-center justify-between font-medium">
-              <p className="text-[15px]">Invite Member</p>
+        <DialogBackdrop className="fixed inset-0 z-[99999] bg-black/30 backdrop-blur-sm" />
+        <div className="fixed inset-0 z-[99999] flex w-screen items-center justify-center">
+          <DialogPanel className="poppins flex flex-col justify-between items-center w-full h-screen rounded-xl bg-white px-6 py-8 dark:bg-[#111]">
+
+  <div className="flex w-full items-center justify-between pb-6 text-xs dark:border-zinc-800">
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2 rounded-lg px-3.5 py-2 font-normal transition-colors duration-300 dark:text-[#fff]/70 dark:hover:text-white"
+            >
+              <ArrowLeft size={14} />
+              <span>Back to Workspace</span>
+            </button>
+
+            <span className="text-gray-400 dark:text-zinc-500">
+              Logged in as <br />
+              <strong className="font-normal text-zinc-900 dark:text-zinc-200">
+                {user?.email || "user@example.com"}
+              </strong>
+            </span>
+          </div>
+
+           <div className="md:w-[500px]">
+             <div className=" flex flex-col -space-y-1.5">
+              <DialogTitle className="flex flex-row items-center justify-between font-normal">
+              <p className="text-[14px]">Invite Member</p>
               <div
                 onClick={() => setIsOpen(false)}
                 className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full"
@@ -188,15 +204,16 @@ export default function AddMember(
               </div>
             </DialogTitle>
             <Description className="pb-6">
-              <span className="w-[80%] text-[12px] leading-4 text-[#777]">
+              <span className="w-[80%] font-normal text-[13px] text-[#fff]/60">
                 Invite your team to review and collaborate on this project
               </span>
             </Description>
+             </div>
             <div
               className="flex flex-col gap-4"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex flex-row gap-2">
+              <div className="flex flex-row gap-2 z-[99999]">
                 <input
                   name="email"
                   type="email"
@@ -230,7 +247,7 @@ export default function AddMember(
                   className="bg-[#222] px-7 text-white hover:bg-[#111]"
                 /> */}
                 <button
-                  className="flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-5 py-2 text-[12px] font-semibold text-zinc-900 shadow-sm transition-all hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none"
+                  className="flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-4 py-2 text-[12px] font-medium text-zinc-900 shadow-sm transition-all hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none"
                   onClick={handleAddMember}
                   disabled={addMemberLoading}
                 >
@@ -245,6 +262,11 @@ export default function AddMember(
                 </button>
               </div>
             </div>
+           </div>
+
+            <div className="text-center text-[11px] text-gray-400 dark:text-zinc-600">
+            © {new Date().getFullYear()} Taskstack Inc.
+          </div>
           </DialogPanel>
         </div>
       </Dialog>

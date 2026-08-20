@@ -142,25 +142,25 @@ function Team({ hideHeader = false }: { hideHeader?: boolean } = {}) {
 
   return (
     <div className="flex h-fit w-full flex-col gap-2 pb-8">
-      {!hideHeader && (
-        <div className="sticky top-0 w-full bg-[white] px-4 dark:bg-[#111] lg:px-8">
-          <div className="poppins flex w-full items-center justify-between border-[#565656]/10 py-[7px]">
+      {/* {!hideHeader && ( */}
+        <div className="sticky top-0 w-full bg-[white] px-4 dark:bg-[#111] py-[7px] border-b-[1px] border-[#565656]/10">
+          <div className="poppins flex w-full items-center justify-between ">
             <div className="flex flex-row items-center">
               <button
                 onClick={() => dispatch(toggleSidebar())}
-                className="mr-2 flex px-1 text-[#707070] transition-all duration-300 hover:text-[#111] dark:hover:text-white lg:hidden lg:p-2"
+                className="flex px-1 text-[#707070] transition-all duration-300 hover:text-[#111] dark:hover:text-white lg:hidden lg:p-2"
                 title="Toggle Navigation Sidebar"
               >
                 <PanelLeft size={18} strokeWidth={1.6} />
               </button>
-              <h2 className="text-lg text-[#111] dark:text-white">Team</h2>
+              <h2 className="text-md text-[#111] dark:text-white lg:text-xl">Team</h2>
             </div>
             <div className="flex flex-row items-center justify-center gap-3">
-              <Notification />
+              {/* <Notification /> */}
             </div>
           </div>
         </div>
-      )}
+      {/* )} */}
 
       <div className={`${hideHeader ? '' : 'px-4 lg:px-8'} flex flex-col gap-2  poppins`}>
         <div className="flex h-fit flex-row items-center justify-between gap-3 pt-6 transition-all duration-300">
@@ -222,7 +222,6 @@ function Team({ hideHeader = false }: { hideHeader?: boolean } = {}) {
 
                     const email = userData.email || user.email;
                     const fullname = userData.fullname || userData.name || "-";
-                    const jobTitle = userData.jobTitle || user.jobTitle || null;
                     const role = user.role || "-";
                     const status = user.status || "pending";
 
@@ -231,7 +230,6 @@ function Team({ hideHeader = false }: { hideHeader?: boolean } = {}) {
                         key={user._id || index}
                         className="grid w-full grid-cols-[1fr_80px_70px_30px] items-center justify-between gap-1 px-3 py-3 text-[13px] font-[400] text-gray-800 dark:text-[#eee] md:grid-cols-[1fr_100px_120px_100px_30px] md:gap-5 md:px-4"
                       >
-                        {/* <div className="">{startIndex + index + 1}</div> */}
                         <div className="flex flex-row items-center gap-2">
                           {imageSrc !== "none" ? (
                             <img
@@ -260,21 +258,18 @@ function Team({ hideHeader = false }: { hideHeader?: boolean } = {}) {
                             </div>
                           )}
                           <div className="flex flex-col poppins -space-y-0.5">
-
-
                           <p className="truncate">{email}</p>
-{fullname && 
 
-                          <p className="truncate dark:text-[#fff]/50 font-regular text-[11px]">{fullname}</p>
-
-}
+                          {fullname && 
+                            <p className="truncate dark:text-[#fff]/50 font-regular text-[11px]">
+                            {fullname}
+                            </p>
+                            }
                         </div>
                         </div>
                         
-                        {/* <div>{jobTitle}</div> */}
                         <div>{role}</div>
                         <div className="hidden md:block dark:text-[#fff]/50 font-regular">Jan 3, 2026</div>
-                        {/* <div className="hidden md:block">Jan 3, 2026</div> */}
                         <div>
                           <div
                             className={`flex w-fit px-2 flex-row items-center justify-center gap-1 rounded-full py-1 ${
@@ -288,10 +283,7 @@ function Team({ hideHeader = false }: { hideHeader?: boolean } = {}) {
                           </div>
                         </div>
                         <div className="flex items-center justify-center">
-                          {/* <FontAwesomeIcon
-                        icon={faEllipsisVertical}
-                        className="rounded-md px-3 py-2 hover:bg-gray-200 dark:hover:bg-[#565656]/20"
-                      /> */}
+                         
                           <TeamMenu
                             userId={user._id}
                             userEmail={email}

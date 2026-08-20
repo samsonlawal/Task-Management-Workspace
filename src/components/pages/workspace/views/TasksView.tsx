@@ -83,13 +83,6 @@ function TasksView() {
   const tasks = workspaceData?.tasks || [];
   const workspace = workspaceData?.workspace;
 
-  // const tasks =
-  //   tasksData?.tasks ||
-  //   tasksData?.data ||
-  //   (Array.isArray(tasksData) ? tasksData : []);
-
-  // const { data: taskData, onGetTasks, loading: tasksLoading } = useGetTasks();
-
   const [activeTab, setActiveTab] = useState<number>(0);
   const [activeTabs, setActiveTabs] = useState<string>("");
   const [byStatus, setByStatus] = useState<boolean>(true);
@@ -156,15 +149,13 @@ function TasksView() {
             >
               <PanelLeft size={18} strokeWidth={1.6} />
             </button>
-            <h2 className="poppins-medium text-md text-[#111] dark:text-white lg:text-xl">
+            <h2 className="poppins-normal text-md text-[#111] dark:text-white lg:text-xl">
               Issues
             </h2>
           </div>
           <div className="flex flex-row items-center justify-center gap-2">
-            {/* <Notification /> */}
-
             <button
-              className={`hidden h-[36px] cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 lg:flex ${
+              className={`hidden cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-normal text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 lg:flex ${
                 byStatus ? "dark:bg-[#565656]/20" : ""
               }`}
               onClick={() => setByStatus(!byStatus)}
@@ -182,7 +173,7 @@ function TasksView() {
             </button>
 
             <button
-              className="hidden h-[36px] cursor-not-allowed flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-medium text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 lg:flex"
+              className="hidden h-fit cursor-not-allowed flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-normal text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 lg:flex"
               disabled={true}
             >
               <img

@@ -201,13 +201,13 @@ export default function EditTask({ taskData }: any) {
                         title: e.target.value,
                       }))
                     }
-                    className="text-normal h-[42px] w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-xs placeholder-gray-400 outline-none focus:border-zinc-500 dark:border-zinc-800 dark:text-white"
+                    className="text-normal h-[42px] w-full rounded-md px-3 py-2 text-xs placeholder-gray-400 outline-none focus:border-zinc-500 dark:border-zinc-800 dark:text-white placeholder-white/30"
                   />
                 </div>
 
                 {/* 2. Description Input */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[13px] font-medium text-zinc-500 dark:text-zinc-400">
+                  <label className="text-[13px] font-medium text-zinc-500  dark:text-white/80 placeholder-white/30">
                     Description
                   </label>
                   <textarea

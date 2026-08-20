@@ -114,18 +114,18 @@ export default function TaskDetailsHeader({
         <div className="flex select-none flex-row items-center gap-1.5 text-[11px] text-zinc-500">
           <button
             onClick={handleDialogClose}
-            className="flex flex-row items-center gap-1 font-medium text-zinc-500 transition-colors hover:text-black dark:text-white dark:hover:text-zinc-200"
+            className="flex flex-row items-center gap-1 font-medium text-zinc-500 transition-colors hover:text-black dark:text-[#fff]/60 dark:hover:text-[#fff]/80"
           >
             <ArrowLeft
               size={11}
               strokeWidth={2.5}
-              className="text-zinc-500 dark:text-white"
+              className="text-zinc-500 hover:text-black dark:text-[#fff]/60 dark:hover:text-[#fff]/80"
             />
-            <span>{taskData.workspaceName || "Workspace"}</span>
+            <span>{taskData.workspaceName || "workspace"}</span>
           </button>
-          <span className="text-zinc-400 dark:text-white">{" > "}</span>
-          <span className="font-semibold text-zinc-700 dark:text-zinc-300">
-            STK-{taskData.id.slice(-4).toUpperCase()}
+          <span className="text-zinc-400 hover:text-black dark:text-[#fff]/60 dark:hover:text-[#fff]/80">{" > "}</span>
+          <span className="font-normal text-zinc-700 hover:text-black dark:text-[#fff]/60 dark:hover:text-[#fff]/80">
+            TSK-{taskData.id.slice(-4).toUpperCase()}
           </span>
         </div>
 
@@ -137,16 +137,14 @@ export default function TaskDetailsHeader({
 
           <MenuItems className="absolute right-0 z-50 mt-1 w-48 origin-top-right rounded-md border border-zinc-200 bg-white p-1 shadow-lg outline-none dark:border-zinc-800 dark:bg-zinc-900">
             <div className="py-0.5">
-              <MenuItem>
+              {/* <MenuItem>
                 {({ active }) => (
                   <button
                     onClick={() => {
                       setTempTitle(title);
                       setIsEditingTitle(true);
                     }}
-                    className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 transition-colors dark:text-zinc-300 ${
-                      active ? "bg-zinc-100 dark:bg-zinc-800" : ""
-                    }`}
+                    className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 transition-colors dark:text-zinc-300`}
                   >
                     <Edit size={12} />
                     <span>Edit Title</span>
@@ -184,9 +182,9 @@ export default function TaskDetailsHeader({
                     <span>Mark as Done</span>
                   </button>
                 )}
-              </MenuItem>
+              </MenuItem> */}
 
-              <div className="border-zinc-150 my-1 border-t dark:border-zinc-800" />
+              {/* <div className="border-zinc-150 my-1 border-t dark:border-zinc-800" /> */}
 
               <MenuItem>
                 {({ active }) => (
@@ -235,7 +233,7 @@ export default function TaskDetailsHeader({
               setTempTitle(title);
               setIsEditingTitle(true);
             }}
-            className="poppins-medium -mx-1 line-clamp-1 w-full cursor-pointer rounded px-1 text-[16px] text-zinc-900 transition-colors hover:bg-zinc-200/50 dark:text-white dark:hover:bg-zinc-800/50"
+            className="poppins-medium -mx-1 line-clamp-1 w-full cursor-pointer rounded px-1 text-[16px] text-zinc-900 transition-colors  dark:text-white"
           >
             {title || "No Title"}
           </DialogTitle>
@@ -265,7 +263,7 @@ export default function TaskDetailsHeader({
               setTempDesc(description);
               setIsEditingDesc(true);
             }}
-            className="poppins-regular -mx-1 w-full flex-1 cursor-pointer rounded px-1 py-1.5 text-[13px] text-zinc-600 transition-colors hover:bg-zinc-200/50 dark:text-zinc-400 dark:hover:bg-zinc-800/50"
+            className="poppins-regular -mx-1 w-full flex-1 cursor-pointer rounded px-1 py-1.5 text-[13px] text-zinc-600 transition-colors dark:text-white/80 placeholder-white/30"
           >
             {description || "Add a description..."}
           </p>

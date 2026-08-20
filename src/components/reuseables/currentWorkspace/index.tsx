@@ -8,6 +8,7 @@ import AddMember from "../Dialogs/AddMember";
 
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentWorkspace } from "@/redux/Slices/currentWorkspaceSlice";
+import { setWorkspace } from "@/redux/Slices/workspaceSlice";
 import {
   getFromLocalStorage,
   saveToLocalStorage,
@@ -41,9 +42,13 @@ export default function CurrentWorkspace() {
 function Workspace() {
   const router = useRouter();
   const dispatch = useDispatch();
-    const params = useParams();
-    const workspaceSlug = (params?.workspaceSlug as string) || "";
-  // const [filteredWorkspaces, setFilteredWorkspaces] = useState<any>([]);
+
+  const [isAddWorkspaceOpen, setIsAddWorkspaceOpen] = useState(false);
+  const [isAddMemberOpen, setIsAddMemberOpen] = useState(false);
+
+
+  const params = useParams();
+  const workspaceSlug = (params?.workspaceSlug as string) || "";
 
   const { user } = useSelector((state: any) => state.auth);
   const { currentWorkspaceId } = useSelector(
@@ -61,6 +66,9 @@ function Workspace() {
       { skip: !currentWorkspaceId },
     );
 
+  // const workspaceData = useSelector((state: any) => state.WorkspaceData.workspace);
+
+
   // Populate initial active workspace on boot if not set yet
   useEffect(() => {
     if (!currentWorkspaceId && workspaces.length > 0) {
@@ -69,9 +77,8 @@ function Workspace() {
         dispatch(setCurrentWorkspace(firstId));
       }
     }
+    console.log(workspaceData)
   }, [workspaces, currentWorkspaceId, dispatch]);
-
-  
 
   // Use the unified hook
   // const { data: taskData, onGetTasks, loading: tasksLoading } = useGetTasks();
@@ -128,10 +135,6 @@ function Workspace() {
     return workspaces.filter((ws: any) => ws._id !== currentId);
   }, [workspaces, workspaceData]);
 
-  // function openWorkspaceDialog() {
-  //   onGetUserWorkspace(user?._id);
-  // }
-
   function switchWorkspace(workspace: any) {
     const id = workspace._id;
     const slug = workspace.slug || workspace._id;
@@ -142,16 +145,16 @@ function Workspace() {
     });
 
     dispatch(setCurrentWorkspace(id));
+    dispatch(setWorkspace(workspaceData));
     router.push(`/${slug}/tasks`);
   }
 
   return (
     <div className="z-100 w-full text-left">
       <Menu>
-        <MenuButton className="inline-flex w-full items-center gap-2 rounded-md border-[1px] border-[#565656]/10 bg-[#565656]/10 px-2 py-1.5 text-black transition-all duration-300 hover:bg-[#565656]/20 focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white">
+        <MenuButton className="inline-flex w-full items-center gap-2 rounded-md border-[1px] border-[#565656]/10 bg-[#565656]/10 px-2 py-1.5 text-black transition-all duration-300 hover:bg-[#565656]/20">
           <div
             className="poppins flex w-full flex-row items-center gap-[8px] text-white"
-            // onClick={() => openWorkspaceDialog()}
           >
             {workspaceData?.name ? (
               <>
@@ -188,7 +191,7 @@ function Workspace() {
         <MenuItems
           transition
           anchor="bottom start"
-          className="poppins-medium z-50 flex min-h-fit w-[260px] origin-top-right flex-col justify-between gap-2 rounded-md border-[1px] border-[#565656]/10 bg-white dark:bg-[#1a1a1a] px-3 py-1 text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-300 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+          className="poppins-medium z-50 flex min-h-fit w-[260px] origin-top-right flex-col justify-between gap-2 rounded-md border-[1px] border-[#565656]/20 bg-white dark:bg-[#1a1a1a] px-3 py-1 text-sm/6 text-white shadow-[0px_4px_10px_rgba(0,0,0,0.001),0px_-2px_5px_rgba(0,0,0,0.001)] transition duration-300 ease-out [--anchor-gap:8px] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
    
           <div className="flex flex-col gap-[4px]">
@@ -204,7 +207,6 @@ function Workspace() {
                   <p className="px-2 text-[13px] text-[#707070]">
                 Select Workspace
               </p>
-                  {/* <Loader loaderSize={50} /> */}
                   <p className="text-[12px] font-regular text-[#fff]">
                     Getting workspaces...
                   </p>
@@ -250,16 +252,19 @@ function Workspace() {
               )}
             </div>
           </div>
-          <MenuItem>
-          <div>
+          <MenuItem as="div" >
+          <div  onClick={(e) => {
+            e.stopPropagation() 
+            e.preventDefault()
+            }}>
             <AddWorkspace />
-            {/* <AddMember variant='button'/> */}
+            <AddMember variant='button'/>
             <Link
-                      href={`/${workspaceSlug}/settings`}
-                      className={`flex w-full cursor-pointer flex-row items-center rounded-[4px] py-1 pl-2 transition-all duration-300 ease-in-out dark:hover:text-white dark:text-[#fff]/50 dark:hover:bg-[#565656]/10 text-[#111] hover:bg-[#565656]/30`}
-                    >
+              href={`/${workspaceSlug}/settings`}
+              className="flex w-full cursor-pointer flex-row items-center rounded-[4px] py-1 pl-2 transition-all duration-300 ease-in-out dark:hover:text-white dark:text-[#fff]/50 dark:hover:bg-[#565656]/10 text-[#111] hover:bg-[#565656]/10"
+            >
                       <Settings size={16} />
-                      <p className="px-2 text-[12px] font-regular ">Settings</p>
+                      <p className="px-2 text-[12px] font-normal">Settings</p>
                     </Link>
 </div>
           </MenuItem>
