@@ -3,7 +3,7 @@ import { apiSlice } from "./apiSlice";
 export const sessionApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getSessions: builder.query({
-            query: ({ userId }: { userId: string }) => `/session/${userId}`,
+            query: () => `/session`,
             providesTags: ["Sessions"],
         }),
 

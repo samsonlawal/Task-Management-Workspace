@@ -11,6 +11,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 type AuthState = {
 accessToken: string;
 user: any;
+sessionId: string
 }
 
 const INITIAL_STATE: AuthState = {
@@ -18,6 +19,7 @@ const INITIAL_STATE: AuthState = {
   //   refreshToken: "",
   //   expiresIn: undefined,
   user: undefined,
+  sessionId: ""
 };
 
 export const authSlice = createSlice({

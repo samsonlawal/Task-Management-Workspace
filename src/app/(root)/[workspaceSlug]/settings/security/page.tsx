@@ -8,15 +8,20 @@ import { useGetSessionsQuery, useDeleteSessionMutation } from "@/redux/api/sessi
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 
 export default function SecurityAndAccessPage() {
-  const user = useSelector((state: RootState) => state.auth.user);
-  const { data: sessionsData, isLoading, refetch } = useGetSessionsQuery({ userId: user?.id }, { skip: !user?.id });
+  const user = useSelector((state: RootState) => state.auth);
+
+  const userId = user?.user._id || user?.user.id;
+  const { data: sessionsData, isLoading, refetch } = useGetSessionsQuery({ skip: !userId });
+  
   const [deleteSession] = useDeleteSessionMutation();
 
   const sessions = sessionsData?.data || sessionsData || [];
 
   useEffect(() => {
     console.log(sessions);
-  }, [sessions])
+    console.log(user);
+
+  }, [sessions, userId])
 
   const handleRevoke = async (sessionId: string) => {
     try {
@@ -51,17 +56,18 @@ export default function SecurityAndAccessPage() {
         ) : (
           <div className="flex flex-col gap-2">
             {sessions.length === 0 ? (
-              <div className="text-sm text-zinc-500 py-4 text-center">No active sessions found.</div>
+              <div className="text-sm text-zinc-500 py-8 text-center">No active sessions found.</div>
             ) : (
               sessions.map((session: any, index: number) => {
-                const sessionId = session._id || session.id || index;
-                // Determine icon based on device string if available
-                const isMobile = session.device?.toLowerCase().includes("android") || session.device?.toLowerCase().includes("iphone");
+
+                const isCurrent = user?.sessionId === session._id;
+
+                const isMobile = session.deviceInfo?.toLowerCase().includes("android") || session.deviceInfo?.toLowerCase().includes("iphone");
                 const IconComponent = isMobile ? Smartphone : Monitor;
 
                 return (
                   <div
-                    key={sessionId}
+                    key={session._id || session.id || index}
                     className={`flex items-center justify-between p-3.5 rounded-md border border-zinc-200 bg-white dark:border-[#565656]/10 dark:bg-[#565656]/10`}
                   >
                     <div className="flex items-center gap-3">
@@ -71,11 +77,11 @@ export default function SecurityAndAccessPage() {
                       <div className="flex flex-col">
                         <div className="flex items-center gap-2">
                           <span className="text-[12px] font-normal text-zinc-900 dark:text-white">
-                            {session.device || "Unknown Device"}
+                            {session.deviceInfo || "Unknown Device"}
                           </span>
                         </div>
                         <span className="text-[11px] flex flex-row items-center gap-2 text-zinc-500 dark:text-[#fff]/60">
-                          {session.isCurrent && (
+                          {isCurrent && (
                           <span className="flex flex-row items-center justify-center gap-1">
                             <div
                               className="h-1 w-1 rounded-full bg-emerald-500"
@@ -88,15 +94,15 @@ export default function SecurityAndAccessPage() {
                         </span>
                       </div>
                     </div>
-                    {!session.isCurrent && (
+                    {!isCurrent && (
                       <button
-                        onClick={() => handleRevoke(sessionId)}
+                        onClick={() => handleRevoke(session._id)}
                         className="rounded-md px-3 py-1.5 text-xs font-medium transition-colors text-red-700 hover:bg-red-50 dark:text-red-500 dark:hover:bg-red-950/30"
                       >
                         Revoke access
                       </button>
                     )}
-                    {session.isCurrent && (
+                    {isCurrent && (
                        <button
                         disabled
                         className="rounded-md px-3 py-1.5 text-xs font-medium transition-colors text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white opacity-50 cursor-not-allowed"

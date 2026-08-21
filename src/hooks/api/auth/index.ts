@@ -54,6 +54,7 @@ export const useLogin = () => {
         ...profile_res?.data,
       };
       const accessToken = login_res?.data.token;
+      const sessionId = login_res?.data?.sessionId;
 
       dispatch(
         setAuthState({
@@ -61,6 +62,7 @@ export const useLogin = () => {
           //    refreshToken,
           //    expiresIn,
           user,
+          sessionId
         }),
       );
 
