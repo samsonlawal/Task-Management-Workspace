@@ -2,36 +2,66 @@
 
 import React, { useEffect } from "react";
 import { Monitor, Smartphone, MoreVertical } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 import { RootState } from "@/redux/store";
+import { apiSlice } from "@/redux/api/apiSlice";
 import { useGetSessionsQuery, useDeleteSessionMutation } from "@/redux/api/sessionApiSlice";
+import { useLogoutMutation } from "@/redux/api/authApiSlice"
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
+import { clearAuthState } from "@/redux/Slices/authSlice";
 
 export default function SecurityAndAccessPage() {
   const user = useSelector((state: RootState) => state.auth);
+
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   const userId = user?.user._id || user?.user.id;
   const { data: sessionsData, isLoading, refetch } = useGetSessionsQuery({ skip: !userId });
   
   const [deleteSession] = useDeleteSessionMutation();
+  const [logout] = useLogoutMutation();
 
-  const sessions = sessionsData?.data || sessionsData || [];
+
+ const sessions = [...(sessionsData?.data || sessionsData || [])].sort((a: any, b: any) => {
+   const aIsCurrent = a._id === user?.sessionId;
+   const bIsCurrent = b._id === user?.sessionId;
+  
+   if (aIsCurrent && !bIsCurrent) return -1;
+   if (!aIsCurrent && bIsCurrent) return 1;
+  
+   return 0;
+ });
 
   useEffect(() => {
     console.log(sessions);
     console.log(user);
 
-  }, [sessions, userId])
+  }, [sessions, user])
 
   const handleRevoke = async (sessionId: string) => {
     try {
-      await deleteSession({ sessionId }).unwrap();
+      console.log(sessionId)
+      await deleteSession({ sessionId: sessionId }).unwrap();
       showSuccessToast({ message: "Session revoked successfully" });
     } catch (error: any) {
       const message = error?.data?.message || "Failed to revoke session";
       showErrorToast({ message });
     }
   };
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap()
+      dispatch(clearAuthState());
+      dispatch(apiSlice.util.resetApiState());
+      router.push('/')
+    } catch(error: any) {
+      const message = error?.data?.message || "Failed to revoke session";
+      showErrorToast({ message });
+    }
+  }
 
   return (
     <div className="flex w-full flex-col gap-6 pt-6 pb-20">
@@ -104,7 +134,8 @@ export default function SecurityAndAccessPage() {
                     )}
                     {isCurrent && (
                        <button
-                        disabled
+                        // disabled
+                        onClick={handleLogout}
                         className="rounded-md px-3 py-1.5 text-xs font-medium transition-colors text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white opacity-50 cursor-not-allowed"
                        >
                          Log out
