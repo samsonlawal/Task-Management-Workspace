@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
-// import { GoogleAnalytics } from "@next/third-parties/google";
 import "@fortawesome/fontawesome-svg-core/styles.css";
-// Prevent fontawesome from adding its CSS since we did it manually above:
 import { config } from "@fortawesome/fontawesome-svg-core";
-config.autoAddCss = false; /* eslint-disable import/first */
+config.autoAddCss = false;
 
 import Initializers from "./Initializers";
 import Login from "@/components/pages/auth/sign-in";
 
-// In your layout.js or page.js file
 import { DM_Sans, Lexend, Outfit, Poppins } from "next/font/google";
 import { PostHogProvider } from "./provider";
 

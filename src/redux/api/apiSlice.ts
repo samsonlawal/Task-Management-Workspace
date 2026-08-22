@@ -1,28 +1,30 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
+import { clearAuthState } from '../Slices/authSlice';
+
+const baseQuery = fetchBaseQuery({
+        baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL + "/api",
+        credentials: "include" 
+    });
+
+const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
+    args,
+    api,
+    extraOptions
+) => {
+    let result = await baseQuery(args, api, extraOptions);
+    if (result.error && result.error.status === 401) {
+        api.dispatch(clearAuthState());
+        if (typeof window !== "undefined") {
+             window.location.href = "/auth/sign-in"; 
+        }
+    }
+    return result;
+};
 
 
 export const apiSlice = createApi({
     reducerPath: 'api',
-    baseQuery: fetchBaseQuery({
-        baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL + "/api",
-        credentials: "include",
-        prepareHeaders: (headers, { getState }: any) => {
-            let token = getState()?.auth?.accessToken || getState()?.auth?.token;
-            if (!token && typeof window !== "undefined") {
-                try {
-                    const raw = localStorage.getItem("STACKTASK_PERSISTOR");
-                    const parsed = raw ? JSON.parse(raw) : null;
-                    token = parsed?.accessToken || parsed?.token;
-                } catch (e) {
-                     console.error("Error parsing STACKTASK_PERSISTOR:", e);
-                }
-            }
-            if (token && token !== "undefined" && token !== "null") {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery: baseQueryWithReauth,
     tagTypes: ["Workspace", "Members", "Tasks", "Users", "Auth", "Sessions", "Notifications"],
     endpoints: (builder: any) => ({}),
 })
