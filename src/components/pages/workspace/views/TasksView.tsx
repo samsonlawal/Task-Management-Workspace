@@ -16,27 +16,17 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 import { RootState } from "@/redux/store";
-import { useGetTasks } from "@/hooks/api/tasks";
+// import { useGetTasks } from "@/hooks/api/tasks";
 import Loader from "@/utils/loader";
 import Card from "@/components/reuseables/Card";
 import ListTask from "@/components/reuseables/List";
 import ListHeader from "@/components/reuseables/List/ListHeader";
 import AddTask from "@/components/reuseables/Dialogs/AddTask";
-import Notification from "@/components/reuseables/Notification";
-import { CustomSelect } from "@/components/reuseables/TeamSelect";
-import { useGetTasksQuery } from "@/redux/api/taskApiSlice";
+import TaskDetails from "@/components/reuseables/TaskDetails";
+// import Notification from "@/components/reuseables/Notification";
+// import { CustomSelect } from "@/components/reuseables/TeamSelect";
+// import { useGetTasksQuery } from "@/redux/api/taskApiSlice";
 import { useGetWorkspaceBySlugQuery } from "@/redux/api/workspaceApiSlice";
-
-const tabby = [
-  {
-    name: "Overview",
-    icon: <GalleryHorizontal strokeWidth={2} size={18} />,
-  },
-  {
-    name: "My Tasks",
-    icon: <Folder strokeWidth={2} size={18} />,
-  },
-];
 
 const STATUS_SECTIONS = ["TO-DO", "IN-PROGRESS", "IN-REVIEW", "DONE"] as const;
 
@@ -49,23 +39,6 @@ function TasksView() {
     user: any;
   };
 
-  // Tasks Logic
-
-  const { currentWorkspaceId } = useSelector(
-    (state: any) => state.currentWorkspace,
-  );
-  // const {
-  //   data: tasksData,
-  //   isError: isTasksError,
-  //   isLoading: tasksLoading,
-  //   error: tasksError,
-  // } = useGetTasksQuery(
-  //   {
-  //     workspaceId: workspaceSlug,
-  //   },
-  //   { skip: !workspaceSlug },
-  // );
-
   const {
     data: workspaceData,
     isLoading: tasksLoading,
@@ -75,13 +48,8 @@ function TasksView() {
     skip: !workspaceSlug,
   });
 
-  // Log RTK Query error if any occurs:
-  if (isTasksError) {
-    console.log("RTK Query getTasks Error:", tasksError);
-  }
-
   const tasks = workspaceData?.tasks || [];
-  const workspace = workspaceData?.workspace;
+  // const workspace = workspaceData?.workspace;
 
   const [activeTab, setActiveTab] = useState<number>(0);
   const [activeTabs, setActiveTabs] = useState<string>("");
@@ -90,6 +58,23 @@ function TasksView() {
   const [collapsedGroups, setCollapsedGroups] = useState<
     Record<string, boolean>
   >({});
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+
+  const selectedTaskData = useMemo(() => {
+    if (!selectedTaskId) return null;
+    const task = tasks.find((t: any) => (t._id || t.id) === selectedTaskId);
+    if (!task) return null;
+    return {
+      ...task,
+      id: task._id || task.id,
+      assignee: {
+        name: task.assignee?.name || task.assignee?.fullname || "Unassigned",
+        email: task.assignee?.email || "",
+        image: task.assignee?.profileImage || task.assignee?.image || "none",
+        _id: task.assignee?._id
+      }
+    };
+  }, [selectedTaskId, tasks]);
 
   const toggleGroup = (status: string) => {
     setCollapsedGroups((prev) => ({ ...prev, [status]: !prev[status] }));
@@ -325,7 +310,6 @@ function TasksView() {
                             className="overflow-hidden"
                           >
                             <ListHeader />
-
                             <div className="flex h-fit w-full flex-row flex-wrap justify-start rounded-[18px]">
                               {groupedTasks[status].length
                                 ? groupedTasks[status].map((task: any) => (
@@ -348,6 +332,7 @@ function TasksView() {
                                       createdBy={
                                         task.createdBy?._id || task.createdBy
                                       }
+                                      onOpenDetails={() => setSelectedTaskId(task._id || task.id)}
                                     />
                                   ))
                                 : null}
@@ -376,6 +361,7 @@ function TasksView() {
                           createdAt={task.createdAt}
                           assigneeId={task.assignee?._id}
                           createdBy={task.createdBy?._id || task.createdBy}
+                          onOpenDetails={() => setSelectedTaskId(task._id || task.id)}
                         />
                       ) : null,
                     )}
@@ -450,6 +436,7 @@ function TasksView() {
                                   createdBy={
                                     task.createdBy?._id || task.createdBy
                                   }
+                                  onOpenDetails={() => setSelectedTaskId(task._id || task.id)}
                                 />
                               ))
                             : null}
@@ -477,6 +464,7 @@ function TasksView() {
                       createdAt={task.createdAt}
                       assigneeId={task.assignee?._id}
                       createdBy={task.createdBy?._id || task.createdBy}
+                      onOpenDetails={() => setSelectedTaskId(task._id || task.id)}
                     />
                   ) : null,
                 )}
@@ -485,6 +473,12 @@ function TasksView() {
           </div>
         )}
       </div>
+      {selectedTaskData && (
+        <TaskDetails
+          taskData={selectedTaskData}
+          onClose={() => setSelectedTaskId(null)}
+        />
+      )}
     </div>
   );
 }

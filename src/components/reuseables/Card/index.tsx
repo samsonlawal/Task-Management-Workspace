@@ -34,6 +34,7 @@ export default function Card({
   createdAt,
   assigneeId,
   createdBy,
+  onOpenDetails,
 }: {
   title?: string;
   desc: string;
@@ -48,6 +49,7 @@ export default function Card({
   createdAt: string;
   assigneeId?: string;
   createdBy?: string;
+  onOpenDetails?: () => void;
 }) {
   const priorityStyles = getPriorityStyles(priority);
 
@@ -69,58 +71,24 @@ export default function Card({
     (state: RootState) => state.WorkspaceData?.workspace,
   );
 
-  // Create task object to pass to TaskDetails
-  const taskData = {
-    id,
-    title,
-    description: desc,
-    deadline,
-    assignee: {
-      name: name || fullname || "",
-      email,
-      image,
-      _id: assigneeId,
-    },
-    priority,
-    // Add other task properties as needed
-    status, // You might want to pass this as a prop too
-    createdAt, // You might want to pass this as a prop
-    workspaceName: workspaceData?.name,
-    workspaceId: workspaceData?._id,
-    createdBy,
-  };
-
-  function gettaskdetails() {
-    // console.log(id);
-    // console.log("Task data:", taskData);
-    // console.log(workspaceData);
-  }
-
   return (
     <div className="poppins group relative flex h-[98px] w-[250px] flex-col justify-between gap-[6px] rounded-[4px] border border-[#565656]/10 bg-[#fff] py-[10px] text-[14px] dark:bg-[#565656]/10">
       <div className="flex flex-col gap-[1px]">
         {/* Head */}
         <div className="flex flex-row justify-between px-[14px] font-medium">
           <div className="flex flex-row items-center justify-center gap-1">
-            {/* Status */}
-            {/* <div className="bg-[#C5C5C5 flex h-[18px] w-[20px] items-center justify-center rounded-[2px]">
-              <img
-                src={`/icons/task/${status === "to-do" ? "to-do" : status === "in-progress" ? "in-progress" : status === "in-review" ? "in-review" : "completed"}.svg`}
-                alt=""
-                className="h-3.5 w-3.5"
-              />
-            </div> */}
-
-            {/* TITLE */}
-            {/* <p className="text-[13px] font-medium">{title || "No Title"}</p> */}
-
             <p className="line-clamp-1 h-fit text-[10px] font-normal uppercase tracking-wide text-[#565656] dark:text-zinc-500">
               TSK-{id ? id.slice(-4).toUpperCase() : "0000"}
             </p>
           </div>
-          <div className="cursor-pointer" onClick={gettaskdetails}>
-            {/* Pass taskData to TaskDetails component */}
-            <TaskDetails taskData={taskData} getDetails={gettaskdetails} />
+          <div className="cursor-pointer" onClick={onOpenDetails}>
+            <button className="flex items-center text-[10px] text-zinc-500 transition-colors hover:text-black dark:hover:text-white">
+              <img
+                src="/icons/expand.svg"
+                alt="expand"
+                className="mr-1 h-3 w-3 select-none"
+              />
+            </button>
           </div>
         </div>
 

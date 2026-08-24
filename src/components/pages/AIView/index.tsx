@@ -36,6 +36,30 @@ interface MockGeneratedTask {
 function AIView() {
   const dispatch = useDispatch();
 
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+
+  const selectedTaskData = useMemo(() => {
+    if (!selectedTaskId) return null;
+    const task = tasks.find((t: any) => (t._id || t.id) === selectedTaskId);
+    if (!task) return null;
+    return {
+      ...task,
+      id: task._id || task.id,
+      title: task.title || "Untitled Task",
+      description: task.description || task.desc || "",
+      priority: task.priority || "Low",
+      status: task.status || "to-do",
+      deadline: task.deadline || "",
+      createdAt: task.createdAt || new Date().toISOString(),
+      assignee: {
+        name: task.assignee?.name || task.assignee?.fullname || "Unassigned",
+        email: task.assignee?.email || "",
+        image: task.assignee?.image || task.assignee?.profileImage || "none",
+        _id: task.assignee?._id
+      }
+    };
+  }, [selectedTaskId]);
+
   // Select stats from Redux
   const tasks = useSelector((state: RootState) => state.TasksData?.task || []);
   const members = useSelector((state: RootState) => state.MemberData?.members || []);
@@ -508,8 +532,14 @@ function AIView() {
                               <span className="text-[9px] font-semibold px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-500">
                                 {t.status}
                               </span>
-                              <div className="cursor-pointer text-zinc-400 hover:text-black dark:hover:text-white">
-                                <TaskDetails taskData={taskDataForDetails} />
+                              <div className="cursor-pointer text-zinc-400 hover:text-black dark:hover:text-white" onClick={() => setSelectedTaskId(t._id || t.id)}>
+                                <button className="flex items-center text-[10px] text-zinc-500 transition-colors hover:text-black dark:hover:text-white">
+                                  <img
+                                    src="/icons/expand.svg"
+                                    alt="expand"
+                                    className="mr-1 h-3.5 w-3.5 select-none opacity-50 hover:opacity-100"
+                                  />
+                                </button>
                               </div>
                             </div>
                           </div>
@@ -581,8 +611,14 @@ function AIView() {
                           <span className="text-[10px] font-semibold text-rose-500 bg-rose-500/10 px-2 py-0.5 rounded">
                             {t.daysLeft < 0 ? "Overdue" : t.daysLeft === 0 ? "Due Today" : "Due Tomorrow"}
                           </span>
-                          <div className="cursor-pointer text-zinc-400 hover:text-black dark:hover:text-white bg-white dark:bg-zinc-900 rounded p-1 border border-zinc-200 dark:border-zinc-800 shadow-sm">
-                            <TaskDetails taskData={taskDataForDetails} />
+                          <div className="cursor-pointer text-zinc-400 hover:text-black dark:hover:text-white bg-white dark:bg-zinc-900 rounded p-1 border border-zinc-200 dark:border-zinc-800 shadow-sm" onClick={() => setSelectedTaskId(t._id || t.id)}>
+                            <button className="flex items-center text-[10px] text-zinc-500 transition-colors hover:text-black dark:hover:text-white">
+                              <img
+                                src="/icons/expand.svg"
+                                alt="expand"
+                                className="mr-1 h-3.5 w-3.5 select-none opacity-50 hover:opacity-100"
+                              />
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -599,6 +635,12 @@ function AIView() {
 
         </div>
       </div>
+      {selectedTaskData && (
+        <TaskDetails
+          taskData={selectedTaskData}
+          onClose={() => setSelectedTaskId(null)}
+        />
+      )}
     </div>
   );
 }

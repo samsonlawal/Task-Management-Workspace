@@ -221,7 +221,7 @@ function Workspaces() {
 
           <div className="flex flex-col gap-2">
             <button
-              className="poppins w-full rounded-sm bg-[#111] py-[10px] text-[12px] text-white transition-all duration-300 hover:bg-[#111]/90 disabled:bg-[#565656]/10 disabled:text-[#565656]/50 dark:bg-[#fff] dark:text-[#111] dark:hover:bg-[#fff]/80"
+              className="poppins w-full rounded-sm bg-[#111] py-[10px] text-[12px] text-white font-medium transition-all duration-300 hover:bg-[#111]/90 disabled:bg-[#565656]/10 disabled:text-[#565656]/50 dark:bg-[#fff] dark:text-[#111] dark:hover:bg-[#fff]/80"
               disabled={!selectedWorkspace}
               onClick={handleContinue}
             >

@@ -4,7 +4,6 @@ import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { DateTime } from "luxon";
-import TaskDetails from "../TaskDetails";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
@@ -25,6 +24,7 @@ export default function ListTask({
   createdAt,
   assigneeId,
   createdBy,
+  onOpenDetails,
 }: {
   title: string;
   desc: string;
@@ -39,6 +39,7 @@ export default function ListTask({
   createdAt: string;
   assigneeId?: string;
   createdBy?: string;
+  onOpenDetails?: () => void;
 }) {
   const priorityStyles = getPriorityStyles(priority);
   const statusStyles = getStatusStyles(status);
@@ -60,32 +61,6 @@ export default function ListTask({
   const workspaceData = useSelector(
     (state: RootState) => state.WorkspaceData?.workspace,
   );
-
-  // Create task object to pass to TaskDetails
-  const taskData = {
-    id,
-    title,
-    description: desc,
-    deadline,
-    assignee: {
-      name: name || fullname || "",
-      email,
-      image,
-      _id: assigneeId,
-    },
-    priority,
-    status,
-    createdAt,
-    workspaceName: workspaceData?.name,
-    workspaceId: workspaceData?._id,
-    createdBy,
-  };
-
-  function gettaskdetails() {
-    // console.log(id);
-    // console.log("Task data:", taskData);
-    // console.log(workspaceData);
-  }
 
   return (
     <div className="poppins flex min-h-fit w-full flex-row justify-between border-t-[1px] border-[#565656]/10 px-3 py-3.5 text-[14px] text-[#111] dark:text-[#eee]/60">
@@ -186,12 +161,6 @@ export default function ListTask({
         <div
           className={`flex h-fit w-fit flex-row items-center justify-center gap-1 rounded-[6px] px-1.5 py-[4px]`}
         >
-          {/* <img
-            src={`/icons/task/${priority === "High" ? "high" : priority === "Medium" ? "medium" : "low"}.svg`}
-            alt=""
-            className="h-3.5 w-3.5"
-          /> */}
-
           <Flag size={14} className={`${priorityStyles.text} fill-current`} />
           <p
             className={`hidden text-[10px] font-normal md:flex ${priorityStyles.text}`}
@@ -204,10 +173,13 @@ export default function ListTask({
       <div className="flex w-[10px] items-center justify-start">
         <div
           className="flex cursor-pointer items-center justify-start"
-          onClick={gettaskdetails}
+          onClick={onOpenDetails}
         >
-          {/* Pass taskData to TaskDetails component */}
-          <TaskDetails taskData={taskData} getDetails={gettaskdetails} />
+          <img
+            src="/icons/expand.svg"
+            alt="expand"
+            className="mr-1 h-3.5 w-3.5 select-none opacity-50 hover:opacity-100"
+          />
         </div>
       </div>
     </div>

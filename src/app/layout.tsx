@@ -10,11 +10,7 @@ import Login from "@/components/pages/auth/sign-in";
 import { DM_Sans, Lexend, Outfit, Poppins } from "next/font/google";
 import { PostHogProvider } from "./provider";
 
-const lexend = Lexend({
-  subsets: ["latin"],
-  variable: "--font-lexend",
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-});
+
 
 export const metadata: Metadata = {
   title: "Task Manager",
@@ -27,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${lexend.variable}`} suppressHydrationWarning>
+    <html lang="en" className={``} suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />

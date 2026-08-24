@@ -202,11 +202,11 @@ function Team({ hideHeader = false }: { hideHeader?: boolean } = {}) {
             <div className="w-full overflow-x-auto">
               <div className="w-full md:min-w-[800px]">
                 {/* Header */}
-                <div className="grid h-[40px] w-full grid-cols-[1fr_80px_70px_30px] items-center justify-between gap-1 px-3 text-[13px] font-medium text-gray-500 dark:text-[#787878] md:grid-cols-[1fr_100px_120px_100px_30px] md:gap-5 md:px-4">
+                <div className="grid h-[40px] w-full grid-cols-[minmax(0,1fr)_70px_70px_30px] items-center justify-between gap-2 px-3 text-[13px] font-medium text-gray-500 dark:text-[#787878] md:grid-cols-[minmax(0,1fr)_100px_120px_100px_30px] md:gap-5 md:px-4">
                   <div className="">Name</div>
-                  <div className="hidden md:block">Role</div>
+                  <div className="">Role</div>
                   <div className="hidden md:block">Date added</div>
-                  <div className="hidden md:block">Status</div>
+                  <div className="">Status</div>
                   <div className=""></div>
                 </div>
 
@@ -228,9 +228,9 @@ function Team({ hideHeader = false }: { hideHeader?: boolean } = {}) {
                     return (
                       <div
                         key={user._id || index}
-                        className="grid w-full grid-cols-[1fr_80px_70px_30px] items-center justify-between gap-1 px-3 py-3 text-[13px] font-[400] text-gray-800 dark:text-[#eee] md:grid-cols-[1fr_100px_120px_100px_30px] md:gap-5 md:px-4"
+                        className="grid w-full grid-cols-[minmax(0,1fr)_70px_70px_30px] items-center justify-between gap-2 px-3 py-3 text-[13px] font-[400] text-gray-800 dark:text-[#eee] md:grid-cols-[minmax(0,1fr)_100px_120px_100px_30px] md:gap-5 md:px-4"
                       >
-                        <div className="flex flex-row items-center gap-2">
+                        <div className="flex flex-row items-center gap-2 min-w-0">
                           {imageSrc !== "none" ? (
                             <img
                               src={imageSrc}
@@ -257,7 +257,7 @@ function Team({ hideHeader = false }: { hideHeader?: boolean } = {}) {
                               {/* {fullname.charAt(0).toUpperCase()} */}
                             </div>
                           )}
-                          <div className="flex flex-col poppins -space-y-0.5">
+                          <div className="flex flex-col poppins -space-y-0.5 min-w-0">
                           <p className="truncate">{email}</p>
 
                           {fullname && 

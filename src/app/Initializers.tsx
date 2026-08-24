@@ -11,6 +11,11 @@ import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import AuthPersistenceWrapper from "@/lib/authPersistenceWrapper";
 import GlobalModals from "@/components/reuseables/Dialogs/GlobalModals";
+import { initDataFast } from 'datafast';
+
+const datafast = await initDataFast({
+  websiteId: 'dfid_9HJsEKHoN09GUvDA5F1fF',
+});
 
 function Initializers({ children }: { children: ReactNode }) {
   const isAuthPage = (usePathname() || "")?.startsWith("/auth/");

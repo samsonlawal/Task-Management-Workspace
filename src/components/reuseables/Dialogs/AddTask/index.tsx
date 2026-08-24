@@ -35,6 +35,8 @@ import { showSuccessToast, showErrorToast } from "@/utils/toaster";
 import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
 import { DateTime } from "luxon";
 import { useCreateTaskMutation } from "@/redux/api/taskApiSlice";
+import { useGetMembersQuery } from "@/redux/api/memberApiSlice";
+import { StatusPill, PriorityPill, AssigneePill, DueDatePill } from "@/components/reuseables/TaskPills";
 
 export default function AddTask() {
   let [isOpen, setIsOpen] = useState<boolean>(false);
@@ -51,8 +53,6 @@ export default function AddTask() {
     title: "",
   });
 
-  const MemberData = useSelector((state: RootState) => state.MemberData);
-  const members = MemberData?.members || [];
   const workspaceData = useSelector(
     (state: RootState) => state.WorkspaceData?.workspace,
   );
@@ -61,6 +61,16 @@ export default function AddTask() {
   const { currentWorkspaceId } = useSelector(
     (state: RootState) => state.currentWorkspace,
   );
+
+  const { data: membersData } = useGetMembersQuery(
+    { workspaceId: currentWorkspaceId || "" },
+    { skip: !currentWorkspaceId },
+  );
+
+  const members =
+    membersData?.members ||
+    membersData?.data ||
+    (Array.isArray(membersData) ? membersData : []);
 
   useEffect(() => {
     if (currentWorkspaceId) {
@@ -154,15 +164,7 @@ export default function AddTask() {
     });
   }
 
-  // Find active selected assignee object to render details
-  const selectedMember = members.find((m: any) => {
-    const mId = m.userId?._id || m._id;
-    return mId === task.assignee;
-  });
-  const selectedMemberUser = selectedMember?.userId || selectedMember;
 
-  const statusDisplay = getStatusStyles(task.status);
-  const priorityDisplay = getPriorityStyles(task.priority);
 
   return (
     <>
@@ -194,7 +196,7 @@ export default function AddTask() {
                 <div className="flex select-none flex-row items-center gap-1.5 text-[11px] text-zinc-500">
                   <button
                     onClick={handleDialogClose}
-                    className="flex flex-row items-center gap-1 font-normal text-zinc-500 transition-colors hover:text-black dark:text-[#fff]/60 dark:hover:text-[#fff]/80"
+                    className="flex flex-row items-center gap-1 font-normal text-zinc-500 transition-colors hover:text-black dark:text-[#fff]/40 dark:hover:text-[#fff]/80"
                   >
                     {/* <FontAwesomeIcon
                       icon={faChevronLeft}
@@ -203,13 +205,13 @@ export default function AddTask() {
                      <ArrowLeft
                                   size={11}
                                   strokeWidth={2.5}
-                                  className="text-zinc-500 hover:text-black dark:text-[#fff]/60 dark:hover:text-[#fff]/80"
+                                  className="text-zinc-500 hover:text-black dark:text-[#fff]/40 dark:hover:text-[#fff]/80"
                                 />
                     <span>{workspaceData?.name || "workspace"}</span>
                   </button>
-                  <span className="text-zinc-400 dark:text-[#fff/60">{" > "}</span>
-                  <span className="font-normal text-zinc-700 dark:text-[#fff]/60">
-                    New Task
+                  <span className="text-zinc-400 dark:text-[#fff]/40">{" > "}</span>
+                  <span className="font-normal text-zinc-700 dark:text-[#fff]/40">
+                    New task
                   </span>
                 </div>
                 <button
@@ -232,7 +234,7 @@ export default function AddTask() {
                       title: e.target.value,
                     }))
                   }
-                  className="poppins-normal m-0 w-full border-none bg-transparent p-0 text-[16px] font-normal text-zinc-900 outline-none focus:outline-none focus:ring-0 dark:text-white hover:text-black dark:text-[#fff]/60 dark:hover:text-[#fff]/80 placeholder-white/30"
+                  className="poppins-normal m-0 w-full border-none bg-transparent p-0 text-[16px] font-normal text-zinc-900 outline-none focus:outline-none focus:ring-0 dark:text-white hover:text-black dark:text-[#fff]/60 dark:hover:text-[#fff]/80 placeholder-white/70"
                 />
                 <textarea
                   placeholder="Add a description..."
@@ -244,259 +246,17 @@ export default function AddTask() {
                     }))
                   }
                   rows={4}
-                  className="poppins-normal text-zinc-650 m-0 mt-1 min-h-[90px] w-full resize-none border-none bg-transparent p-0 text-[13px] outline-none focus:outline-none focus:ring-0 dark:text-white/80 placeholder-white/30"
+                  className="poppins-normal text-zinc-650 m-0 mt-1 min-h-[90px] w-full resize-none border-none bg-transparent p-0 text-[13px] outline-none focus:outline-none focus:ring-0 dark:text-white/80 placeholder-white/60"
                 />
               </div>
 
               {/* Wrapped horizontal pills list for properties */}
               <div className="poppins w-full pt-1">
-                <div className="flex flex-row flex-wrap items-center gap-2.5">
-                  {/* Status Pill */}
-                  <Menu as="div" className="relative">
-                    <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800">
-                      <FontAwesomeIcon
-                        icon={faSpinner}
-                        className="h-3 w-3 text-zinc-900 dark:text-white"
-                      />
-                      <span className="font-semibold text-zinc-900 dark:text-zinc-400">
-                        Status:
-                      </span>
-                      <span className="inline-flex items-center gap-1 text-[11px] text-zinc-700 dark:text-zinc-300">
-                        <span
-                          className={`h-1.5 w-1.5 rounded-full ${statusDisplay.dot}`}
-                        />
-                        {statusDisplay.label}
-                      </span>
-                      <FontAwesomeIcon
-                        icon={faChevronDown}
-                        className="h-2 w-2 opacity-50"
-                      />
-                    </MenuButton>
-                    <MenuItems className="absolute left-0 z-50 mt-1 w-40 origin-top-left rounded-md border border-zinc-200 bg-white p-1 shadow-lg outline-none dark:border-zinc-800 dark:bg-zinc-900">
-                      {["todo", "in-progress", "in-review", "done"].map((s) => {
-                        const styles = getStatusStyles(s);
-                        return (
-                          <MenuItem key={s}>
-                            {({ active }) => (
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setTask((prev) => ({ ...prev, status: s }))
-                                }
-                                className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 transition-colors dark:text-zinc-300 ${
-                                  active ? "bg-zinc-100 dark:bg-zinc-800" : ""
-                                }`}
-                              >
-                                <span
-                                  className={`h-1.5 w-1.5 rounded-full ${styles.dot}`}
-                                />
-                                {styles.label}
-                              </button>
-                            )}
-                          </MenuItem>
-                        );
-                      })}
-                    </MenuItems>
-                  </Menu>
-
-                  {/* Priority Pill */}
-                  <Menu as="div" className="relative">
-                    <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800">
-                      <FontAwesomeIcon
-                        icon={faCircleCheck}
-                        className="h-3 w-3 text-zinc-900 dark:text-white"
-                      />
-                      <span className="font-semibold text-zinc-900 dark:text-white">
-                        Priority:
-                      </span>
-                      <span className="inline-flex items-center gap-1 text-[11px] text-zinc-700 dark:text-zinc-300">
-                        <span
-                          className={`h-1.5 w-1.5 rounded-full ${priorityDisplay.dot}`}
-                        />
-                        {task.priority.charAt(0).toUpperCase() +
-                          task.priority.slice(1).toLowerCase()}
-                      </span>
-                      <FontAwesomeIcon
-                        icon={faChevronDown}
-                        className="h-2 w-2 opacity-50"
-                      />
-                    </MenuButton>
-                    <MenuItems className="absolute left-0 z-50 mt-1 w-32 origin-top-left rounded-md border border-zinc-200 bg-white p-1 shadow-lg outline-none dark:border-zinc-800 dark:bg-zinc-900">
-                      {["low", "medium", "high"].map((p) => {
-                        const styles = getPriorityStyles(p);
-                        return (
-                          <MenuItem key={p}>
-                            {({ active }) => (
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setTask((prev) => ({
-                                    ...prev,
-                                    priority:
-                                      p.charAt(0).toUpperCase() + p.slice(1),
-                                  }))
-                                }
-                                className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 transition-colors dark:text-zinc-300 ${
-                                  active ? "bg-zinc-100 dark:bg-zinc-800" : ""
-                                }`}
-                              >
-                                <span
-                                  className={`h-1.5 w-1.5 rounded-full ${styles.dot}`}
-                                />
-                                {p.charAt(0).toUpperCase() +
-                                  p.slice(1).toLowerCase()}
-                              </button>
-                            )}
-                          </MenuItem>
-                        );
-                      })}
-                    </MenuItems>
-                  </Menu>
-
-                  {/* Assignee Pill */}
-                  <Menu as="div" className="relative">
-                    <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800">
-                      <FontAwesomeIcon
-                        icon={faUser}
-                        className="h-3 w-3 text-zinc-900 dark:text-white"
-                      />
-                      <span className="font-semibold text-zinc-900 dark:text-white">
-                        Assignee:
-                      </span>
-                      <div className="flex items-center gap-1">
-                        {selectedMemberUser?.profileImage &&
-                        selectedMemberUser?.profileImage !== "none" ? (
-                          <img
-                            src={selectedMemberUser?.profileImage}
-                            alt=""
-                            className="h-4 w-4 rounded-full object-cover"
-                          />
-                        ) : (
-                          <div className="flex h-4 w-4 items-center justify-center rounded-full bg-zinc-500">
-                            <span className="text-[7px] text-white">
-                              {selectedMemberUser?.fullname
-                                ?.charAt(0)
-                                .toUpperCase() ||
-                                selectedMemberUser?.name
-                                  ?.charAt(0)
-                                  .toUpperCase() ||
-                                "U"}
-                            </span>
-                          </div>
-                        )}
-                        <span className="ml-1">
-                          {selectedMemberUser?.fullname ||
-                            selectedMemberUser?.name ||
-                            "Unassigned"}
-                        </span>
-                      </div>
-                      <FontAwesomeIcon
-                        icon={faChevronDown}
-                        className="h-2 w-2 opacity-50"
-                      />
-                    </MenuButton>
-                    <MenuItems className="absolute left-0 z-50 mt-1 max-h-60 w-56 origin-top-left overflow-y-auto rounded-md border border-zinc-200 bg-white p-1 shadow-lg outline-none dark:border-zinc-800 dark:bg-zinc-900">
-                      <MenuItem>
-                        {({ active }) => (
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setTask((prev) => ({ ...prev, assignee: "" }))
-                            }
-                            className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-500 transition-colors ${
-                              active ? "bg-zinc-100 dark:bg-zinc-800" : ""
-                            }`}
-                          >
-                            <div className="flex h-4 w-4 items-center justify-center rounded-full bg-zinc-300 dark:bg-zinc-700">
-                              <span className="text-zinc-650 text-[7px] dark:text-zinc-300">
-                                X
-                              </span>
-                            </div>
-                            <span className="ml-2">Unassigned</span>
-                          </button>
-                        )}
-                      </MenuItem>
-                      {members.map((member: any) => {
-                        const m = member.userId || member;
-                        const memberId = m._id || member._id;
-                        return (
-                          <MenuItem key={memberId}>
-                            {({ active }) => (
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setTask((prev) => ({
-                                    ...prev,
-                                    assignee: memberId,
-                                  }))
-                                }
-                                className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 transition-colors dark:text-zinc-300 ${
-                                  active ? "bg-zinc-100 dark:bg-zinc-800" : ""
-                                }`}
-                              >
-                                <img
-                                  src={m.profileImage}
-                                  alt=""
-                                  className="h-4 w-4 rounded-full object-cover"
-                                />
-                                <span className="ml-2 truncate">
-                                  {m.fullname || m.name || m.email}
-                                </span>
-                              </button>
-                            )}
-                          </MenuItem>
-                        );
-                      })}
-                    </MenuItems>
-                  </Menu>
-
-                  {/* Due Date Pill */}
-                  <Popover className="relative">
-                    <PopoverButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800">
-                      <FontAwesomeIcon
-                        icon={faCalendar}
-                        className="h-3 w-3 text-zinc-900 dark:text-white"
-                      />
-                      <span className="font-semibold text-zinc-900 dark:text-white">
-                        Due Date:
-                      </span>
-                      <span>
-                        {task.deadline
-                          ? DateTime.fromISO(task.deadline).toFormat(
-                              "dd LLL, yyyy",
-                            )
-                          : "No Deadline"}
-                      </span>
-                      <FontAwesomeIcon
-                        icon={faChevronDown}
-                        className="h-2 w-2 opacity-50"
-                      />
-                    </PopoverButton>
-                    <PopoverPanel className="absolute left-0 z-50 mt-1 rounded-md border border-zinc-200 bg-white p-3 shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
-                      {({ close }) => (
-                        <div className="flex flex-col gap-2">
-                          <input
-                            type="date"
-                            value={
-                              task.deadline
-                                ? DateTime.fromISO(task.deadline).toFormat(
-                                    "yyyy-MM-dd",
-                                  )
-                                : ""
-                            }
-                            onChange={(e) => {
-                              setTask((prev) => ({
-                                ...prev,
-                                deadline: e.target.value,
-                              }));
-                              close();
-                            }}
-                            className="h-[36px] rounded-md border border-gray-300 bg-transparent px-3 text-xs text-zinc-700 outline-none focus:border-zinc-500 dark:border-zinc-800 dark:text-white"
-                          />
-                        </div>
-                      )}
-                    </PopoverPanel>
-                  </Popover>
+                <div className="flex flex-row flex-wrap items-center gap-1">
+                  <StatusPill status={task.status} onChange={(s) => setTask((prev) => ({ ...prev, status: s }))} />
+                  <PriorityPill priority={task.priority} onChange={(p) => setTask((prev) => ({ ...prev, priority: p }))} />
+                  <AssigneePill assigneeId={task.assignee} members={members} onChange={(a) => setTask((prev) => ({ ...prev, assignee: a }))} />
+                  <DueDatePill deadline={task.deadline} onChange={(d) => setTask((prev) => ({ ...prev, deadline: d }))} />
 
                   {/* Attachments Pill */}
                   <button
@@ -506,13 +266,13 @@ export default function AddTask() {
                         message: "Attach files feature triggered!",
                       })
                     }
-                    className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800"
+                    className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#111]/80"
                   >
                     <FontAwesomeIcon
                       icon={faPaperclip}
-                      className="h-3 w-3 text-zinc-900 dark:text-white"
+                      className="h-3 w-3 text-zinc-900 dark:text-white/60"
                     />
-                    <span className="font-semibold text-zinc-900 dark:text-white">
+                    <span className="font-normal text-zinc-900 dark:text-white/60">
                       Attachments
                     </span>
                   </button>
@@ -521,17 +281,17 @@ export default function AddTask() {
 
               {/* Bottom Actions Row (border-t removed) */}
               <div className="mt-5 flex justify-end gap-3">
-                <button
+                {/* <button
                   type="button"
                   onClick={handleDialogClose}
-                  className="rounded-md bg-zinc-200 px-4 py-2 text-xs text-zinc-700 transition-colors hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                  className="rounded-md bg-zinc-200 px-4 py-2 text-xs text-zinc-700 transition-colors hover:bg-zinc-300 dark:bg-[#565656]/40 dark:text-zinc-300 dark:hover:bg-[#565656]/80"
                 >
                   Cancel
-                </button>
+                </button> */}
                 <button
                   onClick={handleCreateTask}
                   disabled={createTaskLoading}
-                  className="flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-5 py-2 text-xs font-semibold text-zinc-900 shadow-sm transition-all hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none"
+                  className="flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-4 py-1.5 text-xs font-medium text-zinc-900 shadow-sm transition-all hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none"
                 >
                   {createTaskLoading ? (
                     <>

@@ -1,4 +1,5 @@
 import { apiSlice } from "./apiSlice";
+import { workspaceApiSlice } from "./workspaceApiSlice";
 
 export const tasksApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -18,16 +19,34 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
                 method: "POST",
                 body: task,
             }),
-            invalidatesTags: ["Tasks"],
+            invalidatesTags: ["Tasks", "Workspace"],
         }),
 
         updateTask: builder.mutation({
-            query: ({ taskId, task }: { taskId: string; task: any }) => ({
+            query: ({ taskId, task, workspaceSlug }: { taskId: string; task: any; workspaceSlug?: string }) => ({
                 url: `/tasks/${taskId}`,
                 method: "PATCH",
                 body: task,
             }),
-            invalidatesTags: ["Tasks"],
+
+            async onQueryStarted({ taskId, task, workspaceSlug }, { dispatch, queryFulfilled }) {
+                if (!workspaceSlug) return; // Prevent crashes if workspaceSlug is missing
+
+                // 1. Instantly update the UI cache before the server responds
+                const patchResult = dispatch(
+                    workspaceApiSlice.util.updateQueryData("getWorkspaceBySlug", workspaceSlug, (draft: any) => {
+                        const taskToUpdate = draft?.tasks?.find((t: any) => t._id === taskId);
+                        if (taskToUpdate) {
+                            Object.assign(taskToUpdate, task);
+                        }
+                    })
+                );
+                try {
+                    await queryFulfilled;
+                } catch {
+                    patchResult.undo();
+                }
+            },
         }),
 
         deleteTask: builder.mutation({
@@ -35,7 +54,7 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
                 url: `/tasks/${taskId}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["Tasks"],
+            invalidatesTags: ["Tasks", "Workspace"],
         }),
 
         promoteTask: builder.mutation({
@@ -44,7 +63,7 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
                 method: "PATCH",
                 body: {},
             }),
-            invalidatesTags: ["Tasks"],
+            invalidatesTags: ["Tasks", "Workspace"],
         }),
 
         demoteTask: builder.mutation({
@@ -53,7 +72,7 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
                 method: "PATCH",
                 body: {},
             }),
-            invalidatesTags: ["Tasks"],
+            invalidatesTags: ["Tasks", "Workspace"],
         }),
 
         markAsDone: builder.mutation({
@@ -62,7 +81,7 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
                 method: "PATCH",
                 body: {},
             }),
-            invalidatesTags: ["Tasks"],
+            invalidatesTags: ["Tasks", "Workspace"],
         }),
     }),
 });

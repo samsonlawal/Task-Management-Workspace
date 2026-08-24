@@ -20,12 +20,6 @@ export default function Navbar() {
 
       {/* Desktop Menu */}
       <div className="hidden flex-row items-center gap-6 text-[14px] text-white md:flex">
-        <Link href="/" className="cursor-pointer transition-all duration-300 hover:text-white/60">
-          Home
-        </Link>
-        <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
-          How it works
-        </span>
         <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
           Features
         </span>
@@ -35,9 +29,7 @@ export default function Navbar() {
         <span className="cursor-pointer transition-all duration-300 hover:text-white/60">
           FAQs
         </span>
-        <Link href="/contact" className="cursor-pointer transition-all duration-300 hover:text-white/60">
-          Contact
-        </Link>
+
       </div>
 
       {/* Desktop Auth */}

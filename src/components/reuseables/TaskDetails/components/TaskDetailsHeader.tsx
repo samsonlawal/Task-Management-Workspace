@@ -23,19 +23,19 @@ import { useUpdateTaskMutation } from "@/redux/api/taskApiSlice";
 export default function TaskDetailsHeader({
   taskData,
   handleDeleteTask,
-  handleMarkAsDone,
+  // handleMarkAsDone,
   handleDialogClose,
-  markAsDoneLoading,
+  // markAsDoneLoading,
 }: {
   taskData: any;
   handleDeleteTask: () => void;
-  handleMarkAsDone: () => void;
+  // handleMarkAsDone: () => void;
   handleDialogClose: () => void;
-  markAsDoneLoading: boolean;
+  // markAsDoneLoading: boolean;
 }) {
-  const { user } = useSelector((state: RootState) => state.auth) as {
-    user: any;
-  };
+  // const { user } = useSelector((state: RootState) => state.auth) as {
+  //   user: any;
+  // };
 
   const [updateTask, { isLoading: isUpdatingTitle }] = useUpdateTaskMutation();
 
@@ -106,6 +106,8 @@ export default function TaskDetailsHeader({
     }
   };
 
+  // console.log(taskData)
+
   return (
     <div className="flex w-full flex-col gap-4 border-b border-[#565656]/10 pb-4">
       {/* Top Row: Breadcrumbs and Dropdown Menu */}
@@ -137,52 +139,7 @@ export default function TaskDetailsHeader({
 
           <MenuItems className="absolute right-0 z-50 mt-1 w-48 origin-top-right rounded-md border border-zinc-200 bg-white p-1 shadow-lg outline-none dark:border-zinc-800 dark:bg-zinc-900">
             <div className="py-0.5">
-              {/* <MenuItem>
-                {({ active }) => (
-                  <button
-                    onClick={() => {
-                      setTempTitle(title);
-                      setIsEditingTitle(true);
-                    }}
-                    className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 transition-colors dark:text-zinc-300`}
-                  >
-                    <Edit size={12} />
-                    <span>Edit Title</span>
-                  </button>
-                )}
-              </MenuItem>
 
-              <MenuItem>
-                {({ active }) => (
-                  <button
-                    onClick={() => {
-                      setTempDesc(description);
-                      setIsEditingDesc(true);
-                    }}
-                    className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 transition-colors dark:text-zinc-300 ${
-                      active ? "bg-zinc-100 dark:bg-zinc-800" : ""
-                    }`}
-                  >
-                    <AlignLeft size={12} />
-                    <span>Edit Description</span>
-                  </button>
-                )}
-              </MenuItem>
-
-              <MenuItem>
-                {({ active }) => (
-                  <button
-                    onClick={handleMarkAsDone}
-                    disabled={markAsDoneLoading}
-                    className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 transition-colors dark:text-zinc-300 ${
-                      active ? "bg-zinc-100 dark:bg-zinc-800" : ""
-                    }`}
-                  >
-                    <CheckCircle2 size={12} />
-                    <span>Mark as Done</span>
-                  </button>
-                )}
-              </MenuItem> */}
 
               {/* <div className="border-zinc-150 my-1 border-t dark:border-zinc-800" /> */}
 
