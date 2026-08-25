@@ -217,7 +217,7 @@ function Workspace() {
                     filteredWorkspaces.map((workspace: any, index: any) => (
                       <MenuItem key={index}>
                         <div
-                          className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] border border-[#1a1a1a] pl-1 hover:border-[#565656]/10 py-1 hover:bg-[#565656]/10 text-[#111] dark:text-[#fff]"
+                          className="flex cursor-pointer flex-row items-center gap-[12px] rounded-[4px] border border-[#565656]/0 dark:border-[#1a1a1a] pl-1 hover:border-[#565656]/10 py-1 hover:bg-[#565656]/10 text-[#111] dark:text-[#fff]"
                           onClick={() => switchWorkspace(workspace)}
                         >
                           <div

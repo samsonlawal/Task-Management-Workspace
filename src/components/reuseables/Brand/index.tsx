@@ -9,7 +9,7 @@ export default function Brand() {
       {/* <img src="/icons/new-logo2.svg" alt="" className="h-10 w-10" /> */}
       <img
         src={
-          resolvedTheme === "light" ? "/icons/poly-dark.svg" : "/icons/poly.svg"
+          resolvedTheme === "light" ? "/icons/poly-black.svg" : "/icons/poly.svg"
         }
         alt=""
         className="h-7 w-7"

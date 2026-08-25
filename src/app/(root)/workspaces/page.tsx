@@ -35,6 +35,8 @@ function Workspaces() {
     { skip: !user?._id }
   );
 
+  const ler = false
+
   function handleContinue() {
     if (selectedWorkspace) {
       const id = selectedWorkspace?._id;
@@ -88,7 +90,7 @@ function Workspaces() {
         (
         <div className="flex flex-col items-center gap-3 p-8">
           {/* <Loader2 className="h-6 w-6 animate-spin text-[#111] dark:text-white" /> */}
-          <p className="text-xs text-[#707070]">Loading your workspaces...</p>
+          <p className="text-sm poppins text-[#111]/80 dark:text-[#fff]/60">Loading your workspaces...</p>
         </div>
       )
     // } ) 
