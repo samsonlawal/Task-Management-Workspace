@@ -10,15 +10,18 @@ import AuthPersistenceWrapper from "@/lib/authPersistenceWrapper";
 import GlobalModals from "@/components/reuseables/Dialogs/GlobalModals";
 import { initDataFast } from 'datafast';
 
+
+
+function Initializers({ children }: { children: ReactNode }) {
+
   useEffect(() => {
     initDataFast({
       websiteId: 'dfid_9HJsEKHoN09GUvDA5F1fF',
       autoCapturePageviews: true,
-      allowLocalhost: process.env.NODE_ENV !== 'production', // allows testing on localhost
+      allowLocalhost: process.env.NODE_ENV !== 'production',
     });
   }, []);
 
-function Initializers({ children }: { children: ReactNode }) {
   const isAuthPage = (usePathname() || "")?.startsWith("/auth/");
 
   const hideNavbar = isAuthPage ? true : false;
