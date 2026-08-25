@@ -48,7 +48,9 @@ export default function AddWorkspace({
   });
 
   async function handleCreateWorkspace(e: React.FormEvent) {
-    e.preventDefault();
+    // e.preventDefault();
+
+    console.log(workspaceName)
 
     if (!workspaceName.trim()) {
       showErrorToast({ message: "Workspace name is required." });
@@ -113,6 +115,7 @@ export default function AddWorkspace({
       {/* Full Page View */}
       {isOpen && (
         <div className="poppins fixed inset-0 z-50 flex h-screen w-screen flex-col justify-between overflow-y-auto bg-white p-6 dark:bg-[#111] lg:p-10">
+
           {/* Top Navigation Header */}
           <div className="flex w-full items-center justify-between pb-6 text-xs dark:border-zinc-800">
             <button
@@ -135,16 +138,15 @@ export default function AddWorkspace({
           {/* Centered Form */}
           <div className="mx-auto my-auto flex w-full max-w-[460px] flex-col gap-6">
             <div className="flex flex-col text-center">
-              <h1 className="text-lg font-normal text-zinc-900 dark:text-white">
+              <h1 className="text-[17px] font-normal text-zinc-900 dark:text-white">
                 Create a workspace
               </h1>
-              <p className="text-[14px] font-normal text-zinc-500 dark:text-[#F6F6F6]/60">
+              <p className="text-[13px] font-normal text-zinc-500 dark:text-[#F6F6F6]/60">
                 Manage work and teams in one place
               </p>
             </div>
 
-            <form
-              onSubmit={handleCreateWorkspace}
+            <div
               className="flex flex-col gap-5"
             >
               {/* Workspace Name */}
@@ -182,7 +184,8 @@ export default function AddWorkspace({
 
               {/* Submit Button */}
               <button
-                type="submit"
+                type="button"
+                onClick={handleCreateWorkspace}
                 disabled={createWorkspaceLoading || !workspaceName.trim()}
                 className="active:scale-98 mt-2 flex h-[44px] w-full items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white font-normal text-[#111] shadow-sm transition-all hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none text-sm"
               >
@@ -191,7 +194,7 @@ export default function AddWorkspace({
                   <Loader2 size={16} className="animate-spin text-zinc-900" />
                 )}
               </button>
-            </form>
+            </div>
           </div>
 
           {/* Footer */}

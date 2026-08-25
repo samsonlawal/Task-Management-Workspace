@@ -142,8 +142,10 @@ export default function AddTask() {
       });
 
       handleDialogClose();
-    } catch (error) {
-      showErrorToast({ message: errorMsg });
+    } catch (error: any) {
+      console.log(error)
+      const message = error?.data?.message || error?.message || "Failed to create task.";
+      showErrorToast({ message });
       console.log("Error creating task:", error);
     }
   };

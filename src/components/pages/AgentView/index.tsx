@@ -31,8 +31,8 @@ export default function AgentView() {
       </div>
 
       {/* Main Content Area - Centered Chat Interface */}
-      <div className="flex flex-1 flex-col items-center justify-center px-4">
-        <div className="w-full max-w-2xl text-center">
+      <div className="flex flex-1 flex-col items-center justify-center px-8">
+        <div className="w-full max-w-xl text-center">
           <h1 className="mb-2 text-2xl font-medium text-[#111] dark:text-white">
             How can I help you today?
           </h1>
@@ -47,7 +47,7 @@ export default function AgentView() {
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="Ask your agent anything..."
                 rows={1}
-                className="w-full resize-none bg-transparent px-3 py-2 text-[14px] text-[#111] placeholder:text-[#565656]/60 focus:outline-none dark:text-white dark:placeholder:text-[#fff]/40"
+                className="w-full resize-none bg-transparent px-3 py-2 text-[12px] text-[#111] placeholder:text-[#565656]/60 focus:outline-none font-light dark:text-white dark:placeholder:text-[#fff]/40 tracking-wide"
                 style={{ minHeight: "44px", maxHeight: "200px" }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
@@ -84,9 +84,9 @@ export default function AgentView() {
                 <button
                   key={idx}
                   onClick={() => setPrompt(chip.text)}
-                  className="flex items-center gap-1.5 rounded-full border border-[#565656]/10 bg-[#565656]/5 px-3 py-1.5 text-[12px] text-[#565656] transition-colors hover:bg-[#565656]/10 hover:text-black dark:border-[#565656]/20 dark:bg-[#565656]/10 dark:text-[#fff]/60 dark:hover:bg-[#565656]/30 dark:hover:text-white"
+                  className="flex items-center gap-1.5 rounded-lg border border-[#565656]/10 bg-[#565656]/5 px-3 py-1.5 text-[12px] text-[#565656] transition-colors hover:bg-[#565656]/10 hover:text-black dark:border-[#565656]/20 dark:bg-[#565656]/10 dark:text-[#fff]/60 dark:hover:bg-[#565656]/30 dark:hover:text-white"
                 >
-                  {chip.icon}
+                  {/* {chip.icon} */}
                   <span>{chip.text}</span>
                 </button>
               ))}
