@@ -7,13 +7,6 @@ import { usePostHog } from 'posthog-js/react'
 
 import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
-import { initDataFast } from 'datafast';
-
-const datafast = await initDataFast({
-  websiteId: 'dfid_9HJsEKHoN09GUvDA5F1fF',
-  autoCapturePageviews: true,
-
-});
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {

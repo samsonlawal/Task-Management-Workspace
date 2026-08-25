@@ -35,8 +35,6 @@ function Workspaces() {
     { skip: !user?._id }
   );
 
-  const ler = false
-
   function handleContinue() {
     if (selectedWorkspace) {
       const id = selectedWorkspace?._id;
