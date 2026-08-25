@@ -135,7 +135,7 @@ function DropdownMenu() {
   {
     label: "Profile",
     icon: "/icons/menu/user1.svg",
-    path: `/${workspaceIdentifier}/profile`,
+    path: `/${workspaceIdentifier}/settings/profile`,
   },
   {
     label: "Settings",

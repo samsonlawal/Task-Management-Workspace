@@ -15,8 +15,7 @@ interface AddWorkspaceProps {
   trigger?: React.ReactNode;
   variant?: "sidebar" | "button";
   className?: string;
-
-    isOpen?: boolean;
+  isOpen?: boolean;
   setIsOpen?: (open: boolean) => void;
 
 }
@@ -47,10 +46,7 @@ export default function AddWorkspace({
     trim: true,
   });
 
-  async function handleCreateWorkspace(e: React.FormEvent) {
-    // e.preventDefault();
-
-    console.log(workspaceName)
+  async function handleCreateWorkspace() {
 
     if (!workspaceName.trim()) {
       showErrorToast({ message: "Workspace name is required." });
