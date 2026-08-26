@@ -122,10 +122,10 @@ export default function TaskDetails({
               />
 
               {/* Main Drawer Layout content */}
-              <div className="mt-6 flex h-[calc(100vh-140px)] flex-1 flex-col gap-8 overflow-hidden text-[12px] lg:flex-row">
+              <div className="mt-4 flex h-[calc(100vh-140px)] flex-1 flex-col gap-8 overflow-hidden text-[12px]">
                 {/* Left Column: Metadata Fields */}
                 <div
-                  className={`relative z-20 flex w-full flex-none flex-col pr-3 lg:w-[320px] ${isCommentsExpanded ? "hidden" : ""}`}
+                  className={`relative z-20 flex w-full flex-none flex-col pr-3 lg:w-fit ${isCommentsExpanded ? "hidden" : ""}`}
                 >
                   <TaskFields taskData={taskData} />
                 </div>

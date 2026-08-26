@@ -63,7 +63,7 @@ export default function ListTask({
   );
 
   return (
-    <div className="poppins flex min-h-fit w-full flex-row justify-between border-t-[1px] border-[#565656]/10 px-3 py-3.5 text-[14px] text-[#111] dark:text-[#eee]/60">
+    <div className="poppins flex min-h-fit w-full flex-row justify-between border-t-[1px] border-[#565656]/10 px-3 py-3.5 lg:gap-2 text-[14px] text-[#111] dark:text-[#eee]/60">
       <div className="flex flex-1 items-center justify-start gap-2 pr-6 md:w-[250px]">
         <span className="mr-1 select-none whitespace-nowrap text-[10px] font-normal text-[#565656] dark:text-zinc-500">
           STK-{id ? id.slice(-4).toUpperCase() : "01"}
@@ -72,7 +72,7 @@ export default function ListTask({
           {title || desc}
         </p>
       </div>
-      <div className="flex w-[40px] items-center justify-start md:w-[100px]">
+      <div className="flex w-[40px] items-center justify-start">
         {/* Mobile: Status icon only */}
         <div className="flex items-center justify-center md:hidden">
           <img
@@ -91,7 +91,7 @@ export default function ListTask({
         </div>
         {/* Desktop: Status badge (icon + label) */}
         <div
-          className={`hidden flex-row items-center gap-1 rounded-[4px] md:flex ${statusStyles.bg} ${statusStyles.darkBg} px-2 py-[3px]`}
+          className={`hidden flex-row items-center gap-1 rounded-[4px] md:flex px-0 py-[3px]`}
         >
           <img
             src={`/icons/task/${
@@ -106,14 +106,14 @@ export default function ListTask({
             alt=""
             className="h-3 w-3"
           />
-          <p
+          {/* <p
             className={`text-[11px] font-normal ${statusStyles.text} ${statusStyles.darkText}`}
           >
             {statusStyles.label}
-          </p>
+          </p> */}
         </div>
       </div>
-      <div className="flex w-[40px] items-center justify-start md:w-[115px]">
+      <div className="flex w-[40px] items-center justify-start ">
         <div
           className={`jusitfy-center flex flex-1 flex-row items-center gap-2`}
         >
@@ -137,40 +137,40 @@ export default function ListTask({
             )}
           </div>
 
-          <div className="hidden flex-col items-start gap-[2px] -space-y-2 overflow-hidden md:flex">
+          {/* <div className="hidden flex-col items-start gap-[2px] -space-y-2 overflow-hidden md:flex">
             <p className="text-[12px] font-normal">
               {(name || fullname || "")?.split(" ")[0].charAt(0).toUpperCase() +
                 (name || fullname || "")?.split(" ")[0].slice(1).toLowerCase()}
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
-      <div className="flex w-[55px] items-center justify-start md:w-[120px]">
+      <div className="flex w-[55px] items-center justify-start md:w-[90px]">
         {deadline && (
           <p className="text-center text-[12px] font-normal">
             <span className="md:hidden">
               {DateTime.fromISO(deadline).toFormat("MMM dd")}
             </span>
             <span className="hidden md:inline">
-              {DateTime.fromISO(deadline).toFormat("MMMM dd, yyyy")}
+              {DateTime.fromISO(deadline).toFormat("MMM dd, yy")}
             </span>
           </p>
         )}
       </div>
-      <div className="flex w-[40px] items-center justify-start md:w-[70px]">
+      <div className="flex w-[40px] items-center justify-start">
         <div
           className={`flex h-fit w-fit flex-row items-center justify-center gap-1 rounded-[6px] px-1.5 py-[4px]`}
         >
           <Flag size={14} className={`${priorityStyles.text} fill-current`} />
-          <p
+          {/* <p
             className={`hidden text-[10px] font-normal md:flex ${priorityStyles.text}`}
           >
             {(priority || "")?.split(" ")[0].charAt(0).toUpperCase() +
               (priority || "")?.split(" ")[0].slice(1).toLowerCase()}
-          </p>
+          </p> */}
         </div>
       </div>
-      <div className="flex w-[10px] items-center justify-start">
+      <div className="flex w-[30px] items-center justify-start">
         <div
           className="flex cursor-pointer items-center justify-start"
           onClick={onOpenDetails}
@@ -178,7 +178,7 @@ export default function ListTask({
           <img
             src="/icons/expand.svg"
             alt="expand"
-            className="mr-1 h-3.5 w-3.5 select-none opacity-50 hover:opacity-100"
+            className="mr-1 h-3.5 w-3.5 select-none opacity-70 hover:opacity-100"
           />
         </div>
       </div>

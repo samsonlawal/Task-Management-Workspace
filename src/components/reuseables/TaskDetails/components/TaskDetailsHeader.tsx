@@ -23,19 +23,12 @@ import { useUpdateTaskMutation } from "@/redux/api/taskApiSlice";
 export default function TaskDetailsHeader({
   taskData,
   handleDeleteTask,
-  // handleMarkAsDone,
   handleDialogClose,
-  // markAsDoneLoading,
 }: {
   taskData: any;
   handleDeleteTask: () => void;
-  // handleMarkAsDone: () => void;
   handleDialogClose: () => void;
-  // markAsDoneLoading: boolean;
 }) {
-  // const { user } = useSelector((state: RootState) => state.auth) as {
-  //   user: any;
-  // };
 
   const [updateTask, { isLoading: isUpdatingTitle }] = useUpdateTaskMutation();
 
@@ -131,7 +124,6 @@ export default function TaskDetailsHeader({
           </span>
         </div>
 
-        {/* Options Ellipsis menu */}
         <Menu as="div" className="relative inline-block text-left">
           <MenuButton className="flex h-7 w-7 items-center justify-center rounded-full text-zinc-500 outline-none transition-colors hover:bg-gray-200 hover:text-black dark:hover:bg-zinc-800 dark:hover:text-white">
             <EllipsisVertical size={14} />
@@ -139,9 +131,6 @@ export default function TaskDetailsHeader({
 
           <MenuItems className="absolute right-0 z-50 mt-1 w-48 origin-top-right rounded-md border border-zinc-200 bg-white p-1 shadow-lg outline-none dark:border-zinc-800 dark:bg-zinc-900">
             <div className="py-0.5">
-
-
-              {/* <div className="border-zinc-150 my-1 border-t dark:border-zinc-800" /> */}
 
               <MenuItem>
                 {({ active }) => (

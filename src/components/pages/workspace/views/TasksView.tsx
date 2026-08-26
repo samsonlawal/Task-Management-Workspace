@@ -9,23 +9,16 @@ import { useTheme } from "next-themes";
 import {
   SquareKanban,
   List,
-  Folder,
-  GalleryHorizontal,
   PanelLeft,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
 import { RootState } from "@/redux/store";
-// import { useGetTasks } from "@/hooks/api/tasks";
 import Loader from "@/utils/loader";
 import Card from "@/components/reuseables/Card";
 import ListTask from "@/components/reuseables/List";
 import ListHeader from "@/components/reuseables/List/ListHeader";
 import AddTask from "@/components/reuseables/Dialogs/AddTask";
 import TaskDetails from "@/components/reuseables/TaskDetails";
-// import Notification from "@/components/reuseables/Notification";
-// import { CustomSelect } from "@/components/reuseables/TeamSelect";
-// import { useGetTasksQuery } from "@/redux/api/taskApiSlice";
 import { useGetWorkspaceBySlugQuery } from "@/redux/api/workspaceApiSlice";
 
 const STATUS_SECTIONS = ["TO-DO", "IN-PROGRESS", "IN-REVIEW", "DONE"] as const;
@@ -49,7 +42,11 @@ function TasksView() {
   });
 
   const tasks = workspaceData?.tasks || [];
-  // const workspace = workspaceData?.workspace;
+
+
+  useEffect(() => {
+    console.log(workspaceData)
+  }, [workspaceData])
 
   const [activeTab, setActiveTab] = useState<number>(0);
   const [activeTabs, setActiveTabs] = useState<string>("");
@@ -62,17 +59,21 @@ function TasksView() {
 
   const selectedTaskData = useMemo(() => {
     if (!selectedTaskId) return null;
-    const task = tasks.find((t: any) => (t._id || t.id) === selectedTaskId);
+    const task = tasks.find((t: any) => (t._id) === selectedTaskId);
     if (!task) return null;
+
+     const isObj = task.assignee && typeof task.assignee === "object";
+
     return {
       ...task,
-      id: task._id || task.id,
-      assignee: {
-        name: task.assignee?.name || task.assignee?.fullname || "Unassigned",
-        email: task.assignee?.email || "",
-        image: task.assignee?.profileImage || task.assignee?.image || "none",
-        _id: task.assignee?._id
-      }
+      id: task._id,
+      assignee: isObj ?   {
+            name: task.assignee?.name || task.assignee?.fullname || "Unassigned",
+            email: task.assignee?.email || "",
+            image: task.assignee?.profileImage || task.assignee?.image || "none",
+            _id: task.assignee?._id || task.assignee?.id,
+          }
+        : task.assignee,
     };
   }, [selectedTaskId, tasks]);
 
@@ -103,7 +104,7 @@ function TasksView() {
   const groupedTasks = useMemo(() => {
     const activeTasks = tabContent[activeTab] ?? [];
 
-    // pre-fill sections so they ALWAYS exist
+    // set my tabs to an empty string initially to avoid undefined.
     const initial = STATUS_SECTIONS.reduce<Record<string, any[]>>(
       (acc, status) => {
         acc[status] = [];
@@ -112,6 +113,7 @@ function TasksView() {
       {},
     );
 
+    // push each task into its corresponding status array
     return activeTasks.reduce((acc, task) => {
       const status = normalizeStatus(task.status);
       acc[status].push(task);
@@ -121,6 +123,26 @@ function TasksView() {
 
   const changeToListView = () => setView("list");
   const changeToBoardView = () => setView("board");
+  const TaskComponent = view === "list" ? ListTask : Card;
+
+  const renderTaskItem = (task: any) => (                 
+  <TaskComponent
+    key={task._id}
+    title={task.title}
+    desc={task.description}
+    deadline={task.deadline}
+    name={task.assignee?.fullname}
+    email={task.assignee?.email}
+    priority={task.priority}
+    image={task.assignee?.profileImage}
+    id={task._id}
+    status={task.status}
+    createdAt={task.createdAt}
+    assigneeId={task.assignee?._id}
+    createdBy={task.createdBy}
+    onOpenDetails={() => setSelectedTaskId(task._id)}
+  />
+);          
 
   return (
     <div className="poppins flex h-full w-full flex-col">
@@ -235,7 +257,6 @@ function TasksView() {
                 strokeWidth={1.5}
                 size={14}
               />
-              {/* <p>Board</p> */}
             </div>
 
             <div
@@ -249,7 +270,6 @@ function TasksView() {
                 strokeWidth={1.5}
                 size={14}
               />
-              {/* <p>List</p> */}
             </div>
           </div>
 
@@ -257,7 +277,7 @@ function TasksView() {
         </div>
       </div>
 
-      {/* Tasks Content */}
+      {/* Tasks */}
       <div className="w-full flex-1 overflow-y-auto px-4 pb-8 scrollbar-hide lg:px-8">
         {tasksLoading ? (
           <p className="flex h-full items-center justify-center">
@@ -312,29 +332,7 @@ function TasksView() {
                             <ListHeader />
                             <div className="flex h-fit w-full flex-row flex-wrap justify-start rounded-[18px]">
                               {groupedTasks[status].length
-                                ? groupedTasks[status].map((task: any) => (
-                                    <ListTask
-                                      key={task._id}
-                                      title={task.title}
-                                      desc={task.description}
-                                      deadline={task.deadline}
-                                      name={
-                                        task.assignee?.name ||
-                                        task.assignee?.fullname
-                                      }
-                                      email={task.assignee?.email}
-                                      priority={task.priority}
-                                      image={task.assignee?.profileImage}
-                                      id={task._id}
-                                      status={task.status}
-                                      createdAt={task.createdAt}
-                                      assigneeId={task.assignee?._id}
-                                      createdBy={
-                                        task.createdBy?._id || task.createdBy
-                                      }
-                                      onOpenDetails={() => setSelectedTaskId(task._id || task.id)}
-                                    />
-                                  ))
+                                ? groupedTasks[status].map(renderTaskItem)
                                 : null}
                             </div>
                           </motion.div>
@@ -345,38 +343,19 @@ function TasksView() {
                 ) : (
                   <div className="flex h-fit w-full flex-col flex-wrap justify-start rounded-[18px]">
                     <ListHeader />
-                    {tabContent[activeTab]?.map((task) =>
-                      task ? (
-                        <ListTask
-                          key={task._id}
-                          title={task.title}
-                          desc={task.description}
-                          deadline={task.deadline}
-                          name={task.assignee?.name || task.assignee?.fullname}
-                          email={task.assignee?.email}
-                          priority={task.priority}
-                          image={task.assignee?.profileImage}
-                          id={task._id}
-                          status={task.status}
-                          createdAt={task.createdAt}
-                          assigneeId={task.assignee?._id}
-                          createdBy={task.createdBy?._id || task.createdBy}
-                          onOpenDetails={() => setSelectedTaskId(task._id || task.id)}
-                        />
-                      ) : null,
-                    )}
+                    {tabContent[activeTab]?.map(renderTaskItem)}
                   </div>
                 )}
               </div>
             </div>
           </div>
         ) : (
-          <div className="flex h-fit w-full flex-row flex-wrap justify-start gap-5 rounded-[18px] pb-[6px]">
+          <div className="flex h-fit w-fit flex-row flex-nowrap justify-start gap-5 rounded-[18px] pb-[6px]">
             {byStatus ? (
               STATUS_SECTIONS.map((status) => (
                 <div
                   key={status}
-                  className="dark:hover:bg-[#565656]/4 flex w-full flex-col gap-1 rounded-md bg-[#eee] p-2 dark:bg-[#565656]/10"
+                  className="dark:hover:bg-[#565656]/4 flex min-w-[266px] w-fit h-fit flex-col gap-1 rounded-md bg-[#eee] p-2 dark:bg-[#565656]/10"
                 >
                   <div
                     className="flex min-h-fit w-full cursor-pointer flex-row justify-between rounded-sm px-2 py-2 text-[14px] font-medium text-[#787878] transition-colors hover:bg-gray-200 dark:bg-[#565656]/0 dark:hover:bg-[#565656]/0"
@@ -414,31 +393,9 @@ function TasksView() {
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                         className="overflow-hidden"
                       >
-                        <div className="flex h-fit w-full flex-row flex-wrap justify-start gap-2 rounded-[18px]">
+                        <div className="flex h-fit w-fit flex-col flex-wrap justify-start gap-2 rounded-[18px]">
                           {groupedTasks[status].length
-                            ? groupedTasks[status].map((task: any) => (
-                                <Card
-                                  key={task._id}
-                                  title={task.title}
-                                  desc={task.description}
-                                  deadline={task.deadline}
-                                  name={
-                                    task.assignee?.name ||
-                                    task.assignee?.fullname
-                                  }
-                                  email={task.assignee?.email}
-                                  priority={task.priority}
-                                  image={task.assignee?.profileImage}
-                                  id={task._id}
-                                  status={task.status}
-                                  createdAt={task.createdAt}
-                                  assigneeId={task.assignee?._id}
-                                  createdBy={
-                                    task.createdBy?._id || task.createdBy
-                                  }
-                                  onOpenDetails={() => setSelectedTaskId(task._id || task.id)}
-                                />
-                              ))
+                            ? groupedTasks[status].map(renderTaskItem)
                             : null}
                         </div>
                       </motion.div>
@@ -448,26 +405,7 @@ function TasksView() {
               ))
             ) : (
               <div className="flex h-fit w-full flex-row flex-wrap justify-start gap-2 rounded-[18px] pb-[6px]">
-                {tabContent[activeTab]?.map((task) =>
-                  task ? (
-                    <Card
-                      key={task._id}
-                      title={task.title}
-                      desc={task.description}
-                      deadline={task.deadline}
-                      name={task.assignee?.name || task.assignee?.fullname}
-                      email={task.assignee?.email}
-                      priority={task.priority}
-                      image={task.assignee?.profileImage}
-                      id={task._id}
-                      status={task.status}
-                      createdAt={task.createdAt}
-                      assigneeId={task.assignee?._id}
-                      createdBy={task.createdBy?._id || task.createdBy}
-                      onOpenDetails={() => setSelectedTaskId(task._id || task.id)}
-                    />
-                  ) : null,
-                )}
+                {tabContent[activeTab]?.map(renderTaskItem)}
               </div>
             )}
           </div>

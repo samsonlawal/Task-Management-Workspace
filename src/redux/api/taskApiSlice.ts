@@ -28,11 +28,11 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
                 method: "PATCH",
                 body: task,
             }),
+            invalidatesTags: ["Tasks", "Workspace"],
 
             async onQueryStarted({ taskId, task, workspaceSlug }, { dispatch, queryFulfilled }) {
-                if (!workspaceSlug) return; // Prevent crashes if workspaceSlug is missing
+                if (!workspaceSlug) return;
 
-                // 1. Instantly update the UI cache before the server responds
                 const patchResult = dispatch(
                     workspaceApiSlice.util.updateQueryData("getWorkspaceBySlug", workspaceSlug, (draft: any) => {
                         const taskToUpdate = draft?.tasks?.find((t: any) => t._id === taskId);

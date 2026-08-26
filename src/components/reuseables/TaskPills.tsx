@@ -2,12 +2,9 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faSpinner,
   faCalendar,
-  faUser,
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
-import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
 import {
   Menu,
@@ -19,27 +16,30 @@ import {
   PopoverPanel,
 } from "@headlessui/react";
 import { DateTime } from "luxon";
+import { FlagIcon } from "lucide-react";                                          
+
+
+const getStatusIcon = (status: string) => {                                    
+  const s = status?.toLowerCase();
+  if (s === "in-progress") return "/icons/task/in-progress.svg";
+  if (s === "in-review") return "/icons/task/in-review.svg";
+  if (s === "done" || s === "completed") return "/icons/task/completed.svg";
+  if (s === "to-do") return "/icons/task/to-do.svg";
+};
 
 export function StatusPill({ status, onChange }: { status: string; onChange: (status: string) => void }) {
   const statusDisplay = getStatusStyles(status || "todo");
   return (
     <Menu as="div" className="relative">
-      <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#111]/80">
-        {/* <FontAwesomeIcon
-          icon={faSpinner}
-          className="h-3 w-3 text-zinc-900 dark:text-white/60"
-        />
-        <span className="font-normal text-zinc-900 dark:text-white/60">
-          Status:
-        </span> */}
-        <span className="inline-flex items-center gap-1 text-[11px] text-zinc-700 dark:text-white/60">
-          <span className={`h-1.5 w-1.5 rounded-full ${statusDisplay.dot}`} />
+      <MenuButton className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#565656]/10">
+        <span className="inline-flex items-center gap-1.5 text-[11px] text-zinc-700 dark:text-white/60">
+          <img src={getStatusIcon(status)} alt="" className="h-3 w-3" />         
           {statusDisplay.label}
         </span>
         <FontAwesomeIcon icon={faChevronDown} className="h-2 w-2 opacity-50" />
       </MenuButton>
       <MenuItems className="absolute left-0 z-50 mt-1 w-40 origin-top-left rounded-md border border-zinc-200 bg-white p-1 shadow-xl outline-none dark:border-zinc-800 dark:bg-[#111]">
-        {["todo", "in-progress", "in-review", "done"].map((s) => {
+        {["to-do", "in-progress", "in-review", "done"].map((s) => {
           const styles = getStatusStyles(s);
           return (
             <MenuItem key={s}>
@@ -47,12 +47,13 @@ export function StatusPill({ status, onChange }: { status: string; onChange: (st
                 <button
                   onClick={(e) => {
                     onChange(s);
+                    console.log(s)
                   }}
                   className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 transition-colors dark:text-zinc-300 ${
                     focus ? "bg-zinc-100 dark:bg-[#565656]/10" : ""
                   }`}
                 >
-                  <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} />
+                  <img src={getStatusIcon(s)} alt="" className="h-3 w-3" />  
                   {styles.label}
                 </button>
               )}
@@ -68,7 +69,7 @@ export function PriorityPill({ priority, onChange }: { priority: string; onChang
   const priorityDisplay = getPriorityStyles(priority || "low");
   return (
     <Menu as="div" className="relative">
-      <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#111]/80">
+      <MenuButton className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#565656]/10">
         {/* <FontAwesomeIcon
           icon={faCircleCheck}
           className="h-3 w-3 text-zinc-900 dark:text-white/60"
@@ -77,7 +78,7 @@ export function PriorityPill({ priority, onChange }: { priority: string; onChang
           Priority:
         </span> */}
         <span className="inline-flex items-center gap-1 text-[11px] text-zinc-700 dark:text-white/60">
-          <span className={`h-1.5 w-1.5 rounded-full ${priorityDisplay.dot}`} />
+           <FlagIcon size={12} className={`${priorityDisplay.text} ${priorityDisplay.fill}`} />
           {priority.charAt(0).toUpperCase() + priority.slice(1).toLowerCase()}
         </span>
         <FontAwesomeIcon icon={faChevronDown} className="h-2 w-2 opacity-50" />
@@ -96,7 +97,7 @@ export function PriorityPill({ priority, onChange }: { priority: string; onChang
                     focus ? "bg-zinc-100 dark:bg-[#565656]/10" : ""
                   }`}
                 >
-                  <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} />
+                  <FlagIcon size={12} className={`${styles.text} ${styles.fill}`} />
                   {p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()}
                 </button>
               )}
@@ -108,26 +109,45 @@ export function PriorityPill({ priority, onChange }: { priority: string; onChang
   );
 }
 
-export function AssigneePill({ assigneeId, assigneeObj, members, onChange }: { assigneeId?: string; assigneeObj?: any; members: any[]; onChange: (assignee: string) => void }) {
-  let displayImage = "none";
-  let displayName = "Unassigned";
+export function AssigneePill({ assigneeId, assigneeObj, members, onChange }: { 
+  assigneeId?: string;
+  assigneeObj?: any; 
+  members: any[];
+   onChange: (assignee: string) => void }) {
+  
+  console.log('obj:', assigneeObj)
+
+ let displayName = 'Assign'
+ let displayImage = undefined 
+
+if (assigneeObj) {
+  displayName = assigneeObj.fullname || assigneeObj.name || "Unassigned";
+  displayImage = assigneeObj.image;
+}
 
 
-  if (assigneeObj && assigneeObj._id) {
-    displayImage = assigneeObj.image || "none";
-    displayName = assigneeObj.name || "Unknown";
-  } else if (assigneeId) {
-    const selectedMember = members.find((member: any) => (member.userId?._id) === assigneeId);
-    if (selectedMember) {
-      const memberData = selectedMember.userId;
-      displayImage = memberData.profileImage || "none";
-      displayName = memberData.fullname || "Unknown";
-    }
-  }
+  if (assigneeId) {
+  const selectedMember = members.find((member: any) => { 
+    const user = member.userId || member;
+    return (user._id || user.id) === assigneeId;
+  });
+
+
+  console.log('selectedMember:', selectedMember)
+
+
+  const selectedUser = selectedMember?.userId || selectedMember;
+  displayName = selectedUser?.fullname || selectedUser?.name || "Assign";
+  displayImage =
+    selectedUser?.profileImage && selectedUser.profileImage !== "none"
+      ? selectedUser.profileImage
+      : null;
+}
+  
 
   return (
     <Menu as="div" className="relative">
-      <MenuButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#111]/80">
+      <MenuButton className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#565656]/10">
         {/* <FontAwesomeIcon
           icon={faUser}
           className="h-3 w-3 text-zinc-900 dark:text-white/60"
@@ -138,12 +158,7 @@ export function AssigneePill({ assigneeId, assigneeObj, members, onChange }: { a
         <div className="flex items-center gap-1">
           {displayImage && displayImage !== "none" ? (
             <img src={displayImage} alt="" className="h-4 w-4 rounded-full object-cover" />
-          ) : (
-            <div className="flex h-4 w-4 items-center justify-center rounded-full bg-zinc-500">
-              <span className="text-[7px] text-white">
-                {displayName.charAt(0).toUpperCase() || "U"}
-              </span>
-            </div>
+          ) : ( ""
           )}
           <span className="ml-1 text dark:text-white/60">{displayName}</span>
         </div>
@@ -202,18 +217,18 @@ export function AssigneePill({ assigneeId, assigneeObj, members, onChange }: { a
 export function DueDatePill({ deadline, onChange }: { deadline: string; onChange: (deadline: string) => void }) {
   return (
     <Popover className="relative">
-      <PopoverButton className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#111]/80">
-        {/* <FontAwesomeIcon
+      <PopoverButton className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#565656]/10">
+        <FontAwesomeIcon
           icon={faCalendar}
           className="h-3 w-3 text-zinc-900 dark:text-white/60"
         />
-        <span className="font-normal text-zinc-900 dark:text-white/60">
+        {/* <span className="font-normal text-zinc-900 dark:text-white/60">
           Due Date:
         </span> */}
         <span className="text-zinc-700 dark:text-white/60">
           {deadline
             ? DateTime.fromISO(deadline).toFormat("dd LLL, yyyy")
-            : "No Deadline"}
+            : "Deadline"}
         </span>
         <FontAwesomeIcon icon={faChevronDown} className="h-2 w-2 opacity-50" />
       </PopoverButton>

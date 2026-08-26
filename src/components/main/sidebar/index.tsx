@@ -11,6 +11,7 @@ import {
   UsersRound,
   Bot,
   Settings,
+  SquarePen
 } from "lucide-react";
 
 import IntegrationsNavGroup from "@/components/main/sidebar/IntegrationsNavGroup";
@@ -31,7 +32,7 @@ export default function Sidebar() {
     <div className="flex h-full w-full flex-1 flex-col justify-between bg-white py-[14px] dark:bg-[#111]">
       <div className="flex flex-col gap-[34px]">
         <CurrentWorkspace />
-        <div className="poppins-regular flex flex-col justify-between gap-1 px-[12px] text-[13px] font-[300] text-[#707070]">
+        <div className="poppins-regular flex flex-col justify-between gap-0.5 px-[12px] text-[13px] font-[300] text-[#707070]">
           {(
             [
               {
@@ -45,6 +46,12 @@ export default function Sidebar() {
                 value: "tasks",
                 icon: <CheckCheck strokeWidth={1.5} size={16} />,
                 disabled: false,
+              },
+              {
+                label: "Drafts",
+                value: "drafts",
+                icon: <SquarePen strokeWidth={1.5} size={16} />,
+                disabled: true,
               },
               {
                 label: "Team",
@@ -85,11 +92,11 @@ export default function Sidebar() {
                 className={`flex cursor-pointer flex-row items-center justify-between rounded-[5px] border px-2.5 py-1.5 transition-all duration-300 hover:border-[#565656]/10 hover:bg-[#565656]/10 ${
                   isActive
                     ? "border-[#565656]/10 bg-[#565656]/10 font-medium text-zinc-950 dark:text-white"
-                    : "border-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
-                } ${link.disabled ? "opacity-70 hover:cursor-not-allowed" : ""}`}
+                    : "border-transparent text-zinc-500  "
+                } ${link.disabled ? "opacity-70 hover:cursor-not-allowed" : "hover:text-zinc-900 dark:hover:text-white"}`}
               >
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px]">{link.icon}</span>
+                  <span className="text-[9px]">{link.icon}</span>
                   <span>{link.label}</span>
                 </div>
               </span>
@@ -109,25 +116,43 @@ export default function Sidebar() {
 
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { useLogout } from "@/hooks/api/auth";
+import { useLogoutMutation } from "@/redux/api/authApiSlice"; 
+import { clearAuthState } from "@/redux/Slices/authSlice"; 
+import { apiSlice } from "@/redux/api/apiSlice"; 
+import { deleteFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import stringToColor from "@/utils/stringToColor";
 import ThemeSwitcher from "@/components/reuseables/ThemeSwitcher";
 
 
-function DropdownMenu() {
-  const { user, isLoggedIn } = useSelector((state: any) => state.auth);
+function DropdownMenu() {  
   const router = useRouter();
-    const params = useParams();
+  const dispatch = useDispatch();  
+  const params = useParams();
+
   const workspaceSlug = params?.workspaceSlug;
   const workspace = useSelector((state: any) => state.workspace);
+  const { user, isLoggedIn } = useSelector((state: any) => state.auth);
+
 
   const workspaceIdentifier =
     workspaceSlug || workspace?.slug || workspace?._id;
 
+  const [logout, { isLoading: isLoggingOut }] = useLogoutMutation()
 
-  const { onLogout } = useLogout();
-  function handleLogout() {
-    onLogout();
-    router.push("/");
+  async function handleLogout()  {
+
+   try {
+      await logout().unwrap();
+      dispatch(clearAuthState()); 
+      dispatch(apiSlice.util.resetApiState());   
+      router.push("/");
+
+    } catch (error: any) {
+      // console.error("Failed to logout on server", error);
+      dispatch(clearAuthState());
+      dispatch(apiSlice.util.resetApiState());
+      router.push("/");
+    }
   }
 
 

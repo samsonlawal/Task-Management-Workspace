@@ -53,6 +53,8 @@ export default function AddTask() {
     title: "",
   });
 
+  // const [draft, setDraft] = useState<Record | any[]>([])
+
   const workspaceData = useSelector(
     (state: RootState) => state.WorkspaceData?.workspace,
   );
@@ -86,10 +88,18 @@ export default function AddTask() {
   const [createTask, { isLoading: createTaskLoading }] =
     useCreateTaskMutation();
 
-  // const { onCreateTask, loading: createTaskLoading } = useCreateTask();
-
   const handleDialogClose = () => {
-    setIsOpen(false);
+setTask({
+    description: "",
+    workspace_id: "",
+    assignee: "",
+    deadline: "",
+    status: "to-do",
+    priority: "Low",
+    createdBy: "",
+    title: "",
+  })    
+  setIsOpen(false);
   };
 
   const handleCreateTask = async () => {
@@ -283,13 +293,6 @@ export default function AddTask() {
 
               {/* Bottom Actions Row (border-t removed) */}
               <div className="mt-5 flex justify-end gap-3">
-                {/* <button
-                  type="button"
-                  onClick={handleDialogClose}
-                  className="rounded-md bg-zinc-200 px-4 py-2 text-xs text-zinc-700 transition-colors hover:bg-zinc-300 dark:bg-[#565656]/40 dark:text-zinc-300 dark:hover:bg-[#565656]/80"
-                >
-                  Cancel
-                </button> */}
                 <button
                   onClick={handleCreateTask}
                   disabled={createTaskLoading}
