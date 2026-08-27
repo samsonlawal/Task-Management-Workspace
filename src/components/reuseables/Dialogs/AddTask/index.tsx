@@ -18,10 +18,6 @@ import {
   faPlus,
   faXmark,
   faChevronDown,
-  faSpinner,
-  faCalendar,
-  faUser,
-  faChevronLeft,
   faPaperclip,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
@@ -89,7 +85,7 @@ export default function AddTask() {
     useCreateTaskMutation();
 
   const handleDialogClose = () => {
-setTask({
+    setTask({
     description: "",
     workspace_id: "",
     assignee: "",
@@ -284,9 +280,9 @@ setTask({
                       icon={faPaperclip}
                       className="h-3 w-3 text-zinc-900 dark:text-white/60"
                     />
-                    <span className="font-normal text-zinc-900 dark:text-white/60">
+                    {/* <span className="font-normal text-zinc-900 dark:text-white/60">
                       Attachments
-                    </span>
+                    </span> */}
                   </button>
                 </div>
               </div>

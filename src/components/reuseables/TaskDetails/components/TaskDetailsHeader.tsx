@@ -102,7 +102,7 @@ export default function TaskDetailsHeader({
   // console.log(taskData)
 
   return (
-    <div className="flex w-full flex-col gap-4 border-b border-[#565656]/10 pb-4">
+    <div className="flex w-full flex-col gap-4 pb-4">
       {/* Top Row: Breadcrumbs and Dropdown Menu */}
       <div className="flex w-full flex-row items-center justify-between">
         {/* Breadcrumbs path */}

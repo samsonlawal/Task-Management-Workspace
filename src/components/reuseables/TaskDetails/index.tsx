@@ -5,19 +5,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setSingleTask } from "@/redux/Slices/taskSlice";
-import {
-  useDeleteTask,
-  useDemoteTask,
-  useGetTasks,
-  useMarkAsDone,
-  usePromoteTask,
-} from "@/hooks/api/tasks";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
-import { Maximize2, Minimize2 } from "lucide-react";
+import { Maximize2, Minimize2, Paperclip } from "lucide-react";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { TWorkspaceData } from "@/types";
-
-// Import modular sub-components
 import TaskDetailsHeader from "./components/TaskDetailsHeader";
 import TaskFields from "./components/TaskFields";
 import TaskTimeline from "./components/TaskTimeline";
@@ -25,9 +16,6 @@ import TaskComments from "./components/TaskComments";
 
 import {
   useDeleteTaskMutation,
-  useMarkAsDoneMutation,
-  usePromoteTaskMutation,
-  useDemoteTaskMutation,
 } from "@/redux/api/taskApiSlice";
 
 interface TaskData {
@@ -125,9 +113,10 @@ export default function TaskDetails({
               <div className="mt-4 flex h-[calc(100vh-140px)] flex-1 flex-col gap-8 overflow-hidden text-[12px]">
                 {/* Left Column: Metadata Fields */}
                 <div
-                  className={`relative z-20 flex w-full flex-none flex-col pr-3 lg:w-fit ${isCommentsExpanded ? "hidden" : ""}`}
+                  className={`relative z-20 flex w-full flex-none flex-row pr-3 lg:w-fit ${isCommentsExpanded ? "hidden" : ""}`}
                 >
                   <TaskFields taskData={taskData} />
+
                 </div>
 
                 {/* Right Column: Tabs, Activity Log, and Comments */}

@@ -16,7 +16,9 @@ import {
   PopoverPanel,
 } from "@headlessui/react";
 import { DateTime } from "luxon";
-import { FlagIcon } from "lucide-react";                                          
+import { FlagIcon } from "lucide-react";  
+import {  faPaperclip } from "@fortawesome/free-solid-svg-icons";
+import { showErrorToast, showSuccessToast } from "@/utils/toaster";
 
 
 const getStatusIcon = (status: string) => {                                    
@@ -263,4 +265,28 @@ export function DueDatePill({ deadline, onChange }: { deadline: string; onChange
       </PopoverPanel>
     </Popover>
   );
+}
+
+
+export function attachmentPill() {
+
+  return (
+      <button
+        type="button"
+        onClick={() =>
+          showSuccessToast({
+            message: "Attach files feature triggered!",
+          })
+        }
+        className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#111]/80 h-fit w-fit"
+      >
+        <FontAwesomeIcon
+          icon={faPaperclip}
+          className="h-3 w-3 text-zinc-900 dark:text-white/60"
+        />
+        <span className="font-normal text-zinc-900 dark:text-white/60">
+          Attachments
+        </span>
+      </button>
+  )
 }

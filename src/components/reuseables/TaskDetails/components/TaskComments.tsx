@@ -102,7 +102,7 @@ export default function TaskComments({
         <div ref={commentRef} />
       </div>
 
-      <div className="pt-2 border-t border-[#565656]/10 w-full bg-transparent">
+      <div className="pt-2 w-full bg-transparent">
         <MessageBox
           value={value}
           onChange={(val) => setValue(val)}
