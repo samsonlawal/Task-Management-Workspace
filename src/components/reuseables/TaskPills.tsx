@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useRef } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendar,
@@ -267,26 +268,34 @@ export function DueDatePill({ deadline, onChange }: { deadline: string; onChange
   );
 }
 
+export function AttachmentPill({setFiles}: { setFiles: React.Dispatch<React.SetStateAction<File[]>> }) {
 
-export function attachmentPill() {
+  const [showAttachmentModal, setShowAttachmentModal] = useState(false);
+  const attachmentRef = useRef<HTMLInputElement>(null);
+
+  const handleAttachmentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+
+    if(e.target.files && e.target.files.length > 0) {
+      const selectedFiles = Array.from(e.target.files)
+      setFiles((prev) => [...prev, ...selectedFiles]);
+
+      console.log(e.target.files)
+      e.target.value = "";
+    }
+  }
 
   return (
-      <button
-        type="button"
-        onClick={() =>
-          showSuccessToast({
-            message: "Attach files feature triggered!",
-          })
-        }
-        className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#111]/80 h-fit w-fit"
+      <div
+        className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#565656]/10 h-fit w-fit"
       >
-        <FontAwesomeIcon
-          icon={faPaperclip}
-          className="h-3 w-3 text-zinc-900 dark:text-white/60"
-        />
-        <span className="font-normal text-zinc-900 dark:text-white/60">
-          Attachments
-        </span>
-      </button>
+        <label htmlFor="attachment" className="cursor-pointer px-3 py-1.5">
+          <FontAwesomeIcon
+            icon={faPaperclip}
+            className="h-3 w-3 text-zinc-900 dark:text-white/60"
+          />
+        </label>
+        <input id="attachment" type="file" multiple className="hidden" onChange={handleAttachmentUpload} />
+      </div>
   )
 }

@@ -19,10 +19,11 @@ import {
   faXmark,
   faChevronDown,
   faPaperclip,
+  faFilePdf,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowLeft, ArrowDownToLine, X } from "lucide-react";
 import { TAddTask } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -32,11 +33,12 @@ import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
 import { DateTime } from "luxon";
 import { useCreateTaskMutation } from "@/redux/api/taskApiSlice";
 import { useGetMembersQuery } from "@/redux/api/memberApiSlice";
-import { StatusPill, PriorityPill, AssigneePill, DueDatePill } from "@/components/reuseables/TaskPills";
+import { AttachmentPill, StatusPill, PriorityPill, AssigneePill, DueDatePill } from "@/components/reuseables/TaskPills";
 
 export default function AddTask() {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   const [workspaceId, setWorkspaceId] = useState<string>("");
+  const [files, setFiles] = useState<File[]>([]);
 
   const [task, setTask] = useState<TAddTask>({
     description: "",
@@ -172,6 +174,23 @@ export default function AddTask() {
     });
   }
 
+  function formatFile(bytes: number) {
+
+    const k = 1024 
+    const sizes = ["B", "KB", "MB", "GB", "TB"]
+
+    if(!bytes || bytes === 0){
+      return "0 B"
+    }
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`
+    
+
+  }
+
+  function removeFile(indexToRemove: number) {
+    setFiles((prev) => prev.filter((_, index) => index !== indexToRemove))
+  }
 
 
   return (
@@ -211,10 +230,10 @@ export default function AddTask() {
                       className="mr-0.5 text-[8px]"
                     /> */}
                      <ArrowLeft
-                                  size={11}
-                                  strokeWidth={2.5}
-                                  className="text-zinc-500 hover:text-black dark:text-[#fff]/40 dark:hover:text-[#fff]/80"
-                                />
+                        size={11}
+                        strokeWidth={2.5}
+                        className="text-zinc-500 hover:text-black dark:text-[#fff]/40 dark:hover:text-[#fff]/80"
+                      />
                     <span>{workspaceData?.name || "workspace"}</span>
                   </button>
                   <span className="text-zinc-400 dark:text-[#fff]/40">{" > "}</span>
@@ -231,7 +250,7 @@ export default function AddTask() {
               </div>
 
               {/* Title & Description Inputs */}
-              <div className="flex w-full flex-col items-start gap-1 pb-3">
+              <div className="flex w-full flex-col items-start gap-1">
                 <input
                   type="text"
                   placeholder="Task title"
@@ -253,38 +272,81 @@ export default function AddTask() {
                       description: e.target.value,
                     }))
                   }
-                  rows={4}
-                  className="poppins-normal text-zinc-650 m-0 mt-1 min-h-[90px] w-full resize-none border-none bg-transparent p-0 text-[13px] outline-none focus:outline-none focus:ring-0 dark:text-white/80 placeholder-white/60"
+                  className="poppins-normal text-zinc-650 m-0 mt-1 h-fit min-h-[20px] w-full resize-none border-none bg-transparent p-0 text-[13px] outline-none focus:outline-none focus:ring-0 dark:text-white/90 placeholder-white/60"
                 />
               </div>
 
+              {files.length > 0 && (
+                  <div className="w-full md:min-w-[400px] max-h-[200px] overflow-y-scroll flex flex-col gap-2 py-2">
+                    {files.map((file, index) => {
+                      const isImage = file?.type.startsWith("image/");
+                      const isPdf = file?.type === "application/pdf";
+
+
+                      return(
+                        <div key={index}>
+
+
+                      {isImage && (
+                      <div className="group relative">
+
+                      <span className="group-hover:bg-[#565656] group-hover:flex hidden absolute top-4 right-16 p-1.5 rounded-sm transition-all duration-300">
+                      <ArrowDownToLine size={18} className="dark:group-hover:text-white dark:text-[#fff]/40" />
+                      </span>
+
+                         <button type="button" className="group-hover:bg-[#565656] group-hover:flex hidden absolute top-4 right-8 p-1.5 rounded-sm transition-all duration-300" onClick={() => removeFile(index)}>
+                          <X size={12} className="dark:group-hover:text-white dark:text-[#fff]/40" />
+                        </button>
+
+                      <img src={URL.createObjectURL(file)} alt="" className="min-w-[400px] h-auto object-cover" />
+                    </div>
+                    )}
+
+                    {isPdf && (
+                    <div className="relative group flex flex-row items-center gap-2 px-3 py-2 bg-[#565656]/20 rounded-md w-[96%]">
+
+                       <button type="button" className="group-hover:bg-[#565656] group-hover:flex hidden absolute -top-2 -right-2 p-1 rounded-full transition-all duration-300" onClick={() => removeFile(index)}>
+                      <X size={10} className="dark:group-hover:text-white dark:text-[#fff]/40" />
+                      </button>
+
+                      <FontAwesomeIcon icon={faFilePdf} className="text-zinc-500 dark:text-[#fff]/40" />
+
+
+                      <div className="flex flex-1 items-center flex-row justify-start gap-[6px]">
+                        <p className="text-[13px]">{file.name}</p>  
+                        <p className="text-[11px] text-[#fff]/50">
+                        
+                        {`${formatFile(file.size)}`}
+
+                          </p>    
+                      </div>
+
+                      <span className="group hover:bg-[#565656]/30 p-1.5 rounded-sm transition-all duration-300">
+                          <ArrowDownToLine size={18} className="dark:text-[#fff]/40" />
+                        </span>
+                    </div>
+                    )}
+
+
+                        </div>
+                      )
+                    })}
+                    {/* <p className="text-[12px] text-white">{files.name}</p> */}
+                   
+                  </div>
+                )}
+
               {/* Wrapped horizontal pills list for properties */}
-              <div className="poppins w-full pt-1">
+              <div className="poppins w-full">
                 <div className="flex flex-row flex-wrap items-center gap-1">
                   <StatusPill status={task.status} onChange={(s) => setTask((prev) => ({ ...prev, status: s }))} />
                   <PriorityPill priority={task.priority} onChange={(p) => setTask((prev) => ({ ...prev, priority: p }))} />
                   <AssigneePill assigneeId={task.assignee} members={members} onChange={(a) => setTask((prev) => ({ ...prev, assignee: a }))} />
                   <DueDatePill deadline={task.deadline} onChange={(d) => setTask((prev) => ({ ...prev, deadline: d }))} />
-
-                  {/* Attachments Pill */}
-                  <button
-                    type="button"
-                    onClick={() =>
-                      showSuccessToast({
-                        message: "Attach files feature triggered!",
-                      })
-                    }
-                    className="flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#111]/80"
-                  >
-                    <FontAwesomeIcon
-                      icon={faPaperclip}
-                      className="h-3 w-3 text-zinc-900 dark:text-white/60"
-                    />
-                    {/* <span className="font-normal text-zinc-900 dark:text-white/60">
-                      Attachments
-                    </span> */}
-                  </button>
+                  <AttachmentPill setFiles={setFiles} />
                 </div>
+
+                
               </div>
 
               {/* Bottom Actions Row (border-t removed) */}
