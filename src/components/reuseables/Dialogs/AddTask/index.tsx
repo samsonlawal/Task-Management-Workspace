@@ -49,6 +49,7 @@ export default function AddTask() {
     priority: "Low",
     createdBy: "",
     title: "",
+    attachments: []
   });
 
   // const [draft, setDraft] = useState<Record | any[]>([])
@@ -110,44 +111,54 @@ export default function AddTask() {
       priority,
       createdBy,
       title,
+      attachments
     } = task;
 
+    let formData:any = new FormData();
     let errorMsg = "";
     if (!title) {
       errorMsg = "Task title is required.";
     }
-
     if (errorMsg) {
       showErrorToast({ message: errorMsg });
       return;
     }
 
+    formData.append("title", title);
+    formData.append("description", description || "");
+    formData.append("workspace_id", workspace_id);
+    formData.append("status", status);
+    formData.append("priority", priority);
+    formData.append("createdBy", createdBy);
+    if (assignee) formData.append("assignee", assignee);
+    if (deadline) formData.append("deadline", deadline);
+    if(files.length > 0) {
+      files.forEach((file) => {
+        formData.append("attachments", file);
+      });
+    }
+
+
+
+
+
     try {
-      await createTask({
-        task: {
-          description,
-          workspace_id,
-          assignee: assignee || undefined,
-          deadline,
-          status,
-          priority,
-          createdBy,
-          title,
-        },
-      }).unwrap();
+      await createTask({ task: formData }).unwrap();
 
       showSuccessToast({ message: "Task Created Successfully!" });
-
-      setTask({
-        description: "",
-        workspace_id: workspace_id,
-        assignee: assignee || undefined,
-        deadline: "",
-        status: "to-do",
-        priority: "Low",
-        createdBy: createdBy,
-        title: "",
-      });
+      setFiles([])
+      // setTask({})
+      // setTask({
+      //   description: "",
+      //   workspace_id: workspace_id,
+      //   assignee: assignee || undefined,
+      //   deadline: "",
+      //   status: "to-do",
+      //   priority: "Low",
+      //   createdBy: createdBy,
+      //   title: "",
+      //   attachments: []
+      // });
 
       handleDialogClose();
     } catch (error: any) {

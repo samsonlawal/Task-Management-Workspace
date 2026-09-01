@@ -41,6 +41,7 @@ export type TAddTask = {
   priority: string;
   assignee?: string;
   workspace_id: string;
+  attachments?: [];
   // createdAt: string;
   deadline: string;
   createdBy: string;

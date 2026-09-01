@@ -21,7 +21,7 @@ import { setMembers } from "@/redux/Slices/memberSlice";
 import { useUploadAvatar } from "@/hooks/api/account";
 import { Loader2 } from "lucide-react";
 
-export default function AddMember() {
+export default function UploadImage() {
   const dispatch = useDispatch();
 
   const { loading, onUploadAvatar } = useUploadAvatar();

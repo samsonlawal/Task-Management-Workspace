@@ -55,17 +55,6 @@ function Profile() {
     }
   }, [profileData, user]);
 
-  // useEffect(() => {
-  //   if (profileData) {
-  //     setForm({
-  //       username: profileData.username || "",
-  //       email: profileData.email || "",
-  //       fullname: profileData.fullname || "",
-  //     });
-  //     setImage(data.profileImage || null);
-  //   }
-  // }, [data]);
-
   function handleRoute() {
     router.push("/workspaces");
   }

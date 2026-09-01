@@ -6,7 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setSingleTask } from "@/redux/Slices/taskSlice";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
-import { Maximize2, Minimize2, Paperclip } from "lucide-react";
+import { Maximize2, Minimize2, ArrowDownToLine, Paperclip } from "lucide-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { TWorkspaceData } from "@/types";
 import TaskDetailsHeader from "./components/TaskDetailsHeader";
@@ -35,6 +37,7 @@ interface TaskData {
   workspaceName?: string;
   workspaceId?: string;
   createdBy?: string;
+  attachments: []
 }
 
 export default function TaskDetails({
@@ -57,6 +60,9 @@ export default function TaskDetails({
   const [isCommentsExpanded, setIsCommentsExpanded] = useState<boolean>(false);
   const [spaceData, setSpaceData] = useState<TWorkspaceData>();
 
+    console.log(taskData)
+
+
   useEffect(() => {
     getFromLocalStorage({
       key: "WorkspaceData",
@@ -73,6 +79,14 @@ export default function TaskDetails({
     onClose();
     setIsCommentsExpanded(false);
   };
+
+  function formatFileSize(bytes?: number) {
+  if (!bytes || bytes === 0) return "0 B";
+  const k = 1024;
+  const sizes = ["B", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+}
 
   const handleDeleteTask = async () => {
     try {
@@ -140,10 +154,19 @@ export default function TaskDetails({
                           Comments
                         </button>
                         <button
-                          onClick={() => setActiveTab("attachments")}
-                          className={`px-4 py-2 font-medium ${activeTab === "attachments" ? "border-b-2 border-black font-semibold text-black dark:border-[#eee] dark:text-white" : "text-[#565656] hover:text-[#111] dark:hover:text-white"}`}
-                        >
-                          Attachments
+  onClick={() => setActiveTab("attachments")}
+  className={`flex items-center gap-1.5 px-4 py-2 font-medium transition-colors ${ 
+    activeTab === "attachments"
+      ? "border-b-2 border-black font-semibold text-black dark:border-[#eee] dark:text-white"
+      : "text-[#565656] hover:text-[#111] dark:hover:text-white"
+  }`}
+>
+                           <span>Attachments</span>
+  {taskData?.attachments?.length > 0 && (
+    <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-zinc-200 px-1.5 text-[10px] font-medium text-zinc-700 dark:bg-[#565656]/40 dark:text-zinc-300">
+      {taskData.attachments.length}
+    </span>
+  )}
                         </button>
                       </div>
 
@@ -178,9 +201,72 @@ export default function TaskDetails({
                       )}
 
                       {activeTab === "attachments" && (
-                        <div className="py-4 italic text-zinc-500">
+                        taskData?.attachments.length > 0 ? 
+                        (
+    <div className="flex w-full flex-col gap-2.5 py-3"> 
+      {taskData.attachments.map((attachment: any, index: number) => {
+        const isImage = attachment?.fileType?.startsWith("image/"); 
+        const isPdf = attachment?.fileType === "application/pdf"; 
+        return (
+          <div key={attachment._id || index}>
+            {/* Image Preview */}
+            {isImage && (
+              <div className="group relative w-fit max-w-[400px] overflow-hidden rounded-lg border border-zinc-200 dark:border-[#565656]/30">
+                <a
+                  href={attachment.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="absolute right-3 top-3 hidden rounded bg-black/70 p-1.5 text-white transition-all hover:bg-black group-hover:flex"
+                  title="Download / Open"
+                >
+                  <ArrowDownToLine size={14} />
+                </a>
+                <img
+                  src={attachment.url}
+                  alt={attachment.name || "Attachment"}
+                  className="max-h-[220px] w-full object-cover"
+                />
+              </div>
+            )}
+            {/* Document & Other Files */}
+            {!isImage && (
+              <div className="max-w-[400px] flex items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-[#565656]/10 px-3.5 py-2.5 dark:border-[#565656]/20">
+                <div className="flex items-center gap-2.5 overflow-hidden">
+                  <FontAwesomeIcon
+                    icon={isPdf ? faFilePdf : faFilePdf}
+                    className="text-sm text-zinc-500 dark:text-[#fff]/50"
+                  />
+                  <div className="flex flex-col">
+                    <span className="truncate text-[12px] font-medium text-zinc-800 dark:text-zinc-200">
+                      {attachment.name || "Attachment"}
+                    </span>
+                    {attachment.size && (
+                      <span className="text-[10px] text-zinc-500 dark:text-[#fff]/40">
+                        {formatFileSize(attachment.size)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <a
+                  href={attachment.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  download
+                  className="rounded p-1.5 text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-black dark:text-[#fff]/40 dark:hover:bg-[#565656]/30 dark:hover:text-white"
+                >
+                  <ArrowDownToLine size={15} />
+                </a>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  ) : (
+                          <div className="py-4 italic text-zinc-500">
                           No attachments yet
                         </div>
+                        )
                       )}
                     </div>
                   </div>
