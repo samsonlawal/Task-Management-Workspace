@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ArrowDownToLine, X } from "lucide-react";
 
 import { useParams } from "next/navigation";
+import { showSuccessToast, showErrorToast } from "@/utils/toaster";
 
 export default function TaskFields({ taskData }: { taskData: any }) {
   const [updateTask] = useUpdateTaskMutation();
@@ -56,6 +57,31 @@ export default function TaskFields({ taskData }: { taskData: any }) {
     membersData?.data ||
     (Array.isArray(membersData) ? membersData : []);
 
+  const uploadAttachments = async (filesToUpload: File[]) => {
+      const formData = new FormData()
+
+      filesToUpload.forEach((file) => {
+        formData.append("attachments", file)
+      })
+
+      try{
+        await updateTask({
+          taskId: taskData.id,
+          task: formData,
+          workspaceSlug: workspaceSlug,
+        }).unwrap()
+
+        setFiles([])
+        console.log(files)
+
+        showSuccessToast({ message: "Attachments uploaded successfully"})
+      }
+      catch(err: any){
+        showErrorToast({
+          message: err?.data?.message || "Failed to upload attachments",
+        });
+      }
+    }
 
   const handleUpdateField = async (updatedFields: Partial<any>) => {
     try {
@@ -140,7 +166,7 @@ export default function TaskFields({ taskData }: { taskData: any }) {
         <PriorityPill priority={taskData.priority} onChange={(p) => handleUpdateField({ priority: p })} />
         <AssigneePill assigneeObj={taskData.assignee} members={members} onChange={(a) => handleUpdateField({ assignee: a })} />
         <DueDatePill deadline={taskData.deadline} onChange={(d) => handleUpdateField({ deadline: d })} />
-        <AttachmentPill setFiles={setFiles} />
+        <AttachmentPill onUpload={uploadAttachments} setFiles={setFiles} />
       </div>
       {/* {files.length !== 0 && (
         <div>

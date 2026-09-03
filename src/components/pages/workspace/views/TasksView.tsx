@@ -140,6 +140,7 @@ function TasksView() {
     createdAt={task.createdAt}
     assigneeId={task.assignee?._id}
     createdBy={task.createdBy}
+    attachments={task.attachments}
     onOpenDetails={() => setSelectedTaskId(task._id)}
   />
 );          
@@ -355,7 +356,7 @@ function TasksView() {
               STATUS_SECTIONS.map((status) => (
                 <div
                   key={status}
-                  className="dark:hover:bg-[#565656]/4 flex min-w-[266px] w-fit h-fit flex-col gap-1 rounded-md bg-[#eee] p-2 dark:bg-[#565656]/10"
+                  className="dark:hover:bg-[#565656]/4 flex min-w-[246px] w-fit h-fit flex-col gap-1 rounded-md bg-[#eee] p-2 dark:bg-[#565656]/10"
                 >
                   <div
                     className="flex min-h-fit w-full cursor-pointer flex-row justify-between rounded-sm px-2 py-1 text-[14px] font-medium text-[#787878] transition-colors hover:bg-gray-200 dark:bg-[#565656]/0 dark:hover:bg-[#565656]/0"

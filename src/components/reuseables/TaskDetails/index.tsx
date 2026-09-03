@@ -125,7 +125,7 @@ export default function TaskDetails({
 
               {/* Main Drawer Layout content */}
               <div className="mt-4 flex h-[calc(100vh-140px)] flex-1 flex-col gap-8 overflow-hidden text-[12px]">
-                {/* Left Column: Metadata Fields */}
+                {/* Left Column Metadata Fields */}
                 <div
                   className={`relative z-20 flex w-full flex-none flex-row pr-3 lg:w-fit ${isCommentsExpanded ? "hidden" : ""}`}
                 >
@@ -133,7 +133,7 @@ export default function TaskDetails({
 
                 </div>
 
-                {/* Right Column: Tabs, Activity Log, and Comments */}
+                {/* Right Column Tabs, Activity Log, and Comments */}
                 <div
                   className={`relative z-10 flex h-full min-w-0 flex-1 flex-col overflow-hidden ${isCommentsExpanded ? "flex-[5]" : ""}`}
                 >
@@ -201,34 +201,34 @@ export default function TaskDetails({
                       )}
 
                       {activeTab === "attachments" && (
-                        taskData?.attachments.length > 0 ? 
+                        taskData?.attachments && taskData?.attachments.length > 0 ? 
                         (
-    <div className="flex w-full flex-col gap-2.5 py-3"> 
-      {taskData.attachments.map((attachment: any, index: number) => {
-        const isImage = attachment?.fileType?.startsWith("image/"); 
-        const isPdf = attachment?.fileType === "application/pdf"; 
-        return (
-          <div key={attachment._id || index}>
-            {/* Image Preview */}
-            {isImage && (
-              <div className="group relative w-fit max-w-[400px] overflow-hidden rounded-lg border border-zinc-200 dark:border-[#565656]/30">
-                <a
-                  href={attachment.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="absolute right-3 top-3 hidden rounded bg-black/70 p-1.5 text-white transition-all hover:bg-black group-hover:flex"
-                  title="Download / Open"
-                >
-                  <ArrowDownToLine size={14} />
-                </a>
-                <img
-                  src={attachment.url}
-                  alt={attachment.name || "Attachment"}
-                  className="max-h-[220px] w-full object-cover"
-                />
+                          <div className="flex w-full flex-col gap-2.5 py-3"> 
+                            {taskData.attachments.map((attachment: any, index: number) => {
+                              const isImage = attachment?.fileType?.startsWith("image/"); 
+                              const isPdf = attachment?.fileType === "application/pdf"; 
+                              return (
+                                <div key={attachment._id || index}>
+                                  {/* Image Preview */}
+                                  {isImage && (
+                                    <div className="group relative w-fit max-w-[400px] overflow-hidden rounded-lg border border-zinc-200 dark:border-[#565656]/30">
+                                      <a
+                                        href={attachment.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="absolute right-3 top-3 hidden rounded bg-black/70 p-1.5 text-white transition-all hover:bg-black group-hover:flex"
+                                        title="Download / Open"
+                                      >
+                                        <ArrowDownToLine size={14} />
+                                      </a>
+                                      <img
+                                        src={attachment.url}
+                                        alt={attachment.name || "Attachment"}
+                                        className="max-h-[220px] w-full object-cover"
+                                      />
               </div>
             )}
-            {/* Document & Other Files */}
+            {/* Document and Other Files */}
             {!isImage && (
               <div className="max-w-[400px] flex items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-[#565656]/10 px-3.5 py-2.5 dark:border-[#565656]/20">
                 <div className="flex items-center gap-2.5 overflow-hidden">

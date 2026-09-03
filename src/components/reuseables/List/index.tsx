@@ -7,7 +7,7 @@ import { DateTime } from "luxon";
 import { getFromLocalStorage } from "@/utils/localStorage/AsyncStorage";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
-import { Flag } from "lucide-react";
+import { Flag, Paperclip } from "lucide-react";
 import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
 
 export default function ListTask({
@@ -24,21 +24,23 @@ export default function ListTask({
   createdAt,
   assigneeId,
   createdBy,
+  attachments,
   onOpenDetails,
 }: {
-  title: string;
-  desc: string;
-  deadline: any;
+  title?: string;
+  desc?: string;
+  deadline?: any;
   name?: string;
   fullname?: string;
-  email: string;
+  email?: string;
   image?: string;
-  priority: string;
-  id: string;
-  status: string;
-  createdAt: string;
+  priority?: string;
+  id?: string;
+  status?: string;
+  createdAt?: string;
   assigneeId?: string;
   createdBy?: string;
+  attachments?: any[];
   onOpenDetails?: () => void;
 }) {
   const priorityStyles = getPriorityStyles(priority);
@@ -145,6 +147,16 @@ export default function ListTask({
           </div> */}
         </div>
       </div>
+      {/* <div className="flex w-[35px] items-center justify-start">
+        {attachments && attachments.length > 0 && (
+          <div className="flex items-center gap-1 text-zinc-500 dark:text-zinc-400">
+            <Paperclip size={12} strokeWidth={1.75} />
+            <span className="text-[11px] font-medium leading-none">
+              {attachments.length}
+            </span>
+          </div>
+        )}
+      </div> */}
       <div className="flex w-[55px] items-center justify-start md:w-[90px]">
         {deadline && (
           <p className="text-center text-[12px] font-normal">

@@ -268,25 +268,27 @@ export function DueDatePill({ deadline, onChange }: { deadline: string; onChange
   );
 }
 
-export function AttachmentPill({setFiles}: { setFiles: React.Dispatch<React.SetStateAction<File[]>> }) {
+export function AttachmentPill({setFiles, onUpload}: { setFiles: React.Dispatch<React.SetStateAction<File[]>> , onUpload?: (files: File[]) => void }) {
 
   const [showAttachmentModal, setShowAttachmentModal] = useState(false);
   const attachmentRef = useRef<HTMLInputElement>(null);
 
   const handleAttachmentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-
     if(e.target.files && e.target.files.length > 0) {
       const selectedFiles = Array.from(e.target.files)
       setFiles((prev) => [...prev, ...selectedFiles]);
+      if (onUpload) {
+        onUpload(selectedFiles); 
+      }
+     
 
-      console.log(e.target.files)
       e.target.value = "";
     }
   }
 
   return (
       <div
+      onClick={() => attachmentRef.current?.click()}
         className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#565656]/10 h-fit w-fit"
       >
         <label htmlFor="attachment" className="cursor-pointer px-3 py-1.5">
@@ -295,7 +297,7 @@ export function AttachmentPill({setFiles}: { setFiles: React.Dispatch<React.SetS
             className="h-3 w-3 text-zinc-900 dark:text-white/60"
           />
         </label>
-        <input id="attachment" type="file" multiple className="hidden" onChange={handleAttachmentUpload} />
+        <input ref={attachmentRef} type="file" multiple className="hidden" onChange={handleAttachmentUpload} />
       </div>
   )
 }

@@ -288,64 +288,92 @@ export default function AddTask() {
               </div>
 
               {files.length > 0 && (
-                  <div className="w-full md:min-w-[400px] max-h-[200px] overflow-y-scroll flex flex-col gap-2 py-2">
-                    {files.map((file, index) => {
-                      const isImage = file?.type.startsWith("image/");
-                      const isPdf = file?.type === "application/pdf";
+                <div className="flex max-h-[200px] w-full flex-col gap-2 overflow-y-auto py-2 md:min-w-[400px]">
+                  {files.map((file, index) => {
+                    const isImage = file?.type.startsWith("image/");
+                    const isPdf = file?.type === "application/pdf";
 
+                    return (
+                      <div key={index}>
+                        {/* Image Attachment Preview */}
+                        {isImage && (
+                          <div className="group relative w-full overflow-hidden rounded-lg border border-zinc-200 dark:border-[#565656]/30">
+                            {/* Action Buttons Group (Top-Right) */}
+                            <div className="absolute right-2 top-2 hidden items-center gap-1 rounded-md bg-black/60 p-1 backdrop-blur-md transition-all group-hover:flex">
+                              <a
+                                href={URL.createObjectURL(file)}
+                                download={file.name}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="flex h-6 w-6 items-center justify-center rounded text-zinc-300 transition-colors hover:bg-white/20 hover:text-white"
+                                title="Download / View"
+                              >
+                                <ArrowDownToLine size={13} />
+                              </a>
+                              <button
+                                type="button"
+                                onClick={() => removeFile(index)}
+                                className="flex h-6 w-6 items-center justify-center rounded text-zinc-300 transition-colors hover:bg-red-500/30 hover:text-red-300"
+                                title="Remove file"
+                              >
+                                <X size={13} />
+                              </button>
+                            </div>
 
-                      return(
-                        <div key={index}>
+                            <img
+                              src={URL.createObjectURL(file)}
+                              alt={file.name}
+                              className="max-h-[160px] w-full object-cover"
+                            />
+                          </div>
+                        )}
 
+                        {/* PDF & Document Attachment Preview */}
+                        {isPdf && (
+                          <div className="group flex items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-[#565656]/10 px-3.5 py-2 dark:border-[#565656]/20">
+                            <div className="flex items-center gap-2.5 overflow-hidden">
+                              <FontAwesomeIcon
+                                icon={faFilePdf}
+                                className="text-sm text-zinc-500 dark:text-[#fff]/50"
+                              />
+                              <div className="flex flex-col">
+                                <p className="truncate text-[12px] font-medium text-zinc-800 dark:text-zinc-200">
+                                  {file.name}
+                                </p>
+                                <span className="text-[10px] text-zinc-500 dark:text-[#fff]/40">
+                                  {formatFile(file.size)}
+                                </span>
+                              </div>
+                            </div>
 
-                      {isImage && (
-                      <div className="group relative">
-
-                      <span className="group-hover:bg-[#565656] group-hover:flex hidden absolute top-4 right-16 p-1.5 rounded-sm transition-all duration-300">
-                      <ArrowDownToLine size={18} className="dark:group-hover:text-white dark:text-[#fff]/40" />
-                      </span>
-
-                         <button type="button" className="group-hover:bg-[#565656] group-hover:flex hidden absolute top-4 right-8 p-1.5 rounded-sm transition-all duration-300" onClick={() => removeFile(index)}>
-                          <X size={12} className="dark:group-hover:text-white dark:text-[#fff]/40" />
-                        </button>
-
-                      <img src={URL.createObjectURL(file)} alt="" className="min-w-[400px] h-auto object-cover" />
-                    </div>
-                    )}
-
-                    {isPdf && (
-                    <div className="relative group flex flex-row items-center gap-2 px-3 py-2 bg-[#565656]/20 rounded-md w-[96%]">
-
-                       <button type="button" className="group-hover:bg-[#565656] group-hover:flex hidden absolute -top-2 -right-2 p-1 rounded-full transition-all duration-300" onClick={() => removeFile(index)}>
-                      <X size={10} className="dark:group-hover:text-white dark:text-[#fff]/40" />
-                      </button>
-
-                      <FontAwesomeIcon icon={faFilePdf} className="text-zinc-500 dark:text-[#fff]/40" />
-
-
-                      <div className="flex flex-1 items-center flex-row justify-start gap-[6px]">
-                        <p className="text-[13px]">{file.name}</p>  
-                        <p className="text-[11px] text-[#fff]/50">
-                        
-                        {`${formatFile(file.size)}`}
-
-                          </p>    
+                            {/* Action Buttons Group (Trailing) */}
+                            <div className="flex items-center gap-1">
+                              <a
+                                href={URL.createObjectURL(file)}
+                                download={file.name}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="flex h-6 w-6 items-center justify-center rounded text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-black dark:text-[#fff]/40 dark:hover:bg-[#565656]/30 dark:hover:text-white"
+                                title="Download / View"
+                              >
+                                <ArrowDownToLine size={13} />
+                              </a>
+                              <button
+                                type="button"
+                                onClick={() => removeFile(index)}
+                                className="flex h-6 w-6 items-center justify-center rounded text-zinc-500 transition-colors hover:bg-red-500/20 hover:text-red-400 dark:text-[#fff]/40 dark:hover:bg-red-500/30 dark:hover:text-red-300"
+                                title="Remove file"
+                              >
+                                <X size={13} />
+                              </button>
+                            </div>
+                          </div>
+                        )}
                       </div>
-
-                      <span className="group hover:bg-[#565656]/30 p-1.5 rounded-sm transition-all duration-300">
-                          <ArrowDownToLine size={18} className="dark:text-[#fff]/40" />
-                        </span>
-                    </div>
-                    )}
-
-
-                        </div>
-                      )
-                    })}
-                    {/* <p className="text-[12px] text-white">{files.name}</p> */}
-                   
-                  </div>
-                )}
+                    );
+                  })}
+                </div>
+              )}
 
               {/* Wrapped horizontal pills list for properties */}
               <div className="poppins w-full">

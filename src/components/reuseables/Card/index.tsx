@@ -35,6 +35,7 @@ export default function Card({
   assigneeId,
   createdBy,
   onOpenDetails,
+  attachments,
 }: {
   title?: string;
   desc: string;
@@ -49,6 +50,7 @@ export default function Card({
   createdAt: string;
   assigneeId?: string;
   createdBy?: string;
+  attachments?: [];
   onOpenDetails?: () => void;
 }) {
   const priorityStyles = getPriorityStyles(priority);
@@ -72,7 +74,7 @@ export default function Card({
   );
 
   return (
-    <div className="poppins group relative flex h-[98px] w-[250px] flex-col justify-between gap-[6px] rounded-[4px] border border-[#565656]/10 bg-[#fff] py-[10px] text-[14px] dark:bg-[#565656]/10">
+    <div className="poppins group relative flex h-[98px] w-[230px] flex-col justify-between gap-[6px] rounded-[4px] border border-[#565656]/10 bg-[#fff] py-[10px] text-[14px] dark:bg-[#565656]/10">
       <div className="flex flex-col gap-[1px]">
         {/* Head */}
         <div className="flex flex-row justify-between px-[14px] font-medium">
@@ -112,7 +114,7 @@ export default function Card({
             {/* <Redo size={12} className="scale-y-[-1] text-[#565656]" /> */}
             {/* comments */}
             <div
-              className={`flex h-fit w-fit flex-row items-center justify-center gap-1 rounded-[8px]`}
+              className={`flex h-fit w-fit flex-row items-center justify-center gap-1 px-1 rounded-[8px]`}
             >
               <p className={`text-[10px] font-normal ${priorityStyles.text}`}>
                 <FlagIcon size={10} className={priorityStyles.fill} />
@@ -121,43 +123,60 @@ export default function Card({
               </p>
             </div>
 
-            <div className="flex w-fit flex-row items-center justify-center gap-[4px] px-1 py-[1px]">
+            <div className="text-zinc-500 dark:text-zinc-400 flex w-fit flex-row items-center justify-center gap-[3px] px-1 py-[1px]">
               {/* <img
                 src="/icons/chat-outline.svg"
                 alt="chat-icon"
                 className="h-[11px] w-[11px]"
               /> */}
               <MessageSquare
-                size={10}
-                className="text-[#565656] dark:text-[#fff]/70"
+                size={11}
+                strokeWidth={1.75}
+                // className="text-[#565656] dark:text-[#fff]/70"
               />
-              <p className="text-[11px] text-[#565656] dark:text-[#fff]/70">
+              <p className="text-[10px]">
                 2
               </p>
             </div>
 
             {/* links */}
             {/* <div className="flex w-fit flex-row items-center justify-center gap-[4px] px-1.5 py-[2px]">
-              <Link2 size={11} strokeWidth={1} />
+              <Paperclip size={11} strokeWidth={1} />
+              
 
               <p className="text-[10px] text-[#565656]">8</p>
             </div> */}
 
+            {attachments && (
+
+            <div className="text-zinc-500 dark:text-zinc-400 flex w-fit flex-row items-center justify-center gap-[3px] px-1 py-[1px]">
+              <Paperclip 
+              size={10}
+              strokeWidth={1.75}
+              // className="text-[#565656] dark:text-[#fff]/70"
+              />
+              
+
+                <p className="text-center text-[10px]">
+                {attachments.length}
+                </p>
+            </div>)}
+
             {/* deadline */}
             {deadline && (
-              <div className="flex w-fit flex-row items-center justify-center gap-[4px] px-1 py-[2px]">
+            <div className="text-zinc-500 dark:text-zinc-400 flex w-fit flex-row items-center justify-center gap-[3px] px-1 py-[1px]">
                 {/* <img
               src="/icons/task/cal.svg"
               alt="calendar-icon"
               className="h-[10px] w-[10px]"
             /> */}
                 <Clock
-                  size={11}
-                  strokeWidth={2}
-                  className="text-[#565656] dark:text-[#fff]/70"
+                  size={10}
+                  strokeWidth={1.75}
+                  // className="text-[#565656] dark:text-[#fff]/70"
                 />
 
-                <p className="text-center text-[10px] text-[#565656] dark:text-[#fff]/70">
+                <p className="text-center text-[10px]">
                   {DateTime.fromISO(deadline).toFormat("dd MMM")}
                 </p>
               </div>
