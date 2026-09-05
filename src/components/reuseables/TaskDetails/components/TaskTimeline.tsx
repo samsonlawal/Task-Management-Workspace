@@ -1,120 +1,52 @@
-import { useMemo } from "react";
+import { useEffect } from "react";
+import { useGetTaskActivityQuery } from "@/redux/api/taskApiSlice";
 import { DateTime } from "luxon";
-import { Plus, UserPlus, CheckCircle2, Flag, Info } from "lucide-react";
-import { getStatusStyles } from "@/utils/taskStyles";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { getActivityIcon } from "@/utils/activityIcons";
 
 export default function TaskTimeline({ taskData }: { taskData: any }) {
-  const MemberData = useSelector((state: RootState) => state.MemberData);
-  const members = MemberData?.members || [];
 
-  const activities = useMemo(() => {
-    const list = [];
-    
-    // Find creator details
-    const creatorMember = members.find(
-      (m: any) => (m.userId?._id || m._id) === taskData.createdBy
-    );
-    const creatorName = creatorMember?.userId?.fullname || creatorMember?.fullname || "Workspace Member";
-    
-    // 1. Create activity
-    list.push({
-      id: "act-create",
-      actor: {
-        name: creatorName,
-        profileImage: undefined,
-      },
-      type: "create" as const,
-      action: "created this task",
-      timestamp: taskData.createdAt,
-    });
 
-    // 2. Assignee activity
-    if (taskData.assignee?.name) {
-      list.push({
-        id: "act-assign",
-        actor: {
-          name: "Workspace Member",
-          profileImage: undefined,
-        },
-        type: "assignee" as const,
-        action: `assigned this task to ${taskData.assignee.name}`,
-        timestamp: taskData.createdAt,
-      });
-    }
+  const { data: activityData, isLoading } = useGetTaskActivityQuery( 
+    { taskId: taskData.id },
+    { skip: !taskData?.id }
+  );
 
-    // 3. Status activity
-    if (taskData.status !== "to-do" && taskData.status !== "TO-DO") {
-      list.push({
-        id: "act-status",
-        actor: {
-          name: taskData.assignee?.name || "Workspace Member",
-          profileImage: taskData.assignee?.image,
-        },
-        type: "status" as const,
-        action: `updated status to ${getStatusStyles(taskData.status).label}`,
-        timestamp: DateTime.fromISO(taskData.createdAt).plus({ minutes: 30 }).toISO() || taskData.createdAt,
-      });
-    }
+  useEffect(() => {
+    console.log(activityData)
+  }, [activityData])
 
-    // 4. Priority activity
-    list.push({
-      id: "act-priority",
-      actor: {
-        name: "Workspace Member",
-        profileImage: undefined,
-      },
-      type: "priority" as const,
-      action: `set priority to ${taskData.priority}`,
-      timestamp: taskData.createdAt,
-    });
+    const activities: any[] = activityData?.activities || []; 
+  if (isLoading) {
+    return <div className="py-4 text-[12px] text-zinc-500">Loading activities...</div>;
+  }
+  if (activities.length === 0) {
+    return <div className="py-4 text-[12px] italic text-zinc-500">No activities yet.</div>;
+  }
 
-    // Sort by timestamp
-    return list.sort((a, b) => DateTime.fromISO(a.timestamp).toMillis() - DateTime.fromISO(b.timestamp).toMillis());
-  }, [taskData]);
-
-  const getActivityIcon = (type: string) => {
-    switch (type) {
-      case "create":
-        return <Plus size={11} className="text-emerald-500" />;
-      case "assignee":
-        return <UserPlus size={11} className="text-blue-500" />;
-      case "status":
-        return <CheckCircle2 size={11} className="text-indigo-500" />;
-      case "priority":
-        return <Flag size={11} className="text-amber-500" />;
-      default:
-        return <Info size={11} className="text-zinc-500" />;
-    }
-  };
 
   return (
-    <div className="flex flex-col gap-0.5 overflow-y-auto max-h-[calc(100vh-250px)] pr-2 scrollbar-hide py-2">
+      <div className="flex flex-col gap-0.5 overflow-y-auto max-h-[calc(100vh-250px)] pr-2 scrollbar-hide py-2">
       {activities.map((activity, index) => {
         const isLast = index === activities.length - 1;
+        const {icon: Icon, color} = getActivityIcon(activity.type); 
         return (
-          <div key={activity.id} className="flex flex-row gap-3">
-            {/* Icon & Connection Line Column */}
+          <div key={activity._id || index} className="flex flex-row gap-3">
             <div className="relative flex flex-col items-center select-none">
-              {/* Connection Line running through the center of the icon circle */}
               {!isLast && (
                 <div className="absolute top-6 bottom-0 w-[1.5px] bg-zinc-200 dark:bg-zinc-800" />
               )}
-              {/* Icon Circle */}
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white border border-zinc-200 text-zinc-400 dark:bg-zinc-900 dark:border-zinc-800 z-10 shadow-xs">
-                {getActivityIcon(activity.type)}
+              <div className={`flex h-6 w-6 items-center justify-center rounded-sm bg-white border border-zinc-200 text-zinc-400 dark:bg-zinc-900 dark:border-zinc-800 z-10 shadow-xs ${color}`}>
+                <Icon size={14} strokeWidth={2} className={color}/>
               </div>
             </div>
-            
-            {/* Content Column */}
-            <div className="flex-1 pb-6 pt-0.5 flex flex-row items-center gap-1.5 text-[11px] text-zinc-500 dark:text-zinc-400">
-              <p className="text-zinc-600 dark:text-zinc-300">
-                <span className="font-semibold text-zinc-800 dark:text-white">{activity.actor.name}</span> {activity.action}
+            <div className="flex-1 pb-6 pt-0.5 flex flex-row items-center gap-1.5 text-[12px] text-zinc-500 dark:text-zinc-400">
+              <p className="text-zinc-600 dark:text-[#fff]/60">
+                  {activity.actor?.email || activity.actor?.fullname}{" "}
+                {activity.actionText}
               </p>
               <span className="text-zinc-300 dark:text-zinc-700 select-none">•</span>
               <span className="text-zinc-400 dark:text-zinc-500">
-                {DateTime.fromISO(activity.timestamp).toRelative()}
+                {DateTime.fromISO(activity.createdAt || activity.timestamp).toRelative()}
               </span>
             </div>
           </div>

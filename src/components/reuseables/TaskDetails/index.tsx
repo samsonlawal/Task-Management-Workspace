@@ -42,9 +42,11 @@ interface TaskData {
 
 export default function TaskDetails({
   taskData,
+  // taskActivity,
   onClose,
 }: {
   taskData: TaskData;
+  // taskActivity: any;
   onClose: () => void;
 }) {
   const dispatch = useDispatch();

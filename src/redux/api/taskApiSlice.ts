@@ -57,6 +57,11 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Tasks", "Workspace"],
         }),
 
+        getTaskActivity: builder.query({
+            query: ({ taskId }: { taskId: string }) => `/activity/${taskId}`,
+            providesTags: ["Tasks"],
+        }),
+
         promoteTask: builder.mutation({
             query: ({ taskId }: { taskId: string }) => ({
                 url: `/tasks/promote/${taskId}`,
@@ -89,6 +94,7 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
 export const { 
     useGetTasksQuery, 
     useGetSingleTaskQuery,
+    useGetTaskActivityQuery,
     useCreateTaskMutation, 
     useUpdateTaskMutation, 
     useDeleteTaskMutation,
