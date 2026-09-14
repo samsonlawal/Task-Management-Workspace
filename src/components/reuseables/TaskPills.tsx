@@ -20,6 +20,8 @@ import { DateTime } from "luxon";
 import { FlagIcon } from "lucide-react";  
 import {  faPaperclip } from "@fortawesome/free-solid-svg-icons";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";
+// import {LABEL_ICON_MAP} from "@utils/labelIcons";
+import { ILabel } from "@/redux/api/labelApiSlice"
 
 
 const getStatusIcon = (status: string) => {                                    
@@ -41,7 +43,7 @@ export function StatusPill({ status, onChange }: { status: string; onChange: (st
         </span>
         <FontAwesomeIcon icon={faChevronDown} className="h-2 w-2 opacity-50" />
       </MenuButton>
-      <MenuItems className="absolute left-0 z-50 mt-1 w-40 origin-top-left rounded-md border border-zinc-200 bg-white p-1 shadow-xl outline-none dark:border-zinc-800 dark:bg-[#111]">
+      <MenuItems className="absolute left-0 z-50 mt-1 w-40 origin-top-left rounded-md border border-zinc-200 bg-white p-1 shadow-xl outline-none dark:border-zinc-800 dark:bg-[#111] z-100">
         {["to-do", "in-progress", "in-review", "done"].map((s) => {
           const styles = getStatusStyles(s);
           return (
@@ -118,103 +120,103 @@ export function AssigneePill({ assigneeId, assigneeObj, members, onChange }: {
   members: any[];
    onChange: (assignee: string) => void }) {
   
-  console.log('obj:', assigneeObj)
+  // console.log('obj:', assigneeObj)
 
- let displayName = 'Assign'
- let displayImage = undefined 
+  let displayName = 'Assign'
+  let displayImage = undefined 
 
-if (assigneeObj) {
-  displayName = assigneeObj.fullname || assigneeObj.name || "Unassigned";
-  displayImage = assigneeObj.image;
-}
-
-
-  if (assigneeId) {
-  const selectedMember = members.find((member: any) => { 
-    const user = member.userId || member;
-    return (user._id || user.id) === assigneeId;
-  });
+    if (assigneeObj) {
+    displayName = assigneeObj.fullname || assigneeObj.name || "Unassigned";
+    displayImage = assigneeObj.image;
+    }
 
 
-  console.log('selectedMember:', selectedMember)
+    if (assigneeId) {
+      const selectedMember = members.find((member: any) => { 
+        const user = member.userId || member;
+        return (user._id || user.id) === assigneeId;
+      });
 
 
-  const selectedUser = selectedMember?.userId || selectedMember;
-  displayName = selectedUser?.fullname || selectedUser?.name || "Assign";
-  displayImage =
-    selectedUser?.profileImage && selectedUser.profileImage !== "none"
-      ? selectedUser.profileImage
-      : null;
-}
-  
+        console.log('selectedMember:', selectedMember)
 
-  return (
-    <Menu as="div" className="relative">
-      <MenuButton className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#565656]/10">
-        {/* <FontAwesomeIcon
-          icon={faUser}
-          className="h-3 w-3 text-zinc-900 dark:text-white/60"
-        />
-        <span className="font-normal text-zinc-900 dark:text-white/60">
-          Assignee:
-        </span> */}
-        <div className="flex items-center gap-1">
-          {displayImage && displayImage !== "none" ? (
-            <img src={displayImage} alt="" className="h-4 w-4 rounded-full object-cover" />
-          ) : ( ""
-          )}
-          <span className="ml-1 text dark:text-white/60">{displayName}</span>
-        </div>
-        <FontAwesomeIcon icon={faChevronDown} className="h-2 w-2 opacity-50" />
-      </MenuButton>
-      <MenuItems className="absolute left-0 z-50 mt-1 max-h-60 w-56 origin-top-left overflow-y-auto rounded-md border border-zinc-200 bg-white p-1 shadow-lg outline-none dark:border-zinc-800 dark:bg-[#111]">
-        <MenuItem>
-          {({ focus }: { focus: boolean }) => (
-            <button
-              onClick={(e) => {
-                onChange("");
-              }}
-              className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-500 transition-colors ${
-                focus ? "bg-zinc-100 dark:bg-[#565656]/10" : ""
-              }`}
-            >
-              <div className="flex h-4 w-4 items-center justify-center rounded-full bg-zinc-300 dark:bg-[#565656]">
-                <span className="text-[7px] text-center text-zinc-600 dark:text-zinc-300"></span>
-              </div>
-              <span className="ml-2 font-medium">Unassigned</span>
-            </button>
-          )}
-        </MenuItem>
-        {members.map((member: any) => {
-          const m = member.userId || member;
-          const memberId = m._id || member._id;
-          return (
-            <MenuItem key={memberId}>
-              {({ focus }: { focus: boolean }) => (
-                <button
-                  onClick={(e) => {
-                    onChange(memberId);
-                  }}
-                  className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 transition-colors dark:text-zinc-300 ${
-                    focus ? "bg-zinc-100 dark:bg-[#565656]/10" : ""
-                  }`}
-                >
-                  <img
-                    src={m.profileImage || m.image}
-                    alt=""
-                    className="h-4 w-4 rounded-full object-cover"
-                  />
-                  <span className="ml-2 truncate font-normal">
-                    {m.fullname || m.name || m.email}
-                  </span>
-                </button>
-              )}
-            </MenuItem>
-          );
-        })}
-      </MenuItems>
-    </Menu>
-  );
+
+        const selectedUser = selectedMember?.userId || selectedMember;
+        displayName = selectedUser?.fullname || selectedUser?.name || "Assign";
+        displayImage =
+          selectedUser?.profileImage && selectedUser.profileImage !== "none"
+            ? selectedUser.profileImage
+            : null;
+  }
+    
+
+    return (
+      <Menu as="div" className="relative">
+        <MenuButton className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#565656]/10">
+          {/* <FontAwesomeIcon
+            icon={faUser}
+            className="h-3 w-3 text-zinc-900 dark:text-white/60"
+          />
+          <span className="font-normal text-zinc-900 dark:text-white/60">
+            Assignee:
+          </span> */}
+          <div className="flex items-center gap-1">
+            {displayImage && displayImage !== "none" ? (
+              <img src={displayImage} alt="" className="h-4 w-4 rounded-full object-cover" />
+            ) : ( ""
+            )}
+            <span className="ml-1 text dark:text-white/60">{displayName}</span>
+          </div>
+          <FontAwesomeIcon icon={faChevronDown} className="h-2 w-2 opacity-50" />
+        </MenuButton>
+        <MenuItems className="absolute left-0 z-50 mt-1 max-h-60 w-56 origin-top-left overflow-y-auto rounded-md border border-zinc-200 bg-white p-1 shadow-lg outline-none dark:border-zinc-800 dark:bg-[#111]">
+          <MenuItem>
+            {({ focus }: { focus: boolean }) => (
+              <button
+                onClick={(e) => {
+                  onChange("");
+                }}
+                className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-500 transition-colors ${
+                  focus ? "bg-zinc-100 dark:bg-[#565656]/10" : ""
+                }`}
+              >
+                <div className="flex h-4 w-4 items-center justify-center rounded-full bg-zinc-300 dark:bg-[#565656]">
+                  <span className="text-[7px] text-center text-zinc-600 dark:text-zinc-300"></span>
+                </div>
+                <span className="ml-2 font-medium">Unassigned</span>
+              </button>
+            )}
+          </MenuItem>
+          {members.map((member: any) => {
+            const m = member.userId || member;
+            const memberId = m._id || member._id;
+            return (
+              <MenuItem key={memberId}>
+                {({ focus }: { focus: boolean }) => (
+                  <button
+                    onClick={(e) => {
+                      onChange(memberId);
+                    }}
+                    className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 transition-colors dark:text-zinc-300 ${
+                      focus ? "bg-zinc-100 dark:bg-[#565656]/10" : ""
+                    }`}
+                  >
+                    <img
+                      src={m.profileImage || m.image}
+                      alt=""
+                      className="h-4 w-4 rounded-full object-cover"
+                    />
+                    <span className="ml-2 truncate font-normal">
+                      {m.fullname || m.name || m.email}
+                    </span>
+                  </button>
+                )}
+              </MenuItem>
+            );
+          })}
+        </MenuItems>
+      </Menu>
+    );
 }
 
 export function DueDatePill({ deadline, onChange }: { deadline: string; onChange: (deadline: string) => void }) {
@@ -265,6 +267,64 @@ export function DueDatePill({ deadline, onChange }: { deadline: string; onChange
         )}
       </PopoverPanel>
     </Popover>
+  );
+}
+
+export function LabelPill({ selectedLabelId, labels = [], onChange }: {selectedLabelId?: string; labels?: ILabel[]; onChange: (label?: string) => void }) {
+
+  const selectedLabel = Array.isArray(labels) ? labels.find((l) => l._id === selectedLabelId) : undefined;
+  // const icon
+
+  return (
+    <Menu as="div" className="relative">
+      <MenuButton className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-medium text-zinc-900 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-[#111]/60 dark:text-white dark:hover:bg-[#565656]/10">
+       {selectedLabel !== undefined ? (
+        <span 
+          className="inline-flex items-center gap-1 rounded"
+        >
+      {/* <IconComponent size={12} /> */}
+       <span className={`h-2 w-2 rounded-full`}
+          style={{ backgroundColor: `${selectedLabel.color}70`, }}></span>
+      <span>{selectedLabel.name}</span>
+    </span>) :
+     (<span 
+          className="inline-flex items-center gap-1 px-2 rounded text-xs text-zinc-700 dark:text-white/60"
+          onClick={() => console.log(labels)}
+        >
+          {/* <Tags /> */}
+          Label
+          </span>)
+          }
+        <FontAwesomeIcon icon={faChevronDown} className="h-2 w-2 opacity-50" />
+      </MenuButton>
+      <MenuItems className="absolute h-40 overflow-y-auto ms-scrollbar-none left-0 z-50 mt-1 w-40 origin-top-left rounded-md border border-zinc-200 bg-white p-1 shadow-xl outline-none dark:border-zinc-800 dark:bg-[#111]">
+        {labels.map((l: ILabel) => {
+          // const label = getStatusStyles(s);
+          return (
+            <MenuItem key={l._id}>
+              {({ focus }: { focus: boolean }) => (
+                <button
+                  onClick={(e) => {
+                    onChange(l._id);
+                    console.log(l)
+                  }}
+                  className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs text-zinc-700 transition-colors dark:text-zinc-300 ${
+                    focus ? "bg-zinc-100 dark:bg-[#565656]/10" : ""
+                  }`}
+                >
+                  <span className={`h-2 w-2 rounded-full`}
+                  style={{ backgroundColor: `${l.color}50`, }}
+                  
+                  > </span>
+                  {/* <img src={getStatusIcon(s)} alt="" className="h-3 w-3" />   */}
+                  {l.name}
+                </button>
+              )}
+            </MenuItem>
+          );
+        })}
+      </MenuItems>
+    </Menu>
   );
 }
 

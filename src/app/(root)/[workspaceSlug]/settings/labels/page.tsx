@@ -2,15 +2,13 @@
 
 import React from "react";
 import { Search, Plus, MoreHorizontal } from "lucide-react";
+import { useGetLabelsQuery } from "@/redux/api/labelApiSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 export default function LabelsPage() {
-  const labels = [
-    { id: 1, name: "Bug", color: "bg-red-500" },
-    { id: 2, name: "Feature", color: "bg-blue-500" },
-    { id: 3, name: "Enhancement", color: "bg-purple-500" },
-    { id: 4, name: "Design", color: "bg-pink-500" },
-    { id: 5, name: "Documentation", color: "bg-emerald-500" },
-  ];
+  const workspaceId = useSelector((state: RootState) => state.currentWorkspace.currentWorkspaceId);
+  const { data: labelsData, isLoading, error } = useGetLabelsQuery({ workspaceId: workspaceId as string}, { skip: !workspaceId }  );
 
   return (
     <div className="flex w-full flex-col gap-6 pt-6 pb-20">
@@ -53,13 +51,15 @@ export default function LabelsPage() {
           <div className="px-3.5 text-[11px] font-medium  tracking-wider text-zinc-500 dark:text-[#fff]/40">
             Labels
           </div>
-          {labels.map((label, index) => (
+          {labelsData?.label.map((label: any, index: string) => (
             <div
               key={label.id}
-              className={`flex items-center justify-between p-3.5 rounded-md border border-zinc-200 bg-white dark:border-[#565656]/20 dark:bg-[#565656]/10`}
+              className={`flex items-center justify-between p-3 rounded-md border border-zinc-200 bg-white dark:border-[#565656]/20 dark:bg-[#565656]/10`}
             >
               <div className="flex items-center gap-3">
-                <div className={`h-1.5 w-1.5 rounded-full ${label.color}`}></div>
+                <div className={`h-1.5 w-1.5 rounded-full`}
+                style={{ backgroundColor: label.color }}
+                ></div>
                 <span className="text-[13px] font-normal text-zinc-900 dark:text-white">
                   {label.name}
                 </span>

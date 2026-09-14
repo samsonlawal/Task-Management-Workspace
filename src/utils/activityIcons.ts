@@ -6,7 +6,8 @@ import {
   Calendar,
   Pencil,
   MessageCircle,
-  Paperclip
+  Paperclip,
+  Tag
 } from "lucide-react";
 
 export const getActivityIcon = (type: string) => {
@@ -51,6 +52,11 @@ export const getActivityIcon = (type: string) => {
     case "ATTACHMENT_ADDED":
       return {
         icon: Paperclip,
+        color: "text-orange-500 dark:text-orange-400", 
+      };
+        case "LABEL_UPDATED":
+      return {
+        icon: Tag,
         color: "text-orange-500 dark:text-orange-400", 
       };
     default:

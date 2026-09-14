@@ -25,7 +25,7 @@ export default function TaskTimeline({ taskData }: { taskData: any }) {
 
 
   return (
-      <div className="flex flex-col gap-0.5 overflow-y-auto max-h-[calc(100vh-250px)] pr-2 scrollbar-hide py-2">
+      <div className="flex flex-col gap-0.5 overflow-y-auto max-h-[calc(100vh-250px)] scrollbar-hide py-2">
       {activities.map((activity, index) => {
         const isLast = index === activities.length - 1;
         const {icon: Icon, color} = getActivityIcon(activity.type); 
@@ -39,14 +39,14 @@ export default function TaskTimeline({ taskData }: { taskData: any }) {
                 <Icon size={14} strokeWidth={2} className={color}/>
               </div>
             </div>
-            <div className="flex-1 pb-6 pt-0.5 flex flex-row items-center gap-1.5 text-[12px] text-zinc-500 dark:text-zinc-400">
+            <div className="flex-1 pb-6 pt-0.5 flex flex-row items-start gap-1.5 text-[12px] text-zinc-500 dark:text-zinc-400">
               <p className="text-zinc-600 dark:text-[#fff]/60">
                   {activity.actor?.email || activity.actor?.fullname}{" "}
                 {activity.actionText}
               </p>
               <span className="text-zinc-300 dark:text-zinc-700 select-none">•</span>
-              <span className="text-zinc-400 dark:text-zinc-500">
-                {DateTime.fromISO(activity.createdAt || activity.timestamp).toRelative()}
+              <span className="text-zinc-400 dark:text-zinc-500 min-w-fit">
+                {DateTime.fromISO(activity.createdAt || activity.timestamp).toRelative({ style: "narrow" })}
               </span>
             </div>
           </div>

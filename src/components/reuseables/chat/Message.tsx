@@ -1,77 +1,135 @@
-import React from "react";
+import React, { useState } from "react";
 import stringToColor from "@/utils/stringToColor";
-import { Bot } from "lucide-react";
-
+import { Bot, Reply, Smile, MoreHorizontal,  Pencil, Trash2, Check, X, Trash } from "lucide-react";
 interface MessageProps {
-  senderName: string;
+  // senderName: string;
+  senderEmail: string;
   senderAvatar?: string;
   content: string;
-  timestamp: string;
+  timestamp?: string | null;
   isMe?: boolean;
   isBot?: boolean;
   attachedFileName?: string;
-}
+  onReply?: () => void;
+  children?: React.ReactNode;
+  edited: boolean;
+  onEdit?: (newContent: string) => void;
+  onDelete?: () => void;
+   loggedInUser: string;
+  authorId: string;
 
+}
 export const Message: React.FC<MessageProps> = ({
-  senderName,
+  // senderName,
+  senderEmail,
   senderAvatar,
   content,
   timestamp,
-  isMe = false,
-  isBot = false,
   attachedFileName,
+  onReply,
+  children,
+  edited,
+  onEdit, 
+  onDelete,
+  loggedInUser,
+  authorId,
 }) => {
-  const avatarName = isMe ? "You" : senderName;
 
-  return (
-    <div className="flex gap-3 items-start max-w-2xl text-left">
-      {/* Avatar */}
-      <div className="flex-shrink-0">
-        {isBot ? (
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500">
-            <Bot className="w-4 h-4" />
-          </span>
-        ) : senderAvatar && senderAvatar !== "none" ? (
-          <img
-            src={senderAvatar}
-            alt={senderName}
-            className="h-8 w-8 rounded-full object-cover"
-          />
-        ) : (
-          <span
-            className="flex h-8 w-8 items-center justify-center rounded-full text-[11px] text-white font-bold"
-            style={{ backgroundColor: stringToColor(avatarName) }}
+  const [showMenu, setShowMenu] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(content);
+
+   return (
+    <div className="group relative flex flex-col gap-1 w-full text-left py-2 px-2 rounded-md transition-colors bg-[#565656]/10 hover:bg-[#565656]/10 border-[#565656]/20 border"> 
+
+      {/* Floating Hover Toolbar */}
+      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 absolute right-2 top-1 z-10 flex items-center gap-0.5 rounded-md border border-zinc-800 bg-zinc-900/95 backdrop-blur-sm px-1 py-0.5 shadow-md">
+        {/* <button
+          type="button"
+          className="p-1 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 rounded transition-colors"
+          title="Add reaction"
+        >
+          <Smile className="w-3.5 h-3.5" />
+        </button> */}
+        {/* {onReply && (
+          <button
+            type="button"
+            onClick={onReply}
+            className="p-1 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 rounded transition-colors"
+            title="Reply"
           >
-            {avatarName.charAt(0).toUpperCase()}
-          </span>
+            <Reply className="w-3.5 h-3.5" />
+          </button>
+        )} */}
+        {authorId === loggedInUser && (
+          <>
+          <button
+          type="button"
+          className="p-1 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 rounded transition-colors"
+          title="More actions"
+        >
+          <Pencil className="w-3.5 h-3.5" />
+        </button>
+        <button
+          type="button"
+          onClick={onDelete}
+          className="p-1 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 rounded transition-colors"
+          title="More actions"
+        >
+          <Trash className="w-3.5 h-3.5" />
+        </button>
+          </>
         )}
       </div>
-
-      {/* Message Info and Content */}
-      <div className="flex flex-col space-y-1">
-        <div className="flex items-baseline gap-2">
-          <span className="text-[12px] font-semibold text-[#111] dark:text-white">
-            {isMe ? "You" : senderName}
-          </span>
-          <span className="text-[10px] text-gray-400">{timestamp}</span>
-        </div>
-
-        <div
-          className={`rounded-[8px] px-3.5 py-2 text-[13px] leading-relaxed select-text ${
-            isMe
-              ? "bg-zinc-900 text-white border border-zinc-950 dark:bg-zinc-850 dark:border-zinc-700/60 dark:text-zinc-100"
-              : "bg-gray-100 text-[#111] dark:bg-zinc-800/80 dark:text-zinc-200"
-          }`}
-        >
-          <p className="whitespace-pre-wrap">{content}</p>
-          
-          {attachedFileName && (
-            <div className="flex w-fit gap-2 items-center bg-black/5 dark:bg-[#111]/40 px-2 py-1.5 rounded-md mt-1.5 border border-[#565656]/10 dark:border-[#565656]/20">
-              <p className="text-[11px] text-gray-600 dark:text-[#fff]/70 truncate max-w-[180px]">
-                📎 {attachedFileName}
-              </p>
-            </div>
+      {/* Main Comment Row */}
+      <div className="flex items-start gap-2.5">
+        {/* Avatar */}
+        <div className="flex-shrink-0 mt-0.5">
+          { senderAvatar && senderAvatar !== "none" ? (
+            <img
+              src={senderAvatar}
+              alt={senderEmail}
+              className="h-6 w-6 rounded-full object-cover ring-1 ring-zinc-800"
+            />
+          ) : (
+            <span
+              className="flex h-6 w-6 items-center justify-center rounded-full text-[10px] text-white font-semibold"
+              style={{ backgroundColor: stringToColor(senderEmail) }}
+            >
+              {senderEmail.charAt(0).toUpperCase()}
+            </span>
           )}
+        </div>
+        {/* Header & Body Content */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-baseline gap-2">
+            <span className="text-[13px] font-normal text-zinc-900 dark:text-zinc-200">
+              { senderEmail }
+            </span>
+            {timestamp && (
+              <span className="text-[11px] text-zinc-400 dark:text-zinc-500 font-normal">
+                {timestamp}
+              </span>
+            )}
+              {edited && 
+                (<span className="text-[11px] text-zinc-400 dark:text-zinc-500 font-normal">
+                [edited]
+              </span>)
+              }
+            
+          </div>
+          {/* Clean borderless comment body */}
+          <div className="mt-1 text-[13px] text-zinc-800 dark:text-[#fff]/60 selection:bg-zinc-700">
+            <p className="whitespace-pre-wrap select-text">{content}</p>
+
+            {attachedFileName && (
+              <div className="flex w-fit gap-2 items-center bg-[#565656]/10 border border-[#565656]/20 px-2 py-1 rounded mt-2">
+                <p className="text-[11px] text-zinc-400 truncate max-w-[200px]">
+                  📎 {attachedFileName}
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

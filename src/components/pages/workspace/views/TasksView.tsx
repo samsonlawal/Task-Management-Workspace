@@ -20,6 +20,8 @@ import ListHeader from "@/components/reuseables/List/ListHeader";
 import AddTask from "@/components/reuseables/Dialogs/AddTask";
 import TaskDetails from "@/components/reuseables/TaskDetails";
 import { useGetWorkspaceBySlugQuery } from "@/redux/api/workspaceApiSlice";
+import { useGetTaskActivityQuery } from "@/redux/api/taskApiSlice";
+
 
 const STATUS_SECTIONS = ["TO-DO", "IN-PROGRESS", "IN-REVIEW", "DONE"] as const;
 
@@ -41,12 +43,9 @@ function TasksView() {
     skip: !workspaceSlug,
   });
 
+
+
   const tasks = workspaceData?.tasks || [];
-
-
-  useEffect(() => {
-    console.log(workspaceData)
-  }, [workspaceData])
 
   const [activeTab, setActiveTab] = useState<number>(0);
   const [activeTabs, setActiveTabs] = useState<string>("");
@@ -76,6 +75,11 @@ function TasksView() {
         : task.assignee,
     };
   }, [selectedTaskId, tasks]);
+
+    //   const { data: commentsData, isLoading } = useGetTaskCommentsQuery(
+    //   { taskId },
+    //   { skip: !taskId }
+    // );
 
   const toggleGroup = (status: string) => {
     setCollapsedGroups((prev) => ({ ...prev, [status]: !prev[status] }));
@@ -121,6 +125,19 @@ function TasksView() {
     }, initial);
   }, [tabContent, activeTab]);
 
+
+  //   const {
+  //   data: taskActivityData,
+  // } = useGetTaskActivityQuery({taskId: selectedTaskId as string}, {
+  //   skip: !selectedTaskId,
+  // });
+
+   useEffect(() => {
+    console.log(workspaceData)
+    // console.log(taskActivityData)
+
+  }, [workspaceData])
+
   const changeToListView = () => setView("list");
   const changeToBoardView = () => setView("board");
   const TaskComponent = view === "list" ? ListTask : Card;
@@ -141,6 +158,7 @@ function TasksView() {
     assigneeId={task.assignee?._id}
     createdBy={task.createdBy}
     attachments={task.attachments}
+    comments={task.commentCount}
     onOpenDetails={() => setSelectedTaskId(task._id)}
   />
 );          
@@ -415,6 +433,7 @@ function TasksView() {
       {selectedTaskData && (
         <TaskDetails
           taskData={selectedTaskData}
+          // taskActivity={taskActivityData}
           onClose={() => setSelectedTaskId(null)}
         />
       )}
