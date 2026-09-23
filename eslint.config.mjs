@@ -10,14 +10,14 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-
+  ...compat.config({
+    extends: ["next/core-web-vitals", "next/typescript"],
+  }),
   {
-    // Custom rule overrides
     rules: {
-      "@typescript-eslint/no-unused-vars": "warn", // Disable unused vars rule
-      "@typescript-eslint/no-explicit-any": "warn", // Downgrade 'any' to warning
-      "prefer-const": "warn", // Shows as a warning (yellow underline) but won't fail builds
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "prefer-const": "warn",
     },
   },
 ];

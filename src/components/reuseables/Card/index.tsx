@@ -36,7 +36,7 @@ export default function Card({
   createdBy,
   onOpenDetails,
   attachments,
-  comments
+  comments = 0
 }: {
   title?: string;
   desc: string;

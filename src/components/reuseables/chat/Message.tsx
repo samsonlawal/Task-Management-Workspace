@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import stringToColor from "@/utils/stringToColor";
 import { Bot, Reply, Smile, MoreHorizontal,  Pencil, Trash2, Check, X, Trash } from "lucide-react";
 interface MessageProps {
-  senderName: string;
+  senderName?: string;
   senderEmail: string;
   senderAvatar?: string;
   content: string;
