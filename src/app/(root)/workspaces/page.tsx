@@ -187,7 +187,7 @@ function Workspaces() {
                       className="flex h-[30px] w-[30px] items-center justify-center rounded-[4px] text-[13px] font-medium text-[#111] dark:text-white"
                       style={{ backgroundColor: stringToColor(ws.name) }}
                     >
-                      {ws.name.charAt(0).toUpperCase()}
+                      {ws.name?.charAt(0).toUpperCase()}
                     </div>
                     <p className="text-[13px] font-medium text-[#111] dark:text-white">
                       {ws.name}

@@ -2,33 +2,30 @@ import { useState, useRef, useEffect } from "react";
 import { DateTime } from "luxon";
 import { Message } from "@/components/reuseables/chat/Message";
 import { MessageBox } from "@/components/reuseables/chat/MessageBox";
-import { useGetTaskCommentsQuery,
-          useCreateCommentMutation,
-          useDeleteCommentMutation,
-          // useUpdateCommentMutation
+import { useCreateCommentMutation,
+         useDeleteCommentMutation,
          } from "@/redux/api/taskApiSlice";
 import { showErrorToast, showSuccessToast } from "@/utils/toaster";         
 
 export default function TaskComments({
   taskId,
+  taskComments,
   user,
 }: {
   taskId: string;
+  taskComments: any;
   user: any;
 }) {
 
   const [value, setValue] = useState<string>("");
   const [selectedFiles, setSelectedFiles] = useState<File | null>(null);
 
-    const { data: commentsData, isLoading } = useGetTaskCommentsQuery(
-    { taskId },
-    { skip: !taskId }
-  );
 
-  const [createComment] = useCreateCommentMutation();
+
+  const [createComment, { isLoading: isCreatingComment }] = useCreateCommentMutation();
   // const [updateComment] = useUpdateCommentMutation(); 
   const [deleteComment] = useDeleteCommentMutation();
-  const comments = commentsData?.comments || commentsData || []
+  const comments = taskComments?.comments || []
 
 
   const commentRef = useRef<HTMLDivElement>(null);
@@ -60,7 +57,7 @@ export default function TaskComments({
               message: error?.data?.message || "Failed to create comment",
             });
       // console.log("Failed to create comment:", error)
-    }
+    } 
   }
 
   // const handleEdit = async () => {
@@ -120,6 +117,7 @@ export default function TaskComments({
           value={value}
           onChange={(val) => setValue(val)}
           onSend={handleSend}
+          isSending={isCreatingComment}
           placeholder="say something..."
           selectedFile={selectedFiles}
           onFileSelect={(file) => setSelectedFiles(file)}

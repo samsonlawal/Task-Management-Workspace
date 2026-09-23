@@ -29,20 +29,23 @@ export default function WorkspaceLayout({
   // const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
 
   const params = useParams();
+  const token = useSelector((state: any) => state.auth.accessToken); 
   const workspaceSlug = params?.workspaceSlug as string;
 
   const isReservedRoute = RESERVED_SLUGS.includes(workspaceSlug);
 
+  // Fetching workspace data and tasks by slug
   const { data: workspace, isLoading } = useGetWorkspaceBySlugQuery(
     workspaceSlug,
     {
-      skip: !workspaceSlug || isReservedRoute,
+      skip: !workspaceSlug || isReservedRoute || !token,
     },
   );
 
+  // Fetching labels
   useGetLabelsQuery(
     { workspaceId: workspace?._id || "" },
-    { skip: !workspace?._id || isReservedRoute }
+    { skip: !workspace?._id || isReservedRoute || !token }
   ); 
 
   const isSettingsPage = pathname?.includes("/settings");

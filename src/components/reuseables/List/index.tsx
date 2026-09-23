@@ -25,7 +25,7 @@ export default function ListTask({
   assigneeId,
   createdBy,
   attachments,
-  comment,
+  comments,
   onOpenDetails,
 }: {
   title?: string;

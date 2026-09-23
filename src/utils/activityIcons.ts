@@ -7,7 +7,8 @@ import {
   Pencil,
   MessageCircle,
   Paperclip,
-  Tag
+  Tag,
+  MessageSquare
 } from "lucide-react";
 
 export const getActivityIcon = (type: string) => {
@@ -46,7 +47,7 @@ export const getActivityIcon = (type: string) => {
     case "COMMENT_ADDED":
     case "COMMENT_EDITED":
       return {
-        icon: MessageCircle,
+        icon: MessageSquare,
         color: "text-teal-500 dark:text-teal-400", 
       };
     case "ATTACHMENT_ADDED":

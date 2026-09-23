@@ -3,7 +3,7 @@ import { useGetTaskActivityQuery } from "@/redux/api/taskApiSlice";
 import { DateTime } from "luxon";
 import { getActivityIcon } from "@/utils/activityIcons";
 
-export default function TaskTimeline({ taskData }: { taskData: any }) {
+export default function TaskTimeline({ taskData, taskActivities }: { taskData: any; taskActivities: any[] }) {
 
 
   const { data: activityData, isLoading } = useGetTaskActivityQuery( 
@@ -11,21 +11,20 @@ export default function TaskTimeline({ taskData }: { taskData: any }) {
     { skip: !taskData?.id }
   );
 
-  useEffect(() => {
-    console.log(activityData)
-  }, [activityData])
+    const activities: any[] = activityData.activities || activityData || []; 
+    // const activities: any[] = taskActivities || []; 
 
-    const activities: any[] = activityData?.activities || []; 
   if (isLoading) {
     return <div className="py-4 text-[12px] text-zinc-500">Loading activities...</div>;
   }
+
   if (activities.length === 0) {
     return <div className="py-4 text-[12px] italic text-zinc-500">No activities yet.</div>;
   }
 
 
   return (
-      <div className="flex flex-col gap-0.5 overflow-y-auto max-h-[calc(100vh-250px)] scrollbar-hide py-2">
+      <div className="flex flex-col gap-0.5 overflow-y-auto max-h-[calc(100vh-250px)] scrollbar-hide pt-1 pb-8">
       {activities.map((activity, index) => {
         const isLast = index === activities.length - 1;
         const {icon: Icon, color} = getActivityIcon(activity.type); 

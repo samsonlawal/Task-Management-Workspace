@@ -45,10 +45,11 @@ import { showSuccessToast } from "@/utils/toaster";
 import { Message as ChatBubble } from "@/components/reuseables/chat/Message";
 import { MessageBox as ChatInput } from "@/components/reuseables/chat/MessageBox";
 
+
 interface Message {
   id: string;
   senderId: string;
-  senderName: string;
+  senderName?: string;
   senderAvatar?: string;
   content: string;
   timestamp: string;
@@ -437,14 +438,17 @@ function Chats() {
               const isMe = message.senderId === "current-user";
               return (
                 <ChatBubble
-                  key={message.id}
-                  senderName={isMe ? "You" : message.senderName}
-                  senderAvatar={isMe ? (user?.profileImage || "none") : message.senderAvatar}
+                   key={message.id}
+                  senderName={isMe ? "You" : (message.senderName || "Unknown")} 
+                  senderEmail={isMe ? user?.email : ""} 
+                  senderAvatar={isMe ? user?.profileImage : message.senderAvatar}
                   content={message.content}
                   timestamp={message.timestamp}
                   isMe={isMe}
                   isBot={message.isBot}
                   attachedFileName={message.attachedFileName}
+                  loggedInUser={user?._id || "current-user"}
+                  authorId={message.senderId}
                 />
               );
             })}
@@ -477,6 +481,7 @@ function Chats() {
             placeholder={`Message ${activeChat.type === "channel" ? "#" : ""}${activeChat.name}...`}
             selectedFile={selectedFile}
             onFileSelect={(file) => setSelectedFile(file)}
+            isSending={false}
             className="p-4 border-t border-[#565656]/10"
           />
         </div>

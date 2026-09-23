@@ -126,18 +126,6 @@ function TasksView() {
   }, [tabContent, activeTab]);
 
 
-  //   const {
-  //   data: taskActivityData,
-  // } = useGetTaskActivityQuery({taskId: selectedTaskId as string}, {
-  //   skip: !selectedTaskId,
-  // });
-
-   useEffect(() => {
-    console.log(workspaceData)
-    // console.log(taskActivityData)
-
-  }, [workspaceData])
-
   const changeToListView = () => setView("list");
   const changeToBoardView = () => setView("board");
   const TaskComponent = view === "list" ? ListTask : Card;

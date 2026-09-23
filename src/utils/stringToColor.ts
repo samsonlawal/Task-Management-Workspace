@@ -1,5 +1,5 @@
 // Helper to generate consistent colors from strings
-const stringToColor = (str: string) => {
+const stringToColor = (str: string = '') => {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
@@ -9,3 +9,4 @@ const stringToColor = (str: string) => {
 };
 
 export default stringToColor;
+

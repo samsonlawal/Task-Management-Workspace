@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import stringToColor from "@/utils/stringToColor";
 import { Bot, Reply, Smile, MoreHorizontal,  Pencil, Trash2, Check, X, Trash } from "lucide-react";
 interface MessageProps {
-  // senderName: string;
+  senderName: string;
   senderEmail: string;
   senderAvatar?: string;
   content: string;
@@ -12,15 +12,15 @@ interface MessageProps {
   attachedFileName?: string;
   onReply?: () => void;
   children?: React.ReactNode;
-  edited: boolean;
+  edited?: boolean;
   onEdit?: (newContent: string) => void;
   onDelete?: () => void;
    loggedInUser: string;
-  authorId: string;
+  authorId?: string;
 
 }
 export const Message: React.FC<MessageProps> = ({
-  // senderName,
+  senderName,
   senderEmail,
   senderAvatar,
   content,

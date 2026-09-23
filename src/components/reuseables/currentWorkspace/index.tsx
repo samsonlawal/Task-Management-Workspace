@@ -77,7 +77,7 @@ function Workspace() {
         dispatch(setCurrentWorkspace(firstId));
       }
     }
-    console.log(workspaceData)
+    // console.log(workspaceData)
   }, [workspaces, currentWorkspaceId, dispatch]);
 
   // Use the unified hook
@@ -226,7 +226,7 @@ function Workspace() {
                               backgroundColor: stringToColor(workspace?.name),
                             }}
                           >
-                            {workspace?.name.charAt(0).toUpperCase()}
+                            {workspace?.name?.charAt(0).toUpperCase()}
                           </div>
                           <div className="flex flex-col -space-y-[8px]">
                             <p className="text-[13px] font-normal">

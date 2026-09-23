@@ -15,6 +15,9 @@ import TaskDetailsHeader from "./components/TaskDetailsHeader";
 import TaskFields from "./components/TaskFields";
 import TaskTimeline from "./components/TaskTimeline";
 import TaskComments from "./components/TaskComments";
+import { useGetTaskCommentsQuery,
+ 
+         } from "@/redux/api/taskApiSlice";
 
 import {
   useDeleteTaskMutation,
@@ -37,7 +40,9 @@ interface TaskData {
   workspaceName?: string;
   workspaceId?: string;
   createdBy?: string;
-  attachments: []
+  attachments: [];
+  comments: [];
+  activities: [];
 }
 
 export default function TaskDetails({
@@ -56,6 +61,11 @@ export default function TaskDetails({
 
   const [deleteTask, { isLoading: deleteLoading }] = useDeleteTaskMutation();
 
+    const { data: commentsData, isLoading } = useGetTaskCommentsQuery(
+    { taskId: taskData.id },
+    { skip: !taskData.id }
+  );
+
   const [activeTab, setActiveTab] = useState<
     "activity" | "comments" | "attachments"
   >("activity");
@@ -72,7 +82,6 @@ export default function TaskDetails({
       },
     });
     dispatch(setSingleTask(taskData));
-    // console.log(user)
   }, [taskData, dispatch]);
 
   const handleDialogClose = () => {
@@ -99,8 +108,6 @@ export default function TaskDetails({
       });
     }
   };
-
-  if(taskData) console.log(taskData)
 
   return (
     <Dialog
@@ -178,11 +185,11 @@ export default function TaskDetails({
                     {/* Tab Content Panels */}
                     <div className="min-h-0 flex-1 pt-4">
                       {activeTab === "activity" && (
-                        <TaskTimeline taskData={taskData} />
+                        <TaskTimeline taskData={taskData} taskActivities={taskData?.activities} />
                       )}
 
                       {activeTab === "comments" && (
-                        <TaskComments taskId={taskData.id} user={user} />
+                        <TaskComments taskId={taskData.id} taskComments={commentsData} user={user} />
                       )}
 
                       {activeTab === "attachments" && (

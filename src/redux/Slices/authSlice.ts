@@ -14,22 +14,36 @@ user: any;
 sessionId: string
 }
 
-const INITIAL_STATE: AuthState = {
-  accessToken: "",
-  //   refreshToken: "",
-  //   expiresIn: undefined,
-  user: undefined,
-  sessionId: ""
-};
+const getInitialState = (): AuthState => { 
+  if (typeof window !== "undefined") { 
+    const stored = localStorage.getItem("STACKTASK_PERSISTOR"); 
+    if (stored) { 
+      try { 
+        return JSON.parse(stored); 
+      } catch (e) {} 
+    } 
+  } 
+  return { 
+    accessToken: "", 
+    user: undefined, 
+    sessionId: "", 
+  }; 
+}; 
 
 export const authSlice = createSlice({
   name: "auth",
-  initialState: INITIAL_STATE,
+  initialState: getInitialState(),
   reducers: {
     setAuthState: (state, action: PayloadAction<any>) => {
       return { ...state, ...action.payload };
     },
-    clearAuthState: () => INITIAL_STATE,
+    clearAuthState: () => (
+      { 
+      accessToken: "", 
+      user: undefined, 
+      sessionId: "", 
+    }
+    ),
   },
 });
 

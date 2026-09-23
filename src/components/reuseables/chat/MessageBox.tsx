@@ -1,10 +1,11 @@
 import React, { useRef } from "react";
-import { Paperclip, Send, Smile } from "lucide-react";
+import { Loader, Paperclip, Send, Smile } from "lucide-react";
 
 interface MessageBoxProps {
   value: string;
   onChange: (val: string) => void;
   onSend: () => void;
+  isSending: boolean;
   placeholder?: string;
   selectedFile?: File | null;
   onFileSelect?: (file: File | null) => void;
@@ -16,6 +17,7 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
   value,
   onChange,
   onSend,
+  isSending,
   placeholder = "Write a message...",
   selectedFile = null,
   onFileSelect,
@@ -112,11 +114,16 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
           <button
             type="button"
             onClick={onSend}
-            disabled={!value.trim() && !selectedFile}
-            className="flex items-center gap-1.5 px-3 py-1 bg-[#111] dark:bg-white text-white dark:text-[#111] text-[12px] font-medium rounded-md hover:opacity-90 disabled:opacity-40 transition-opacity cursor-pointer" 
+            disabled={!value.trim() && !selectedFile || isSending}
+            className="flex items-center gap-1.5 px-3 py-1 bg-[#000] dark:bg-white text-white dark:text-[#111] text-[12px] font-medium rounded-md hover:opacity-90 disabled:opacity-40 transition-opacity cursor-pointer" 
           >
-            <span>Send</span>
-            <Send className="w-3 h-3" />
+            {isSending ? (
+              <span>Sending...</span>
+            ) : (
+              <span>Send</span>
+            )}
+           
+              <Send className="w-3 h-3" />
           </button>
         </div>
       </div>
