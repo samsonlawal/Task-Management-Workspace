@@ -25,7 +25,7 @@ export default function ListTask({
   assigneeId,
   createdBy,
   attachments,
-  comments,
+  comments = 0,
   onOpenDetails,
 }: {
   title?: string;
@@ -42,7 +42,7 @@ export default function ListTask({
   assigneeId?: string;
   createdBy?: string;
   attachments?: any[];
-  comments: number;
+  comments?: number;
   onOpenDetails?: () => void;
 }) {
   const priorityStyles = getPriorityStyles(priority);

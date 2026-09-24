@@ -11,7 +11,7 @@ export default function TaskTimeline({ taskData, taskActivities }: { taskData: a
     { skip: !taskData?.id }
   );
 
-    const activities: any[] = activityData.activities || activityData || []; 
+    const activities: any[] = activityData?.activities || activityData || []; 
     // const activities: any[] = taskActivities || []; 
 
   if (isLoading) {

@@ -52,7 +52,7 @@ export default function Card({
   assigneeId?: string;
   createdBy?: string;
   attachments?: [];
-  comments: number;
+  comments?: number;
   onOpenDetails?: () => void;
 }) {
   const priorityStyles = getPriorityStyles(priority);
