@@ -38,14 +38,14 @@ export default function WorkspaceLayout({
   const { data: workspace, isLoading } = useGetWorkspaceBySlugQuery(
     workspaceSlug,
     {
-      skip: !workspaceSlug || isReservedRoute || !token,
+      skip: !workspaceSlug || isReservedRoute,
     },
   );
 
   // Fetching labels
   useGetLabelsQuery(
     { workspaceId: workspace?._id || "" },
-    { skip: !workspace?._id || isReservedRoute || !token }
+    { skip: !workspace?._id || isReservedRoute }
   ); 
 
   const isSettingsPage = pathname?.includes("/settings");
