@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { getPriorityStyles } from "@/utils/taskStyles";
 
-export default function Card({
+function Card({
   title,
   desc,
   deadline,
@@ -53,7 +53,7 @@ export default function Card({
   createdBy?: string;
   attachments?: [];
   comments?: number;
-  onOpenDetails?: () => void;
+  onOpenDetails?: (id: string) => void;
 }) {
   const priorityStyles = getPriorityStyles(priority);
 
@@ -71,9 +71,9 @@ export default function Card({
     return colors[firstLetter] || "bg-gray-500";
   };
 
-  const workspaceData = useSelector(
-    (state: RootState) => state.WorkspaceData?.workspace,
-  );
+  // const workspaceData = useSelector(
+  //   (state: RootState) => state.WorkspaceData?.workspace,
+  // );
 
   return (
     <div className="poppins group relative flex h-[98px] w-[230px] flex-col justify-between gap-[6px] rounded-[4px] border border-[#565656]/10 bg-[#fff] py-[10px] text-[14px] dark:bg-[#565656]/10">
@@ -85,7 +85,7 @@ export default function Card({
               TSK-{id ? id.slice(-4).toUpperCase() : "0000"}
             </p>
           </div>
-          <div className="cursor-pointer" onClick={onOpenDetails}>
+          <div className="cursor-pointer" onClick={() => onOpenDetails?.(id)}>
             <button className="flex items-center text-[10px] text-zinc-500 transition-colors hover:text-black dark:hover:text-white">
               <img
                 src="/icons/expand.svg"
@@ -207,3 +207,5 @@ export default function Card({
     </div>
   );
 }
+
+export default React.memo(Card)

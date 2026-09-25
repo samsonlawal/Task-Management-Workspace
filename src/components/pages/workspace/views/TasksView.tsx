@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar } from "@/redux/Slices/uiSlice";
 import { useParams } from "next/navigation";
@@ -42,8 +42,6 @@ function TasksView() {
   } = useGetWorkspaceBySlugQuery(workspaceSlug, {
     skip: !workspaceSlug,
   });
-
-
 
   const tasks = workspaceData?.tasks || [];
 
@@ -130,7 +128,11 @@ function TasksView() {
   const changeToBoardView = () => setView("board");
   const TaskComponent = view === "list" ? ListTask : Card;
 
-  const renderTaskItem = (task: any) => (                 
+  const handleOpenDetails = useCallback((id?: string) => {
+  setSelectedTaskId(id ?? null);
+}, []);
+
+  const renderTaskItem = useCallback((task: any) => (                 
   <TaskComponent
     key={task._id}
     title={task.title}
@@ -147,14 +149,14 @@ function TasksView() {
     createdBy={task.createdBy}
     attachments={task.attachments}
     comments={task.commentCount}
-    onOpenDetails={() => setSelectedTaskId(task._id)}
+    onOpenDetails={handleOpenDetails}
   />
-);          
+), [TaskComponent, handleOpenDetails]);          
 
   return (
     <div className="poppins flex h-full w-full flex-col">
       {/* Navbar / Header for Tasks */}
-      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111]">
+      <div className="sticky top-0 w-full bg-[white] dark:bg-[#111] z-10">
         <div className="poppins flex w-full items-center justify-between border-b-[1px] border-[#565656]/10 px-4 py-[7px] lg:px-8">
           <div className="flex flex-row items-center justify-center">
             <button
@@ -167,6 +169,7 @@ function TasksView() {
               Issues
             </h2>
           </div>
+
           <div className="flex flex-row items-center justify-center gap-2">
             <button
               className={`hidden cursor-pointer flex-row items-center gap-1 rounded-[6px] border-[1.7px] border-[#565656]/20 px-3 py-1 text-[12px] font-normal text-[#111] transition-all duration-300 hover:bg-[#565656]/10 active:scale-95 dark:text-[#fff]/50 lg:flex ${
@@ -204,6 +207,7 @@ function TasksView() {
           </div>
         </div>
       </div>
+        {/* Rest of view */}
 
       {/* Tabs Navigation */}
       <div className="mb-5 flex h-fit items-center justify-between px-4 pt-6 transition-all duration-300 lg:px-8">
