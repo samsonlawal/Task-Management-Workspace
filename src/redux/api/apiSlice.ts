@@ -34,7 +34,12 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
         message: "Access Denied", 
         description: "You do not have permission to perform this action.", 
       }); 
-    }
+    } else if (typeof result.error.status === "number" && result.error.status >= 500) { 
+            showErrorToast({ 
+                message: "Server Error",  
+                description: "Something went wrong on our end. Please try again.",
+            }); 
+            }
 }
     return result;
 };
@@ -43,6 +48,8 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 export const apiSlice = createApi({
     reducerPath: 'api',
     baseQuery: baseQueryWithReauth,
+    refetchOnReconnect: true,
+    // refetchOnFocus: true, 
     tagTypes: ["Workspace", "Members", "Tasks", "Users", "Auth", "Sessions", "Notifications", "Labels"],
     endpoints: (builder: any) => ({}),
 })

@@ -2,8 +2,8 @@
 import usePersistAppContext from "@/hooks/context/auth/usePersistAuthContext";
 
 const AuthPersistenceWrapper = () => {
-  usePersistAppContext(); // ✅ just call the hook
-  return null; // no UI
+  usePersistAppContext();
+  return null; 
 };
 
 export default AuthPersistenceWrapper;

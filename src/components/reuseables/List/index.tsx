@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { Flag, Paperclip } from "lucide-react";
 import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
 
-export default function ListTask({
+function ListTask({
   title,
   desc,
   deadline,
@@ -43,7 +43,7 @@ export default function ListTask({
   createdBy?: string;
   attachments?: any[];
   comments?: number;
-  onOpenDetails?: () => void;
+  onOpenDetails?: (id?: string) => void;
 }) {
   const priorityStyles = getPriorityStyles(priority);
   const statusStyles = getStatusStyles(status);
@@ -62,9 +62,9 @@ export default function ListTask({
     return colors[firstLetter] || "bg-gray-500";
   };
 
-  const workspaceData = useSelector(
-    (state: RootState) => state.WorkspaceData?.workspace,
-  );
+  // const workspaceData = useSelector(
+  //   (state: RootState) => state.WorkspaceData?.workspace,
+  // );
 
   return (
     <div className="poppins flex min-h-fit w-full flex-row justify-between border-t-[1px] border-[#565656]/10 px-3 py-3.5 lg:gap-2 text-[14px] text-[#111] dark:text-[#eee]/60">
@@ -187,7 +187,7 @@ export default function ListTask({
       <div className="flex w-[30px] items-center justify-start">
         <div
           className="flex cursor-pointer items-center justify-start"
-          onClick={onOpenDetails}
+          onClick={() => onOpenDetails?.(id)}
         >
           <img
             src="/icons/expand.svg"
@@ -199,3 +199,5 @@ export default function ListTask({
     </div>
   );
 }
+
+export default React.memo(ListTask);

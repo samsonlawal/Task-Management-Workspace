@@ -2,6 +2,7 @@ import { apiSlice } from "./apiSlice";
 import { workspaceApiSlice } from "./workspaceApiSlice";
 
 export const tasksApiSlice = apiSlice.injectEndpoints({
+    overrideExisting: true,
     endpoints: (builder) => ({
         getTasks: builder.query({
             query: ({ workspaceId }: { workspaceId: string }) => `/tasks/${workspaceId}`,
@@ -50,11 +51,28 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
         }),
 
         deleteTask: builder.mutation({
-            query: ({ taskId }: { taskId: string }) => ({
+            query: ({ taskId }: { taskId: string; workspaceSlug?: string }) => ({
                 url: `/tasks/${taskId}`,
                 method: "DELETE",
             }),
             invalidatesTags: ["Tasks", "Workspace"],
+
+            async onQueryStarted({ taskId, workspaceSlug }, { dispatch, queryFulfilled }) {
+                if(!workspaceSlug) return;
+
+                const patchResult = dispatch(
+                    workspaceApiSlice.util.updateQueryData("getWorkspaceBySlug", workspaceSlug, (draft: any) => {
+                        if(draft?.tasks) {
+                            draft.tasks = draft.tasks.filter((t: any) => t._id !== taskId);
+                        }
+                    })
+                );
+                try {
+                    await queryFulfilled;
+                } catch {
+                    patchResult.undo();
+                }
+            }
         }),
 
         getTaskActivity: builder.query({

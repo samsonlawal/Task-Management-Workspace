@@ -58,6 +58,10 @@ export const useLogin = () => {
       const accessToken = login_res?.data.token;
       const sessionId = login_res?.data?.sessionId;
 
+        if (accessToken) {
+        document.cookie = `token=${accessToken}; path=/; max-age=604800; SameSite=Lax`;
+      }
+
       dispatch(
         setAuthState({
           accessToken,
