@@ -15,6 +15,9 @@ import TaskDetailsHeader from "./components/TaskDetailsHeader";
 import TaskFields from "./components/TaskFields";
 import TaskTimeline from "./components/TaskTimeline";
 import TaskComments from "./components/TaskComments";
+import { useGetTaskCommentsQuery,
+ 
+         } from "@/redux/api/taskApiSlice";
 
 import {
   useDeleteTaskMutation,
@@ -37,7 +40,9 @@ interface TaskData {
   workspaceName?: string;
   workspaceId?: string;
   createdBy?: string;
-  attachments: []
+  attachments: [];
+  comments: [];
+  activities: [];
 }
 
 export default function TaskDetails({
@@ -56,14 +61,16 @@ export default function TaskDetails({
 
   const [deleteTask, { isLoading: deleteLoading }] = useDeleteTaskMutation();
 
+    const { data: commentsData, isLoading } = useGetTaskCommentsQuery(
+    { taskId: taskData.id },
+    { skip: !taskData.id }
+  );
+
   const [activeTab, setActiveTab] = useState<
     "activity" | "comments" | "attachments"
   >("activity");
   const [isCommentsExpanded, setIsCommentsExpanded] = useState<boolean>(false);
   const [spaceData, setSpaceData] = useState<TWorkspaceData>();
-
-    console.log(taskData)
-
 
   useEffect(() => {
     getFromLocalStorage({
@@ -115,7 +122,7 @@ export default function TaskDetails({
 
           <div className="fixed inset-0 flex w-screen items-center justify-end">
             <DialogPanel
-              className="flex h-full w-full flex-col overflow-hidden rounded-sm bg-gray-100 px-8 py-6 dark:bg-[#111] lg:w-[calc(100vw-256px)]"
+              className="flex h-full w-full flex-col overflow-hidden rounded-sm bg-gray-100 px-8 pt-6 pb-3 dark:bg-[#111] lg:w-[calc(100vw-256px)]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header Sub-Component */}
@@ -156,56 +163,39 @@ export default function TaskDetails({
                           Comments
                         </button>
                         <button
-  onClick={() => setActiveTab("attachments")}
-  className={`flex items-center gap-1.5 px-4 py-2 font-medium transition-colors ${ 
-    activeTab === "attachments"
-      ? "border-b-2 border-black font-semibold text-black dark:border-[#eee] dark:text-white"
-      : "text-[#565656] hover:text-[#111] dark:hover:text-white"
-  }`}
->
-                           <span>Attachments</span>
-  {taskData?.attachments?.length > 0 && (
-    <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-zinc-200 px-1.5 text-[10px] font-medium text-zinc-700 dark:bg-[#565656]/40 dark:text-zinc-300">
-      {taskData.attachments.length}
-    </span>
-  )}
+                          onClick={() => setActiveTab("attachments")}
+                          className={`flex items-center gap-1.5 px-4 py-2 font-medium transition-colors ${ 
+                            activeTab === "attachments"
+                              ? "border-b-2 border-black font-semibold text-black dark:border-[#eee] dark:text-white"
+                              : "text-[#565656] hover:text-[#111] dark:hover:text-white"
+                          }`}
+                        >
+            <span>Attachments</span>
+              {taskData?.attachments?.length > 0 && (
+                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-zinc-200 px-1.5 text-[10px] font-medium text-zinc-700 dark:bg-[#565656]/40 dark:text-zinc-300">
+                  {taskData.attachments.length}
+                </span>
+              )}
                         </button>
                       </div>
 
-                      {/* Comments Toggle Expand/Collapse */}
-                      <button
-                        onClick={() =>
-                          setIsCommentsExpanded(!isCommentsExpanded)
-                        }
-                        className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-medium text-zinc-500 transition-colors hover:text-black dark:hover:text-white"
-                        title={
-                          isCommentsExpanded
-                            ? "Show task fields"
-                            : "Expand comments"
-                        }
-                      >
-                        {isCommentsExpanded ? (
-                          <Minimize2 className="h-3.5 w-3.5" />
-                        ) : (
-                          <Maximize2 className="h-3.5 w-3.5" />
-                        )}
-                      </button>
+                   
                     </div>
 
                     {/* Tab Content Panels */}
                     <div className="min-h-0 flex-1 pt-4">
                       {activeTab === "activity" && (
-                        <TaskTimeline taskData={taskData} />
+                        <TaskTimeline taskData={taskData} taskActivities={taskData?.activities} />
                       )}
 
                       {activeTab === "comments" && (
-                        <TaskComments taskId={taskData.id} user={user} />
+                        <TaskComments taskId={taskData.id} taskComments={commentsData} user={user} />
                       )}
 
                       {activeTab === "attachments" && (
                         taskData?.attachments && taskData?.attachments.length > 0 ? 
                         (
-                          <div className="flex w-full flex-col gap-2.5 py-3"> 
+                          <div className="flex w-full flex-row flex-wrap gap-2.5 py-3"> 
                             {taskData.attachments.map((attachment: any, index: number) => {
                               const isImage = attachment?.fileType?.startsWith("image/"); 
                               const isPdf = attachment?.fileType === "application/pdf"; 
@@ -213,7 +203,7 @@ export default function TaskDetails({
                                 <div key={attachment._id || index}>
                                   {/* Image Preview */}
                                   {isImage && (
-                                    <div className="group relative w-fit max-w-[400px] overflow-hidden rounded-lg border border-zinc-200 dark:border-[#565656]/30">
+                                    <div className="group relative w-fit max-w-[300px] overflow-hidden rounded-lg border border-zinc-200 dark:border-[#565656]/30">
                                       <a
                                         href={attachment.url}
                                         target="_blank"

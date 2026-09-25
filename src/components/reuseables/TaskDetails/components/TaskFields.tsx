@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { StatusPill, PriorityPill, AssigneePill, DueDatePill, AttachmentPill } from "@/components/reuseables/TaskPills";
+import { StatusPill, PriorityPill, AssigneePill, DueDatePill, AttachmentPill, LabelPill } from "@/components/reuseables/TaskPills";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useUpdateTaskMutation } from "@/redux/api/taskApiSlice";
 import { useGetMembersQuery } from "@/redux/api/memberApiSlice";
+import { useGetLabelsQuery } from "@/redux/api/labelApiSlice"; 
+
 
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -52,6 +54,12 @@ export default function TaskFields({ taskData }: { taskData: any }) {
     { skip: !currentWorkspaceId },
   );
 
+  const { data: labelsData } = useGetLabelsQuery(
+    { workspaceId: currentWorkspaceId || "" },
+    { skip: !currentWorkspaceId }
+  ); 
+  const labels = labelsData?.label || [];
+
   const members =
     membersData?.members ||
     membersData?.data ||
@@ -72,8 +80,6 @@ export default function TaskFields({ taskData }: { taskData: any }) {
         }).unwrap()
 
         setFiles([])
-        console.log(files)
-
         showSuccessToast({ message: "Attachments uploaded successfully"})
       }
       catch(err: any){
@@ -95,70 +101,68 @@ export default function TaskFields({ taskData }: { taskData: any }) {
     }
   };
 
-  // console.log(members)
-
   return (
     <div className="poppins w-full">
 
       {files.length > 0 && (
-                     <div className="w-full  md:w-[500px] max-h-[200px] overflow-y-scroll flex flex-col gap-2 py-2">
-                       {files.map((file, index) => {
-                         const isImage = file?.type.startsWith("image/");
-                         const isPdf = file?.type === "application/pdf";
-   
-   
-                         return(
-                           <div key={index}>
-   
-   
-                         {isImage && (
-                         <div className="group relative">
-   
-                         <span className="group-hover:bg-[#565656] group-hover:flex hidden absolute top-4 right-16 p-1.5 rounded-sm transition-all duration-300">
-                         <ArrowDownToLine size={18} className="dark:group-hover:text-white dark:text-[#fff]/40" />
-                         </span>
-   
-                            <button type="button" className="group-hover:bg-[#565656] group-hover:flex hidden absolute top-4 right-8 p-1.5 rounded-sm transition-all duration-300" onClick={() => removeFile(index)}>
-                             <X size={12} className="dark:group-hover:text-white dark:text-[#fff]/40" />
-                           </button>
-   
-                         <img src={URL.createObjectURL(file)} alt="" className="min-w-[400px] h-auto object-cover" />
-                       </div>
-                       )}
-   
-                       {isPdf && (
-                       <div className="relative group flex flex-row items-center gap-2 px-3 py-2 bg-[#565656]/20 rounded-md w-[96%]">
-   
-                          <button type="button" className="group-hover:bg-[#565656] group-hover:flex hidden absolute -top-2 -right-2 p-1 rounded-full transition-all duration-300" onClick={() => removeFile(index)}>
-                         <X size={10} className="dark:group-hover:text-white dark:text-[#fff]/40" />
-                         </button>
-   
-                         <FontAwesomeIcon icon={faFilePdf} className="text-zinc-500 dark:text-[#fff]/40" />
-   
-   
-                         <div className="flex flex-1 items-center flex-row justify-start gap-[6px]">
-                           <p className="text-[13px]">{file.name}</p>  
-                           <p className="text-[11px] text-[#fff]/50">
-                           
-                           {`${formatFile(file.size)}`}
-   
-                             </p>    
-                         </div>
-   
-                         <span className="group hover:bg-[#565656]/30 p-1.5 rounded-sm transition-all duration-300">
-                             <ArrowDownToLine size={18} className="dark:text-[#fff]/40" />
-                           </span>
-                       </div>
-                       )}
-   
-   
-                           </div>
-                         )
-                       })}
-                       {/* <p className="text-[12px] text-white">{files.name}</p> */}
-                      
-                     </div>
-                   )} 
+        <div className="w-full  md:w-[500px] max-h-[200px] overflow-y-scroll flex flex-col gap-2 py-2">
+          {files.map((file, index) => {
+            const isImage = file?.type.startsWith("image/");
+            const isPdf = file?.type === "application/pdf";
+
+
+            return(
+              <div key={index}>
+
+
+            {isImage && (
+            <div className="group relative">
+
+            <span className="group-hover:bg-[#565656] group-hover:flex hidden absolute top-4 right-16 p-1.5 rounded-sm transition-all duration-300">
+            <ArrowDownToLine size={18} className="dark:group-hover:text-white dark:text-[#fff]/40" />
+            </span>
+
+              <button type="button" className="group-hover:bg-[#565656] group-hover:flex hidden absolute top-4 right-8 p-1.5 rounded-sm transition-all duration-300" onClick={() => removeFile(index)}>
+                <X size={12} className="dark:group-hover:text-white dark:text-[#fff]/40" />
+              </button>
+
+            <img src={URL.createObjectURL(file)} alt="" className="min-w-[400px] h-auto object-cover" />
+          </div>
+          )}
+
+          {isPdf && (
+          <div className="relative group flex flex-row items-center gap-2 px-3 py-2 bg-[#565656]/20 rounded-md w-[96%]">
+
+            <button type="button" className="group-hover:bg-[#565656] group-hover:flex hidden absolute -top-2 -right-2 p-1 rounded-full transition-all duration-300" onClick={() => removeFile(index)}>
+            <X size={10} className="dark:group-hover:text-white dark:text-[#fff]/40" />
+            </button>
+
+            <FontAwesomeIcon icon={faFilePdf} className="text-zinc-500 dark:text-[#fff]/40" />
+
+
+            <div className="flex flex-1 items-center flex-row justify-start gap-[6px]">
+              <p className="text-[13px]">{file.name}</p>  
+              <p className="text-[11px] text-[#fff]/50">
+              
+              {`${formatFile(file.size)}`}
+
+                </p>    
+            </div>
+
+            <span className="group hover:bg-[#565656]/30 p-1.5 rounded-sm transition-all duration-300">
+                <ArrowDownToLine size={18} className="dark:text-[#fff]/40" />
+              </span>
+          </div>
+          )}
+
+
+              </div>
+            )
+          })}
+          {/* <p className="text-[12px] text-white">{files.name}</p> */}
+        
+        </div>
+      )} 
 
       
       <div className="flex flex-row flex-wrap items-center gap-1 pt-1">
@@ -166,6 +170,7 @@ export default function TaskFields({ taskData }: { taskData: any }) {
         <PriorityPill priority={taskData.priority} onChange={(p) => handleUpdateField({ priority: p })} />
         <AssigneePill assigneeObj={taskData.assignee} members={members} onChange={(a) => handleUpdateField({ assignee: a })} />
         <DueDatePill deadline={taskData.deadline} onChange={(d) => handleUpdateField({ deadline: d })} />
+        <LabelPill selectedLabelId={taskData?.label?._id} labels={labels} onChange={(l) => handleUpdateField({ label: l })}/>
         <AttachmentPill onUpload={uploadAttachments} setFiles={setFiles} />
       </div>
       {/* {files.length !== 0 && (

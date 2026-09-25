@@ -50,6 +50,8 @@ export const useLogin = () => {
         accessToken: login_res?.data?.token,
       });
 
+      console.log("profile_res", profile_res);
+      console.log("login_res", login_res);
       const user = {
         ...profile_res?.data,
       };

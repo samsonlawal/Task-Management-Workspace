@@ -2,47 +2,31 @@ import { useState, useRef, useEffect } from "react";
 import { DateTime } from "luxon";
 import { Message } from "@/components/reuseables/chat/Message";
 import { MessageBox } from "@/components/reuseables/chat/MessageBox";
+import { useCreateCommentMutation,
+         useDeleteCommentMutation,
+         } from "@/redux/api/taskApiSlice";
+import { showErrorToast, showSuccessToast } from "@/utils/toaster";         
 
 export default function TaskComments({
   taskId,
+  taskComments,
   user,
 }: {
   taskId: string;
+  taskComments: any;
   user: any;
 }) {
-  const [comments, setComments] = useState<any[]>([
-    {
-      id: "c1",
-      taskId: taskId || "1",
-      comment: "Hey team, I just finished the first draft of the UI mockups. I've attached them in the channel.",
-      commenter: "Jane Smith",
-      commenterImage: "https://i.pravatar.cc/150?img=47",
-      commenterEmail: "jane.smith@example.com",
-      createdAt: new Date(Date.now() - 86400000).toISOString(),
-      updatedAt: new Date(Date.now() - 86400000).toISOString(),
-    },
-    {
-      id: "c2",
-      taskId: taskId || "1",
-      comment: "Looks great Jane! Just one quick note: can we make sure the padding on the cards is exactly 16px to match the design system?",
-      commenter: "Mark Johnson",
-      commenterImage: "https://i.pravatar.cc/150?img=11",
-      commenterEmail: "mark.j@example.com",
-      createdAt: new Date(Date.now() - 43200000).toISOString(),
-    },
-    {
-      id: "c3",
-      taskId: taskId || "1",
-      comment: "Good catch Mark. I'll update that right now and push the changes. We can use this to create other modals too.",
-      commenter: "Jane Smith",
-      commenterImage: "https://i.pravatar.cc/150?img=47",
-      commenterEmail: "jane.smith@example.com",
-      createdAt: new Date(Date.now() - 3600000).toISOString(),
-    },
-  ]);
 
   const [value, setValue] = useState<string>("");
   const [selectedFiles, setSelectedFiles] = useState<File | null>(null);
+
+
+
+  const [createComment, { isLoading: isCreatingComment }] = useCreateCommentMutation();
+  // const [updateComment] = useUpdateCommentMutation(); 
+  const [deleteComment] = useDeleteCommentMutation();
+  const comments = taskComments?.comments || []
+
 
   const commentRef = useRef<HTMLDivElement>(null);
   const commentsFeedRef = useRef<HTMLDivElement>(null);
@@ -56,58 +40,85 @@ export default function TaskComments({
     }
   }, [comments]);
 
-  const addComments = (val: string) => {
-    if (!val.trim()) return;
-    const date = new Date().toISOString();
-    const newComment = {
-      id: Math.random().toString(),
-      taskId: taskId || "1",
-      comment: val,
-      commenter: user?.fullname || "You",
-      commenterImage: user?.profileImage,
-      commenterEmail: user?.email,
-      createdAt: date,
-      updatedAt: date,
-    };
-    setComments((prev) => [...prev, newComment]);
-    setValue("");
-  };
+  const handleSend = async () => {
+    if(!value.trim()) return;
+
+    try {
+        await createComment({
+          comment: {
+          taskId,
+          author: user._id,
+          content: value,
+          }
+        }).unwrap()
+        setValue('')
+    } catch(error: any) {
+      showErrorToast({
+              message: error?.data?.message || "Failed to create comment",
+            });
+      // console.log("Failed to create comment:", error)
+    } 
+  }
+
+  // const handleEdit = async () => {
+  //   try {
+  //     await updateComment({ commentId, content }).unwrap()
+  //   } catch(error) {
+  //     console.log("Failed to edit comment:", error)
+  //   }
+  // }
+
+  const handleDelete = async (commentId: string) => {
+    try{
+      await deleteComment({ commentId }).unwrap()
+    } catch(error: any) {
+         showErrorToast({
+              message: error?.data?.message || "Failed to delete comment",
+            });
+      // console.log("Failed to update comment:", error)
+    }
+  }
 
   return (
-    <div className="flex flex-col h-full w-full relative overflow-hidden pb-4">
-      <div ref={commentsFeedRef} className="flex-1 overflow-y-auto pb-4 space-y-4 pr-1 scrollbar-hide">
+    <div className="flex flex-col h-full w-full relative overflow-hidden pb-1">
+      <div ref={commentsFeedRef} className="flex-1 sm:w-full lg:w-[500px] overflow-y-auto pb-4 space-y-2 pr-1 scrollbar-hide">
         {comments && comments.length > 0 ? (
-          comments.map((comment) => {
+          comments.map((comment: any) => {
             const isMe = comment.commenter === "You" || (user && comment.commenter === user.fullname);
             const dateFormatted = comment.updatedAt 
-              ? DateTime.fromISO(comment.updatedAt).toFormat("MMMM dd, yyyy, hh:mm a")
-              : DateTime.fromISO(comment.createdAt).toFormat("MMMM dd, yyyy, hh:mm a");
+              ? DateTime.fromISO(comment.updatedAt).toRelative({ style: "narrow" })
+              : DateTime.fromISO(comment.createdAt).toRelative({ style: "narrow" });
             return (
               <Message
-                key={comment.id}
-                senderName={comment.commenter}
-                senderAvatar={comment.commenterImage}
-                content={comment.comment}
+                key={comment._id}
+                authorId={comment.author._id}
+                senderEmail={comment.author.email}
+                senderAvatar={comment.author.profileImage}
+                content={comment.content}
                 timestamp={dateFormatted}
-                isMe={isMe}
                 attachedFileName={comment.attachedFileName}
+                edited = {comment.edited}
+                loggedInUser={user._id}
+                // onEdit={(newContent) => handleEdit(comment._id, newContent)} 
+                onDelete={() => handleDelete(comment._id)}
               />
             );
           })
         ) : (
-          <div className="w-full text-center py-6 text-gray-500 italic text-[12px]">
+          <div className="w-full text-start py-1 text-gray-500 italic text-[12px]">
             No comments yet...
           </div>
         )}
         <div ref={commentRef} />
       </div>
 
-      <div className="pt-2 w-full bg-transparent">
+      <div className="pt-2 sm:w-full lg:w-[500px] bg-transparent">
         <MessageBox
           value={value}
           onChange={(val) => setValue(val)}
-          onSend={() => addComments(value)}
-          placeholder="> say something..."
+          onSend={handleSend}
+          isSending={isCreatingComment}
+          placeholder="say something..."
           selectedFile={selectedFiles}
           onFileSelect={(file) => setSelectedFiles(file)}
           isDarkBg={true}

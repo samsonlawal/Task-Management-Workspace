@@ -37,7 +37,7 @@ const usePersistAppContext = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (appState !== INITIAL_APP_STATE) {
+    if (appState?.accessToken || appState?.user) {
       saveToLocalStorage({
         key: PERSIST_AUTH_KEY,
         value: appState,

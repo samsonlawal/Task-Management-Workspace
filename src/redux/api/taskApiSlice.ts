@@ -88,6 +88,55 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["Tasks", "Workspace"],
         }),
+
+        createComment: builder.mutation({
+            query: ({ comment }: { comment: any }) => ({
+                url: `/tasks/comment`,
+                method: "POST",
+                body: comment,
+            }),
+            invalidatesTags: ["Tasks"],
+        }),
+
+        getTaskComments: builder.query({
+            query: ({ taskId }: { taskId: string }) => `/tasks/${taskId}/comment`,
+            providesTags: ["Tasks"],
+        }),
+
+        // updateComment: builder.mutation({
+        //     query: ({ commentId, content}: { commentId: string; content: string;}) => ({
+        //         url: `/tasks/comment/${commentId}`,
+        //         method: "PATCH",
+        //         body: content,
+        //     }),
+        //     invalidatesTags: ["Tasks", "Workspace"],
+
+        //     async onQueryStarted({ taskId, task, workspaceSlug }, { dispatch, queryFulfilled }) {
+        //         if (!workspaceSlug) return;
+
+        //         const patchResult = dispatch(
+        //             workspaceApiSlice.util.updateQueryData("getWorkspaceBySlug", workspaceSlug, (draft: any) => {
+        //                 const taskToUpdate = draft?.tasks?.find((t: any) => t._id === taskId);
+        //                 if (taskToUpdate) {
+        //                     Object.assign(taskToUpdate, task);
+        //                 }
+        //             })
+        //         );
+        //         try {
+        //             await queryFulfilled;
+        //         } catch {
+        //             patchResult.undo();
+        //         }
+        //     },
+        // }),
+
+        deleteComment: builder.mutation({
+            query: ({ commentId }: { commentId: string }) => ({
+                url: `/tasks/comment/${commentId}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Tasks"],
+        }),
     }),
 });
 
@@ -101,4 +150,8 @@ export const {
     usePromoteTaskMutation,
     useDemoteTaskMutation,
     useMarkAsDoneMutation,
+    useCreateCommentMutation,
+    useGetTaskCommentsQuery,
+    // useUpdateCommentMutation,
+    useDeleteCommentMutation,
 } = tasksApiSlice;

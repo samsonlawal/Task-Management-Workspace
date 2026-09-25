@@ -33,7 +33,8 @@ import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
 import { DateTime } from "luxon";
 import { useCreateTaskMutation } from "@/redux/api/taskApiSlice";
 import { useGetMembersQuery } from "@/redux/api/memberApiSlice";
-import { AttachmentPill, StatusPill, PriorityPill, AssigneePill, DueDatePill } from "@/components/reuseables/TaskPills";
+import { useGetLabelsQuery } from "@/redux/api/labelApiSlice"; 
+import { AttachmentPill, StatusPill, PriorityPill, AssigneePill, DueDatePill, LabelPill } from "@/components/reuseables/TaskPills";
 
 export default function AddTask() {
   let [isOpen, setIsOpen] = useState<boolean>(false);
@@ -49,7 +50,8 @@ export default function AddTask() {
     priority: "Low",
     createdBy: "",
     title: "",
-    attachments: []
+    attachments: [],
+    label: ""
   });
 
   // const [draft, setDraft] = useState<Record | any[]>([])
@@ -68,6 +70,12 @@ export default function AddTask() {
     { skip: !currentWorkspaceId },
   );
 
+  const { data: labelsData } = useGetLabelsQuery(
+    { workspaceId: currentWorkspaceId || "" },
+    { skip: !currentWorkspaceId }
+  ); 
+  const labels = labelsData?.label || [];
+
   const members =
     membersData?.members ||
     membersData?.data ||
@@ -82,6 +90,7 @@ export default function AddTask() {
         createdBy: user?._id || "",
       }));
     }
+    console.log(labelsData)
   }, [isOpen]);
 
   const [createTask, { isLoading: createTaskLoading }] =
@@ -97,6 +106,7 @@ export default function AddTask() {
     priority: "Low",
     createdBy: "",
     title: "",
+    label: ""
   })    
   setIsOpen(false);
   };
@@ -111,7 +121,8 @@ export default function AddTask() {
       priority,
       createdBy,
       title,
-      attachments
+      attachments,
+      label
     } = task;
 
     let formData:any = new FormData();
@@ -130,6 +141,7 @@ export default function AddTask() {
     formData.append("status", status);
     formData.append("priority", priority);
     formData.append("createdBy", createdBy);
+    if (label) formData.append("label", label)
     if (assignee) formData.append("assignee", assignee);
     if (deadline) formData.append("deadline", deadline);
     if(files.length > 0) {
@@ -137,10 +149,6 @@ export default function AddTask() {
         formData.append("attachments", file);
       });
     }
-
-
-
-
 
     try {
       await createTask({ task: formData }).unwrap();
@@ -224,7 +232,7 @@ export default function AddTask() {
 
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
           <DialogPanel
-            className="flex w-full max-w-[500px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white px-6 py-5 shadow-2xl dark:border-zinc-800 dark:bg-[#1a1a1a]"
+            className="flex w-full max-w-[500px] flex-col overflow rounded-xl border border-zinc-200 bg-white px-6 py-5 shadow-2xl dark:border-zinc-800 dark:bg-[#1a1a1a]"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col gap-4">
@@ -382,6 +390,7 @@ export default function AddTask() {
                   <PriorityPill priority={task.priority} onChange={(p) => setTask((prev) => ({ ...prev, priority: p }))} />
                   <AssigneePill assigneeId={task.assignee} members={members} onChange={(a) => setTask((prev) => ({ ...prev, assignee: a }))} />
                   <DueDatePill deadline={task.deadline} onChange={(d) => setTask((prev) => ({ ...prev, deadline: d }))} />
+                  <LabelPill selectedLabelId={task.label} labels={labels} onChange={(l) => setTask((prev) => ({...prev, label: l}))}/>
                   <AttachmentPill setFiles={setFiles} />
                 </div>
 

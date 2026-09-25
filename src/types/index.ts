@@ -45,6 +45,7 @@ export type TAddTask = {
   // createdAt: string;
   deadline: string;
   createdBy: string;
+  label?: string;
 };
 
 export type TAddMember = {

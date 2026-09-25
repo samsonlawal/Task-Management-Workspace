@@ -1,10 +1,11 @@
 import React, { useRef } from "react";
-import { Paperclip, Send, Smile } from "lucide-react";
+import { Loader, Paperclip, Send, Smile } from "lucide-react";
 
 interface MessageBoxProps {
   value: string;
   onChange: (val: string) => void;
   onSend: () => void;
+  isSending: boolean;
   placeholder?: string;
   selectedFile?: File | null;
   onFileSelect?: (file: File | null) => void;
@@ -16,6 +17,7 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
   value,
   onChange,
   onSend,
+  isSending,
   placeholder = "Write a message...",
   selectedFile = null,
   onFileSelect,
@@ -47,68 +49,81 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
     }
   };
 
-  return (
+ return (
     <div className={`w-full ${className}`}>
-      {/* File Attachment Tag Indicator */}
-      {selectedFile && (
-        <div className="flex w-fit gap-2 items-center bg-gray-500/10 dark:bg-gray-700/25 px-2 py-1 rounded-md mb-2 border border-[#565656]/10 dark:border-[#565656]/20">
-          <p className="text-[11px] text-[#707070] dark:text-[#fff]/70 truncate max-w-[200px]">
-            📎 {selectedFile.name}
-          </p>
-          <button
-            onClick={handleRemoveFile}
-            className="text-[#707070] dark:text-[#fff]/50 hover:text-red-500 dark:hover:text-red-400 text-[10px] px-1 transition-colors"
-          >
-            ✕
-          </button>
-        </div>
-      )}
-
-      {/* Input Form Wrapper */}
+      {/* Container with subtle border and focus ring */}
       <div
-        className={`relative flex items-end rounded-lg border border-[#565656]/20 bg-gray-50/50 p-2 dark:border-[#565656]/20 ${
+        className={`flex flex-col rounded-lg border border-[#565656]/20 bg-gray-50/50 transition-all focus-within:border-[#565656]/50 ${ 
           isDarkBg ? "dark:bg-[#111]" : "dark:bg-[#161616]/40"
         }`}
       >
-        {/* Attachment Pin Button */}
-        {onFileSelect && (
-          <>
-            <input
-              type="file"
-              ref={fileInputRef}
-              className="hidden"
-              onChange={handleFileChange}
-            />
+        {/* File Attachment Tag Indicator */}
+        {selectedFile && (
+          <div className="flex w-fit gap-2 items-center bg-gray-500/10 dark:bg-gray-700/25 px-2 py-1 rounded-md mb-2 border border-[#565656]/10 dark:border-[#565656]/20">
+            <p className="text-[11px] text-[#707070] dark:text-[#fff]/70 truncate max-w-[200px]">
+              📎 {selectedFile.name}
+            </p>
             <button
-              onClick={() => fileInputRef.current?.click()}
-              className="p-2 text-gray-400 hover:text-[#111] dark:hover:text-white transition-colors cursor-pointer"
+              onClick={handleRemoveFile}
+              className="text-[#707070] dark:text-[#fff]/50 hover:text-red-500 dark:hover:text-red-400 text-[10px] px-1 transition-colors"
             >
-              <Paperclip className="w-4 h-4" />
+              ✕
             </button>
-          </>
+          </div>
         )}
-
-        {/* Text Area Input */}
+        {/* Text Area on Top */}
         <textarea
-          rows={1}
+          rows={2} 
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="flex-1 bg-transparent px-3 py-1.5 text-[13px] placeholder-gray-400 focus:outline-none dark:text-white resize-none scrollbar-hide max-h-[120px]"
-          style={{ height: "auto" }}
+          className="w-full bg-transparent px-2 py-2 text-[13px] placeholder-gray-400 focus:outline-none dark:text-white resize-none scrollbar-hide min-h-[44px] max-h-[140px]" 
         />
-
-        {/* Action Buttons */}
-        <div className="flex items-center gap-1.5">
-          <button className="p-2 text-gray-400 hover:text-[#111] dark:hover:text-white transition-colors">
-            <Smile className="w-4 h-4" />
-          </button>
+        {/* Bottom Toolbar */}
+        <div className="flex items-center justify-between bg-[#565656]/10 p-1.5 mt-1"> 
+          {/* Left Toolbar Icons */}
+          <div className="flex items-center gap-1"> 
+            {onFileSelect && (
+              <>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="p-1.5 text-gray-400 hover:text-[#111] dark:hover:text-white rounded-md hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer" 
+                  title="Attach file"
+                >
+                  <Paperclip className="w-3.5 h-3.5" />
+                </button>
+              </>
+            )}
+            <button
+              type="button"
+              className="p-1.5 text-gray-400 hover:text-[#111] dark:hover:text-white rounded-md hover:bg-black/5 dark:hover:bg-white/5 transition-colors" 
+              title="Add emoji"
+            >
+              <Smile className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          {/* Right Submit Action */}
           <button
+            type="button"
             onClick={onSend}
-            className="p-2 bg-[#111] dark:bg-white text-white dark:text-[#111] rounded-md hover:opacity-95 transition-opacity cursor-pointer"
+            disabled={!value.trim() && !selectedFile || isSending}
+            className="flex items-center gap-1.5 px-3 py-1 bg-[#000] dark:bg-white text-white dark:text-[#111] text-[12px] font-medium rounded-md hover:opacity-90 disabled:opacity-40 transition-opacity cursor-pointer" 
           >
-            <Send className="w-3.5 h-3.5" />
+            {isSending ? (
+              <span>Sending...</span>
+            ) : (
+              <span>Send</span>
+            )}
+           
+              <Send className="w-3 h-3" />
           </button>
         </div>
       </div>
