@@ -1,4 +1,5 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import Link from "next/link";
 
 export default function DropdownMenu() {
   return (
@@ -6,19 +7,19 @@ export default function DropdownMenu() {
       <MenuButton>My account</MenuButton>
       <MenuItems anchor="bottom">
         <MenuItem>
-          <a className="data-focus:bg-blue-100 block" href="/settings">
+          <Link className="data-focus:bg-blue-100 block" href="/settings">
             Settings
-          </a>
+          </Link>
         </MenuItem>
         <MenuItem>
-          <a className="data-focus:bg-blue-100 block" href="/support">
+          <Link className="data-focus:bg-blue-100 block" href="/support">
             Support
-          </a>
+          </Link>
         </MenuItem>
         <MenuItem>
-          <a className="data-focus:bg-blue-100 block" href="/license">
+          <Link className="data-focus:bg-blue-100 block" href="/license">
             License
-          </a>
+          </Link>
         </MenuItem>
       </MenuItems>
     </Menu>
