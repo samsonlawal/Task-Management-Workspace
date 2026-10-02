@@ -16,10 +16,14 @@ sessionId: string
 
 const getInitialState = (): AuthState => { 
   if (typeof window !== "undefined") { 
-    const stored = localStorage.getItem("STACKTASK_PERSISTOR"); 
-    if (stored) { 
+    const storedUser = localStorage.getItem("STACKTASK_USER"); 
+    if (storedUser) { 
       try { 
-        return JSON.parse(stored); 
+         return {
+          accessToken: "",
+          user: JSON.parse(storedUser), 
+          sessionId: "",
+        };
       } catch (e) {} 
     } 
   } 

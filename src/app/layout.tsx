@@ -7,7 +7,7 @@ config.autoAddCss = false;
 import Initializers from "./Initializers";
 import Login from "@/components/pages/auth/sign-in";
 
-import { DM_Sans, Lexend, Outfit, Poppins } from "next/font/google";
+// import { DM_Sans, Lexend, Outfit, Poppins } from "next/font/google";
 import { PostHogProvider } from "./provider";
 
 

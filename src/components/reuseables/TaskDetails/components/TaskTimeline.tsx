@@ -24,7 +24,7 @@ export default function TaskTimeline({ taskData, taskActivities }: { taskData: a
 
 
   return (
-      <div className="flex flex-col gap-0.5 overflow-y-auto max-h-[calc(100vh-250px)] scrollbar-hide pt-1 pb-8">
+    <div className="flex flex-col gap-0.5 overflow-y-auto h-full scrollbar-hide pt-1 pb-16">
       {activities.map((activity, index) => {
         const isLast = index === activities.length - 1;
         const {icon: Icon, color} = getActivityIcon(activity.type); 
