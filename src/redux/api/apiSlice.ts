@@ -26,8 +26,12 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
     } 
     else if (result.error.status === 401) { 
       api.dispatch(clearAuthState()); 
-      if (typeof window !== "undefined" && !window.location.pathname.startsWith("/auth")) { 
-        window.location.href = "/auth/sign-in"; 
+        if (typeof window !== "undefined") {  
+        document.cookie = "token=; path=/; max-age=0; SameSite=Lax"; 
+        localStorage.removeItem("STACKTASK_PERSISTOR"); 
+        if (!window.location.pathname.startsWith("/auth")) {
+          window.location.href = "/auth/sign-in";
+        }
       } 
     } else if (result.error.status === 403) { 
       showErrorToast({ 

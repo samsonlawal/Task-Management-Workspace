@@ -183,7 +183,7 @@ export default function TaskDetails({
                     </div>
 
                     {/* Tab Content Panels */}
-                    <div className="min-h-0 flex-1 pt-4">
+                    <div className="min-h-0 flex-1 overflow-hidden pt-4">
                       {activeTab === "activity" && (
                         <TaskTimeline taskData={taskData} taskActivities={taskData?.activities} />
                       )}

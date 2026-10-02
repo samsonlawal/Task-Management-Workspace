@@ -52,18 +52,43 @@ export const workspaceApiSlice = apiSlice.injectEndpoints({
             ) {
                 try {
                     const { data } = await cacheDataLoaded;
-                    const workspaceId = data?._id;
+                    console.log(data)
+                    const workspaceId =  data?.workspace?._id || data?._id;
                     if (!workspaceId) return;
+
                     const socket = getSocket();
                     socket.emit("join_workspace", workspaceId);
+
                     socket.on("task:created", (newTask: any) => {
                         updateCachedData((draft) => {
-                            draft.tasks.unshift(newTask);
+                             const exists = draft.tasks.some((t: any) => t._id === newTask._id); 
+                            if (!exists) {
+                                draft.tasks.unshift(newTask); 
+                            }
                         });
                     });
+
+                   socket.on("task:updated", (updatedTask: any) => {
+    updateCachedData((draft) => {
+        const index = draft.tasks.findIndex((t: any) => t._id === updatedTask._id);
+        if (index !== -1) {
+            draft.tasks[index] = updatedTask;
+        }
+    });
+});
+
+
+                    socket.on("task:deleted", (deletedTaskId: string) => { // <-- ADD THIS
+                        updateCachedData((draft) => {
+                            draft.tasks = draft.tasks.filter((t: any) => t._id !== deletedTaskId);
+                        });
+                    });
+
                     await cacheEntryRemoved;
                     socket.emit("leave_workspace", workspaceId);
                     socket.off("task:created");
+                    socket.off("task:updated");
+                    socket.off("task:deleted");
                 } catch {}
             },
             }),
