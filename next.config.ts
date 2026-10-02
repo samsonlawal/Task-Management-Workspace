@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   //   // your project has ESLint errors.
   //   ignoreDuringBuilds: true,
   // },
-   distDir: ".next_cache",
+  // distDir: ".next_cache",
 };
 
 export default nextConfig;
