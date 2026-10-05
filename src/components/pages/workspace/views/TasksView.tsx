@@ -147,6 +147,7 @@ function TasksView() {
     createdAt={task.createdAt}
     assigneeId={task.assignee?._id}
     createdBy={task.createdBy}
+    label={task.label}
     attachments={task.attachments}
     comments={task.commentCount}
     onOpenDetails={handleOpenDetails}

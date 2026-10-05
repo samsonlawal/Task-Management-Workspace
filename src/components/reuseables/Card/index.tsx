@@ -19,6 +19,7 @@ import {
   Redo,
 } from "lucide-react";
 import { getPriorityStyles } from "@/utils/taskStyles";
+import { LABEL_ICON_MAP } from "@/utils/labelIcons";
 
 function Card({
   title,
@@ -36,7 +37,8 @@ function Card({
   createdBy,
   onOpenDetails,
   attachments,
-  comments = 0
+  comments = 0,
+  label,
 }: {
   title?: string;
   desc: string;
@@ -51,11 +53,13 @@ function Card({
   createdAt: string;
   assigneeId?: string;
   createdBy?: string;
-  attachments?: [];
+  attachments?: any[];
   comments?: number;
+  label?: any;
   onOpenDetails?: (id: string) => void;
 }) {
   const priorityStyles = getPriorityStyles(priority);
+  const LabelIcon = label?.icon ? LABEL_ICON_MAP[label.icon] : null;
 
   const getBgColor = (firstName: string) => {
     const colors: any = {
@@ -80,10 +84,26 @@ function Card({
       <div className="flex flex-col gap-[1px]">
         {/* Head */}
         <div className="flex flex-row justify-between px-[14px] font-medium">
-          <div className="flex flex-row items-center justify-center gap-1">
+          <div className="flex flex-row items-center justify-center gap-1.5">
             <p className="line-clamp-1 h-fit text-[10px] font-normal uppercase tracking-wide text-[#565656] dark:text-zinc-500">
               TSK-{id ? id.slice(-4).toUpperCase() : "0000"}
             </p>
+            {label && (
+              <span
+                className="flex items-center justify-center opacity-60 transition-opacity hover:opacity-100"
+                style={{ color: label.color || "inherit" }}
+                title={label.name}
+              >
+                {LabelIcon ? (
+                  <LabelIcon size={11} />
+                ) : (
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: label.color }}
+                  />
+                )}
+              </span>
+            )}
           </div>
           <div className="cursor-pointer" onClick={() => onOpenDetails?.(id)}>
             <button className="flex items-center text-[10px] text-zinc-500 transition-colors hover:text-black dark:hover:text-white">

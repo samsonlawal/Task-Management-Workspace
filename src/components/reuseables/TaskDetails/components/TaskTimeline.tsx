@@ -3,7 +3,7 @@ import { useGetTaskActivityQuery } from "@/redux/api/taskApiSlice";
 import { DateTime } from "luxon";
 import { getActivityIcon } from "@/utils/activityIcons";
 
-export default function TaskTimeline({ taskData, taskActivities }: { taskData: any; taskActivities: any[] }) {
+export default function TaskTimeline({ taskData, taskActivities }: { taskData: any; taskActivities: any[] | undefined }) {
 
 
   const { data: activityData, isLoading } = useGetTaskActivityQuery( 

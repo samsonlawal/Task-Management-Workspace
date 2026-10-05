@@ -60,8 +60,12 @@ export const useLogin = () => {
 
         if (accessToken) {
         document.cookie = `token=${accessToken}; path=/; max-age=604800; SameSite=Lax`;
-        localStorage.setItem("STACKTASK_USER", JSON.stringify(user))
+        // localStorage.setItem("STACKTASK_USER", JSON.stringify(user))
       }
+
+       if (user && typeof window !== "undefined") {
+        localStorage.setItem("STACKTASK_USER", JSON.stringify(user));
+      } 
 
       dispatch(
         setAuthState({
