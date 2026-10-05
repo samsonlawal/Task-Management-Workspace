@@ -188,25 +188,31 @@ export default function SettingsLayout({
 
       {/* MAIN SETTINGS CONTENT AREA */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        <main className="flex flex-1 flex-col overflow-auto bg-white px-8 py-4 dark:bg-[#111] lg:px-12">
-          <div className="flex w-full flex-row items-center justify-start gap-2 text-[#565656]">
-            <span onClick={toggleSettingsSideBar}>
-              <PanelLeft
-                size={14}
-                className="flex cursor-pointer transition-all duration-300 dark:hover:text-[#fff]/70 lg:hidden"
-              />
-            </span>
-            {/* toggleSettingsSideBar */}
-            {/* Back to Workspace Link */}
-            <Link
-              href={`/${workspaceSlug}/tasks`}
-              className="flex w-fit items-center gap-2 rounded-md px-2.5 py-2 text-xs font-medium text-gray-500 transition-colors hover:text-zinc-900 dark:text-[#565656] dark:hover:text-white"
-            >
-              <ArrowLeft size={14} />
-              <span>Settings</span>
-            </Link>
+        <main className="flex flex-1 flex-col overflow-auto bg-white px-6 py-4 dark:bg-[#111] lg:px-10">
+          <div className="w-full max-w-4xl">
+            {/* Header / Back Link Bar */}
+            <div className="flex w-full items-center gap-2 pb-2 text-[#565656]">
+              <button
+                type="button"
+                onClick={toggleSettingsSideBar}
+                className="flex items-center text-[#565656] transition-all duration-300 hover:text-black dark:hover:text-white lg:hidden"
+                title="Toggle Settings Navigation"
+              >
+                <PanelLeft size={16} />
+              </button>
+
+              <Link
+                href={`/${workspaceSlug}/tasks`}
+                className="flex w-fit items-center gap-1.5 py-1 text-xs font-medium text-gray-500 transition-colors hover:text-zinc-900 dark:text-[#565656] dark:hover:text-white"
+              >
+                <ArrowLeft size={14} />
+                <span>Settings</span>
+              </Link>
+            </div>
+
+            {/* Page Content */}
+            <div className="w-full">{children}</div>
           </div>
-          <div className="w-full">{children}</div>
         </main>
       </div>
     </div>

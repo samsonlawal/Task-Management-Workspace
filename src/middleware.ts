@@ -5,7 +5,7 @@ export function middleware(request: NextRequest) {
 
 const { pathname } = request.nextUrl
 
-const token = request.cookies.get("token")?.value;
+const token = request.cookies.get("token")?.value || request.cookies.get("jwt")?.value;
 
 const isAuthRoute = pathname.startsWith("/auth");
 const isProtectedRoute = pathname.startsWith("/workspaces") || (!isAuthRoute && pathname !== "/" && pathname.split("/").length > 1);
