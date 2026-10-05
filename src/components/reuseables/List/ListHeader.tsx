@@ -1,4 +1,4 @@
-import { AlignLeft, CircleDashed, UserRound, Calendar, Flag, Paperclip } from "lucide-react";
+import { AlignLeft, CircleDashed, UserRound, Calendar, Flag, Tag, Paperclip } from "lucide-react";
 import React from "react";
 
 const ListHeader = () => (
@@ -12,6 +12,13 @@ const ListHeader = () => (
       <p className="hidden md:flex line-clamp-1 h-fit text-[12px] leading-tight">
         Description
       </p>
+    </div>
+    <div className="flex w-[35px] items-center justify-start gap-2 text-[#565656]">
+      <Tag
+        size={14}
+        strokeWidth={2}
+        className="text-[#787878] dark:text-zinc-500"
+      />
     </div>
     <div className="flex w-[40px] items-center justify-start gap-2 text-[#565656]">
       <CircleDashed

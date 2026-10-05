@@ -40,9 +40,9 @@ interface TaskData {
   workspaceName?: string;
   workspaceId?: string;
   createdBy?: string;
-  attachments: [];
-  comments: [];
-  activities: [];
+  attachments?: any[];
+  comments?: any[];
+  activities?: any[];
 }
 
 export default function TaskDetails({
@@ -171,7 +171,7 @@ export default function TaskDetails({
                           }`}
                         >
             <span>Attachments</span>
-              {taskData?.attachments?.length > 0 && (
+              {taskData?.attachments && taskData?.attachments?.length > 0 && (
                 <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-zinc-200 px-1.5 text-[10px] font-medium text-zinc-700 dark:bg-[#565656]/40 dark:text-zinc-300">
                   {taskData.attachments.length}
                 </span>

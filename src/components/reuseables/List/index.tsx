@@ -9,6 +9,7 @@ import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 import { Flag, Paperclip } from "lucide-react";
 import { getStatusStyles, getPriorityStyles } from "@/utils/taskStyles";
+import { LABEL_ICON_MAP } from "@/utils/labelIcons";
 
 function ListTask({
   title,
@@ -26,6 +27,7 @@ function ListTask({
   createdBy,
   attachments,
   comments = 0,
+  label,
   onOpenDetails,
 }: {
   title?: string;
@@ -43,10 +45,12 @@ function ListTask({
   createdBy?: string;
   attachments?: any[];
   comments?: number;
+  label?: any;
   onOpenDetails?: (id?: string) => void;
 }) {
   const priorityStyles = getPriorityStyles(priority);
   const statusStyles = getStatusStyles(status);
+  const LabelIcon = label?.icon ? LABEL_ICON_MAP[label.icon] : null;
 
   const getBgColor = (firstName: string) => {
     const colors: any = {
@@ -62,10 +66,6 @@ function ListTask({
     return colors[firstLetter] || "bg-gray-500";
   };
 
-  // const workspaceData = useSelector(
-  //   (state: RootState) => state.WorkspaceData?.workspace,
-  // );
-
   return (
     <div className="poppins flex min-h-fit w-full flex-row justify-between border-t-[1px] border-[#565656]/10 px-3 py-3.5 lg:gap-2 text-[14px] text-[#111] dark:text-[#eee]/60">
       <div className="flex flex-1 items-center justify-start gap-2 pr-6 md:w-[250px]">
@@ -76,6 +76,29 @@ function ListTask({
           {title || desc}
         </p>
       </div>
+
+      {/* Label Icon Column */}
+      <div className="flex w-[30px] items-center justify-start">
+        {label ? (
+          <span
+            className="flex items-center justify-center opacity-60 transition-opacity hover:opacity-100"
+            style={{ color: label.color || "inherit" }}
+            title={label.name}
+          >
+            {LabelIcon ? (
+              <LabelIcon size={12} />
+            ) : (
+              <span
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ backgroundColor: label.color }}
+              />
+            )}
+          </span>
+        ) : (
+          <span className="text-[10px] text-zinc-600 dark:text-zinc-600">-</span>
+        )}
+      </div>
+
       <div className="flex w-[40px] items-center justify-start">
         {/* Mobile: Status icon only */}
         <div className="flex items-center justify-center md:hidden">
