@@ -76,8 +76,8 @@ function Profile() {
     form.email !== (user?.email || "");
 
   return (
-    <div className="poppins flex h-fit w-full flex-col items-center justify-center gap-6 overflow-auto bg-[#fff] pb-24 pt-6 transition-all duration-300 scrollbar-hide dark:bg-[#111]">
-      <div className="flex h-fit w-full flex-col items-center justify-center gap-2 rounded-[14px] border-[1px] border-[#565656]/20 bg-[#fff] transition-all duration-300 dark:bg-[#111] md:w-[700px]">
+    <div className="poppins flex h-fit w-full flex-col gap-6 pb-24 pt-6 transition-all duration-300 max-w-[700px]">
+      <div className="flex h-fit w-full flex-col gap-2 rounded-[14px] border-[1px] border-[#565656]/20 bg-[#fff] transition-all duration-300 dark:bg-[#111]">
         <div className="flex w-full flex-row justify-between border-b-[1px] border-[#565656]/20 px-6 py-6 text-left">
           <div className="flex w-fit flex-col justify-start text-left">
             <h1 className="text-[16px]">Profile</h1>

@@ -22,7 +22,7 @@ export default function AgentView() {
               <PanelLeft size={18} strokeWidth={1.6} />
             </button>
             <div className="flex items-center gap-2">
-              <h2 className="poppins-normal text-md text-[#111] dark:text-white lg:text-xl">
+              <h2 className="text-md font-medium text-[#111] lg:text-xl dark:text-white">
                 Agent
               </h2>
             </div>

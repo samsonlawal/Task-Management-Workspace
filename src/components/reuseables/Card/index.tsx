@@ -85,9 +85,6 @@ function Card({
         {/* Head */}
         <div className="flex flex-row justify-between px-[14px] font-medium">
           <div className="flex flex-row items-center justify-center gap-1.5">
-            <p className="line-clamp-1 h-fit text-[10px] font-normal uppercase tracking-wide text-[#565656] dark:text-zinc-500">
-              TSK-{id ? id.slice(-4).toUpperCase() : "0000"}
-            </p>
             {label && (
               <span
                 className="flex items-center justify-center opacity-60 transition-opacity hover:opacity-100"
@@ -104,6 +101,9 @@ function Card({
                 )}
               </span>
             )}
+            <p className="line-clamp-1 h-fit text-[10px] font-normal uppercase tracking-wide text-[#565656] dark:text-zinc-500">
+              TSK-{id ? id.slice(-4).toUpperCase() : "0000"}
+            </p>
           </div>
           <div className="cursor-pointer" onClick={() => onOpenDetails?.(id)}>
             <button className="flex items-center text-[10px] text-zinc-500 transition-colors hover:text-black dark:hover:text-white">
