@@ -1,14 +1,15 @@
 import { apiSlice } from "./apiSlice";
+import { IWorkspaceMember, IAddMemberInput, WorkspaceRole } from "@/types";
 
 export const memberApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getMembers: builder.query({
-            query: ({ workspaceId }: { workspaceId: string }) => `/workspaces/${workspaceId}/members`,
+        getMembers: builder.query<{ members: IWorkspaceMember[]; data?: IWorkspaceMember[] } & IWorkspaceMember[], { workspaceId: string }>({
+            query: ({ workspaceId }) => `/workspaces/${workspaceId}/members`,
             providesTags: ["Members"],
         }),
 
-        addMember: builder.mutation({
-            query: ({ workspaceId, member }: { workspaceId: string; member: any }) => ({
+        addMember: builder.mutation<{ member: IWorkspaceMember; message?: string }, { workspaceId: string; member: IAddMemberInput }>({
+            query: ({ workspaceId, member }) => ({
                 url: `/workspaces/${workspaceId}/members`,
                 method: "POST",
                 body: member,
@@ -16,8 +17,8 @@ export const memberApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Members"],
         }),
 
-        editMemberRole: builder.mutation({
-            query: ({ workspaceId, memberId, role }: { workspaceId: string; memberId: string; role: string }) => ({
+        editMemberRole: builder.mutation<{ member: IWorkspaceMember; message?: string }, { workspaceId: string; memberId: string; role: WorkspaceRole }>({
+            query: ({ workspaceId, memberId, role }) => ({
                 url: `/workspaces/${workspaceId}/members/edit-role/${memberId}`,
                 method: "PATCH",
                 body: { role },
@@ -25,16 +26,17 @@ export const memberApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Members"],
         }),
 
-        suspendMember: builder.mutation({
-            query: ({ workspaceId, memberId }: { workspaceId: string; memberId: string }) => ({
+        suspendMember: builder.mutation<{ message: string }, { workspaceId: string; memberId: string }>({
+            query: ({ workspaceId, memberId }) => ({
                 url: `/workspaces/${workspaceId}/members/suspend/${memberId}`,
                 method: "PATCH",
+                body: {},
             }),
             invalidatesTags: ["Members"],
         }),
 
-        removeMember: builder.mutation({
-            query: ({ workspaceId, memberId }: { workspaceId: string; memberId: string }) => ({
+        removeMember: builder.mutation<{ message: string }, { workspaceId: string; memberId: string }>({
+            query: ({ workspaceId, memberId }) => ({
                 url: `/workspaces/${workspaceId}/members/remove/${memberId}`,
                 method: "DELETE",
             }),

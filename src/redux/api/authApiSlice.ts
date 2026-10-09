@@ -1,9 +1,16 @@
 import { apiSlice } from "./apiSlice";
+import {
+  ILoginInput,
+  IRegisterInput,
+  IForgotPasswordInput,
+  IResetPasswordInput,
+  IAuthResponse,
+} from "@/types";
 
 export const authApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        login: builder.mutation({
-            query: (credentials: any) => ({
+        login: builder.mutation<IAuthResponse, ILoginInput>({
+            query: (credentials) => ({
                 url: "/auth/login",
                 method: "POST",
                 body: credentials,
@@ -11,7 +18,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Auth", "Users"],
         }),
 
-         logout: builder.mutation<any, void>({
+        logout: builder.mutation<{ message: string }, void>({
             query: () => ({
                 url: "/auth/logout",
                 method: "POST",
@@ -19,9 +26,8 @@ export const authApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Auth"],
         }),
 
-
-        register: builder.mutation({
-            query: (userData: any) => ({
+        register: builder.mutation<IAuthResponse, IRegisterInput>({
+            query: (userData) => ({
                 url: "/auth/register",
                 method: "POST",
                 body: userData,
@@ -29,20 +35,20 @@ export const authApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Auth"],
         }),
 
-        activateAccount: builder.query({
+        activateAccount: builder.query<{ message: string }, string>({
             query: (token: string) => `/auth/activate-account?token=${token}`,
         }),
 
-        forgotPassword: builder.mutation({
-            query: (email: string) => ({
+        forgotPassword: builder.mutation<{ message: string }, string | IForgotPasswordInput>({
+            query: (payload) => ({
                 url: "/auth/forgot-password",
                 method: "POST",
-                body: {email},
+                body: typeof payload === "string" ? { email: payload } : payload,
             }),
         }),
 
-        resetPassword: builder.mutation({
-            query: (payload: any) => ({
+        resetPassword: builder.mutation<{ message: string }, IResetPasswordInput>({
+            query: (payload) => ({
                 url: "/auth/reset-password",
                 method: "POST",
                 body: payload,

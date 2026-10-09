@@ -1,22 +1,30 @@
 import { apiSlice } from "./apiSlice";
 import { workspaceApiSlice } from "./workspaceApiSlice";
 import { getSocket } from "@/lib/socket";
+import {
+  ITask,
+  ICreateTaskInput,
+  IComment,
+  ICreateCommentInput,
+  IActivity,
+  IWorkspaceResponse,
+} from "@/types";
 
 export const tasksApiSlice = apiSlice.injectEndpoints({
     overrideExisting: true,
     endpoints: (builder) => ({
-        getTasks: builder.query({
-            query: ({ workspaceId }: { workspaceId: string }) => `/tasks/${workspaceId}`,
+        getTasks: builder.query<{ tasks: ITask[] }, { workspaceId: string }>({
+            query: ({ workspaceId }) => `/tasks/${workspaceId}`,
             providesTags: ["Tasks"],
         }),
 
-        getSingleTask: builder.query({
-            query: ({ taskId }: { taskId: string }) => `/tasks/single/${taskId}`,
+        getSingleTask: builder.query<{ task: ITask } & ITask, { taskId: string }>({
+            query: ({ taskId }) => `/tasks/single/${taskId}`,
             providesTags: ["Tasks"],
         }),
 
-        createTask: builder.mutation({
-            query: ({ task }: { task: any }) => ({
+        createTask: builder.mutation<{ task: ITask; message?: string }, { task: ICreateTaskInput | Record<string, any> }>({
+            query: ({ task }) => ({
                 url: `/tasks`,
                 method: "POST",
                 body: task,
@@ -24,8 +32,8 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Tasks", "Workspace"],
         }),
 
-        updateTask: builder.mutation({
-            query: ({ taskId, task, workspaceSlug }: { taskId: string; task: any; workspaceSlug?: string }) => ({
+        updateTask: builder.mutation<{ task: ITask; message?: string }, { taskId: string; task: Partial<ITask> | Record<string, any> | FormData; workspaceSlug?: string }>({
+            query: ({ taskId, task }) => ({
                 url: `/tasks/${taskId}`,
                 method: "PATCH",
                 body: task,
@@ -36,9 +44,9 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
                 if (!workspaceSlug) return;
 
                 const patchResult = dispatch(
-                    workspaceApiSlice.util.updateQueryData("getWorkspaceBySlug", workspaceSlug, (draft: any) => {
-                        const taskToUpdate = draft?.tasks?.find((t: any) => t._id === taskId);
-                        if (taskToUpdate) {
+                    workspaceApiSlice.util.updateQueryData("getWorkspaceBySlug", workspaceSlug, (draft: IWorkspaceResponse) => {
+                        const taskToUpdate = draft?.tasks?.find((t) => t._id === taskId);
+                        if (taskToUpdate && !(task instanceof FormData)) {
                             Object.assign(taskToUpdate, task);
                         }
                     })
@@ -51,8 +59,8 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
             },
         }),
 
-        deleteTask: builder.mutation({
-            query: ({ taskId }: { taskId: string; workspaceSlug?: string }) => ({
+        deleteTask: builder.mutation<{ message: string }, { taskId: string; workspaceSlug?: string }>({
+            query: ({ taskId }) => ({
                 url: `/tasks/${taskId}`,
                 method: "DELETE",
             }),
@@ -62,9 +70,9 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
                 if(!workspaceSlug) return;
 
                 const patchResult = dispatch(
-                    workspaceApiSlice.util.updateQueryData("getWorkspaceBySlug", workspaceSlug, (draft: any) => {
+                    workspaceApiSlice.util.updateQueryData("getWorkspaceBySlug", workspaceSlug, (draft: IWorkspaceResponse) => {
                         if(draft?.tasks) {
-                            draft.tasks = draft.tasks.filter((t: any) => t._id !== taskId);
+                            draft.tasks = draft.tasks.filter((t) => t._id !== taskId);
                         }
                     })
                 );
@@ -76,35 +84,35 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
             }
         }),
 
-        getTaskActivity: builder.query({
-            query: ({ taskId }: { taskId: string }) => `/activity/${taskId}`,
+        getTaskActivity: builder.query<{ activities: IActivity[] } & IActivity[], { taskId: string }>({
+            query: ({ taskId }) => `/activity/${taskId}`,
             providesTags: ["Tasks"],
 
-              async onCacheEntryAdded(
-    { taskId },
-    { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
-  ) {
-    try {
-      await cacheDataLoaded;
-      const socket = getSocket();
-      const handleActivityCreated = (newActivity: any) => {
-        if (newActivity.taskId !== taskId) return;
-        updateCachedData((draft: any) => {
-          const exists = draft.activities?.some((a: any) => a._id === newActivity._id);
-          if (!exists) {
-            draft.activities?.push(newActivity);
-          }
-        });
-      };
-      socket.on("activity:created", handleActivityCreated);
-      await cacheEntryRemoved;
-      socket.off("activity:created", handleActivityCreated);
-    } catch {}
-},
+            async onCacheEntryAdded(
+                { taskId },
+                { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+            ) {
+                try {
+                    await cacheDataLoaded;
+                    const socket = getSocket();
+                    const handleActivityCreated = (newActivity: IActivity) => {
+                        if (newActivity.taskId !== taskId) return;
+                        updateCachedData((draft) => {
+                            const exists = draft.activities?.some((a) => a._id === newActivity._id);
+                            if (!exists) {
+                                draft.activities?.push(newActivity);
+                            }
+                        });
+                    };
+                    socket.on("activity:created", handleActivityCreated);
+                    await cacheEntryRemoved;
+                    socket.off("activity:created", handleActivityCreated);
+                } catch {}
+            },
         }),
 
-        promoteTask: builder.mutation({
-            query: ({ taskId }: { taskId: string }) => ({
+        promoteTask: builder.mutation<{ task: ITask }, { taskId: string }>({
+            query: ({ taskId }) => ({
                 url: `/tasks/promote/${taskId}`,
                 method: "PATCH",
                 body: {},
@@ -112,8 +120,8 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Tasks", "Workspace"],
         }),
 
-        demoteTask: builder.mutation({
-            query: ({ taskId }: { taskId: string }) => ({
+        demoteTask: builder.mutation<{ task: ITask }, { taskId: string }>({
+            query: ({ taskId }) => ({
                 url: `/tasks/demote/${taskId}`,
                 method: "PATCH",
                 body: {},
@@ -121,8 +129,8 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Tasks", "Workspace"],
         }),
 
-        markAsDone: builder.mutation({
-            query: ({ taskId }: { taskId: string }) => ({
+        markAsDone: builder.mutation<{ task: ITask }, { taskId: string }>({
+            query: ({ taskId }) => ({
                 url: `/tasks/done/${taskId}`,
                 method: "PATCH",
                 body: {},
@@ -130,8 +138,8 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Tasks", "Workspace"],
         }),
 
-        createComment: builder.mutation({
-            query: ({ comment }: { comment: any }) => ({
+        createComment: builder.mutation<{ comment: IComment; message?: string }, { comment: ICreateCommentInput }>({
+            query: ({ comment }) => ({
                 url: `/tasks/comment`,
                 method: "POST",
                 body: comment,
@@ -139,8 +147,8 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Tasks"],
         }),
 
-        getTaskComments: builder.query({
-            query: ({ taskId }: { taskId: string }) => `/tasks/${taskId}/comment`,
+        getTaskComments: builder.query<{ comments: IComment[] }, { taskId: string }>({
+            query: ({ taskId }) => `/tasks/${taskId}/comment`,
             providesTags: ["Tasks"],
 
             async onCacheEntryAdded({taskId}, {updateCachedData, cacheDataLoaded, cacheEntryRemoved}) {
@@ -148,22 +156,22 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
                     await cacheDataLoaded;
                     const socket = getSocket();
 
-                    const handleCommentCreated = (newComment: any) => {
+                    const handleCommentCreated = (newComment: IComment) => {
                         if(newComment.taskId !== taskId) return;
-                        updateCachedData((draft: any) => {
-                            const exists = draft.comments.some((c: any) => c._id === newComment._id)
+                        updateCachedData((draft) => {
+                            const exists = draft.comments.some((c) => c._id === newComment._id);
                             if(!exists) {
                                 draft.comments.push(newComment);
                             }
-                        })
+                        });
                     };
 
-                    const handleCommentDeleted = ({ commentId, taskId: targetTaskId }: any) => {
+                    const handleCommentDeleted = ({ commentId, taskId: targetTaskId }: { commentId: string; taskId: string }) => {
                         if(targetTaskId !== taskId) return;
 
-                        updateCachedData((draft: any) => {
-                            draft.comments = draft.comments.filter((c: any) => c._id !== commentId)
-                        })
+                        updateCachedData((draft) => {
+                            draft.comments = draft.comments.filter((c) => c._id !== commentId);
+                        });
                     };
 
                     socket.on("comment:created", handleCommentCreated);
@@ -177,35 +185,8 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
             } 
         }),
 
-        // updateComment: builder.mutation({
-        //     query: ({ commentId, content}: { commentId: string; content: string;}) => ({
-        //         url: `/tasks/comment/${commentId}`,
-        //         method: "PATCH",
-        //         body: content,
-        //     }),
-        //     invalidatesTags: ["Tasks", "Workspace"],
-
-        //     async onQueryStarted({ taskId, task, workspaceSlug }, { dispatch, queryFulfilled }) {
-        //         if (!workspaceSlug) return;
-
-        //         const patchResult = dispatch(
-        //             workspaceApiSlice.util.updateQueryData("getWorkspaceBySlug", workspaceSlug, (draft: any) => {
-        //                 const taskToUpdate = draft?.tasks?.find((t: any) => t._id === taskId);
-        //                 if (taskToUpdate) {
-        //                     Object.assign(taskToUpdate, task);
-        //                 }
-        //             })
-        //         );
-        //         try {
-        //             await queryFulfilled;
-        //         } catch {
-        //             patchResult.undo();
-        //         }
-        //     },
-        // }),
-
-        deleteComment: builder.mutation({
-            query: ({ commentId }: { commentId: string }) => ({
+        deleteComment: builder.mutation<{ message: string }, { commentId: string }>({
+            query: ({ commentId }) => ({
                 url: `/tasks/comment/${commentId}`,
                 method: "DELETE",
             }),

@@ -1,19 +1,20 @@
 import { apiSlice } from "./apiSlice";
+import { IUser, IUpdateUserDetailsInput } from "@/types";
 
 export const accountApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getProfile: builder.query({
+        getProfile: builder.query<{ user: IUser }, string>({
             query: (id: string) => `/users/profile/${id}`,
             providesTags: ["Users"],
         }),
 
-        getUserProfile: builder.query({
+        getUserProfile: builder.query<{ user: IUser }, string>({
             query: (id: string) => `/users/${id}`,
             providesTags: ["Users"],
         }),
 
-        updateDetails: builder.mutation({
-            query: (payload: any) => ({
+        updateDetails: builder.mutation<{ user: IUser; message?: string }, IUpdateUserDetailsInput>({
+            query: (payload) => ({
                 url: "/users/update-details",
                 method: "PUT",
                 body: payload,
@@ -21,7 +22,7 @@ export const accountApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Users"],
         }),
 
-        updateAvatar: builder.mutation({
+        updateAvatar: builder.mutation<{ user: IUser; message?: string }, FormData>({
             query: (formData: FormData) => ({
                 url: "/users/update-avatar",
                 method: "PUT",
@@ -30,7 +31,7 @@ export const accountApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Users"],
         }),
 
-        checkUsername: builder.mutation({
+        checkUsername: builder.mutation<{ available: boolean; message?: string }, string>({
             query: (username: string) => ({
                 url: "/users/check-username",
                 method: "POST",
@@ -38,7 +39,7 @@ export const accountApiSlice = apiSlice.injectEndpoints({
             }),
         }),
 
-        checkEmail: builder.mutation({
+        checkEmail: builder.mutation<{ available: boolean; message?: string }, string>({
             query: (email: string) => ({
                 url: "/users/check-email",
                 method: "POST",

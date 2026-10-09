@@ -1,24 +1,17 @@
 import { apiSlice } from "./apiSlice";
+import { ILabel } from "@/types";
 
-export interface ILabel {
-    _id?: string;
-    name: string;
-    color?: string;
-    icon?: string;
-    isDefault?: boolean;
-    workspaceId?: string;
-    createdBy?: string;
-}
+export type { ILabel };
 
 export const labelApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getLabels: builder.query({
-            query: ({ workspaceId }: { workspaceId: string }) => `/workspaces/${workspaceId}/labels`,
+        getLabels: builder.query<{ labels: ILabel[]; label?: ILabel[] } & ILabel[], { workspaceId: string }>({
+            query: ({ workspaceId }) => `/workspaces/${workspaceId}/labels`,
             providesTags: ["Labels"],
         }),
 
-        createLabel: builder.mutation({
-            query: ({ workspaceId, label }: { workspaceId: string; label: { name: string; color?: string; icon?: string } }) => ({
+        createLabel: builder.mutation<{ label: ILabel; message?: string }, { workspaceId: string; label: { name: string; color?: string; icon?: string } }>({
+            query: ({ workspaceId, label }) => ({
                 url: `/workspaces/${workspaceId}/labels`,
                 method: "POST",
                 body: label,
@@ -26,8 +19,8 @@ export const labelApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Labels", "Workspace"],
         }),
 
-        deleteLabel: builder.mutation({
-            query: ({ workspaceId, labelId }: { workspaceId: string; labelId: string }) => ({
+        deleteLabel: builder.mutation<{ message: string }, { workspaceId: string; labelId: string }>({
+            query: ({ workspaceId, labelId }) => ({
                 url: `/workspaces/${workspaceId}/labels/${labelId}`,
                 method: "DELETE",
             }),

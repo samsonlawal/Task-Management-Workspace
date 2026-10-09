@@ -1,3 +1,13 @@
+// Modular Entity Interfaces & Types
+export * from "./user";
+export * from "./task";
+export * from "./comment";
+export * from "./workspace";
+export * from "./activity";
+export * from "./notification";
+export * from "./auth";
+
+// Legacy Type Aliases (Maintained for Backward Compatibility)
 export type TAssignee = {
   id: string;
   name?: string;
@@ -17,7 +27,7 @@ export type TTask = {
   assignee?: TAssignee;
   workspace_id: string;
   createdAt: string;
-  title: String;
+  title: string;
 };
 
 export type TSingleTask = {
@@ -42,7 +52,6 @@ export type TAddTask = {
   assignee?: string;
   workspace_id: string;
   attachments?: [];
-  // createdAt: string;
   deadline: string;
   createdBy: string;
   label?: string;
@@ -69,10 +78,6 @@ export type TRegister = {
   email: string;
   username: string;
   password: string;
-
-  // assignee: TAssignee;
-  // workspace_id: string;
-  // deadline: string;
 };
 
 export type TLogin = {
@@ -92,14 +97,8 @@ export type TWorkspace = {
   _id: string;
 };
 
-type Workspace = {
-  name: string; // Make sure this exists in your type
-  id: string;
-  // other properties...
-};
-
 export type TWorkspaceData = {
-  workspace: Workspace;
+  workspace: TWorkspace;
   members: Record<string, any>;
   tasks: Record<string, any>;
   name: string;
@@ -128,3 +127,4 @@ export type TUpdateDetailsService = {
     username?: string;
   };
 };
+

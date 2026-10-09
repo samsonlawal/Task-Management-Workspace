@@ -1,13 +1,14 @@
 import { apiSlice } from "./apiSlice";
+import { INotification } from "@/types";
 
 export const notificationApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getUserNotifications: builder.query({
+        getUserNotifications: builder.query<{ notifications: INotification[] }, string>({
             query: (userId: string) => `/notification/${userId}`,
             providesTags: ["Notifications"],
         }),
 
-        markAsRead: builder.mutation({
+        markAsRead: builder.mutation<{ message: string }, string>({
             query: (id: string) => ({
                 url: `/notification/read/${id}`,
                 method: "PATCH",
@@ -15,7 +16,7 @@ export const notificationApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["Notifications"],
         }),
 
-        markAllAsRead: builder.mutation({
+        markAllAsRead: builder.mutation<{ message: string }, string>({
             query: (userId: string) => ({
                 url: `/notification/read-all/${userId}`,
                 method: "PATCH",
