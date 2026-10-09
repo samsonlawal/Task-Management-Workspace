@@ -1,6 +1,7 @@
 
 import { apiSlice } from "./apiSlice";
 import { getSocket } from "@/lib/socket";
+import { toast } from "sonner";
 
 export const workspaceApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -12,6 +13,24 @@ export const workspaceApiSlice = apiSlice.injectEndpoints({
         getUserWorkspace: builder.query({
             query: ({ userId }: { userId: string }) => `/workspaces/user/${userId}`,
             providesTags: ["Workspace"],
+
+            async onCacheEntryAdded(
+                userId,
+                { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+            ) {
+                try {
+                await cacheDataLoaded;
+                const socket = getSocket();
+                const handleWorkspaceDeleted = ({ workspaceId }: { workspaceId: string }) => {
+                    updateCachedData((draft: any[]) => {
+                        return draft.filter((ws: any) => ws._id !== workspaceId);
+                    });
+                };
+                socket.on("workspace:deleted", handleWorkspaceDeleted);
+                await cacheEntryRemoved;
+                socket.off("workspace:deleted", handleWorkspaceDeleted);
+                } catch {}
+            },
         }),
 
         getSingleWorkspace: builder.query({
@@ -68,27 +87,60 @@ export const workspaceApiSlice = apiSlice.injectEndpoints({
                         });
                     });
 
-                   socket.on("task:updated", (updatedTask: any) => {
-    updateCachedData((draft) => {
-        const index = draft.tasks.findIndex((t: any) => t._id === updatedTask._id);
-        if (index !== -1) {
-            draft.tasks[index] = updatedTask;
-        }
-    });
-});
+                    socket.on("task:updated", (updatedTask: any) => {
+                        updateCachedData((draft) => {
+                            const index = draft.tasks.findIndex((t: any) => t._id === updatedTask._id);
+                            if (index !== -1) {
+                                draft.tasks[index] = updatedTask;
+                            }
+                        });
+                    });
 
 
-                    socket.on("task:deleted", (deletedTaskId: string) => { // <-- ADD THIS
+                    socket.on("task:deleted", (deletedTaskId: string) => {
                         updateCachedData((draft) => {
                             draft.tasks = draft.tasks.filter((t: any) => t._id !== deletedTaskId);
                         });
                     });
+
+                    socket.on("comment:created", (newComment: any) => {
+                        updateCachedData((draft) => {
+                            const task = draft?.tasks?.find((t: any) => t._id === newComment.taskId);
+                            if (task) {
+                                task.commentCount = (task.commentCount || 0) + 1;
+                            }
+                        });
+                    });
+
+                    socket.on("comment:deleted", ({ taskId }: any) => {
+                        updateCachedData((draft) => {
+                        const task = draft?.tasks?.find((t: any) => t._id === taskId);
+                        if (task && task.commentCount > 0) {
+                            task.commentCount -= 1;
+                        }
+                    });
+                    });
+
+
+                    const handleWorkspaceDeleted = ({ workspaceId: deletedId }: { workspaceId: string }) => {
+                        if (deletedId === workspaceId) {
+                               toast.error("This workspace has been deleted by the owner.");
+    
+                            setTimeout(() => {
+                                window.location.href = "/dashboard";
+                            }, 1500);
+                        }
+                    };
+                    socket.on("workspace:deleted", handleWorkspaceDeleted);
 
                     await cacheEntryRemoved;
                     socket.emit("leave_workspace", workspaceId);
                     socket.off("task:created");
                     socket.off("task:updated");
                     socket.off("task:deleted");
+                    socket.off("comment:created");
+                    socket.off("comment:deleted");
+                    socket.off("workspace:deleted", handleWorkspaceDeleted);
                 } catch {}
             },
             }),
