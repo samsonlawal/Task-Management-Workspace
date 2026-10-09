@@ -79,6 +79,28 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
         getTaskActivity: builder.query({
             query: ({ taskId }: { taskId: string }) => `/activity/${taskId}`,
             providesTags: ["Tasks"],
+
+              async onCacheEntryAdded(
+    { taskId },
+    { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+  ) {
+    try {
+      await cacheDataLoaded;
+      const socket = getSocket();
+      const handleActivityCreated = (newActivity: any) => {
+        if (newActivity.taskId !== taskId) return;
+        updateCachedData((draft: any) => {
+          const exists = draft.activities?.some((a: any) => a._id === newActivity._id);
+          if (!exists) {
+            draft.activities?.push(newActivity);
+          }
+        });
+      };
+      socket.on("activity:created", handleActivityCreated);
+      await cacheEntryRemoved;
+      socket.off("activity:created", handleActivityCreated);
+    } catch {}
+},
         }),
 
         promoteTask: builder.mutation({
@@ -127,7 +149,7 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
                     const socket = getSocket();
 
                     const handleCommentCreated = (newComment: any) => {
-                        if(newComment.task !== taskId) return;
+                        if(newComment.taskId !== taskId) return;
                         updateCachedData((draft: any) => {
                             const exists = draft.comments.some((c: any) => c._id === newComment._id)
                             if(!exists) {
