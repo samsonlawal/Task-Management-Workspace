@@ -1,5 +1,6 @@
 import { apiSlice } from "./apiSlice";
 import { workspaceApiSlice } from "./workspaceApiSlice";
+import { getSocket } from "@/lib/socket";
 
 export const tasksApiSlice = apiSlice.injectEndpoints({
     overrideExisting: true,
@@ -119,6 +120,39 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
         getTaskComments: builder.query({
             query: ({ taskId }: { taskId: string }) => `/tasks/${taskId}/comment`,
             providesTags: ["Tasks"],
+
+            async onCacheEntryAdded({taskId}, {updateCachedData, cacheDataLoaded, cacheEntryRemoved}) {
+                try{
+                    await cacheDataLoaded;
+                    const socket = getSocket();
+
+                    const handleCommentCreated = (newComment: any) => {
+                        if(newComment.task !== taskId) return;
+                        updateCachedData((draft: any) => {
+                            const exists = draft.comments.some((c: any) => c._id === newComment._id)
+                            if(!exists) {
+                                draft.comments.push(newComment);
+                            }
+                        })
+                    };
+
+                    const handleCommentDeleted = ({ commentId, taskId: targetTaskId }: any) => {
+                        if(targetTaskId !== taskId) return;
+
+                        updateCachedData((draft: any) => {
+                            draft.comments = draft.comments.filter((c: any) => c._id !== commentId)
+                        })
+                    };
+
+                    socket.on("comment:created", handleCommentCreated);
+                    socket.on("comment:deleted", handleCommentDeleted);
+
+                    await cacheEntryRemoved;
+                    socket.off("comment:created", handleCommentCreated);
+                    socket.off("comment:deleted", handleCommentDeleted); 
+
+                } catch {}
+            } 
         }),
 
         // updateComment: builder.mutation({
